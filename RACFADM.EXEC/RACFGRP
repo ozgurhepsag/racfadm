@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BC  200313  TRIDJK   Add Supgrp and Owner to group list           */
 /* @BB  200303  RACFA    Del 'ret_code = rc', not referenced          */
 /* @BA  200303  RACFA    Chg 'RL class ALL' to 'RL class * ALL'       */
 /* @B9  200302  RACFA    Chk RC 'LU id prms', if RC>0 then 'LU id'    */
@@ -74,7 +75,8 @@ ADDRESS ISPEXEC                                               /* @AO */
         "ERAADMN ERADISP) ASIS"                               /* @AK */
   If (eratrace = 'YES') then Trace r                          /* @AM */
   If (ERAADMN = "YES") then                                   /* @B2 */
-      SELCMDS = "ÝS¨Show,ÝL¨List,ÝC¨Change,ÝA¨Add,ÝR¨Remove"  /* @AJ */
+      SELCMDS = "ÝS¨Show,ÝL¨List,ÝC¨Change,ÝA¨Add,"||,        /* @BC */
+                "ÝR¨Remove,ÝP¨Profile"                        /* @BC */
   else
       SELCMDS = "ÝS¨Show,ÝL¨list"                             /* @AJ */
   rlv    = SYSVAR('SYSLRACF')
@@ -105,6 +107,7 @@ PROFL:
   opta = ' '
   sort = 'GROUP,C,A'                                          /* @AU */
   CLRGROU = "TURQ";  CLRDATA = "GREEN"   /* Col. colors */    /* @AH */
+  CLRSUPG = "GREEN"; CLROWNE = "GREEN"   /* Col. colors */    /* @BC */
   "TBSORT " tbla "FIELDS("sort")"                             /* @AU */
   "TBTOP  " tbla
   "TBDISPL" tbla "PANEL("PANEL08")"                           /* @AW */
@@ -129,6 +132,10 @@ PROFL:
              SELECT                                           /* @A3 */
                 when (ABBREV("GROUP",PARM,1) = 1) then        /* @AT */
                      sort = 'GROUP,C,'seq                     /* @AU */
+                when (ABBREV("SUPGRP",PARM,1) = 1) then       /* @BC */
+                     sort = 'SUPGRP,C,'seq                    /* @BC */
+                when (ABBREV("OWNER",PARM,1) = 1) then        /* @BC */
+                     sort = 'OWNER,C,'seq                     /* @BC */
                 when (ABBREV("DESCRIPTION",PARM,1) = 1) then  /* @AT */
                      sort = 'DATA,C,'seq                      /* @AU */
                 otherwise NOP                                 /* @A3 */
@@ -141,7 +148,7 @@ PROFL:
              'tbtop ' tbla                                    /* @AP */
              'tbskip' tbla                                    /* @AP */
              do forever                                       /* @AP */
-                str = translate(group data)                   /* @AP */
+                str = translate(group supgrp owner data)      /* @BC */
                 if (pos(find_str,str) > 0) then nop           /* @AP */
                 else 'tbdelete' tbla                          /* @AP */
                 'tbskip' tbla                                 /* @AP */
@@ -165,6 +172,7 @@ PROFL:
         when (opta = 'L') then call Lisd
         when (opta = 'R') then call Deld
         when (opta = 'S') then call Disd
+        when (opta = 'P') then call XProf                     /* @BC */
         otherwise nop
      End /* Select */
      Do while (reta = 4)   /* process multi selection */
@@ -183,11 +191,13 @@ PROFL:
            when (opta = 'S') then call Disd
            when (opta = 'R') then call Deld
            when (opta = 'L') then call Lisd
+           when (opta = 'P') then call XProf                  /* @BC */
            otherwise nop
         End
      end  /* Do while (reta < 4) */
      PARSE VAR SORT LOCARG "," .                              /* @AU */
      CLRGROU = "GREEN"; CLRDATA = "GREEN"                     /* @AH */
+     CLRSUPG = "GREEN"; CLROWNE = "GREEN"                     /* @BC */
      INTERPRET "CLR"SUBSTR(LOCARG,1,4)" = 'TURQ'"             /* @AH */
      "TBSORT" tbla "FIELDS("sort")"
      "TBTOP " tbla
@@ -402,6 +412,12 @@ DISD:
      "TBEND" tblb
   end /* Do until */
 RETURN
+/*--------------------------------------------------------------------*/
+/*  Display profile with R_Admin API                             @BC  */
+/*--------------------------------------------------------------------*/
+XPROF:                                                        /* @BC */
+  Call RACFGRPS 'GROUP' group                                 /* @BC */
+RETURN                                                        /* @BC */
 /*--------------------------------------------------------------------*/
 /*  Get LG info to initialize add or change option                    */
 /*--------------------------------------------------------------------*/
@@ -652,7 +668,8 @@ RETURN                                                        /* @AN */
 CREATE_TABLE:                                                 /* @AP */
   seconds = TIME('S')
   tbla    = 'TA'ZSCREEN||SECONDS  /* table name unique */
-  "TBCREATE" tbla "KEYS(GROUP) NAMES(DATA) REPLACE NOWRITE"
+  "TBCREATE" tbla "KEYS(GROUP) NAMES(DATA SUPGRP OWNER)",     /* @BC */
+    "REPLACE NOWRITE"
   cmd = "SEARCH FILTER("RFILTER") CLASS("rclass")"            /* @AN */
   x = OUTTRAP('var.')
   address TSO cmd                                             /* @AN */

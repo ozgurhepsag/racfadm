@@ -12,6 +12,7 @@
  RACFCLSS  Class          Search and display classes
  RACFDSN   Dataset        Display dataset profiles
  RACFGRP   Group          Display group profiles, menu option 2
+ RACFGRPS  Group          Execute line cmd P, extract/display profile
  RACFLOG   Documentation  Display changes/issues, menu option C/I
  RACFLOGE  Documentation  Display changes/issues - Edit Macro
  RACFMSGC  Message        Display 'Confirm Request' panel

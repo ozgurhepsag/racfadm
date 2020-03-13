@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CJ  200313  RACFA    Chg subroutine name CHKATTR to UPDATTR       */
 /* @CI  200313  RACFA    After 'C'hanging userid, upd attribute vars  */
 /* @CH  200312  RACFA    Renamed attribute variables                  */
 /* @CG  200311  ZDOHK    Fix Atributes for user change                */
@@ -604,7 +605,7 @@ CHGD:
      when (ret_code <> 0) then
           call racfmsgs 'ERR11' /* Defalias failed */
      otherwise DO                                             /* @CI */
-          call chkattr                                        /* @CI */
+          call updattr                                        /* @CJ */
           "TBMOD" tbla
      END                                                      /* @CI */
   End
@@ -612,7 +613,7 @@ RETURN
 /*--------------------------------------------------------------------*/
 /*  Obtain userid attributes                                     @CI  */
 /*--------------------------------------------------------------------*/
-CHKATTR:                                                      /* @CI */
+UPDATTR:                                                      /* @CJ */
   cmd      = "LU "USER" TSO"                                  /* @CI */
   x        = OUTTRAP('details.')                              /* @CI */
   address TSO cmd                                             /* @CI */

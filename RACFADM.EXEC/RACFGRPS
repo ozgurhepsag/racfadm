@@ -1,0 +1,145 @@
+/*%NOCOMMENT====================* REXX *==============================*/
+/*  PURPOSE:  RACFADM - Group profiles - Line cmd P - Extract profile */
+/*--------------------------------------------------------------------*/
+/*  NOTES:    1) Uses RACF administration API (IRRXUTIL)              */
+/*            2) READ access to IRR.RADMIN.LIST_/RLIST in FACILITY    */
+/*               plus authority to list the profile is required       */
+/*--------------------------------------------------------------------*/
+/* FLG  YYMMDD  USERID   DESCRIPTION                                  */
+/* ---  ------  -------  -------------------------------------------- */
+/* @A5  200313  RACFA    Standardized REXX program                    */
+/* @A4  200313  RACFA    Chg to allow editing/browsing the data       */
+/* @A3  200313  TRIDJK   Display profile using R_admin extract vars   */
+/* @A2  100101  WELLS    Created REXX   (brwells@us.ibm.com)          */
+/* @A1  091201  ONGHENA  Created REXX   (onghena@us.ibm.com)          */
+/* @A0  060101  WELLS    Created HLASM  (brwells@us.ibm.com)          */
+/*====================================================================*/
+arg class profile
+
+/* Initialize VIEW output stem */                             /* @A3 */
+irrxout. = ''
+irrx = 0
+
+ADDRESS ISPEXEC
+  "VGET (ERADISP) ASIS"                                       /* @A4 */
+
+  /* Call IRRXUTIL to extract the desired profile */
+  myrc=IRRXUTIL("EXTRACT",class,profile,"RACF","")
+
+  /* Check return code and exit if problem is discovered */
+  if (word(myrc,1)<>0) then do
+    call sez "Error calling IRRXUTIL: "myrc
+    if (word(myrc,1)=12) then
+      call sez "R_admin failure"
+    irrxout.0 = irrx
+    call do_view_stem irrxout
+    exit 8
+  end
+
+  /* Print header */
+  call sez "Profile: "RACF.PROFILE"  Segments:"||,
+       right(RACF.0,2,"0")
+
+  /* Run through all segments */
+  do k=1 to RACF.0
+    segname=RACF.k               /* Get next segment name */
+    call sez "Segment: "left(segname,8)" Fields:"||,
+                   right(RACF.segname.0,2,"0")
+    /* Run through the fields in this segment */
+    do l=1 to RACF.segname.0
+       fieldName=RACF.segname.l  /* Get next field name   */
+
+       /* If repeat header, handle the repeat group.      */
+       /* Tricky part, to keep the repeat group together  */
+       if (RACF.segname.fieldname.repeatcount>0) then do
+           /* Get dimension (number of fields in a group)
+              and cardinality (number of groups) */
+           dimension=RACF.segname.fieldname.subfield.0
+           repeats=RACF.segname.fieldname.repeatcount
+           call sez " Repeat field:"left(fieldname,8),
+                "Subfields:"right(dimension,2,"0")||,
+                " Occurrences:"right(repeats,4,"0")
+
+           /* For each repeat group */
+           do rpt=1 to repeats
+              /* Run through each of the fields */
+              do dim=1 to dimension
+                /* Get repeat group field name */
+                subfld=RACF.segname.fieldname.SUBFIELD.dim
+                /* Get repeat group value */
+                call sez "  "left(subfld,8)":"||,
+                         RACF.segname.subfld.rpt
+              end /* dim */
+              call sez "  "COPIES("-",44)
+           end  /* repeats */
+       end /* repeat header */
+       else if (RACF.segname.fieldname.REPEATING="TRUE") then do
+          /* Skip repeating fields because */
+          /* they were already handled     */
+          /* in the logic above when the   */
+          /* repeatheader was processed    */
+       end
+       else do /* not repeating */
+          /* Display value for this field */
+          call sez " "left(fieldname,8)||,
+                   ":"RACF.segname.fieldname.1
+       end    /* not repeating */
+    end /* fields */
+  end /* segments */
+
+  /* --------------------------------- */                     /* @A3 */
+  /* Display connect groups for user   */                     /* @A3 */
+  /* --------------------------------- */                     /* @A3 */
+  if class = 'USER' then do
+    gcnt = racf.base.connects.repeatcount
+    call sez 'Connect Groups:  ' 'Fields:'right(gcnt,2,"0")
+    do i = 1 to gcnt
+      call sez ' 'racf.base.cgroup.i
+    end
+  end
+
+  /* --------------------------------- */                     /* @A3 */
+  /* View IRRXUTIL output              */                     /* @A3 */
+  /* --------------------------------- */                     /* @A3 */
+  irrxout.0 = irrx
+  call do_view_stem irrxout
+EXIT
+/*--------------------------------------------------------------------*/
+/*  Add to stem                                                   @A3 */
+/*--------------------------------------------------------------------*/
+SEZ:
+  parse arg text
+  irrx = irrx + 1
+  irrxout.irrx = text
+RETURN
+/*--------------------------------------------------------------------*/
+/*  ISPF View Stem routine                                        @A3 */
+/*--------------------------------------------------------------------*/
+DO_VIEW_STEM:
+  parse arg stem
+
+Address TSO
+  dd = '$'right(time("s"),7,"0")   /* create unique ddname */
+  'alloc f('dd') unit(vio) new reuse space(1,1) tracks',
+        'lrecl(80) recfm(f b) blksize(0) dsorg(ps)'
+  'execio * diskw' dd '(finis stem' stem'.'
+
+Address ISPExec
+  'lminit dataid(id) ddname('dd') enq(exclu)'
+  if rc ^= 0 then do
+     zedsmsg = 'Error'
+     zedlmsg = 'Error.  LMINIT failed for VIO output file'
+    'setmsg msg(isrz001)'
+    exit
+  end
+  Select                                                      /* @A4 */
+     When (ERADISP = "EDIT") THEN                             /* @A4 */
+         'edit dataid('id')'                                  /* @A4 */
+     When (ERADISP = "VIEW") THEN                             /* @A4 */
+         'view dataid('id')'                                  /* @A4 */
+     Otherwise                                                /* @A4 */
+         'browse dataid('id')'                                /* @A4 */
+  end                                                         /* @A4 */
+  'lmfree dataid('id')'
+  Address TSO 'free f('dd')'
+RETURN

@@ -2,6 +2,11 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  13 Mar 2020 - V8R7
+     - Groups (Option 2)
+       * Added columns SupGrp and Owner
+       * Added line command 'P'rofile, when 'Administrator=YES'
+
   13 Mar 2020 - V8R6
      - User (Option 1)
        * When changing a userid, update 'ATT' column (YES/NO),

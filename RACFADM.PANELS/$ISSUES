@@ -2,46 +2,6 @@
 *                        RACFADM - Open Issues
 *---------------------------------------------------------------------*
   PMR        COMPONENT   STATUS   SUBMITTER  FIX RELEASE
-  200306-A   RACFUSR     Open     sbgolob    V?R?
-
-  DESCRIPTION:
-    Tried removing the attribute of SPECIAL for a userid, and there
-    seems to be the following problem:  When you ADD attributes, the
-    RACFADM dialog can read them from the line which says ATTRIBUTES,
-    and it enters them into the generated ALU or ALTUSER command to
-    change the attribute.  The syntax of the ALU command requires
-    (for removal of attributes):  that you have to say NOSPECIAL,
-    NOOPERATIONS, or NOAUDITOR specifically.  So if you want to
-    remove attribute of SPECIAL, you have to specifically write on the
-    ATTRIBUTE line:  NOSPECIAL, so the NOSPECIAL word gets generated
-    into the ALU command.
-
-    Once this was done:  coding NOSPECIAL in the ATTRIBUTES line, then
-    the attribute of SPECIAL is indeed removed.  However the dialog
-    does not do an LU to "feel" that there are no attributes left,
-    and it doesn't remove the YES from the attribute column for that
-    userid:
-
-  RESOLUTION:
-    ???
-
-*---------------------------------------------------------------------*
-  PMR        COMPONENT   STATUS   SUBMITTER  FIX RELEASE
-  200304-A   RACFUSR     Testing  sbgolob    V8R3
-
-  DESCRIPTION:
-    Added attributes of SPECIAL and OPERATIONS to a userid which
-    didn't have any.  The YES did not show up on the userid menu when
-    it re-displayed, after the change.  In order to see the changes
-    reflected in the table, I had to completely redisplay the
-    userids.
-
-  RESOLUTION:
-    Add code to check to see if attributes where added/removed, if so
-    update the ATT column to contain YES or NO.
-
-*---------------------------------------------------------------------*
-  PMR        COMPONENT   STATUS   SUBMITTER  FIX RELEASE
   200302-C   RACFGRP     Open     sbgolob    V?R?
 
   DESCRIPTION:
@@ -66,6 +26,49 @@
     Dialog should not delete the TSO segment based on the TSO = 'NO'
     panel field value.  To delete a TSO Segment, issue the
     "ALTUSER user NOTSO" command.
+
+*---------------------------------------------------------------------*
+*                        RACFADM - Testing Issues
+*---------------------------------------------------------------------*
+  PMR        COMPONENT   STATUS   SUBMITTER  FIX RELEASE
+  200306-A   RACFUSR     Testing  sbgolob    V?R?
+
+  DESCRIPTION:
+    Tried removing the attribute of SPECIAL for a userid, and there
+    seems to be the following problem:  When you ADD attributes, the
+    RACFADM dialog can read them from the line which says ATTRIBUTES,
+    and it enters them into the generated ALU or ALTUSER command to
+    change the attribute.  The syntax of the ALU command requires
+    (for removal of attributes):  that you have to say NOSPECIAL,
+    NOOPERATIONS, or NOAUDITOR specifically.  So if you want to
+    remove attribute of SPECIAL, you have to specifically write on the
+    ATTRIBUTE line:  NOSPECIAL, so the NOSPECIAL word gets generated
+    into the ALU command.
+
+    Once this was done:  coding NOSPECIAL in the ATTRIBUTES line, then
+    the attribute of SPECIAL is indeed removed.  However the dialog
+    does not do an LU to "feel" that there are no attributes left,
+    and it doesn't remove the YES from the attribute column for that
+    userid:
+
+  RESOLUTION:
+    Added subroutine UPDATTR, will issue 'LU userid TSO' command
+    and populate the ATTR and ATTR2 variables with current information
+
+*---------------------------------------------------------------------*
+  PMR        COMPONENT   STATUS   SUBMITTER  FIX RELEASE
+  200304-A   RACFUSR     Testing  sbgolob    V8R3
+
+  DESCRIPTION:
+    Added attributes of SPECIAL and OPERATIONS to a userid which
+    didn't have any.  The YES did not show up on the userid menu when
+    it re-displayed, after the change.  In order to see the changes
+    reflected in the table, I had to completely redisplay the
+    userids.
+
+  RESOLUTION:
+    Add code to check to see if attributes where added/removed, if so
+    update the ATT column to contain YES or NO.
 
 *---------------------------------------------------------------------*
 *                       RACFADM - Closed Issues
