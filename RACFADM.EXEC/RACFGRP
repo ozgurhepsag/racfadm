@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BD  200313  RACFA    Renamed RACFGHPS to RACFGRPP (P-Profile)     */
 /* @BC  200313  TRIDJK   Add Supgrp and Owner to group list           */
 /* @BB  200303  RACFA    Del 'ret_code = rc', not referenced          */
 /* @BA  200303  RACFA    Chg 'RL class ALL' to 'RL class * ALL'       */
@@ -416,7 +417,7 @@ RETURN
 /*  Display profile with R_Admin API                             @BC  */
 /*--------------------------------------------------------------------*/
 XPROF:                                                        /* @BC */
-  Call RACFGRPS 'GROUP' group                                 /* @BC */
+  Call RACFGRPP 'GROUP' group                                 /* @BD */
 RETURN                                                        /* @BC */
 /*--------------------------------------------------------------------*/
 /*  Get LG info to initialize add or change option                    */

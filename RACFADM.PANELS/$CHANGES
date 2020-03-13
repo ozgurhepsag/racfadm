@@ -2,8 +2,13 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  13 Mar 2020 - V8R8
+     - Other Items
+       * Renamed RACFGRPS to RACFGRPP (P=Profile)
+       * Closed several PMRs
+
   13 Mar 2020 - V8R7
-     - Groups (Option 2)
+     - Group (Option 2)
        * Added columns SupGrp and Owner
        * Added line command 'P'rofile, when 'Administrator=YES'
 
