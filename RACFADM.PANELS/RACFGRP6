@@ -11,7 +11,7 @@
 +
 +
 +PROFILE %===>$GROUP   { (Group name)
-+USER    %===>$ID      { (User ID)
++USER    %===>$ID      { (Userid)
 +
 +Change the field below:
 +

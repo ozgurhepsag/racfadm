@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BE  200313  RACFA    Del XPROF subroutine, call RACFGRPP directly */
 /* @BD  200313  RACFA    Renamed RACFGHPS to RACFGRPP (P-Profile)     */
 /* @BC  200313  TRIDJK   Add Supgrp and Owner to group list           */
 /* @BB  200303  RACFA    Del 'ret_code = rc', not referenced          */
@@ -173,7 +174,8 @@ PROFL:
         when (opta = 'L') then call Lisd
         when (opta = 'R') then call Deld
         when (opta = 'S') then call Disd
-        when (opta = 'P') then call XProf                     /* @BC */
+        when (opta = 'P') then                                /* @XX */
+             call RACFGRPP 'GROUP' group                      /* @XX */
         otherwise nop
      End /* Select */
      Do while (reta = 4)   /* process multi selection */
@@ -192,7 +194,8 @@ PROFL:
            when (opta = 'S') then call Disd
            when (opta = 'R') then call Deld
            when (opta = 'L') then call Lisd
-           when (opta = 'P') then call XProf                  /* @BC */
+           when (opta = 'P') then                             /* @XX */
+                call RACFGRPP 'GROUP' group                   /* @XX */
            otherwise nop
         End
      end  /* Do while (reta < 4) */
@@ -413,12 +416,6 @@ DISD:
      "TBEND" tblb
   end /* Do until */
 RETURN
-/*--------------------------------------------------------------------*/
-/*  Display profile with R_Admin API                             @BC  */
-/*--------------------------------------------------------------------*/
-XPROF:                                                        /* @BC */
-  Call RACFGRPP 'GROUP' group                                 /* @BD */
-RETURN                                                        /* @BC */
 /*--------------------------------------------------------------------*/
 /*  Get LG info to initialize add or change option                    */
 /*--------------------------------------------------------------------*/

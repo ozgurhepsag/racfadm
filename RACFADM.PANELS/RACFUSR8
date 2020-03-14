@@ -9,7 +9,7 @@
 %
 +Alt RACF%USER+profile: %ALTUSER+command
 +
-+PROFILE   %===>$USER    { (User ID)
++PROFILE   %===>$USER    { (Userid)
 +
 +TSOPROC   %===>_TSOPROC { (TSO logon procedure)
 +TSOACCT   %===>_TSOACCT { (TSO account number)

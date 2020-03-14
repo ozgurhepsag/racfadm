@@ -9,7 +9,7 @@
 %
 +Alt RACF%USER+profile: %ALTUSER+command
 +
-+PROFILE   %===>$USER    { (User ID)
++PROFILE   %===>$USER    { (Userid)
 +
 +OWNER     %===>_OWNER   { (Owner of profile)
 +DFLTGRP   %===>_DEFGRP  { (Default group)
