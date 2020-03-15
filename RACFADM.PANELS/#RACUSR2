@@ -17,13 +17,13 @@
 %  S  !Show        +List of groups connected to the user
 %  SE !Search      +Analyze user access to general resource profiles
 %  L  !List        +Issue LISTUSER command
+%  P  !Profile     +List user profile using Radmin extract (admin)
 %  D  !Dsn         +Display datasets
 %  C  !Change      +Change user attributes (admin)
 %  A  !Add         +Define a new user (admin)
 %  R  !Remove      +Remove user from RACF (admin)
 %  RS !Resume      +Resume user and initialize the password (admin)
 %  RV !Revoke      +Revoke the user (admin)
-%  P  !Profile     +List user profile using Radmin extract (admin)
 )PROC
   &ZUP     = #RACUSR2
 )END

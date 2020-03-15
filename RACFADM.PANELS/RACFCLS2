@@ -15,7 +15,7 @@
 %
 +CLASS:  $RCLASS
 +FILTER: $RFILTER
-+SELECT: ¬SELCMDS                                                              ¬
++SELECT: ¬SELCMDS1                                                             ¬
 %
 %S  ~Profile                                ~Description
 %-------------------------------------------------------------------------------

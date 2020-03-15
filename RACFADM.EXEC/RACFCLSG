@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @B5  200315  RACFA    Added line cmd 'P=Profile'                   */
 /* @B4  200303  RACFA    Chg 'RC/Ret_code' to 'cmd_rc' after EXCMD    */
 /* @B3  200303  RACFA    Fixed RC and del TBDMOD, not needed          */
 /* @B2  200303  RACFA    Chk RC 'RLIST prms', if RC>0 then 'RLIST'    */
@@ -67,8 +68,12 @@ ADDRESS ISPEXEC                                               /* @AG */
   "VGET (ZSCREEN ERASHOW ERATRACE ERACONF",                   /* @AA */
         "ERASINT ERAADMN ERADISP) ASIS"                       /* @AC */
   If (eratrace = 'YES') then Trace r                          /* @AE */
-  If (ERAADMN = "YES") then                                   /* @AB */
-      SELCMDS = "ÝS¨Show,ÝL¨List,ÝC¨Change,ÝA¨Add,ÝR¨Remove"  /* @AB */
+  If (ERAADMN = "YES") then DO                                /* @B5 */
+      SELCMDS1 = "ÝS¨Show,ÝL¨List,"||,                        /* @B5 */
+                 "ÝC¨Change,ÝA¨Add,ÝR¨Remove"                 /* @B5 */
+      SELCMDS2 = "ÝS¨Show,ÝL¨List,ÝP¨Profile,"||,             /* @B5 */
+                 "ÝC¨Change,ÝA¨Add,ÝR¨Remove"                 /* @B5 */
+  END                                                         /* @B5 */
   else
       SELCMDS = "ÝS¨Show,ÝL¨list"                             /* @AB */
   rlv    = SYSVAR('SYSLRACF')
@@ -157,12 +162,12 @@ PROFL:
         otherwise NOP                                         /* @AK */
      END /* Select */                                         /* @AK */
      Select
-        when (opta= 'A') then call Addd
-        when (opta= 'C') then call Chgd
-        when (opta= 'L') then call Lisd                       /* @A1 */
-        when (opta= 'M') then call Dism
-        when (opta= 'R') then call Deld
-        when (opta= 'S') then call Disd
+        when (opta = 'A') then call Addd
+        when (opta = 'C') then call Chgd
+        when (opta = 'L') then call Lisd                      /* @A1 */
+        when (opta = 'M') then call Dism
+        when (opta = 'R') then call Deld
+        when (opta = 'S') then call Disd
         otherwise nop
      End
      Do while (reta = 4)   /* process multi selection */
@@ -171,12 +176,12 @@ PROFL:
         reta = rc
         "CONTROL DISPLAY SAVE"
         Select
-           when (opta= 'A') then call Addd
-           when (opta= 'C') then call Chgd
-           when (opta= 'L') then call Lisd                    /* @A1 */
-           when (opta= 'M') then call Dism
-           when (opta= 'R') then call Deld
-           when (opta= 'S') then call Disd
+           when (opta = 'A') then call Addd
+           when (opta = 'C') then call Chgd
+           when (opta = 'L') then call Lisd                   /* @A1 */
+           when (opta = 'M') then call Dism
+           when (opta = 'R') then call Deld
+           when (opta = 'S') then call Disd
            otherwise nop
         End
      end  /* Do while (reta < 4) */
@@ -542,11 +547,13 @@ DISD:
               "TBSKIP" TBLB "NUMBER("SROW")"                  /* @AI */
            END                                                /* @AI */
         Select
-           when (optb= 'A') then call Addp
-           when (optb= 'C') then call Chgp
-           when (optb= 'L') then call Lisp                    /* @A2 */
-           when (optb= 'R') then call Delp
-           when (optb= 'S') then call Disp
+           when (optb = 'A') then call Addp
+           when (optb = 'C') then call Chgp
+           when (optb = 'L') then call Lisp                   /* @A2 */
+           when (optb = 'P') then                             /* @B5 */
+                call RACFPROF 'GROUP' ID                      /* @B5 */
+           when (optb = 'R') then call Delp
+           when (optb = 'S') then call Disp
            otherwise nop
         End
         Do while (retb = 4)   /* process multi-section */
@@ -555,11 +562,13 @@ DISD:
            retb = rc
            "CONTROL DISPLAY SAVE"
            Select
-              when (optb= 'A') then call Addp
-              when (optb= 'C') then call Chgp
-              when (optb= 'L') then call Lisp                 /* @A2 */
-              when (optb= 'R') then call Delp
-              when (optb= 'S') then call Disp
+              when (optb = 'A') then call Addp
+              when (optb = 'C') then call Chgp
+              when (optb = 'L') then call Lisp                /* @A2 */
+              when (optb = 'P') then                          /* @B5 */
+                   call RACFPROF 'GROUP' ID                   /* @B5 */
+              when (optb = 'R') then call Delp
+              when (optb = 'S') then call Disp
               otherwise nop
            End
         end  /* While retb= 4 */

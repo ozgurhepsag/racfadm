@@ -2,13 +2,24 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  15 Mar 2020 - V9R3
+     - Dataset (Option 3)
+       * Added line command 'P'rofile when displaying a dataset's
+         groups or userids (Panel RACFDSN5)
+     - General Resources (Option 4)
+       * Added line command 'P'rofile when displaying a class's
+         groups or userids (Panel RACFCLS5)
+     - Other Items
+       * Updated REXX program RACFPROF, if RC>0 then change the
+         class (USER/GROUP) and re-execute
+
   15 Mar 2020 - V9R2
      - User (Option 1)
        * Added line command 'P'rofile when displaying a userid's
          groups (Panel=RACFUSR3)
      - Group (Option 2)
        * Added line command 'P'rofile when displaying a group's
-         userids (Panel=RACFGRP5)
+         userids (Panel RACFGRP5)
      - User and Group (Option 1/2)
        * Enhanced indenting the data displayed when using line
          command 'P'rofile

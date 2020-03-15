@@ -12,6 +12,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A8  200315  RACFA    If RC>0, then chg class variable (USER/GROUP)*/
 /* @A7  200315  RACFA    Del/add space in front of data               */
 /* @A6  200315  RACFA    Chged comments above                         */
 /* @A5  200313  RACFA    Standardized REXX program                    */
@@ -31,16 +32,24 @@ ADDRESS ISPEXEC
   "VGET (ERADISP) ASIS"                                       /* @A4 */
 
   /* Call IRRXUTIL to extract the desired profile */
-  myrc=IRRXUTIL("EXTRACT",class,profile,"RACF","")
+  myrc = IRRXUTIL("EXTRACT",class,profile,"RACF","")
+
 
   /* Check return code and exit if problem is discovered */
-  if (word(myrc,1)<>0) then do
-    call sez "Error calling IRRXUTIL: "myrc
-    if (word(myrc,1)=12) then
-      call sez "R_admin failure"
-    irrxout.0 = irrx
-    call do_view_stem irrxout
-    exit 8
+  if (word(myrc,1) <> 0) then do
+     select                                                   /* @A8 */
+        when (class = "USER") THEN class="GROUP"              /* @A8 */
+        otherwise class="USER"                                /* @A8 */
+     end                                                      /* @A8 */
+     myrc = IRRXUTIL("EXTRACT",class,profile,"RACF","")
+     if (word(myrc,1) <> 0) then do
+        call sez "Error calling IRRXUTIL: "myrc
+        if (word(myrc,1) = 12) then
+           call sez "R_admin failure"
+        irrxout.0 = irrx
+        call do_view_stem irrxout
+        exit 8
+     end
   end
 
   /* Print header */
@@ -48,50 +57,50 @@ ADDRESS ISPEXEC
        right(RACF.0,2,"0")
 
   /* Run through all segments */
-  do k=1 to RACF.0
-    segname=RACF.k               /* Get next segment name */
-    call sez "Segment: "left(segname,8)" Fields:"||,
-                   right(RACF.segname.0,2,"0")
-    /* Run through the fields in this segment */
-    do l=1 to RACF.segname.0
-       fieldName=RACF.segname.l  /* Get next field name   */
+  do k = 1 to RACF.0
+     segname = RACF.k              /* Get next segment name */
+     call sez "Segment: "left(segname,8)" Fields:"||,
+                    right(RACF.segname.0,2,"0")
+     /* Run through the fields in this segment */
+     do l = 1 to RACF.segname.0
+        fieldName = RACF.segname.l /* Get next field name   */
 
-       /* If repeat header, handle the repeat group.      */
-       /* Tricky part, to keep the repeat group together  */
-       if (RACF.segname.fieldname.repeatcount>0) then do
+        /* If repeat header, handle the repeat group.      */
+        /* Tricky part, to keep the repeat group together  */
+        if (RACF.segname.fieldname.repeatcount > 0) then do
            /* Get dimension (number of fields in a group)
               and cardinality (number of groups) */
-           dimension=RACF.segname.fieldname.subfield.0
-           repeats=RACF.segname.fieldname.repeatcount
+           dimension = RACF.segname.fieldname.subfield.0
+           repeats   = RACF.segname.fieldname.repeatcount
            call sez "Repeat field:"left(fieldname,8),         /* @A7 */
-                "Subfields:"right(dimension,2,"0")||,
-                " Occurrences:"right(repeats,4,"0")
+                    "Subfields:"right(dimension,2,"0")||,
+                    " Occurrences:"right(repeats,4,"0")
 
-           /* For each repeat group */
-           do rpt=1 to repeats
+            /* For each repeat group */
+           do rpt = 1 to repeats
               /* Run through each of the fields */
-              do dim=1 to dimension
-                /* Get repeat group field name */
-                subfld=RACF.segname.fieldname.SUBFIELD.dim
-                /* Get repeat group value */
-                call sez "  "left(subfld,8)":"||,
-                         RACF.segname.subfld.rpt
+              do dim = 1 to dimension
+                 /* Get repeat group field name */
+                 subfld = RACF.segname.fieldname.SUBFIELD.dim
+                 /* Get repeat group value */
+                 call sez "  "left(subfld,8)":"||,
+                          RACF.segname.subfld.rpt
               end /* dim */
               call sez "  "COPIES("-",44)
            end  /* repeats */
-       end /* repeat header */
-       else if (RACF.segname.fieldname.REPEATING="TRUE") then do
-          /* Skip repeating fields because */
-          /* they were already handled     */
-          /* in the logic above when the   */
-          /* repeatheader was processed    */
-       end
-       else do /* not repeating */
-          /* Display value for this field */
-          call sez "  "left(fieldname,8)||,                   /* @A7 */
-                   ":"RACF.segname.fieldname.1
-       end    /* not repeating */
-    end /* fields */
+        end /* repeat header */
+        else if (RACF.segname.fieldname.REPEATING = "TRUE") then do
+           /* Skip repeating fields because */
+           /* they were already handled     */
+           /* in the logic above when the   */
+           /* repeatheader was processed    */
+        end
+        else do /* not repeating */
+           /* Display value for this field */
+           call sez "  "left(fieldname,8)||,                  /* @A7 */
+                    ":"RACF.segname.fieldname.1
+        end    /* not repeating */
+     end /* fields */
   end /* segments */
 
   /* --------------------------------- */                     /* @A3 */
