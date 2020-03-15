@@ -2,14 +2,25 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
-  14 Mar 2020 - V9R1
+  15 Mar 2020 - V9R2
+     - User (Option 1)
+       * Added line command 'P'rofile when displaying a userid's
+         groups (Panel=RACFUSR3)
+     - Group (Option 2)
+       * Added line command 'P'rofile when displaying a group's
+         userids (Panel=RACFGRP5)
+     - User and Group (Option 1/2)
+       * Enhanced indenting the data displayed when using line
+         command 'P'rofile
+
+  15 Mar 2020 - V9R1
      - Group (Option 2)
        * Fix typing multiple 'P'rofile line commands
      - Other Items
        * Updated all REXX pgms, placed line commands in alphabetical
          order in SELECT commands
 
-  14 Mar 2020 - V9R0
+  15 Mar 2020 - V9R0
      - User (Option 1)
        * Added line command 'P'rofile to list user profile using
          Radmin extract, must have 'Administrator=YES'

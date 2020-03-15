@@ -12,6 +12,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A7  200315  RACFA    Del/add space in front of data               */
 /* @A6  200315  RACFA    Chged comments above                         */
 /* @A5  200313  RACFA    Standardized REXX program                    */
 /* @A4  200313  RACFA    Chg to allow editing/browsing the data       */
@@ -62,7 +63,7 @@ ADDRESS ISPEXEC
               and cardinality (number of groups) */
            dimension=RACF.segname.fieldname.subfield.0
            repeats=RACF.segname.fieldname.repeatcount
-           call sez " Repeat field:"left(fieldname,8),
+           call sez "Repeat field:"left(fieldname,8),         /* @A7 */
                 "Subfields:"right(dimension,2,"0")||,
                 " Occurrences:"right(repeats,4,"0")
 
@@ -87,7 +88,7 @@ ADDRESS ISPEXEC
        end
        else do /* not repeating */
           /* Display value for this field */
-          call sez " "left(fieldname,8)||,
+          call sez "  "left(fieldname,8)||,                   /* @A7 */
                    ":"RACF.segname.fieldname.1
        end    /* not repeating */
     end /* fields */
@@ -100,7 +101,7 @@ ADDRESS ISPEXEC
     gcnt = racf.base.connects.repeatcount
     call sez 'Connect Groups:  ' 'Fields:'right(gcnt,2,"0")
     do i = 1 to gcnt
-      call sez ' 'racf.base.cgroup.i
+      call sez '  'racf.base.cgroup.i                         /* @A7 */
     end
   end
 

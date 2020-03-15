@@ -3,7 +3,9 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @BG  200315  RACFA    Renamed RACFGRPP to RACFPROF                 */
+/* @BI  200315  RACFA    Added line cmd 'P' for RACFGRP5 panel        */
+/* @BH  200315  RACFA    Placed 'P-Prof' next to other list commands  */
+/* @BG  200315  RACFA    Renamed RACFGRPP to RACFPROF, in 2nd SELECT  */
 /* @BF  200315  RACFA    Renamed RACFGRPP to RACFPROF                 */
 /* @BE  200313  RACFA    Del XPROF subroutine, call RACFGRPP directly */
 /* @BD  200313  RACFA    Renamed RACFGHPS to RACFGRPP (P-Profile)     */
@@ -79,8 +81,9 @@ ADDRESS ISPEXEC                                               /* @AO */
         "ERAADMN ERADISP) ASIS"                               /* @AK */
   If (eratrace = 'YES') then Trace r                          /* @AM */
   If (ERAADMN = "YES") then                                   /* @B2 */
-      SELCMDS = "ÝS¨Show,ÝL¨List,ÝC¨Change,ÝA¨Add,"||,        /* @BC */
-                "ÝR¨Remove,ÝP¨Profile"                        /* @BC */
+      SELCMDS = "ÝS¨Show,ÝL¨List,ÝP¨Profile,"||,              /* @BH */
+                "ÝC¨Change,ÝA¨Add,"||,                        /* @BH */
+                "ÝR¨Remove"                                   /* @BH */
   else
       SELCMDS = "ÝS¨Show,ÝL¨list"                             /* @AJ */
   rlv    = SYSVAR('SYSLRACF')
@@ -383,6 +386,8 @@ DISD:
            when (optb = 'A')  then call Addp
            when (optb = 'C')  then call Chgp
            when (optb = 'L')  then call Lisp                  /* @A5 */
+           when (optb = 'P') then                             /* @BI */
+                call RACFPROF 'USER' id                       /* @BI */
            when (optb = 'R')  then call Delp
            when (optb = 'S')  then call RACFUSR id
            when (optb = 'SE') then call RACFCLSS id
@@ -397,6 +402,8 @@ DISD:
               when (optb = 'A')  then call Addp
               when (optb = 'C')  then call Chgp
               when (optb = 'L')  then call Lisp               /* @A5 */
+              when (optb = 'P') then                          /* @BI */
+                   call RACFPROF 'USER' id                    /* @BI */
               when (optb = 'R')  then call Delp
               when (optb = 'S')  then call RACFUSR id
               when (optb = 'SE') then call RACFCLSS id
