@@ -12,14 +12,13 @@
  RACFCLSS  Class          Search and display classes
  RACFDSN   Dataset        Display dataset profiles
  RACFGRP   Group          Display group profiles, menu option 2
- RACFGRPP  Group          Execute line cmd P, extract/display profile
  RACFLOG   Documentation  Display changes/issues, menu option C/I
  RACFLOGE  Documentation  Display changes/issues - Edit Macro
  RACFMSGC  Message        Display 'Confirm Request' panel
  RACFMSGS  Message        Display error message
  RACFPRMJ  Parameter      Display RACF parameters, menu option 5
  RACFPRMU  Parameter      Customize settings, menu option 0
- RACFTSO   TSO            Create TSO alias and files
+ RACFPROF  Profile        Execute line cmd 'P', extract/display profile
  RACFUSR   User           Display userid profiles, menu option 1
  RACFUSRT  User           Add, delete and change TSO userid
  RACFUSRX  User           Userid cross reference report (line cmd XR)

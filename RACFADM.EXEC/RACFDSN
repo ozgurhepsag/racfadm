@@ -459,8 +459,8 @@ DISD:
            Select
               when (optb = 'A') then call Addp
               when (optb = 'C') then call Chgp
-              when (optb = 'R') then call Delp
               when (optb = 'L') then call Lisp                /* @A5 */
+              when (optb = 'R') then call Delp
               when (optb = 'S') then call Disp
               otherwise nop
            End

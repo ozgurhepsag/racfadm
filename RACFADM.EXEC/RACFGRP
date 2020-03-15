@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BG  200315  RACFA    Renamed RACFGRPP to RACFPROF                 */
+/* @BF  200315  RACFA    Renamed RACFGRPP to RACFPROF                 */
 /* @BE  200313  RACFA    Del XPROF subroutine, call RACFGRPP directly */
 /* @BD  200313  RACFA    Renamed RACFGHPS to RACFGRPP (P-Profile)     */
 /* @BC  200313  TRIDJK   Add Supgrp and Owner to group list           */
@@ -172,10 +174,10 @@ PROFL:
         when (opta = 'A') then call Addd
         when (opta = 'C') then call Chgd
         when (opta = 'L') then call Lisd
+        when (opta = 'P') then                                /* @BE */
+             call RACFPROF 'GROUP' group                      /* @BF */
         when (opta = 'R') then call Deld
         when (opta = 'S') then call Disd
-        when (opta = 'P') then                                /* @XX */
-             call RACFGRPP 'GROUP' group                      /* @XX */
         otherwise nop
      End /* Select */
      Do while (reta = 4)   /* process multi selection */
@@ -191,11 +193,11 @@ PROFL:
         Select
            when (opta = 'A') then call Addd
            when (opta = 'C') then call Chgd
-           when (opta = 'S') then call Disd
-           when (opta = 'R') then call Deld
            when (opta = 'L') then call Lisd
-           when (opta = 'P') then                             /* @XX */
-                call RACFGRPP 'GROUP' group                   /* @XX */
+           when (opta = 'P') then                             /* @BE */
+                call RACFPROF 'GROUP' group                   /* @BG */
+           when (opta = 'R') then call Deld
+           when (opta = 'S') then call Disd
            otherwise nop
         End
      end  /* Do while (reta < 4) */

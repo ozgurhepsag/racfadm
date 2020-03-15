@@ -167,9 +167,9 @@ DISPLAY_TABLE:
      End
      Select
         when (opta = 'L') then call lisp                      /* @AL */
+        when (opta = 'R') then call REFRESH
         when (opta = 'S') then   /* call generic */
              call RACFCLSG class '**' 'YES'
-        when (opta = 'R') then call REFRESH
         otherwise nop
      End
      Do while (reta = 4)   /* process multi selection */
@@ -179,9 +179,9 @@ DISPLAY_TABLE:
         "CONTROL DISPLAY SAVE"
         Select
            when (opta = 'L') then call lisp                   /* @AL */
+           when (opta = 'R') then call REFRESH
            when (opta = 'S') then /* gen prof. routine */
                 call RACFCLSG class '**' 'YES'
-           when (opta = 'R') then call REFRESH
            otherwise nop
         End
      end

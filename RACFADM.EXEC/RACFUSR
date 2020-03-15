@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CL  200315  RACFA    Ranamed RACFSEQ to RACFPROF                  */
+/* @CK  200315  RACFA    Added line command 'P-Profile'               */
 /* @CJ  200313  RACFA    Chg subroutine name CHKATTR to UPDATTR       */
 /* @CI  200313  RACFA    After 'C'hanging userid, upd attribute vars  */
 /* @CH  200312  RACFA    Renamed attribute variables                  */
@@ -115,9 +117,9 @@ ADDRESS ISPEXEC                                               /* @BC */
         "ERAULIB ERAADMN ERASINT ERADISP) ASIS"               /* @B7 */
   If (eratrace = 'YES') then Trace r                          /* @BA */
   If (ERAADMN = "YES") then do                                /* @B2 */
-      SELCMDS2 = "›S®Show,›SE®Srch,›L®Lst,›D®Dsn,"||,         /* @BW */
-                 "›C®Chg,›A®Add,›R®Rem,›RS®Res,"||,           /* @BW */
-                 "›RV®Rev"                                    /* @BW */
+      SELCMDS2 = "›S®Show›SE®Srch›L®Lst›D®Dsn"||,             /* @CK */
+                 "›C®Chg›A®Add›R®Rem›RS®Res"||,               /* @CK */
+                 "›RV®Rev›P®Prof"                             /* @CK */
       SELCMDS3 = "›S®Show,›L®List,›C®Change,"||,              /* @B6 */
                  "›A®Add,›R®Remove"                           /* @B4 */
   end
@@ -233,6 +235,8 @@ PROFL:
              "TBMOD" TBLA                                     /* @BW */
         end                                                   /* @BW */
         when (opta = 'L')  then call Lisd
+        when (opta = 'P') then                                /* @CK */
+             call RACFPROF 'USER' user                        /* @CK */
         when (opta = 'R')  then call Deld
         when (opta = 'RS') then call Resd
         when (opta = 'RV') then call Revd
@@ -269,6 +273,8 @@ PROFL:
                 "TBMOD" TBLA                                  /* @BW */
            end                                                /* @BW */
            when (opta = 'L')  then call Lisd
+           when (opta = 'P') then                             /* @CI */
+                call RACFPROF 'USER' user                     /* @CL */
            when (opta = 'R')  then call Deld
            when (opta = 'RS') then call Resd
            when (opta = 'RV') then call Revd

@@ -2,19 +2,31 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  14 Mar 2020 - V9R1
+     - Group (Option 2)
+       * Fix typing multiple 'P'rofile line commands
+     - Other Items
+       * Updated all REXX pgms, placed line commands in alphabetical
+         order in SELECT commands
+
+  14 Mar 2020 - V9R0
+     - User (Option 1)
+       * Added line command 'P'rofile to list user profile using
+         Radmin extract, must have 'Administrator=YES'
+
   14 Mar 2020 - V8R9
      - Settings (Option 0)
-       -- Changed below settings to accept/use 1 character,
-          standardize software and reduce typing:
-            Administrator ...... Y     (Y=Yes, N=No)
-            Display files ...... V     (B=Browse, E=Edit, V=View)
-            Confirm panel ...... Y     (Y=Yes, N=No)
-            RACF commands ...... N     (Y=Yes, N=No)
-            REXX trace ......... N     (Y=Yes, N=No)
+       * Changed below settings to accept/use 1 character,
+         standardize software and reduce typing:
+           Administrator ...... Y     (Y=Yes, N=No)
+           Display files ...... V     (B=Browse, E=Edit, V=View)
+           Confirm panel ...... Y     (Y=Yes, N=No)
+           RACF commands ...... N     (Y=Yes, N=No)
+           REXX trace ......... N     (Y=Yes, N=No)
      - User (Option 1)
-       -- Updated RACFUSR, removed subroutine XPROF, instead call
-          RACFGRPP directly, reducing lines of code
-       -- Changed text 'User ID' to 'Userid' on several panels
+       * Updated RACFUSR, removed subroutine XPROF, instead call
+         RACFGRPP directly, reducing lines of code
+       * Changed text 'User ID' to 'Userid' on several panels
 
   13 Mar 2020 - V8R8
      - Other Items
@@ -24,7 +36,8 @@
   13 Mar 2020 - V8R7
      - Group (Option 2)
        * Added columns 'SupGrp' and 'Owner'
-       * Added line command 'P'rofile, when 'Administrator=YES'
+       * Added line command 'P'rofile to list group profile using
+         Radmin extract, must have 'Administrator=YES'
 
   13 Mar 2020 - V8R6
      - User (Option 1)

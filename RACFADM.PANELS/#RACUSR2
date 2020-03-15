@@ -23,6 +23,7 @@
 %  R  !Remove      +Remove user from RACF (admin)
 %  RS !Resume      +Resume user and initialize the password (admin)
 %  RV !Revoke      +Revoke the user (admin)
+%  P  !Profile     +List user profile using Radmin extract (admin)
 )PROC
   &ZUP     = #RACUSR2
 )END
