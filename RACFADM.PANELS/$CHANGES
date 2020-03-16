@@ -2,6 +2,11 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  16 Mar 2020 - V9R7
+     - Other Items
+       * Fixed line command 'L'ist and 'P'rofile when group is a
+         single asterick, display message
+
   16 Mar 2020 - V9R6
      - Other Items
        * Fixed line command 'P'rofile, addresses the "*" and "_"

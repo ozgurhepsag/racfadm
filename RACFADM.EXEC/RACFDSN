@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BI  200316  RACFA    Prevent typing in 'L' line cmd next to '*'   */
 /* @BH  200315  RACFA    Added line cmd 'P=Profile'                   */
 /* @BG  200305  TRIDJK   TBDELETE if cmd_rc = 0 on DELDSD command     */
 /* @BF  200303  RACFA    Chg 'ret_code' to 'cmd_rc' after EXCMD       */
@@ -724,6 +725,10 @@ RETURN                                                        /* @A1 */
 /*  List group                                                        */
 /*--------------------------------------------------------------------*/
 LISP:                                                         /* @A5 */
+  if (id = "*") then do  /* Wild card - All other entries */  /* @BI */
+     call RACFMSGS ERR17                                      /* @BI */
+     return                                                   /* @BI */
+  end                                                         /* @BI */
   WFDD    = "ERA"RANDOM(0,99999)                              /* @A5 */
   WFLGPRM = "CSDATA DFP OMVS OVM TME"                         /* @A5 */
   CMD     = "LG "ID WFLGPRM                                   /* @AI */

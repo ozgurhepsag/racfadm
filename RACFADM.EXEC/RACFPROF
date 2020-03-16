@@ -12,6 +12,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AF  200316  RACFA    Fix profile=*, no go, display msg            */
 /* @AE  200316  TRIDJK   No cmd trace if profile has special chars    */
 /* @AD  200316  RACFA    Added spacing after semi-colon               */
 /* @AC  200316  RACFA    Break up DATA field into multi-line msg      */
@@ -30,6 +31,10 @@
 /*====================================================================*/
 PANELM2 = "RACFMSG2"    /* Execute RACF Command (pop-up)   */ /* @A9 */
 arg class profile
+if (profile = "*") then do                                    /* @AF */
+   call RACFMSGS ERR17                                        /* @AF */
+   return                                                     /* @AF */
+end                                                           /* @AF */
 
 /* Initialize VIEW output stem */                             /* @A3 */
 irrxout. = ''
