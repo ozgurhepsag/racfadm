@@ -2,6 +2,18 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  16 Mar 2020 - V9R6
+     - Other Items
+       * Fixed line command 'P'rofile, addresses the "*" and "_"
+         in resource profile names that was causing the INTERPRET
+         to fail (REXX program RACFPROF)
+
+  16 Mar 2020 - V9R5
+     - Other Items
+       * Updated line command 'P'rofile to display entire line
+         of 'Installation Data' when displaying a group (REXX
+         program RACFPROF)
+
   16 Mar 2020 - V9R4
      - Other Items
        * Updated line command 'P'rofile to allow:

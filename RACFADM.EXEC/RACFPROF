@@ -12,6 +12,10 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AE  200316  TRIDJK   No cmd trace if profile has special chars    */
+/* @AD  200316  RACFA    Added spacing after semi-colon               */
+/* @AC  200316  RACFA    Break up DATA field into multi-line msg      */
+/* @AB  200316  RACFA    Added a space after semi-colon               */
 /* @AA  200316  RACFA    Added ERATRACE=YES, then TRACE R             */
 /* @A9  200316  RACFA    Display RACF cmd (IRXXUTIL) after execution  */
 /* @A8  200315  RACFA    If RC>0, then chg class variable (USER/GROUP)*/
@@ -56,13 +60,14 @@ ADDRESS ISPEXEC
   end
 
   /* Print header */
-  call sez "Profile: "RACF.PROFILE"  Segments:"||,
-       right(RACF.0,2,"0")
+  call sez "Profile: "LEFT(RACF.PROFILE,8),                   /* @AD */
+           " Segments: "||,                                   /* @AD */
+           right(RACF.0,2,"0")
 
   /* Run through all segments */
   do k = 1 to RACF.0
      segname = RACF.k              /* Get next segment name */
-     call sez "Segment: "left(segname,8)" Fields:"||,
+     call sez "Segment: "left(segname,8)"  Fields:   "||,     /* @AD */
                     right(RACF.segname.0,2,"0")
      /* Run through the fields in this segment */
      do l = 1 to RACF.segname.0
@@ -75,9 +80,9 @@ ADDRESS ISPEXEC
               and cardinality (number of groups) */
            dimension = RACF.segname.fieldname.subfield.0
            repeats   = RACF.segname.fieldname.repeatcount
-           call sez "Repeat field:"left(fieldname,8),         /* @A7 */
-                    "Subfields:"right(dimension,2,"0")||,
-                    " Occurrences:"right(repeats,4,"0")
+           call sez "Repeat field: "left(fieldname,8),        /* @AB */
+                    "  Subfields: "right(dimension,2,"0")||,  /* @AD */
+                    "  Occurrences: "right(repeats,4,"0")     /* @AD */
 
             /* For each repeat group */
            do rpt = 1 to repeats
@@ -86,7 +91,7 @@ ADDRESS ISPEXEC
                  /* Get repeat group field name */
                  subfld = RACF.segname.fieldname.SUBFIELD.dim
                  /* Get repeat group value */
-                 call sez "  "left(subfld,8)":"||,
+                 call sez "  "left(subfld,8)": "||,           /* @AB */
                           RACF.segname.subfld.rpt
               end /* dim */
               call sez "  "COPIES("-",44)
@@ -100,8 +105,11 @@ ADDRESS ISPEXEC
         end
         else do /* not repeating */
            /* Display value for this field */
-           call sez "  "left(fieldname,8)||,                  /* @A7 */
-                    ":"RACF.segname.fieldname.1
+           if (fieldname = "DATA") THEN                       /* @AC */
+              call linegt55                                   /* @AC */
+           else
+              call sez "  "left(fieldname,8)||,               /* @A7 */
+                       ": "RACF.segname.fieldname.1
         end    /* not repeating */
      end /* fields */
   end /* segments */
@@ -123,6 +131,33 @@ ADDRESS ISPEXEC
   irrxout.0 = irrx
   call do_view_stem irrxout
 EXIT
+/*--------------------------------------------------------------------*/
+/*  Break up the line of data since it is larger than 50 chrs    @AC  */
+/*--------------------------------------------------------------------*/
+LINEGT55:                                                     /* @AC */
+  FIELDLEN = LENGTH(RACF.segname.fieldname.1)                 /* @AC */
+  FIELDREM = FIELDLEN//55                                     /* @AC */
+  FIELDINT = FIELDLEN%55                                      /* @AC */
+  if (FIELDREM > 0) THEN                                      /* @AC */
+     FIELDINT = FIELDINT + 1                                  /* @AC */
+  STRCOL = 1                                                  /* @AC */
+  do J = 1 to FIELDINT                                        /* @AC */
+     TMPFIELD = SUBSTR(RACF.segname.fieldname.1,STRCOL,55)    /* @AC */
+     NOWORDS  = WORDS(TMPFIELD)                               /* @AC */
+     WORDS    = ""                                            /* @AC */
+     do K = 1 to NOWORDS                                      /* @AC */
+        WORDS = WORDS" "WORD(TMPFIELD,K)                      /* @AC */
+     end                                                      /* @AC */
+     TMPFIELD = STRIP(WORDS)                                  /* @AC */
+     if (J = 1) THEN                                          /* @AC */
+        call sez "  "left(fieldname,8)||,                     /* @AC */
+                 ": "tmpfield                                 /* @AC */
+     else                                                     /* @AC */
+        call sez "  "left(' ',8)||,                           /* @AC */
+                 ": "tmpfield                                 /* @AC */
+     STRCOL   = STRCOL + 55                                   /* @AC */
+  end                                                         /* @AC */
+RETURN                                                        /* @AC */
 /*--------------------------------------------------------------------*/
 /*  Add to stem                                                  @A3  */
 /*--------------------------------------------------------------------*/
@@ -166,6 +201,11 @@ RETURN
 /*  Execute IRRUXTIL command                                     @A9  */
 /*--------------------------------------------------------------------*/
 EXCCMD:                                                       /* @A9 */
+  if (pos('*',profile) > 0) |,                                /* @AB */
+     (pos('_',profile) > 0) then do                           /* @AB */
+     cmd_rc = IRRXUTIL("EXTRACT",class,profile,"RACF","")     /* @AB */
+     RETURN                                                   /* @AB */
+  end                                                         /* @AB */
   cmd    = "IRRXUTIL(EXTRACT,"class","profile",RACF,)"        /* @A9 */
   interpret 'cmd_rc = 'cmd                                    /* @A9 */
   if (erashow = 'YES') then                                   /* @A9 */
