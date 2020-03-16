@@ -987,7 +987,7 @@ DIGITAL_CERTS:                                                /* @AP */
   irrsitec.6 = ' LAST-ACCESS=UNKNOWN'                         /* @AP */
 RETURN                                                        /* @AP */
 /*--------------------------------------------------------------------*/
-/*  Display RACF command                                          @BB */
+/*  Display RACF command                                         @BB  */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @BB */
   PARSE VAR CMD MSG1 60 MSG2 121 MSG3                         /* @BB */
@@ -997,7 +997,7 @@ SHOWCMD:                                                      /* @BB */
   "REMPOP"                                                    /* @BB */
 RETURN                                                        /* @BB */
 /*--------------------------------------------------------------------*/
-/*  Create table                                                  @BE */
+/*  Create table                                                 @BE  */
 /*--------------------------------------------------------------------*/
 CREATE_TABLE:                                                 /* @BE */
   action  = ''

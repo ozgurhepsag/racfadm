@@ -28,9 +28,9 @@
 /* @A1  200118  RACFA    Fixed NOPREF issue with users TSO PROFILE    */
 /* @A0  011229  NICORIZ  Created REXX, V2.1, www.rizzuto.it           */
 /*====================================================================*/
-PANEL29 = "RACFUSRT"    /* Add, chg and del a TSO userid   */  /* @A9 */
-PANELM2 = "RACFMSG2"    /* Execute RACF Command (pop-up)   */  /* @AW */
-X       = MSG("OFF")    /* No informational messages       */  /* @AD */
+PANEL29 = "RACFUSRT"    /* Add, chg and del a TSO userid   */ /* @A9 */
+PANELM2 = "RACFMSG2"    /* Execute RACF Command (pop-up)   */ /* @AW */
+X       = MSG("OFF")    /* No informational messages       */ /* @AD */
 
 ADDRESS ISPEXEC                                               /* @AF */
   "VGET (ERASHOW ERATRACE ERAISPP ERACTLG",                   /* @A4 */
@@ -170,7 +170,7 @@ GETEGN:
   interpret "if (x= '"value"'x) then "variable"="status2
 RETURN 0000
 /*--------------------------------------------------------------------*/
-/*  Execute RACF command                                          @BB */
+/*  Execute RACF command                                         @BB  */
 /*--------------------------------------------------------------------*/
 EXCCMD:                                                       /* @AG */
 ADDRESS TSO                                                   /* @AG */
@@ -180,7 +180,7 @@ ADDRESS TSO                                                   /* @AG */
      call SHOWCMD                                             /* @AG */
 RETURN                                                        /* @AG */
 /*--------------------------------------------------------------------*/
-/*  Display RACF command                                          @BB */
+/*  Display RACF command                                         @BB  */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @BB */
 ADDRESS ISPEXEC                                               /* @AG */

@@ -761,7 +761,7 @@ LISP:                                                         /* @A5 */
      CALL racfmsgs "ERR15" /* Generic failure */              /* @B6 */
 RETURN                                                        /* @A5 */
 /*--------------------------------------------------------------------*/
-/*  Display RACF command                                          @AI */
+/*  Display RACF command                                         @AI  */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @AI */
   PARSE VAR CMD MSG1 60 MSG2 121 MSG3                         /* @AI */
@@ -771,7 +771,7 @@ SHOWCMD:                                                      /* @AI */
   "REMPOP"                                                    /* @AV */
 RETURN                                                        /* @AI */
 /*--------------------------------------------------------------------*/
-/*  Create table                                                  @AL */
+/*  Create table                                                 @AL  */
 /*--------------------------------------------------------------------*/
 CREATE_TABLE:
   tbla = 'RCFDA'ZSCREEN

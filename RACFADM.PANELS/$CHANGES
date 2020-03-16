@@ -2,6 +2,13 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  16 Mar 2020 - V9R4
+     - Other Items
+       * Updated line command 'P'rofile to allow:
+         o Displaying IRXXUTIL command and return code after execution
+           when Settings 'RACF Command = Y'
+         o Turning on TRACE R when  Settings 'REXX Trace = Y'
+
   15 Mar 2020 - V9R3
      - Dataset (Option 3)
        * Added line command 'P'rofile when displaying a dataset's

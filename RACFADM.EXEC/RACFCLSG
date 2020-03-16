@@ -889,7 +889,7 @@ LISP:                                                         /* @A2 */
      CALL racfmsgs "ERR13"   /* Generic failure */            /* @AU */
 RETURN                                                        /* @A2 */
 /*--------------------------------------------------------------------*/
-/*  Display RACF command                                          @AF */
+/*  Display RACF command                                         @AF  */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @AF */
   PARSE VAR CMD MSG1 60 MSG2 121 MSG3                         /* @AF */
@@ -899,7 +899,7 @@ SHOWCMD:                                                      /* @AF */
   "REMPOP"                                                    /* @AN */
 RETURN                                                        /* @AF */
 /*--------------------------------------------------------------------*/
-/*  Create Table                                                  @AK */
+/*  Create Table                                                 @AK  */
 /*--------------------------------------------------------------------*/
 CREATE_TABLE:
   seconds = TIME('S')

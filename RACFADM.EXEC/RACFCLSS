@@ -406,7 +406,7 @@ LISD:                                                         /* @A2 */
      CALL racfmsgs "ERR10" /* Generic failure */              /* @A2 */
 RETURN                                                        /* @A2 */
 /*--------------------------------------------------------------------*/
-/*  Display RACF command                                          @A5 */
+/*  Display RACF command                                         @A5  */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @A5 */
   PARSE VAR CMD MSG1 60 MSG2 121 MSG3                         /* @A5 */
