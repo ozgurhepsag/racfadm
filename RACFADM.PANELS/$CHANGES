@@ -2,6 +2,16 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  16 Mar 2020 - V9R8
+     - Settings (Option 1)
+       * Removed the below 'Adding TSO userid' fields, not used,
+         referenced and updated tutorials:
+           Master catalog ..... z/OS Master catalog
+           TSO JOBLIB unit .... TSO programmer library unit
+           TSO alloc unit ..... z/OS allocation unit
+           TSO A/S size ....... z/OS address space size
+           Common group ....... Connect new users to this group
+
   16 Mar 2020 - V9R7
      - Other Items
        * Fixed line command 'L'ist and 'P'rofile when group is a

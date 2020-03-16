@@ -14,8 +14,6 @@
 +                  %No+to work without trace (default)
 +
 +Adding TSO userid:
-!  Master catalog  +Specify the MVS master catalog
-+
 !  TSO User catalog+Specify the TSO user catalog in which all new TSO user
 +                  +aliases are to be defined
 +
@@ -25,8 +23,10 @@
 +                  +for new TSO users
 +
 +
++
++
 + \ \ (press%ENTER+to continue) \ \
 )PROC
   &ZUP     = #RACPRM1
-  &ZCONT   = #RACPRM3
+  &ZCONT   = #RACPRM1
 )END

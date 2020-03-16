@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AN  200316  RACFA    Removed ERAMCAT, ERAUVOL, ERAUNIT, not used  */
 /* @AM  200305  RACFA    Del comments and ERROR subroutine            */
 /* @AL  200305  RACFA    Del OUTTRAP('TRASH.') and DISPLAY_MSG proc.  */
 /* @AK  200305  TRIDJK   Add quotes to userid on DELETE/DEFINE ALIAS  */
@@ -34,7 +35,7 @@ X       = MSG("OFF")    /* No informational messages       */ /* @AD */
 
 ADDRESS ISPEXEC                                               /* @AF */
   "VGET (ERASHOW ERATRACE ERAISPP ERACTLG",                   /* @A4 */
-        "ERAUNIT ERAULIB  ERAUVOL ERAMCAT) ASIS"              /* @A4 */
+        "ERAULIB) ASIS"                                       /* @AN */
   If (eratrace = 'YES') then Trace r                          /* @A6 */
 
   rc      = GETEGN(ERAEGN,53,'01','NO','YES')  /* egn=Y/N */  /* @AE */

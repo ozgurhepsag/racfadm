@@ -9,35 +9,28 @@
 %Command ===>_ZCMD                                                             +
 %
 %General:
-+  Administrator{......_Z~    (Y=Yes, N=No)   {Full administrator authority
-+  Default filter{....._Z                    { Default search string for panels
-+  Status interval{...._Z   ~ (0-9999)        {Progress message number
++  Administrator{......_Z~    (Y=Yes, N=No)            {Administrator authority
++  Default filter{....._Z                             { Default search string
++  Status interval{...._Z   ~ (0-9999)                 {Progress message number
 +  Display files{......_Z~    (B=Browse, E=Edit, V=View)
-+  Confirm panel{......_Z~    (Y=Yes, N=No)   {Confirm command request
-+  RACF commands{......_Z~    (Y=Yes, N=No)   {Show RACF commands
-+  REXX trace{........._Z~    (Y=Yes, N=No)   {Start REXX trace
++  Confirm panel{......_Z~    (Y=Yes, N=No)            {Confirm command request
++  RACF commands{......_Z~    (Y=Yes, N=No)            {Show RACF commands
++  REXX trace{........._Z~    (Y=Yes, N=No)            {Start REXX trace
 +
 %Adding TSO userids:
-+  Master catalog{....._Z                    { z/OS Master catalog
-+  TSO User catalog{..._Z                    { z/OS Alias catalog
-+  TSO ISPPROF{........_Z                    { TSO ISPF profile
-+  TSO JOBLIB{........._Z                    { TSO programmer library
-+  TSO JOBLIB unit{...._Z       {              TSO programmer library unit
-+  TSO alloc unit{....._Z       {              z/OS allocation unit
-+  TSO A/S size{......._Z    {                 z/OS address space size
-+  Common group{......._Z       {              Connect new users to this group
++  TSO User catalog{..._Z                             { z/OS Alias catalog
++  TSO ISPPROF{........_Z                             { TSO ISPF profile
++  TSO JOBLIB{........._Z                             { TSO programmer library
 )INIT
   VGET (ERAADMN ERAFLTR ERASINT ERADISP ERACONF ERASHOW ERATRACE +
-        ERAMCAT ERACTLG ERAISPP ERAULIB ERAUVOL ERAUNIT ERAASIZ  +
-        ERACGRP) PROFILE
+        ERACTLG ERAISPP ERAULIB) PROFILE
   &ERAADMN  = TRANS (&ERAADMN  YES,Y NO,N *,*)
   &ERACONF  = TRANS (&ERACONF  YES,Y NO,N *,*)
   &ERASHOW  = TRANS (&ERASHOW  YES,Y NO,N *,*)
   &ERADISP  = TRANS (&ERADISP  BROWSE,B EDIT,E VIEW,V *,*)
   &ERATRACE = TRANS (&ERATRACE YES,Y NO,N *,*)
   .ZVARS = '(ERAADMN  ERAFLTR ERASINT ERADISP ERACONF ERASHOW  +
-             ERATRACE ERAMCAT ERACTLG ERAISPP ERAULIB ERAUVOL +
-             ERAUNIT  ERAASIZ ERACGRP)'
+             ERATRACE ERACTLG ERAISPP ERAULIB)'
   .HELP   = #RACPRM1
   .CURSOR = ERAADMN
 )PROC
@@ -53,13 +46,8 @@
   VER  (&ERASHOW,NB,LIST,NO,YES)
   VER  (&ERATRACE,NB,LIST,NO,YES)
   IF (&ERACTLG NE ' ')
-     VER (&ERAUNIT,NB)
-     VER (&ERAASIZ,NB)
      VER (&ERAULIB,NB)
-     VER (&ERAUVOL,NB)
-     VER (&ERAMCAT,NB)
      VER (&ERAISPP,NB)
   VPUT (ERAADMN ERAFLTR ERASINT ERADISP ERACONF ERASHOW ERATRACE +
-        ERAMCAT ERACTLG ERAISPP ERAULIB ERAUVOL ERAUNIT ERAASIZ  +
-        ERACGRP) PROFILE
+        ERACTLG ERAISPP ERAULIB) PROFILE
 )END
