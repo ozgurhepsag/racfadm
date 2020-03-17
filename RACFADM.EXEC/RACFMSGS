@@ -87,6 +87,11 @@ ADDRESS ISPEXEC                                               /* @A4 */
           racflmsg = 'The astrisk (*) is a wild card,',
                      'signifies default access'
      end
+     WHEN (code = 'ERR18') then do
+          racfsmsg = 'Invalid - User Catalog'
+          racflmsg = 'The TSO User Catalog defined in',
+                     'Settings is invalid or null'
+     end
      otherwise nop
   End
   "SETMSG MSG(RACF011)"

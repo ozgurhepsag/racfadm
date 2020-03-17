@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AP  200317  RACFA    Chg JOBLIB=Y, was JOBLIB=YES                 */
+/* @AO  200317  RACFA    Add error msg when unable to define alias    */
 /* @AN  200316  RACFA    Removed ERAMCAT, ERAUVOL, ERAUNIT, not used  */
 /* @AM  200305  RACFA    Del comments and ERROR subroutine            */
 /* @AL  200305  RACFA    Del OUTTRAP('TRASH.') and DISPLAY_MSG proc.  */
@@ -34,8 +36,7 @@ PANELM2 = "RACFMSG2"    /* Execute RACF Command (pop-up)   */ /* @AW */
 X       = MSG("OFF")    /* No informational messages       */ /* @AD */
 
 ADDRESS ISPEXEC                                               /* @AF */
-  "VGET (ERASHOW ERATRACE ERAISPP ERACTLG",                   /* @A4 */
-        "ERAULIB) ASIS"                                       /* @AN */
+  "VGET (ERASHOW ERATRACE ERAISPP ERACTLG ERAULIB) ASIS"      /* @A4 */
   If (eratrace = 'YES') then Trace r                          /* @A6 */
 
   rc      = GETEGN(ERAEGN,53,'01','NO','YES')  /* egn=Y/N */  /* @AE */
@@ -76,8 +77,10 @@ ADDD:                                                         /* @AJ */
   Eractlg = Strip(eractlg,b,"'")                              /* @AC */
   cmd = "DEF ALIAS (NAME('"user"') RELATE('"eractlg"'))"      /* @AK */
   call exccmd                                                 /* @AG */
-  IF (cmd_rc > 0) then                                        /* @AM */
+  IF (cmd_rc > 0) then do                                     /* @AO */
+     call racfmsgs ERR018  /* Invalid user catalog */         /* @AO */
      return cmd_rc                                            /* @AM */
+  end                                                         /* @AO */
 
   /*- Allocate ISPF profile          -*/
   cmd = "ALLOC FILE(DD1) DATASET('"user"."eraispp"')",        /* @AG */
@@ -89,7 +92,7 @@ ADDD:                                                         /* @AJ */
   call exccmd                                                 /* @AG */
 
   /*- Allocate joblib library        -*/
-  if joblib='YES' then do
+  if joblib='Y' then do                                       /* @AP */
      cmd = "ALLOC FILE(DD2) DATASET('"user"."eraulib"')",     /* @AG */
                   "NEW SPACE(5,5) CYLINDERS",                 /* @AG */
                   "BLKSIZE(0) LRECL(80) RECFM(F B)",          /* @AG */

@@ -17,9 +17,8 @@
  #RACGRP8  Tutorial       Group profile
  #RACMENU  Tutorial       Main menu, menu option T
  #RACPRMJ  Tutorial       JES2 parameters
- #RACPRM1  Tutorial       Settings - Customize options (1 of 3)
- #RACPRM2  Tutorial       Settings - Customize options (2 of 3)
- #RACPRM3  Tutorial       Settings - Customize options (3 of 3)
+ #RACPRM1  Tutorial       Settings - Customize options (1 of 2)
+ #RACPRM2  Tutorial       Settings - Customize options (2 of 2)
  #RACPUBL  Tutorial       RACF publications
  #RACUSR2  Tutorial       User profile
  RACFAUT1  Authorization  Enter profile/class/user

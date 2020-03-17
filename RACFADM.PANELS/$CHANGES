@@ -2,6 +2,24 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  17 Mar 2020 - V10R1
+     - Settings (Option 0)
+       * Updated wording on TSO fields 'ISPPROF' and 'JOBLIB'
+     - User (Option 1)
+       * When 'A'dding a new TSO user:
+         o Initialize the TSOLIB field to Y/N if the Setting's
+           'JOBLIB' field contains the 'TSO programmer library'
+         o Fixed obtaining the TSO account number, procedure,
+           size and unit, prior was blank
+         o Display error message when unable to define an alias
+     - Other Items
+       * Updated $CONTRIB member
+
+  16 Mar 2020 - V9R9
+     - Other Items
+       * Minor house cleaning in REXX programs, tutorials and $DIR
+         member
+
   16 Mar 2020 - V9R8
      - Settings (Option 1)
        * Removed the below 'Adding TSO userid' fields, not used,

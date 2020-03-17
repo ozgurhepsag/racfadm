@@ -3,7 +3,7 @@
   ! TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(TURQ)
   + TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
-%Tutorial+\-\(%RACFADM - Settings - 2 of 3+)\-\%Tutorial
+%Tutorial+\-\(%RACFADM - Settings - 2 of 2+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
 +General:
@@ -14,12 +14,12 @@
 +                  %No+to work without trace (default)
 +
 +Adding TSO userid:
-!  TSO User catalog+Specify the TSO user catalog in which all new TSO user
+!  User catalog    +Specify the TSO user catalog in which all new TSO user
 +                  +aliases are to be defined
 +
-!  TSO ISPPROF     +Specify the name of the TSO profile
+!  ISPPROF dataset +Specify the name of the TSO profile
 +
-!  TSO JOBLIB      +Specify an initial job library to be allocated
+!  JOBLIB dataset  +Specify an initial job library to be allocated
 +                  +for new TSO users
 +
 +

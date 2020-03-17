@@ -18,9 +18,9 @@
 +  REXX trace{........._Z~    (Y=Yes, N=No)            {Start REXX trace
 +
 %Adding TSO userids:
-+  TSO User catalog{..._Z                             { z/OS Alias catalog
-+  TSO ISPPROF{........_Z                             { TSO ISPF profile
-+  TSO JOBLIB{........._Z                             { TSO programmer library
++  User catalog{......._Z                             { z/OS alias catalog
++  ISPPROF dataset{...._Z                             { TSO ISPF profile
++  JOBLIB dataset{....._Z                             { TSO programmer library
 )INIT
   VGET (ERAADMN ERAFLTR ERASINT ERADISP ERACONF ERASHOW ERATRACE +
         ERACTLG ERAISPP ERAULIB) PROFILE
@@ -29,7 +29,7 @@
   &ERASHOW  = TRANS (&ERASHOW  YES,Y NO,N *,*)
   &ERADISP  = TRANS (&ERADISP  BROWSE,B EDIT,E VIEW,V *,*)
   &ERATRACE = TRANS (&ERATRACE YES,Y NO,N *,*)
-  .ZVARS = '(ERAADMN  ERAFLTR ERASINT ERADISP ERACONF ERASHOW  +
+  .ZVARS = '(ERAADMN  ERAFLTR ERASINT ERADISP ERACONF ERASHOW +
              ERATRACE ERACTLG ERAISPP ERAULIB)'
   .HELP   = #RACPRM1
   .CURSOR = ERAADMN

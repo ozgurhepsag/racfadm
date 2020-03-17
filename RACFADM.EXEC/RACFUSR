@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CQ  200317  RACFA    Fix obtaining TSO acct, proc, size and unit  */
+/* @CP  200317  RACFA    Init TSOLIB=Y/N, if ERAULIB has dsname       */
 /* @CO  200315  RACFA    Added line command 'P-Profile' to RACFUSR3   */
 /* @CN  200315  RACFA    Fixed typing in L as 1st line command        */
 /* @CM  200315  RACFA    Placed 'P-Prof' next to other list commands  */
@@ -119,6 +121,10 @@ ADDRESS ISPEXEC                                               /* @BC */
   "VGET (ZSCREEN ERASHOW ERATRACE ERAISPP",                   /* @CF */
         "ERAULIB ERAADMN ERASINT ERADISP) ASIS"               /* @B7 */
   If (eratrace = 'YES') then Trace r                          /* @BA */
+  If (ERAULIB <> "") then                                     /* @CP */
+     TSOLIB = 'Y'                                             /* @CP */
+  else                                                        /* @CP */
+     TSOLIB = 'N'                                             /* @CP */
   If (ERAADMN = "YES") then do                                /* @B2 */
       SELCMDS2 = "›S®Show›SE®Srch›L®Lst›P®Prof"||,            /* @CM */
                  "›D®Dsn›C®Chg›A®Add›R®Rem›RS®Res"||,         /* @CM */
@@ -857,18 +863,19 @@ GETD:
      if (details.getd_count = 'NO TSO INFORMATION') then leave
      if (details.getd_count = 'TSO INFORMATION') then do
         tsouser    ='YES'
-        getd_count = getd_count+2
-        parse var details.getd_count 'ACCTNUM=' tsoacct
-        getd_count = getd_count+1
-        parse var details.getd_count 'PROC=' tsoproc
-        getd_count = getd_count+1
-        parse var details.getd_count 'SIZE=' tsosize
-        getd_count = getd_count+2
-        parse var details.getd_count 'UNIT=' tsounit
-        tsoacct    = strip(tsoacct)
-        tsoproc    = strip(tsoproc)
+        getd_count = getd_count + 1                           /* @CQ */
+        do k = getd_count to getd_max                         /* @CQ */
+           parse var details.k W1 W2                          /* @CQ */
+           W2 = STRIP(W2)                                     /* @CQ */
+           Select                                             /* @CQ */
+              When (W1 = 'ACCTNUM=') then tsoacct = W2        /* @CQ */
+              When (W1 = 'PROC=')    then tsoproc = W2        /* @CQ */
+              When (W1 = 'SIZE=')    then tsosize = W2        /* @CQ */
+              When (W1 = 'UNIT=')    then tsounit = W2        /* @CQ */
+              otherwise nop                                   /* @CQ */
+           end                                                /* @CQ */
+        end                                                   /* @CQ */
         if (tsosize <> ' ') then tsosize = format(tsosize)
-        tsounit = strip(tsounit)
         leave
      end  /* Tso-info */
   end  /* Do count */
