@@ -28,5 +28,4 @@
 + \ \ (press%ENTER+to continue) \ \
 )PROC
   &ZUP     = #RACPRM1
-  &ZCONT   = #RACPRM1
 )END

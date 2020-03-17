@@ -2,17 +2,6 @@
 *                        RACFADM - Open Issues
 *---------------------------------------------------------------------*
   PMR        COMPONENT   STATUS   SUBMITTER  FIX RELEASE
-  200302-C   RACFGRP     Open     sbgolob    V?R?
-
-  DESCRIPTION:
-   When you add a new group, it doesn't show up in the list of groups,
-   until you re-do the list.
-
-  RESOLUTION:
-    ???
-
-*---------------------------------------------------------------------*
-  PMR        COMPONENT   STATUS   SUBMITTER  FIX RELEASE
   200301-A   RACFUSR     Open     sbgolob    V?R?
 
   DESCRIPTION:
@@ -83,6 +72,17 @@
 
   RESOLUTION:
     Added quotes to user in DELETE/DEFINE ALIAS commands in RACFUSRT.
+
+*---------------------------------------------------------------------*
+  PMR        COMPONENT   STATUS   SUBMITTER  FIX RELEASE
+  200302-C   RACFGRP     Closed   sbgolob    V?R?
+
+  DESCRIPTION:
+   When you add a new group, it doesn't show up in the list of groups,
+   until you re-do the list.
+
+  RESOLUTION:
+    ???
 
 *---------------------------------------------------------------------*
   PMR        COMPONENT   STATUS   SUBMITTER  FIX RELEASE

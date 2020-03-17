@@ -9,18 +9,18 @@
 %Command ===>_ZCMD                                                             +
 %
 %General:
-+  Administrator{......_Z~    (Y=Yes, N=No)            {Administrator authority
-+  Default filter{....._Z                             { Default search string
-+  Status interval{...._Z   ~ (0-9999)                 {Progress message number
-+  Display files{......_Z~    (B=Browse, E=Edit, V=View)
-+  Confirm panel{......_Z~    (Y=Yes, N=No)            {Confirm command request
-+  RACF commands{......_Z~    (Y=Yes, N=No)            {Show RACF commands
-+  REXX trace{........._Z~    (Y=Yes, N=No)            {Start REXX trace
++  Administrator{....._Z~   (Y=Yes, N=No)              {Administrator authority
++  Default filter{...._Z                              { Default search string
++  Status interval{..._Z   ~(0-9999)                   {Progress message number
++  Display files{....._Z~   (B=Browse, E=Edit, V=View) {Display reports/files
++  Confirm panel{....._Z~   (Y=Yes, N=No)              {Confirm command request
++  RACF commands{....._Z~   (Y=Yes, N=No)              {Show RACF commands
++  REXX trace{........_Z~   (Y=Yes, N=No)              {Start REXX trace
 +
 %Adding TSO userids:
-+  User catalog{......._Z                             { z/OS alias catalog
-+  ISPPROF dataset{...._Z                             { TSO ISPF profile
-+  JOBLIB dataset{....._Z                             { TSO programmer library
++  User catalog{......_Z                              { z/OS alias catalog
++  ISPPROF dataset{..._Z                              { TSO ISPF profile
++  JOBLIB dataset{...._Z                              { TSO programmer library
 )INIT
   VGET (ERAADMN ERAFLTR ERASINT ERADISP ERACONF ERASHOW ERATRACE +
         ERACTLG ERAISPP ERAULIB) PROFILE

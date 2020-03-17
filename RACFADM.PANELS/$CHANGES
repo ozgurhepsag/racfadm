@@ -2,6 +2,18 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  17 Mar 2020 - V10R2
+     - Main Menu
+       * Fixed 'T'utorial, when pressing enter to go through all
+         the tutorials, it would redisplay the user help panels
+         (looping), due to having &ZCONT coded in )PROC section
+       * Removed hidden option 6,'CMD(%RACFAUTH)'
+       * Fixed point-n-shoot for option 'I, Issues'
+     - Settings (Option 0)
+       * Adjusted fields and descriptions
+     - Other items
+       * Closed issue 200302-C
+
   17 Mar 2020 - V10R1
      - Settings (Option 0)
        * Updated wording on TSO fields 'ISPPROF' and 'JOBLIB'
