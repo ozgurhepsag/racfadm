@@ -16,7 +16,10 @@
 {Enter the information above and press enter to start the analysis.
 +
 )INIT
-  .HELP = #RACMENU
-  &ZCMD = ' '
+  .HELP   = #RACMENU
+  .CURSOR = PROFILE
+  &ZCMD   = ' '
 )PROC
+  VER (&PROFILE,NB)
+  VER (&RCLASS,NB)
 )END

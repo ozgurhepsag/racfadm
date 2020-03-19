@@ -8,11 +8,11 @@
 +\-\(%RACFADM - Authorization+)\-\
 %Command ===>_ZCMD                                              +Scroll==>_SAMT+
 %
-+PROFILE: $PROFILE
-+CLASS:   $RCLASS   +
-+UACC:    $UACC    { (Default access)     +OWNER: $OWNER   { (Owner of profile)
-+WARNING: $WARN    { (YES/NO)             +AUDIT: $AUDIT
-+DATA:    $DATA
++PROFILE:$PROFILE
++CLASS:  $RCLASS   +
++UACC:   $UACC    { (Default access)     +OWNER: $OWNER   { (Owner of profile)
++WARNING:$WARN    { (YES/NO)             +AUDIT: $AUDIT
++DATA:   $DATA
 +                                           +
 %Group/ID     Access
 %-------------------------------------------------------------------------------

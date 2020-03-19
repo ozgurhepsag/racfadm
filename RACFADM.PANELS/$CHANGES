@@ -2,6 +2,11 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  18 Mar 2020 - V10R3
+     - Main Menu
+       * Added back hidden option 6,'CMD(%RACFAUTH)' and updated
+         panel used to ensure user types in PROFILE and CLASS
+
   17 Mar 2020 - V10R2
      - Main Menu
        * Fixed 'T'utorial, when pressing enter to go through all

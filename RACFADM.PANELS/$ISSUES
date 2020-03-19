@@ -16,7 +16,6 @@
     panel field value.  To delete a TSO Segment, issue the
     "ALTUSER user NOTSO" command.
 
-
 *---------------------------------------------------------------------*
 *                       RACFADM - Closed Issues
 *---------------------------------------------------------------------*

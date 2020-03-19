@@ -4,7 +4,7 @@
   + TYPE(TEXT)   INTENS(LOW)  SKIP(ON) COLOR(GREEN)
   ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V10R2+)\-\
++\-\(%RACFADM - RACF Administration - V10R3+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options
@@ -82,6 +82,7 @@
       3,'CMD(%RACFDSN)'
       4,'CMD(%RACFCLSR &CLASS)'
       5,'CMD(%RACFPRMJ)'
+      6,'CMD(%RACFAUTH)'
       C,'CMD(%RACFLOG $CHANGES)'
       I,'CMD(%RACFLOG $ISSUES)'
       T,'PGM(ISPTUTOR) PARM(#RACMENU)'
