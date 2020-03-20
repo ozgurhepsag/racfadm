@@ -2,6 +2,12 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  20 Mar 2020 - V10R8
+     - User (Optiion 1)
+       * Updated 'C'hanging a userid, limited number the number
+         of characters to type in the 'TSOSIZE' field to seven,
+         was eight, preventing abend
+
   20 Mar 2020 - V10R7
      - User (Optiion 1)
        * Once again... attempting to fix the 'C'hanging of a userid
