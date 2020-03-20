@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CR  200319  RACFA    Fix changing a TSO userid when 'TSO User=N'  */
 /* @CQ  200317  RACFA    Fix obtaining TSO acct, proc, size and unit  */
 /* @CP  200317  RACFA    Init TSOLIB=Y/N, if ERAULIB has dsname       */
 /* @CO  200315  RACFA    Added line command 'P-Profile' to RACFUSR3   */
@@ -611,9 +612,11 @@ CHGD:
              "TSO (ACCTNUM("tsoacct") PROC("tsoproc")",
              "SIZE("tsosize") UNIT("tsounit") "
   end
-  else
+  else do                                                     /* @CR */
+     attr = attr' NOTSO'                                      /* @CR */
      call EXCMD "ALTUSER ("USER")" alt_own,
                 alt_defgrp alt_name xtr
+  end                                                         /* @CR */
   Select
      when (cmd_rc > 0) then                                   /* @CA */
           call racfmsgs 'ERR07' /* Altdsd failed */

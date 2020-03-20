@@ -2,6 +2,11 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  19 Mar 2020 - V10R4
+     - User (Optiion 1)
+       * Fixed 'C'hanging a userid, when 'TSO Userid=N', remove
+         TSO access
+
   18 Mar 2020 - V10R3
      - Main Menu
        * Added back hidden option 6,'CMD(%RACFAUTH)' and updated
