@@ -3,7 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @CS  200320  RACFA    Relocat code to upd attrs and row            */
+/* @CS  200320  RACFA    Relocate code to upd attrs and row           */
 /* @CR  200319  RACFA    Fix changing a TSO userid when 'TSO User=N'  */
 /* @CQ  200317  RACFA    Fix obtaining TSO acct, proc, size and unit  */
 /* @CP  200317  RACFA    Init TSOLIB=Y/N, if ERAULIB has dsname       */
@@ -614,7 +614,7 @@ CHGD:
              "SIZE("tsosize") UNIT("tsounit") "
   end
   else do                                                     /* @CR */
-     attr = attr' NOTSO'                                      /* @CR */
+     xtr = xtr' NOTSO'                                        /* @CR2*/
      call EXCMD "ALTUSER ("USER")" alt_own,
                 alt_defgrp alt_name xtr
   end                                                         /* @CR */

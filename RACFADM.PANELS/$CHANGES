@@ -2,6 +2,11 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  20 Mar 2020 - V10R7
+     - User (Optiion 1)
+       * Once again... attempting to fix the 'C'hanging of a userid
+         when 'TSO Userid=N'... maybe three times is the charm...
+
   20 Mar 2020 - V10R6
      - User (Optiion 1)
        * Re-attempt fixing 'C'hanging a userid when 'TSO Userid=N',
