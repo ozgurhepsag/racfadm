@@ -2,7 +2,7 @@
 *                        RACFADM - Open Issues
 *---------------------------------------------------------------------*
   PMR        COMPONENT   STATUS   SUBMITTER  FIX RELEASE
-  200301-A   RACFUSR     Open     sbgolob    V?R?
+  200301-A   RACFUSR     Testing  sbgolob    V10R4
 
   DESCRIPTION:
     I tried to do a change on a userid with a TSO segment, to delete

@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AQ  200320  RACFA    Del all users dsns, prior was ISPPROF/JOBLIB */
 /* @AP  200317  RACFA    Chg JOBLIB=Y, was JOBLIB=YES                 */
 /* @AO  200317  RACFA    Add error msg when unable to define alias    */
 /* @AN  200316  RACFA    Removed ERAMCAT, ERAUVOL, ERAUNIT, not used  */
@@ -132,12 +133,18 @@ DELD:
   IF (cmd_rc > 0) then                                        /* @AM */
      return cmd_rc                                            /* @AM */
 
-  if joblib='YES' then do                                     /* @AJ */
-     cmd = "DELETE '"user"."eraulib"'"                        /* @AJ */
-     call exccmd                                              /* @AJ */
-  end                                                         /* @AJ */
-  cmd = "DELETE '"user"."eraispp"'"                           /* @AG */
-  call exccmd                                                 /* @AG */
+  X = OUTTRAP("REC.")                                         /* @AQ */
+  ADDRESS TSO "LISTCAT LEV('"user"')"                         /* @AQ */
+  X = OUTTRAP("OFF")                                          /* @AQ */
+  DO J = 1 TO REC.0                                           /* @AQ */
+     PARSE VAR REC.J W1 W2 W3 .                               /* @AQ */
+     IF (W2 = "-------") THEN DO                              /* @AQ */
+        CMD = "DELETE '"W3"'"                                 /* @AQ */
+        call exccmd                                           /* @AQ */
+     END                                                      /* @AQ */
+  END                                                         /* @AQ */
+  DROP REC.
+
   cmd = "DELETE ('"user"') ALIAS"                             /* @AK */
   call exccmd                                                 /* @AG */
 RETURN cmd_rc                                                 /* @AM */

@@ -2,6 +2,12 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  20 Mar 2020 - V10R5
+     - User (Optiion 1)
+       * When deleting a userid, delete all 'userid.*' files, before
+         deleting the alias, prior it only deleted ISPPROF and JOBLIB
+         datasets
+
   19 Mar 2020 - V10R4
      - User (Optiion 1)
        * Fixed 'C'hanging a userid, when 'TSO Userid=N', remove
