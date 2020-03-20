@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CS  200320  RACFA    Relocat code to upd attrs and row            */
 /* @CR  200319  RACFA    Fix changing a TSO userid when 'TSO User=N'  */
 /* @CQ  200317  RACFA    Fix obtaining TSO acct, proc, size and unit  */
 /* @CP  200317  RACFA    Init TSOLIB=Y/N, if ERAULIB has dsname       */
@@ -622,11 +623,12 @@ CHGD:
           call racfmsgs 'ERR07' /* Altdsd failed */
      when (ret_code <> 0) then
           call racfmsgs 'ERR11' /* Defalias failed */
-     otherwise DO                                             /* @CI */
-          call updattr                                        /* @CJ */
-          "TBMOD" tbla
+     otherwise                                                /* @CI */
+          NOP
      END                                                      /* @CI */
   End
+  call updattr                                                /* @CS */
+  "TBMOD" tbla                                                /* @CS */
 RETURN
 /*--------------------------------------------------------------------*/
 /*  Obtain userid attributes                                     @CI  */

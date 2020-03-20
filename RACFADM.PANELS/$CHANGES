@@ -2,6 +2,11 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  20 Mar 2020 - V10R6
+     - User (Optiion 1)
+       * Re-attempt fixing 'C'hanging a userid when 'TSO Userid=N',
+         was not updating the table/row
+
   20 Mar 2020 - V10R5
      - User (Optiion 1)
        * When deleting a userid, delete all 'userid.*' files, before
