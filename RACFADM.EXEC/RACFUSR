@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CT  200322  RACFA    Del an unnecessary END statement on Line 629 */
 /* @CS  200320  RACFA    Relocate code to upd attrs and row           */
 /* @CR  200319  RACFA    Fix changing a TSO userid when 'TSO User=N'  */
 /* @CQ  200317  RACFA    Fix obtaining TSO acct, proc, size and unit  */
@@ -626,7 +627,6 @@ CHGD:
      otherwise                                                /* @CI */
           NOP
      END                                                      /* @CI */
-  End
   call updattr                                                /* @CS */
   "TBMOD" tbla                                                /* @CS */
 RETURN

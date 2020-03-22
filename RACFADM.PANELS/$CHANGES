@@ -2,11 +2,15 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  22 Mar 2020 - V10R9
+     - User (Option 1)
+       * Fixed 'C'hanging a userid, REXX program RACFUSR had one to
+         many END commands, preventing abend
+
   20 Mar 2020 - V10R8
-     - User (Optiion 1)
-       * Updated 'C'hanging a userid, limited number the number
-         of characters to type in the 'TSOSIZE' field to seven,
-         was eight, preventing abend
+     - User (Option 1)
+       * Updated 'C'hanging a userid, limited the number of characters
+         to seven when typing in the 'TSOSIZE', preventing abend
 
   20 Mar 2020 - V10R7
      - User (Optiion 1)
