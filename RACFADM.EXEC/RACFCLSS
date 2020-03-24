@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A5  200324  RACFA    Allow both display/logging of RACF commands  */
 /* @A4  200324  RACFA    Allow logging RACF commands to ISPF Log file */
 /* @A3  200303  RACFA    Chg 'RL class ALL' to 'RL class * ALL'       */
 /* @A2  200303  RACFA    Added line cmd 'L-List' to class's profile   */
@@ -385,7 +386,7 @@ LISD:                                                         /* @A2 */
      ADDRESS TSO cmd                                          /* @A2 */
      cmd_rc = rc                                              /* @A2 */
      X = OUTTRAP("OFF")                                       /* @A2 */
-     if (erashow <> 'NO`) then                                /* @A4 */
+     if (erashow <> 'NO') then                                /* @A4 */
         call SHOWCMD                                          /* @A2 */
   end                                                         /* @A2 */
   ADDRESS TSO "ALLOC F("WFDD") NEW REUSE",                    /* @A2 */
@@ -410,21 +411,17 @@ RETURN                                                        /* @A2 */
 /*  Display RACF command                                         @A5  */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @A5 */
-  SELECT                                                      /* @A4 */
-     WHEN (ERASHOW = "DISPLAY") THEN DO                       /* @A4 */
-          PARSE VAR CMD MSG1 60 MSG2 121 MSG3                 /* @A5 */
-          MSG4 = "Return code = "cmd_rc                       /* @AK */
-          "ADDPOP ROW(6) COLUMN(4)"                           /* @AH */
-          "DISPLAY PANEL("PANELM2")"                          /* @AG */
-          "REMPOP"                                            /* @AH */
-     END                                                      /* @A4 */
-     WHEN (ERASHOW = "LOG") THEN DO                           /* @A4 */
-          zerrsm = "RACFADM RACFCLSS RC="cmd_rc               /* @A4 */
-          zerrlm = cmd                                        /* @A4 */
-          'log msg(isrz003)'                                  /* @A4 */
-     END                                                      /* @A4 */
-     OTHERWISE                                                /* @A4 */
-          NOP                                                 /* @A4 */
+  IF (ERASHOW = "BOTH") | (ERASHOW = "DISPLAY") THEN DO       /* @A5 */
+     PARSE VAR CMD MSG1 60 MSG2 121 MSG3                      /* @A5 */
+     MSG4 = "Return code = "cmd_rc                            /* @AK */
+     "ADDPOP ROW(6) COLUMN(4)"                                /* @AH */
+     "DISPLAY PANEL("PANELM2")"                               /* @AG */
+     "REMPOP"                                                 /* @AH */
+  END                                                         /* @A4 */
+  IF (ERASHOW = "BOTH") | (ERASHOW = "LOG") THEN DO           /* @A5 */
+     zerrsm = "RACFADM RACFCLSS RC="cmd_rc                    /* @A4 */
+     zerrlm = cmd                                             /* @A4 */
+     'log msg(isrz003)'                                       /* @A4 */
   END                                                         /* @A4 */
 RETURN                                                        /* @A5 */
 /*--------------------------------------------------------------------*/

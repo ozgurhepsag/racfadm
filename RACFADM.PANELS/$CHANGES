@@ -2,6 +2,16 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  24 Mar 2020 - V11R2
+     - User and Group (Options 1/2)
+       * Fixed line cmd 'P'rofile, conflict with loop variable
+
+  24 Mar 2020 - V11R1
+     - Settings (Option 0)
+       * Changed 'RACF Commands' to allow both logging commands to the
+         ISPF log file and display in a pop-up panel, prior was only
+         one or the other
+
   24 Mar 2020 - V11R0
      - Settings (Option 0)
        * Changed 'RACF Commands' to allow logging commands to the ISPF

@@ -12,6 +12,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AI  200324  TRIDJK   Chg loop var K to seg, due to conflict       */
+/* @AH  200324  RACFA    Allow both display/logging of RACF commands  */
 /* @AG  200324  RACFA    Allow logging RACF commands to ISPF Log file */
 /* @AF  200316  RACFA    Fix profile=*, no go, display msg            */
 /* @AE  200316  TRIDJK   No cmd trace if profile has special chars    */
@@ -71,8 +73,8 @@ ADDRESS ISPEXEC
            right(RACF.0,2,"0")
 
   /* Run through all segments */
-  do k = 1 to RACF.0
-     segname = RACF.k              /* Get next segment name */
+  do seg = 1 to RACF.0                                        /* @AI */
+     segname = RACF.seg      /* Get next segment name */      /* @AI */
      call sez "Segment: "left(segname,8)"  Fields:   "||,     /* @AD */
                     right(RACF.segname.0,2,"0")
      /* Run through the fields in this segment */
@@ -221,20 +223,16 @@ RETURN                                                        /* @A9 */
 /*  Display RACF command                                         @A9  */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @A9 */
-  SELECT                                                      /* @AG */
-     WHEN (ERASHOW = "DISPLAY") THEN DO                       /* @AG */
-          PARSE VAR CMD MSG1 60 MSG2 121 MSG3                 /* @A9 */
-          MSG4 = "Return code = "cmd_rc                       /* @A9 */
-          "ADDPOP ROW(6) COLUMN(4)"                           /* @A9 */
-          "DISPLAY PANEL("PANELM2")"                          /* @A9 */
-          "REMPOP"                                            /* @A9 */
-     END                                                      /* @AG */
-     WHEN (ERASHOW = "LOG") THEN DO                           /* @AG */
-          zerrsm = "RACFADM RACFPROF RC="WORD(cmd_rc,1)       /* @AG */
-          zerrlm = cmd                                        /* @AG */
-          'log msg(isrz003)'                                  /* @AG */
-     END                                                      /* @AG */
-     OTHERWISE                                                /* @AG */
-          NOP                                                 /* @AG */
+  IF (ERASHOW = "BOTH") | (ERASHOW = "DISPLAY") THEN DO       /* @AH */
+     PARSE VAR CMD MSG1 60 MSG2 121 MSG3                      /* @A9 */
+     MSG4 = "Return code = "cmd_rc                            /* @A9 */
+     "ADDPOP ROW(6) COLUMN(4)"                                /* @A9 */
+     "DISPLAY PANEL("PANELM2")"                               /* @A9 */
+     "REMPOP"                                                 /* @A9 */
+  END                                                         /* @AG */
+  IF (ERASHOW = "BOTH") | (ERASHOW = "LOG") THEN DO           /* @AH */
+     zerrsm = "RACFADM RACFPROF RC="WORD(cmd_rc,1)            /* @AG */
+     zerrlm = cmd                                             /* @AG */
+     'log msg(isrz003)'                                       /* @AG */
   END                                                         /* @AG */
 RETURN                                                        /* @A9 */

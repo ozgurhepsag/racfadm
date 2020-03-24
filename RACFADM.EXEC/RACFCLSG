@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @B7  200324  RACFA    Allow both display/logging of RACF commands  */
 /* @B6  200324  RACFA    Allow logging RACF commands to ISPF Log file */
 /* @B5  200315  RACFA    Added line cmd 'P=Profile'                   */
 /* @B4  200303  RACFA    Chg 'RC/Ret_code' to 'cmd_rc' after EXCMD    */
@@ -893,21 +894,17 @@ RETURN                                                        /* @A2 */
 /*  Display RACF command                                         @AF  */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @AF */
-  SELECT                                                      /* @B6 */
-     WHEN (ERASHOW = "DISPLAY") THEN DO                       /* @B6 */
-          PARSE VAR CMD MSG1 60 MSG2 121 MSG3                 /* @AF */
-          MSG4 = "Return code = "cmd_rc                       /* @AR */
-          "ADDPOP ROW(6) COLUMN(4)"                           /* @AN */
-          "DISPLAY PANEL("PANELM2")"                          /* @AM */
-          "REMPOP"                                            /* @AN */
-     END                                                      /* @B6 */
-     WHEN (ERASHOW = "LOG") THEN DO                           /* @B6 */
-          zerrsm = "RACFADM RACFCLSG RC="cmd_rc               /* @B6 */
-          zerrlm = cmd                                        /* @B6 */
-          'log msg(isrz003)'                                  /* @B6 */
-     END                                                      /* @B6 */
-     OTHERWISE                                                /* @B6 */
-          NOP                                                 /* @B6 */
+  IF (ERASHOW = "BOTH") | (ERASHOW = "DISPLAY") THEN DO       /* @B7 */
+     PARSE VAR CMD MSG1 60 MSG2 121 MSG3                      /* @AF */
+     MSG4 = "Return code = "cmd_rc                            /* @AR */
+     "ADDPOP ROW(6) COLUMN(4)"                                /* @AN */
+     "DISPLAY PANEL("PANELM2")"                               /* @AM */
+     "REMPOP"                                                 /* @AN */
+  END                                                         /* @B6 */
+  IF (ERASHOW = "BOTH") | (ERASHOW = "LOG") THEN DO           /* @B7 */
+     zerrsm = "RACFADM RACFCLSG RC="cmd_rc                    /* @B6 */
+     zerrlm = cmd                                             /* @B6 */
+     'log msg(isrz003)'                                       /* @B6 */
   END                                                         /* @B6 */
 RETURN                                                        /* @AF */
 /*--------------------------------------------------------------------*/

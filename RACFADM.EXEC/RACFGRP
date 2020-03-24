@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BK  200324  RACFA    Allow both display/logging of RACF commands  */
 /* @BJ  200324  RACFA    Allow logging RACF commands to ISPF Log file */
 /* @BI  200315  RACFA    Added line cmd 'P' for RACFGRP5 panel        */
 /* @BH  200315  RACFA    Placed 'P-Prof' next to other list commands  */
@@ -664,21 +665,17 @@ RETURN
 /*  Display RACF command                                         @AN  */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @AN */
-  SELECT                                                      /* @BJ */
-     WHEN (ERASHOW = "DISPLAY") THEN DO                       /* @BJ */
-          PARSE VAR CMD MSG1 60 MSG2 121 MSG3                 /* @AN */
-          MSG4 = "Return code = "cmd_rc                       /* @AN */
-          "ADDPOP ROW(6) COLUMN(4)"                           /* @AZ */
-          "DISPLAY PANEL("PANELM2")"                          /* @AX */
-          "REMPOP"                                            /* @AW */
-     END                                                      /* @BJ */
-     WHEN (ERASHOW = "LOG") THEN DO                           /* @BJ */
-          zerrsm = "RACFADM RACFGRP  RC="cmd_rc               /* @BJ */
-          zerrlm = cmd                                        /* @BJ */
-          'log msg(isrz003)'                                  /* @BJ */
-     END                                                      /* @BJ */
-     OTHERWISE                                                /* @BJ */
-          NOP                                                 /* @BJ */
+  IF (ERASHOW = "BOTH") | (ERASHOW = "DISPLAY") THEN DO       /* @BK */
+     PARSE VAR CMD MSG1 60 MSG2 121 MSG3                      /* @AN */
+     MSG4 = "Return code = "cmd_rc                            /* @AN */
+     "ADDPOP ROW(6) COLUMN(4)"                                /* @AZ */
+     "DISPLAY PANEL("PANELM2")"                               /* @AX */
+     "REMPOP"                                                 /* @AW */
+  END                                                         /* @BJ */
+  IF (ERASHOW = "BOTH") | (ERASHOW = "LOG") THEN DO           /* @BK */
+     zerrsm = "RACFADM RACFGRP  RC="cmd_rc                    /* @BJ */
+     zerrlm = cmd                                             /* @BJ */
+     'log msg(isrz003)'                                       /* @BJ */
   END                                                         /* @BJ */
 RETURN                                                        /* @AN */
 /*--------------------------------------------------------------------*/
