@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A4  200324  RACFA    Allow logging RACF commands to ISPF Log file */
 /* @A3  200303  RACFA    Chg 'RL class ALL' to 'RL class * ALL'       */
 /* @A2  200303  RACFA    Added line cmd 'L-List' to class's profile   */
 /* @A1  200303  RACFA    Added line cmd 'L-List' to class             */
@@ -64,7 +65,7 @@ GET_PERMITS:
   address TSO cmd                                             /* @A5 */
   cmd_rc = rc                                                 /* @AK */
   x = OUTTRAP('OFF')
-  if (erashow = 'YES') then                                   /* @A5 */
+  if (erashow <> 'NO') then                                   /* @A4 */
      call SHOWCMD                                             /* @A5 */
   Do i = 1 to var.0   /* Scan output */
      profile = subword(var.i,1,1)
@@ -194,7 +195,7 @@ GET_ACT_CLASS:
   address TSO cmd                                             /* @A5 */
   cmd_rc = rc                                                 /* @AK */
   x = OUTTRAP('OFF')
-  if (erashow = 'YES') then                                   /* @A5 */
+  if (erashow <> 'NO') then                                   /* @A4 */
      call SHOWCMD                                             /* @A5 */
   Do i = 1 to var.0           /* Scan output */
      temp = var.i
@@ -337,7 +338,7 @@ LISP:                                                         /* @A1 */
   ADDRESS TSO cmd                                             /* @A1 */
   cmd_rc = rc                                                 /* @A1 */
   X = OUTTRAP("OFF")                                          /* @A1 */
-  if (erashow = 'YES') then                                   /* @A1 */
+  if (erashow <> 'NO') then                                   /* @A4 */
      call SHOWCMD                                             /* @A1 */
   if (cmd_rc > 0) then do   /* Remove parms */                /* @A1 */
      cmd     = "RL "CLASS" *"                                 /* @A3 */
@@ -345,7 +346,7 @@ LISP:                                                         /* @A1 */
      ADDRESS TSO cmd                                          /* @A1 */
      cmd_rc = rc                                              /* @A1 */
      X = OUTTRAP("OFF")                                       /* @A1 */
-     if (erashow = 'YES') then                                /* @A1 */
+     if (erashow <> 'NO') then                                /* @A4 */
         call SHOWCMD                                          /* @A1 */
   end                                                         /* @A1 */
   ADDRESS TSO "ALLOC F("WFDD") NEW REUSE",                    /* @A1 */
@@ -376,7 +377,7 @@ LISD:                                                         /* @A2 */
   ADDRESS TSO cmd                                             /* @A2 */
   cmd_rc = rc                                                 /* @A2 */
   X    = OUTTRAP("OFF")                                       /* @A2 */
-  if (erashow = 'YES') then                                   /* @A2 */
+  if (erashow <> 'NO') then                                   /* @A4 */
      call SHOWCMD                                             /* @A2 */
   if (cmd_rc > 0) then do    /* Remove parms */               /* @A2 */
      cmd = "RLIST "RCLASS PROFILE                             /* @A2 */
@@ -384,7 +385,7 @@ LISD:                                                         /* @A2 */
      ADDRESS TSO cmd                                          /* @A2 */
      cmd_rc = rc                                              /* @A2 */
      X = OUTTRAP("OFF")                                       /* @A2 */
-     if (erashow = 'YES') then                                /* @A2 */
+     if (erashow <> 'NO`) then                                /* @A4 */
         call SHOWCMD                                          /* @A2 */
   end                                                         /* @A2 */
   ADDRESS TSO "ALLOC F("WFDD") NEW REUSE",                    /* @A2 */
@@ -409,11 +410,22 @@ RETURN                                                        /* @A2 */
 /*  Display RACF command                                         @A5  */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @A5 */
-  PARSE VAR CMD MSG1 60 MSG2 121 MSG3                         /* @A5 */
-  MSG4 = "Return code = "cmd_rc                               /* @AK */
-  "ADDPOP ROW(6) COLUMN(4)"                                   /* @AH */
-  "DISPLAY PANEL("PANELM2")"                                  /* @AG */
-  "REMPOP"                                                    /* @AH */
+  SELECT                                                      /* @A4 */
+     WHEN (ERASHOW = "DISPLAY") THEN DO                       /* @A4 */
+          PARSE VAR CMD MSG1 60 MSG2 121 MSG3                 /* @A5 */
+          MSG4 = "Return code = "cmd_rc                       /* @AK */
+          "ADDPOP ROW(6) COLUMN(4)"                           /* @AH */
+          "DISPLAY PANEL("PANELM2")"                          /* @AG */
+          "REMPOP"                                            /* @AH */
+     END                                                      /* @A4 */
+     WHEN (ERASHOW = "LOG") THEN DO                           /* @A4 */
+          zerrsm = "RACFADM RACFCLSS RC="cmd_rc               /* @A4 */
+          zerrlm = cmd                                        /* @A4 */
+          'log msg(isrz003)'                                  /* @A4 */
+     END                                                      /* @A4 */
+     OTHERWISE                                                /* @A4 */
+          NOP                                                 /* @A4 */
+  END                                                         /* @A4 */
 RETURN                                                        /* @A5 */
 /*--------------------------------------------------------------------*/
 /*  Error message                                                     */

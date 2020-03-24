@@ -12,6 +12,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AG  200324  RACFA    Allow logging RACF commands to ISPF Log file */
 /* @AF  200316  RACFA    Fix profile=*, no go, display msg            */
 /* @AE  200316  TRIDJK   No cmd trace if profile has special chars    */
 /* @AD  200316  RACFA    Added spacing after semi-colon               */
@@ -213,16 +214,27 @@ EXCCMD:                                                       /* @A9 */
   end                                                         /* @AB */
   cmd    = "IRRXUTIL(EXTRACT,"class","profile",RACF,)"        /* @A9 */
   interpret 'cmd_rc = 'cmd                                    /* @A9 */
-  if (erashow = 'YES') then                                   /* @A9 */
+  if (erashow <> 'NO') then                                   /* @AG */
      call SHOWCMD                                             /* @A9 */
 RETURN                                                        /* @A9 */
 /*--------------------------------------------------------------------*/
 /*  Display RACF command                                         @A9  */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @A9 */
-  PARSE VAR CMD MSG1 60 MSG2 121 MSG3                         /* @A9 */
-  MSG4 = "Return code = "cmd_rc                               /* @A9 */
-  "ADDPOP ROW(6) COLUMN(4)"                                   /* @A9 */
-  "DISPLAY PANEL("PANELM2")"                                  /* @A9 */
-  "REMPOP"                                                    /* @A9 */
+  SELECT                                                      /* @AG */
+     WHEN (ERASHOW = "DISPLAY") THEN DO                       /* @AG */
+          PARSE VAR CMD MSG1 60 MSG2 121 MSG3                 /* @A9 */
+          MSG4 = "Return code = "cmd_rc                       /* @A9 */
+          "ADDPOP ROW(6) COLUMN(4)"                           /* @A9 */
+          "DISPLAY PANEL("PANELM2")"                          /* @A9 */
+          "REMPOP"                                            /* @A9 */
+     END                                                      /* @AG */
+     WHEN (ERASHOW = "LOG") THEN DO                           /* @AG */
+          zerrsm = "RACFADM RACFPROF RC="WORD(cmd_rc,1)       /* @AG */
+          zerrlm = cmd                                        /* @AG */
+          'log msg(isrz003)'                                  /* @AG */
+     END                                                      /* @AG */
+     OTHERWISE                                                /* @AG */
+          NOP                                                 /* @AG */
+  END                                                         /* @AG */
 RETURN                                                        /* @A9 */

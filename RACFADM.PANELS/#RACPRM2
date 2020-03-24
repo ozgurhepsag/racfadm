@@ -7,11 +7,13 @@
 %Command ===>_ZCMD                                                             +
 %
 +General:
-!  RACF commands   +Enter%Yes+to view each RACF command before it is
-+                  +issued,%No+to hide all RACF commands (default)
+!  RACF commands   +To view the RACF commands executed, type in the following:
++                    %Display+in pop-up panel
++                    %Log+to the ISPF Log file
++                    %No+do not display/log (default)
 +
-!  REXX trace      +Enter%Yes+to trace the execution of the REXX exec,
-+                  %No+to work without trace (default)
+!  REXX trace      +Enter%Yes+to trace the execution of the REXX programs, and
++                  %No+to not display trace data (default)
 +
 +Adding TSO userid:
 !  User catalog    +Specify the TSO user catalog in which all new TSO user
@@ -21,8 +23,6 @@
 +
 !  JOBLIB dataset  +Specify an initial job library to be allocated
 +                  +for new TSO users
-+
-+
 +
 +
 + \ \ (press%ENTER+to continue) \ \

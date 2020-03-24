@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BJ  200324  RACFA    Allow logging RACF commands to ISPF Log file */
 /* @BI  200316  RACFA    Prevent typing in 'L' line cmd next to '*'   */
 /* @BH  200315  RACFA    Added line cmd 'P=Profile'                   */
 /* @BG  200305  TRIDJK   TBDELETE if cmd_rc = 0 on DELDSD command     */
@@ -376,7 +377,7 @@ DISD:
      address TSO cmd                                          /* @AI */
      cmd_rc = rc                                              /* @AZ */
      x = OUTTRAP('OFF')
-     if (erashow = 'YES') then                                /* @AI */
+     if (erashow <> 'NO') then                                /* @BJ */
         call SHOWCMD                                          /* @AI */
      if (type = ' ') then
         type = 'DISCRETE'
@@ -500,7 +501,7 @@ GETD:
   address TSO cmd                                             /* @AI */
   cmd_rc = rc                                                 /* @AZ */
   x = OUTTRAP('OFF')
-  if (erashow = 'YES') then                                   /* @AI */
+  if (erashow <> 'NO') then                                   /* @BJ */
      call SHOWCMD                                             /* @AI */
   Do i = 1 to var.0 while (flags <> 'OUT') /* Scan output */
      temp = var.i
@@ -636,7 +637,7 @@ DISP:
   address TSO cmd                                             /* @AI */
   cmd_rc = rc
   x = OUTTRAP('OFF')
-  if (erashow = 'YES') then                                   /* @AI */
+  if (erashow <> 'NO') then                                   /* @BJ */
      call SHOWCMD                                             /* @AI */
   x = msg('ON')
   if (cmd_rc = 0) then call RACFUSR id                        /* @B7 */
@@ -673,7 +674,7 @@ EXCMD:
   address TSO cmd                                             /* @AY */
   cmd_rc = rc
   x = OUTTRAP('OFF')
-  if (erashow = 'YES') then                                   /* @AI */
+  if (erashow <> 'NO') then                                   /* @BJ */
      call SHOWCMD                                             /* @AI */
   if (subword(msg.1,1,1) = 'ICH11009I') |,
      (subword(msg.1,1,1) = 'ICH10006I') |,
@@ -692,7 +693,7 @@ LISD:                                                         /* @A1 */
   ADDRESS TSO cmd                                             /* @AI */
   cmd_rc = rc                                                 /* @AZ */
   X = OUTTRAP("OFF")                                          /* @A1 */
-  if (erashow = 'YES') then                                   /* @AI */
+  if (erashow <> 'NO') then                                   /* @BJ */
      call SHOWCMD                                             /* @AI */
   if (cmd_rc > 0) then do   /* Remove parms */                /* @BC */
      CMD = "LISTDSD DATASET('"DATASET"')"                     /* @BC */
@@ -700,7 +701,7 @@ LISD:                                                         /* @A1 */
      ADDRESS TSO cmd                                          /* @BC */
      cmd_rc = rc                                              /* @BC */
      X   = OUTTRAP("OFF")                                     /* @BC */
-     if (erashow = 'YES') then                                /* @BC */
+     if (erashow <> 'NO') then                                /* @BJ */
         call SHOWCMD                                          /* @BC */
   end                                                         /* @BC */
   ADDRESS TSO "ALLOC F("WFDD") NEW REUSE",                    /* @A1 */
@@ -736,14 +737,14 @@ LISP:                                                         /* @A5 */
   ADDRESS TSO cmd                                             /* @AI */
   cmd_rc = rc                                                 /* @AZ */
   X = OUTTRAP("OFF")                                          /* @A5 */
-  if erashow = 'YES' then                                     /* @AI */
+  if erashow <> 'NO' then                                     /* @BJ */
      call SHOWCMD                                             /* @AI */
   if (cmd_rc > 0) then do   /* Remove parms */                /* @AB */
      X = OUTTRAP("WFREC.")                                    /* @AI */
      CMD     = "LU "ID                                        /* @AI */
      ADDRESS TSO cmd                                          /* @AI */
      cmd_rc = rc                                              /* @AB */
-     if (erashow = 'YES') then                                /* @AI */
+     if (erashow <> 'NO') then                                /* @BJ */
         call SHOWCMD                                          /* @AI */
      X = OUTTRAP("OFF")                                       /* @AI */
   end                                                         /* @AB */
@@ -769,11 +770,22 @@ RETURN                                                        /* @A5 */
 /*  Display RACF command                                         @AI  */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @AI */
-  PARSE VAR CMD MSG1 60 MSG2 121 MSG3                         /* @AI */
-  MSG4 = "Return code = "cmd_rc                               /* @AZ */
-  "ADDPOP ROW(6) COLUMN(4)"                                   /* @AV */
-  "DISPLAY PANEL("PANELM2")"                                  /* @AU */
-  "REMPOP"                                                    /* @AV */
+  SELECT                                                      /* @BJ */
+     WHEN (ERASHOW = "DISPLAY") THEN DO                       /* @BJ */
+          PARSE VAR CMD MSG1 60 MSG2 121 MSG3                 /* @AI */
+          MSG4 = "Return code = "cmd_rc                       /* @AZ */
+          "ADDPOP ROW(6) COLUMN(4)"                           /* @AV */
+          "DISPLAY PANEL("PANELM2")"                          /* @AU */
+          "REMPOP"                                            /* @AV */
+     END                                                      /* @BJ */
+     WHEN (ERASHOW = "LOG") THEN DO                           /* @BJ */
+          zerrsm = "RACFADM RACFDSN  RC="cmd_rc               /* @BJ */
+          zerrlm = cmd                                        /* @BJ */
+          'log msg(isrz003)'                                  /* @BJ */
+     END                                                      /* @BJ */
+     OTHERWISE                                                /* @BJ */
+          NOP                                                 /* @BJ */
+  END                                                         /* @BJ */
 RETURN                                                        /* @AI */
 /*--------------------------------------------------------------------*/
 /*  Create table                                                 @AL  */
@@ -786,7 +798,7 @@ CREATE_TABLE:
   address TSO cmd                                             /* @AI */
   cmd_rc = rc                                                 /* @AB */
   x = OUTTRAP('OFF')
-  if (erashow = 'YES') then                                   /* @AI */
+  if (erashow <> 'NO') then                                   /* @BJ */
      call SHOWCMD                                             /* @AI */
   Do i = 1 to var.0
      temp = var.i

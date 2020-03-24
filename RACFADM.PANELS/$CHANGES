@@ -2,6 +2,12 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  24 Mar 2020 - V11R0
+     - Settings (Option 0)
+       * Changed 'RACF Commands' to allow logging commands to the ISPF
+         Log file, instead of displaying in pop-up panel, updated
+         tutorial to reflect change
+
   22 Mar 2020 - V10R9
      - User (Option 1)
        * Fixed 'C'hanging a userid, REXX program RACFUSR had one to

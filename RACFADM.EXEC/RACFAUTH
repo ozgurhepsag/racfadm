@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AT  200324  RACFA    Allow logging RACF commands to ISPF Log file */
 /* @AS  200303  RACFA    Del 'EXCMD' procedure, not referenced        */
 /* @AR  200301  RACFA    Deleted EMSG procedure, not referenced       */
 /* @AD  200226  RACFA    Fix @AB chg, chg ret_code to cmd_rc          */
@@ -86,7 +87,7 @@ GET_PROF_ACL:
   address TSO cmd                                             /* @A5 */
   cmd_rc = rc                                                 /* @AB */
   x = OUTTRAP('OFF')
-  if (erashow = 'YES') then                                   /* @A5 */
+  if (erashow <> 'NO') then                                   /* @AT */
      call SHOWCMD                                             /* @A5 */
   if (type = ' ') then
      type = 'DISCRETE'
@@ -156,7 +157,7 @@ GET_USER_GROUP:
   address TSO cmd                                             /* @A5 */
   x = OUTTRAP('OFF')
   cmd_rc = rc                                                 /* @AB */
-  if (erashow = 'YES') then                                   /* @A5 */
+  if (erashow <> 'NO') then                                   /* @AT */
      call SHOWCMD                                             /* @A5 */
   Do i = 1 to var.0               /* Scan output */
      temp = var.i
@@ -172,9 +173,20 @@ RETURN
 /*  Display RACF command                                         @A5  */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @A5 */
-  PARSE VAR CMD MSG1 60 MSG2 121 MSG3                         /* @A5 */
-  MSG4 = "Return code = "cmd_rc                               /* @AB */
-  "ADDPOP ROW(6) COLUMN(4)"                                   /* @A9 */
-  "DISPLAY PANEL("PANELM2")"                                  /* @A8 */
-  "REMPOP"                                                    /* @A9 */
+  SELECT                                                      /* @AT */
+     WHEN (ERASHOW = "DISPLAY") THEN DO                       /* @AT */
+          PARSE VAR CMD MSG1 60 MSG2 121 MSG3                 /* @A5 */
+          MSG4 = "Return code = "cmd_rc                       /* @AB */
+          "ADDPOP ROW(6) COLUMN(4)"                           /* @A9 */
+          "DISPLAY PANEL("PANELM2")"                          /* @A8 */
+          "REMPOP"                                            /* @A9 */
+     END                                                      /* @AT */
+     WHEN (ERASHOW = "LOG") THEN DO                           /* @AT */
+          zerrsm = "RACFADM RACFAUTH RC="cmd_rc               /* @AT */
+          zerrlm = cmd                                        /* @AT */
+          'log msg(isrz003)'                                  /* @AT */
+     END                                                      /* @AT */
+     OTHERWISE                                                /* @AT */
+          NOP                                                 /* @AT */
+  END                                                         /* @AT */
 RETURN                                                        /* @A5 */
