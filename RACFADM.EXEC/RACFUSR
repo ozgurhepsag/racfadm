@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CW  200325  RACFA    Line cmd 'P', add '*Prof' to row             */
 /* @CV  200324  RACFA    Allow both Display/logging of RACF commands  */
 /* @CU  200324  RACFA    Allow logging RACF commands to ISPF Log file */
 /* @CT  200322  RACFA    Del an unnecessary END statement on Line 629 */
@@ -249,8 +250,11 @@ PROFL:
              "TBMOD" TBLA                                     /* @BW */
         end                                                   /* @BW */
         when (opta = 'L')  then call Lisd
-        when (opta = 'P') then                                /* @CK */
+        when (opta = 'P') then do                             /* @CK */
              call RACFPROF 'USER' user                        /* @CK */
+             action = '*Prof'                                 /* @CW */
+             "TBMOD" TBLA                                     /* @CW */
+        end                                                   /* @CW */
         when (opta = 'R')  then call Deld
         when (opta = 'RS') then call Resd
         when (opta = 'RV') then call Revd
@@ -287,8 +291,11 @@ PROFL:
                 "TBMOD" TBLA                                  /* @BW */
            end                                                /* @BW */
            when (opta = 'L')  then call Lisd
-           when (opta = 'P') then                             /* @CI */
+           when (opta = 'P') then do                          /* @CI */
                 call RACFPROF 'USER' user                     /* @CL */
+                action = '*Prof'                              /* @CW */
+                "TBMOD" TBLA                                  /* @CW */
+           end                                                /* @CW */
            when (opta = 'R')  then call Deld
            when (opta = 'RS') then call Resd
            when (opta = 'RV') then call Revd
@@ -737,8 +744,11 @@ DISD:
            when (optb = 'A') then call Addp
            when (optb = 'C') then call Chgp
            when (optb = 'L') then call Lisp                   /* @CN */
-           when (optb = 'P') then                             /* @CO */
+           when (optb = 'P') then do                          /* @CO */
                 call RACFPROF 'GROUP' id                      /* @CO */
+                action = '*Prof'                              /* @CW */
+                "TBMOD" TBLB                                  /* @CW */
+           end                                                /* @CW */
            when (optb = 'R') then call Delp
            when (optb = 'S') then call RACFGRP id
            otherwise nop
@@ -752,8 +762,11 @@ DISD:
               when (optb = 'A') then call Addp
               when (optb = 'C') then call Chgp
               when (optb = 'L') then call Lisp                /* @AC */
-              when (optb = 'P') then                          /* @CO */
+              when (optb = 'P') then do                       /* @CO */
                    call RACFPROF 'GROUP' id                   /* @CO */
+                   action = '*Prof'                           /* @CW */
+                   "TBMOD" TBLB                               /* @CW */
+              end                                             /* @CW */
               when (optb = 'R') then call Delp
               when (optb = 'S') then call RACFGRP id
               otherwise nop

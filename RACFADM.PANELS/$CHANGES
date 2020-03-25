@@ -2,9 +2,18 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  25 Mar 2020 - V11R3
+     - Main Menu
+       * Added option 'H', Help, RACF commands
+         o Lists all the TSO RACF commands, allowing to select the
+           command and obtain detailed help
+     - User (Options 1)
+       * When using line command 'P'rofile, display '*Prof' to the
+         right of the input field of the row selected
+
   24 Mar 2020 - V11R2
      - User and Group (Options 1/2)
-       * Fixed line cmd 'P'rofile, conflict with loop variable
+       * Fixed line command 'P'rofile, conflict with loop variable
 
   24 Mar 2020 - V11R1
      - Settings (Option 0)
