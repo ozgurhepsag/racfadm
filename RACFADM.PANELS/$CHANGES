@@ -2,6 +2,11 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  25 Mar 2020 - V11R4
+     - Tutorials (Option T)
+       * Added 'Notes', describes RACFADM REXX program and what security
+         access is needed to use the line command 'P'rofile
+
   25 Mar 2020 - V11R3
      - Main Menu
        * Added option 'H', Help, RACF commands
