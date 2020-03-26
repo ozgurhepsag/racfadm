@@ -10,11 +10,12 @@
  RACFCLSG  Class          Extract generic class profiles
  RACFCLSR  Class          Display class profiles, menu option 4
  RACFCLSS  Class          Search and display classes
+ RACFDB    Database       Display RACF database info, menu option 6
  RACFDSN   Dataset        Display dataset profiles
  RACFGRP   Group          Display group profiles, menu option 2
  RACFHELP  Help           Display TSO HELP on RACF commands
  RACFLOG   Documentation  Display changes/issues, menu option C/I
- RACFLOGE  Documentation  Display changes/issues - Edit Macro
+ RACFLOGE  Documentation  Display changes/issues, edit macro
  RACFMSGC  Message        Display 'Confirm Request' panel
  RACFMSGS  Message        Display error message
  RACFPRMJ  Parameter      Display RACF parameters, menu option 5

@@ -4,7 +4,7 @@
   + TYPE(TEXT)   INTENS(LOW)  SKIP(ON) COLOR(GREEN)
   ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V11R4+)\-\
++\-\(%RACFADM - RACF Administration - V11R5+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options
@@ -13,12 +13,12 @@
 %   3 ~Dataset  +Dataset profiles
 %   4 ~General  +General resource _CLASS   +
 %   5 ~RACFprms +RACF parameters
+%   6 ~RACFdb   +RACF database
 %   C ~Changes  +Version/updates
 %   H ~Help     +RACF commands
 %   I ~Issues   +Known issues
 %   T ~Tutorial +Help
 %   X ~Exit     +Terminate
-+
 +
 +
 + ---------------------------------------------------------------------------
@@ -82,7 +82,8 @@
       3,'CMD(%RACFDSN)'
       4,'CMD(%RACFCLSR &CLASS)'
       5,'CMD(%RACFPRMJ)'
-      6,'CMD(%RACFAUTH)'
+      6,'CMD(%RACFDB)'
+      7,'CMD(%RACFAUTH)'                  /* Hidden option */
       C,'CMD(%RACFLOG $CHANGES)'
       H,'CMD(%RACFHELP)'
       I,'CMD(%RACFLOG $ISSUES)'
@@ -97,9 +98,10 @@
   FIELD(ZPS00004) VAR(ZCMD) VAL('3')
   FIELD(ZPS00005) VAR(ZCMD) VAL('4')
   FIELD(ZPS00006) VAR(ZCMD) VAL('5')
-  FIELD(ZPS00007) VAR(ZCMD) VAL('C')
-  FIELD(ZPS00008) VAR(ZCMD) VAL('H')
-  FIELD(ZPS00009) VAR(ZCMD) VAL('I')
-  FIELD(ZPS00010) VAR(ZCMD) VAL('T')
-  FIELD(ZPS00011) VAR(ZCMD) VAL('X')
+  FIELD(ZPS00007) VAR(ZCMD) VAL('6')
+  FIELD(ZPS00008) VAR(ZCMD) VAL('C')
+  FIELD(ZPS00009) VAR(ZCMD) VAL('H')
+  FIELD(ZPS00010) VAR(ZCMD) VAL('I')
+  FIELD(ZPS00011) VAR(ZCMD) VAL('T')
+  FIELD(ZPS00012) VAR(ZCMD) VAL('X')
 )END

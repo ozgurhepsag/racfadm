@@ -1,5 +1,5 @@
 /*%NOCOMMENT====================* REXX *==============================*/
-/*  PURPOSE:  RACFADM - Userid profiles - Create TSO alias/datasets   */
+/*  PURPOSE:  RACFADM - User (Option 1) - Create TSO alias/datasets   */
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */

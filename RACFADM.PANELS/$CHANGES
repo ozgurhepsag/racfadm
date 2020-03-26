@@ -2,6 +2,10 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  25 Mar 2020 - V11R5
+     - Menu
+       * Added option 6, RACFdb, RACF database
+
   25 Mar 2020 - V11R4
      - Tutorials (Option T)
        * Added 'Notes', describes RACFADM REXX program and what security
@@ -232,7 +236,7 @@
 
   03 Mar 2020 - V8R0
      - Other Items
-       * General clean up of code in several modules
+       * General cleanup of code in several modules
        * Added 'L-List' command to tutorials when displaying classes
        * Standardized/fixed checking return code after executing
          RACF commands
@@ -575,14 +579,14 @@
          in several modules
 
   20 Feb 2020 - V3R7
-     - User (Opton 1)
+     - User (Option 1)
        * When general user (Administrator=NO), do not display SE
          (Search) line command when displaying the Groups connected/
          associated to the userid, prior fix installed, was only for
          administrators, not general user
 
   20 Feb 2020 - V3R6
-     - Settings (Opton 0)
+     - Settings (Option 0)
        * Added 'Display file' field, Display files in BROWSE, EDIT or
          VIEW mode when using the List line command and selecting menu
          option C, Changes (VIEW=Default)
