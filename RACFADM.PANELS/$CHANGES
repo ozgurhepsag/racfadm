@@ -2,7 +2,22 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
-  25 Mar 2020 - V11R5
+  26 Mar 2020 - V11R8
+     - Menu
+       * Reordered option 4, General Resources
+
+  26 Mar 2020 - V11R7
+     - Menu
+       * Made the menu a primary menu, allowing the capability to type
+         =1, =2, =n to skip around from one panel to another
+
+  26 Mar 2020 - V11R6
+     - Menu
+       * Removed entering the class field to the right of menu option 4
+         General Resource, not needed, due to obtaining the classes is
+         extremely quick
+
+  26 Mar 2020 - V11R5
      - Menu
        * Added option 6, RACFdb, RACF database
 
