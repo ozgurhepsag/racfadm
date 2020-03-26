@@ -2,14 +2,21 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  26 Mar 2020 - V11R9
+     - Group and General Resources (Opt 2/4)
+       * Updated panels RACFGRP8 and RACFCLS2, made the description
+         fields scrollable
+         o Allows placing the cursor on the description field and
+           press F11 (RIGHT) or F10 (LEFT) to view the entire text
+
   26 Mar 2020 - V11R8
      - Menu
-       * Reordered option 4, General Resources
+       * Reworded option 4, General Resources
 
   26 Mar 2020 - V11R7
      - Menu
        * Made the menu a primary menu, allowing the capability to type
-         =1, =2, =n to skip around from one panel to another
+         =1, =2, =n to skip around frome one panel to another
 
   26 Mar 2020 - V11R6
      - Menu
