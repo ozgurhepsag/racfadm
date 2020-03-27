@@ -241,7 +241,7 @@ RETURN
 /*  List class                                                   @AL  */
 /*--------------------------------------------------------------------*/
 LISP:
-  WFDD    = "ERA"RANDOM(0,99999)
+  DDNAME  = "ERA"RANDOM(0,99999)
   cmd     = "RL "CLASS" * ALL"                                /* @AN */
   X = OUTTRAP("WFREC.")
   ADDRESS TSO cmd
@@ -258,11 +258,11 @@ LISP:
      if (erashow <> 'NO') then                                /* @AP */
         call SHOWCMD                                          /* @AM */
   end                                                         /* @AM */
-  ADDRESS TSO "ALLOC F("WFDD") NEW REUSE",
+  ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",
               "LRECL(132) BLKSIZE(0) RECFM(F B)",
               "UNIT(VIO) SPACE(1 5) CYLINDERS"
-  ADDRESS TSO "EXECIO * DISKW "WFDD" (STEM WFREC. FINIS"
-  "LMINIT DATAID(WFDATAID) DDNAME("WFDD")"
+  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM WFREC. FINIS"
+  "LMINIT DATAID(WFDATAID) DDNAME("DDNAME")"
   SELECT
      WHEN (ERADISP = "VIEW") THEN
           "VIEW DATAID("WFDATAID")"
@@ -271,8 +271,8 @@ LISP:
      OTHERWISE
           "BROWSE DATAID("WFDATAID")"
   END
-  ADDRESS TSO "FREE FI("WFDD")"
-  DROP WFREC. WFDD
+  ADDRESS TSO "FREE FI("DDNAME")"
+  DROP WFREC. DDNAME
   if (cmd_rc > 0) then                                        /* @AC */
      CALL racfmsgs "ERR10" /* Generic failure */              /* @AC */
 RETURN

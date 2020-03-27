@@ -469,9 +469,9 @@ RETURN
 /*  List group                                                        */
 /*--------------------------------------------------------------------*/
 LISD:
-  WFDD     = "ERA"RANDOM(0,99999)                             /* @A2 */
-  WFLGPRM  = "CSDATA DFP OMVS OVM TME"                        /* @A2 */
-  cmd      = "LG "GROUP" "WFLGPRM                             /* @AN */
+  DDNAME   = "ERA"RANDOM(0,99999)                             /* @A2 */
+  CMDPRM   = "CSDATA DFP OMVS OVM TME"                        /* @A2 */
+  cmd      = "LG "GROUP" "CMDPRM                              /* @AN */
   X = OUTTRAP("WFREC.")                                       /* @A2 */
   ADDRESS TSO cmd                                             /* @AN */
   cmd_rc   = rc                                               /* @AZ */
@@ -487,11 +487,11 @@ LISD:
      if (erashow <> 'NO') then                                /* @BJ */
         call SHOWCMD                                          /* @B7 */
   END                                                         /* @B7 */
-  ADDRESS TSO "ALLOC F("WFDD") NEW REUSE",                    /* @A2 */
+  ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",                  /* @A2 */
               "LRECL(132) BLKSIZE(0) RECFM(F B)",             /* @A2 */
               "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @A2 */
-  ADDRESS TSO "EXECIO * DISKW "WFDD" (STEM WFREC. FINIS"      /* @A2 */
-  "LMINIT DATAID(WFDATAID) DDNAME("WFDD")"                    /* @A2 */
+  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM WFREC. FINIS"    /* @A2 */
+  "LMINIT DATAID(WFDATAID) DDNAME("DDNAME")"                  /* @A2 */
   SELECT                                                      /* @AK */
      WHEN (ERADISP = "VIEW") THEN                             /* @AK */
           "VIEW DATAID("WFDATAID")"                           /* @AK */
@@ -500,8 +500,8 @@ LISD:
      OTHERWISE                                                /* @AK */
           "BROWSE DATAID("WFDATAID")"                         /* @AK */
   END                                                         /* @AK */
-  ADDRESS TSO "FREE FI("WFDD")"                               /* @A2 */
-  DROP WFREC. WFDD WFLGPRM                                    /* @A2 */
+  ADDRESS TSO "FREE FI("DDNAME")"                             /* @A2 */
+  DROP WFREC. DDNAME CMDPRM                                   /* @A2 */
   if (cmd_rc > 0) then                                        /* @B8 */
      CALL racfmsgs "ERR10" /* Generic failure */              /* @B5 */
 RETURN
@@ -509,16 +509,16 @@ RETURN
 /*  List userid                                                       */
 /*--------------------------------------------------------------------*/
 LISP:
-  WFDD    = "ERA"RANDOM(0,99999)                              /* @A5 */
-  WFLUPRM = "CICS CSDATA DCE DFP EIM KERB LANGUAGE",          /* @A5 */
+  DDNAME  = "ERA"RANDOM(0,99999)                              /* @A5 */
+  CMDPRM  = "CICS CSDATA DCE DFP EIM KERB LANGUAGE",          /* @A5 */
             "LNOTES MFA NDS NETVIEW OMVS OPERPARM",           /* @A5 */
             "OVM PROXY TSO WORKATTR"                          /* @A5 */
   call get_setropts_options                                   /* @A9 */
   if (rcvtsmfa = 'NO') then do                                /* @A9 */
-     mfa_pos = pos('MFA',wfluprm)                             /* @A9 */
-     wfluprm = delstr(wfluprm,mfa_pos,4)                      /* @A9 */
+     mfa_pos = pos('MFA',CMDPRM)                              /* @A9 */
+     CMDPRM = delstr(CMDPRM,mfa_pos,4)                        /* @A9 */
   end                                                         /* @A9 */
-  cmd = "LU "ID WFLUPRM                                       /* @AN */
+  cmd = "LU "ID CMDPRM                                        /* @AN */
   X = OUTTRAP("WFREC.")                                       /* @A5 */
   ADDRESS TSO cmd                                             /* @AN */
   cmd_rc = rc                                                 /* @AZ */
@@ -534,11 +534,11 @@ LISP:
      if (erashow <> 'NO') then                                /* @BJ */
         call SHOWCMD                                          /* @B9 */
   END                                                         /* @B9 */
-  ADDRESS TSO "ALLOC F("WFDD") NEW REUSE",                    /* @A5 */
+  ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",                  /* @A5 */
               "LRECL(132) BLKSIZE(0) RECFM(F B)",             /* @A5 */
               "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @A5 */
-  ADDRESS TSO "EXECIO * DISKW "WFDD" (STEM WFREC. FINIS"      /* @A5 */
-  "LMINIT DATAID(WFDATAID) DDNAME("WFDD")"                    /* @A5 */
+  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM WFREC. FINIS"    /* @A5 */
+  "LMINIT DATAID(WFDATAID) DDNAME("DDNAME")"                  /* @A5 */
   SELECT                                                      /* @AK */
      WHEN (ERADISP = "VIEW") THEN                             /* @AK */
           "VIEW DATAID("WFDATAID")"                           /* @AK */
@@ -547,8 +547,8 @@ LISP:
      OTHERWISE                                                /* @AK */
           "BROWSE DATAID("WFDATAID")"                         /* @AK */
   END                                                         /* @AK */
-  ADDRESS TSO "FREE FI("WFDD")"                               /* @A5 */
-  DROP WFREC. WFDD WFLUPRM                                    /* @A5 */
+  ADDRESS TSO "FREE FI("DDNAME")"                             /* @A5 */
+  DROP WFREC. DDNAME CMDPRM                                   /* @A5 */
   if (cmd_rc > 0) then                                        /* @B9 */
      CALL RACFMSGS "ERR10" /* Generic failure */              /* @B5 */
 RETURN

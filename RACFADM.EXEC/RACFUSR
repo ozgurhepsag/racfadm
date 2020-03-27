@@ -427,16 +427,16 @@ RETURN
 /*--------------------------------------------------------------------*/
 LISD:
   action  = '*Listed'                                         /* @A4 */
-  WFDD    = "ERA"RANDOM(0,99999)                              /* @A2 */
-  WFLUPRM = "CICS CSDATA DCE DFP EIM KERB LANGUAGE",          /* @A2 */
+  DDNAME  = "ERA"RANDOM(0,99999)                              /* @A2 */
+  CMDPRM  = "CICS CSDATA DCE DFP EIM KERB LANGUAGE",          /* @A2 */
             "LNOTES MFA NDS NETVIEW OMVS OPERPARM",           /* @A2 */
             "OVM PROXY TSO WORKATTR"                          /* @A2 */
   call get_setropts_options                                   /* @AJ */
   if (rcvtsmfa = 'NO') then do                                /* @AJ */
-     mfa_pos = pos('MFA',wfluprm)                             /* @AJ */
-     wfluprm = delstr(wfluprm,mfa_pos,4)                      /* @AJ */
+     mfa_pos = pos('MFA',CMDPRM)                              /* @AJ */
+     CMDPRM = delstr(CMDPRM,mfa_pos,4)                        /* @AJ */
   end                                                         /* @AJ */
-  cmd = "LU "USER WFLUPRM                                     /* @BB */
+  cmd = "LU "USER CMDPRM                                      /* @BB */
   X = OUTTRAP("WFREC.")                                       /* @A2 */
   ADDRESS TSO cmd                                             /* @BB */
   cmd_rc = rc                                                 /* @BS */
@@ -473,11 +473,11 @@ LISD:
      wfrec.2 = irrsitec.3                                     /* @AP */
      wfrec.3 = irrsitec.6                                     /* @AP */
   end                                                         /* @AP */
-  ADDRESS TSO "ALLOC F("WFDD") NEW REUSE",                    /* @A2 */
+  ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",                  /* @A2 */
               "LRECL(132) BLKSIZE(0) RECFM(F B)",             /* @A2 */
               "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @A2 */
-  ADDRESS TSO "EXECIO * DISKW "WFDD" (STEM WFREC. FINIS"      /* @A2 */
-  "LMINIT DATAID(WFDATAID) DDNAME("WFDD")"                    /* @A2 */
+  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM WFREC. FINIS"    /* @A2 */
+  "LMINIT DATAID(WFDATAID) DDNAME("DDNAME")"                  /* @A2 */
   SELECT                                                      /* @B7 */
      WHEN (ERADISP = "VIEW") THEN                             /* @B7 */
           "VIEW DATAID("WFDATAID")"                           /* @B7 */
@@ -486,8 +486,8 @@ LISD:
      OTHERWISE                                                /* @B7 */
           "BROWSE DATAID("WFDATAID")"                         /* @B7 */
   END                                                         /* @B7 */
-  ADDRESS TSO "FREE FI("WFDD")"                               /* @A2 */
-  DROP WFREC. WFDD WFLUPRM                                    /* @A2 */
+  ADDRESS TSO "FREE FI("DDNAME")"                             /* @A2 */
+  DROP WFREC. DDNAME CMDPRM                                   /* @A2 */
   if (cmd_rc = 0) then                                        /* @C8 */
      "TBMOD" TBLA
   else
@@ -522,9 +522,9 @@ RETURN 0                                                      /* @AJ */
 /*--------------------------------------------------------------------*/
 LISP:
   action  = '*Listed'                                         /* @AC */
-  WFDD    = "ERA"RANDOM(0,99999)                              /* @AC */
-  WFLGPRM = "CSDATA DFP OMVS OVM TME"                         /* @AC */
-  cmd     = "LG "ID" "WFLGPRM                                 /* @BB */
+  DDNAME  = "ERA"RANDOM(0,99999)                              /* @AC */
+  CMDPRM  = "CSDATA DFP OMVS OVM TME"                         /* @AC */
+  cmd     = "LG "ID" "CMDPRM                                  /* @BB */
   X = OUTTRAP("WFREC.")                                       /* @AC */
   ADDRESS TSO cmd                                             /* @BB */
   cmd_rc = rc                                                 /* @BS */
@@ -540,11 +540,11 @@ LISP:
      if (erashow <> 'NO') then                                /* @CU */
         call SHOWCMD                                          /* @C9 */
   END                                                         /* @C9 */
-  ADDRESS TSO "ALLOC F("WFDD") NEW REUSE",                    /* @AC */
+  ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",                  /* @AC */
               "LRECL(132) BLKSIZE(0) RECFM(F B)",             /* @AC */
               "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @AC */
-  ADDRESS TSO "EXECIO * DISKW "WFDD" (STEM WFREC. FINIS"      /* @AC */
-  "LMINIT DATAID(WFDATAID) DDNAME("WFDD")"                    /* @AC */
+  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM WFREC. FINIS"    /* @AC */
+  "LMINIT DATAID(WFDATAID) DDNAME("DDNAME")"                  /* @AC */
   SELECT                                                      /* @B7 */
      WHEN (ERADISP = "VIEW") THEN                             /* @B7 */
           "VIEW DATAID("WFDATAID")"                           /* @B7 */
@@ -553,8 +553,8 @@ LISP:
      OTHERWISE                                                /* @B7 */
           "BROWSE DATAID("WFDATAID")"                         /* @B7 */
   END                                                         /* @B7 */
-  ADDRESS TSO "FREE FI("WFDD")"                               /* @AC */
-  DROP WFREC. WFDD WFLGPRM                                    /* @AC */
+  ADDRESS TSO "FREE FI("DDNAME")"                             /* @AC */
+  DROP WFREC. DDNAME CMDPRM                                   /* @AC */
   if (cmd_rc = 0) then                                        /* @C8 */
      "TBMOD" TBLB                                             /* @AC */
   else                                                        /* @AC */

@@ -233,12 +233,12 @@ IF ICBTMPRL /= '0000000000000000'X THEN                       /* @A1 */
 QUEUE SYSCOM SYSDS                                            /* @A1 */
 QUEUE                                                         /* @A1 */
                                                               /* @A1 */
-WFDD = "RACFDB"                                               /* @A1 */
-"ALLOC F("WFDD") NEW REUSE",                                  /* @A1 */
+DDNAME = "RACFDB"                                             /* @A1 */
+"ALLOC F("DDNAME") NEW REUSE",                                /* @A1 */
       "LRECL(80) BLKSIZE(0) RECFM(F B)",                      /* @A2 */
       "UNIT(VIO) SPACE(1 5) CYLINDERS"                        /* @A1 */
-"EXECIO * DISKW "WFDD" (FINIS"                                /* @A1 */
-ADDRESS ISPEXEC "LMINIT DATAID(WFDATAID) DDNAME("WFDD")"      /* @A1 */
+"EXECIO * DISKW "DDNAME" (FINIS"                              /* @A1 */
+ADDRESS ISPEXEC "LMINIT DATAID(WFDATAID) DDNAME("DDNAME")"    /* @A1 */
 SELECT                                                        /* @A1 */
    WHEN (ERADISP = "VIEW") THEN                               /* @A1 */
         ADDRESS ISPEXEC "VIEW DATAID("WFDATAID")"             /* @A1 */
@@ -247,7 +247,7 @@ SELECT                                                        /* @A1 */
    OTHERWISE                                                  /* @A1 */
         ADDRESS ISPEXEC "BROWSE DATAID("WFDATAID")"           /* @A1 */
 END                                                           /* @A1 */
-"FREE FI("WFDD")"                                             /* @A1 */
+"FREE FI("DDNAME")"                                           /* @A1 */
 EXIT
 /*--------------------------------+----------------------------------*/
 /*                           SUBROUTE AREA                           */

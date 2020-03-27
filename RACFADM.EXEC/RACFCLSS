@@ -333,7 +333,7 @@ RETURN 0
 /*  List class                                                   @A1  */
 /*--------------------------------------------------------------------*/
 LISP:                                                         /* @A1 */
-  WFDD    = "ERA"RANDOM(0,99999)                              /* @A1 */
+  DDNAME  = "ERA"RANDOM(0,99999)                              /* @A1 */
   cmd     = "RL "CLASS" * ALL"                                /* @A3 */
   X = OUTTRAP("WFREC.")                                       /* @A1 */
   ADDRESS TSO cmd                                             /* @A1 */
@@ -350,11 +350,11 @@ LISP:                                                         /* @A1 */
      if (erashow <> 'NO') then                                /* @A4 */
         call SHOWCMD                                          /* @A1 */
   end                                                         /* @A1 */
-  ADDRESS TSO "ALLOC F("WFDD") NEW REUSE",                    /* @A1 */
+  ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",                  /* @A1 */
               "LRECL(132) BLKSIZE(0) RECFM(F B)",             /* @A1 */
               "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @A1 */
-  ADDRESS TSO "EXECIO * DISKW "WFDD" (STEM WFREC. FINIS"      /* @A1 */
-  "LMINIT DATAID(WFDATAID) DDNAME("WFDD")"                    /* @A1 */
+  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM WFREC. FINIS"    /* @A1 */
+  "LMINIT DATAID(WFDATAID) DDNAME("DDNAME")"                  /* @A1 */
   SELECT                                                      /* @A1 */
      WHEN (ERADISP = "VIEW") THEN                             /* @A1 */
           "VIEW DATAID("WFDATAID")"                           /* @A1 */
@@ -363,8 +363,8 @@ LISP:                                                         /* @A1 */
      OTHERWISE                                                /* @A1 */
           "BROWSE DATAID("WFDATAID")"                         /* @A1 */
   END                                                         /* @A1 */
-  ADDRESS TSO "FREE FI("WFDD")"                               /* @A1 */
-  DROP WFREC. WFDD                                            /* @A1 */
+  ADDRESS TSO "FREE FI("DDNAME")"                             /* @A1 */
+  DROP WFREC. DDNAME                                          /* @A1 */
   if (cmd_rc > 0) then                                        /* @A1 */
      CALL racfmsgs "ERR10" /* Generic failure */              /* @A1 */
 RETURN                                                        /* @A1 */
@@ -372,7 +372,7 @@ RETURN                                                        /* @A1 */
 /*  List class's profile                                         @A2  */
 /*--------------------------------------------------------------------*/
 LISD:                                                         /* @A2 */
-  WFDD = "ERA"RANDOM(0,99999)                                 /* @A2 */
+  DDNAME = "ERA"RANDOM(0,99999)                               /* @A2 */
   cmd  = "RLIST "CLASS PROFILE" AUTH"                         /* @A2 */
   X    = OUTTRAP("WFREC.")                                    /* @A2 */
   ADDRESS TSO cmd                                             /* @A2 */
@@ -389,11 +389,11 @@ LISD:                                                         /* @A2 */
      if (erashow <> 'NO') then                                /* @A4 */
         call SHOWCMD                                          /* @A2 */
   end                                                         /* @A2 */
-  ADDRESS TSO "ALLOC F("WFDD") NEW REUSE",                    /* @A2 */
+  ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",                  /* @A2 */
               "LRECL(132) BLKSIZE(0) RECFM(F B)",             /* @A2 */
               "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @A2 */
-  ADDRESS TSO "EXECIO * DISKW "WFDD" (STEM WFREC. FINIS"      /* @A2 */
-  "LMINIT DATAID(WFDATAID) DDNAME("WFDD")"                    /* @A2 */
+  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM WFREC. FINIS"    /* @A2 */
+  "LMINIT DATAID(WFDATAID) DDNAME("DDNAME")"                  /* @A2 */
   SELECT                                                      /* @A2 */
      WHEN (ERADISP = "VIEW") THEN                             /* @A2 */
           "VIEW DATAID("WFDATAID")"                           /* @A2 */
@@ -402,8 +402,8 @@ LISD:                                                         /* @A2 */
      OTHERWISE                                                /* @A2 */
           "BROWSE DATAID("WFDATAID")"                         /* @A2 */
   END                                                         /* @A2 */
-  ADDRESS TSO "FREE FI("WFDD")"                               /* @A2 */
-  DROP WFREC. WFDD                                            /* @A2 */
+  ADDRESS TSO "FREE FI("DDNAME")"                             /* @A2 */
+  DROP WFREC. DDNAME                                          /* @A2 */
   if (cmd_rc > 0) then                                        /* @A2 */
      CALL racfmsgs "ERR10" /* Generic failure */              /* @A2 */
 RETURN                                                        /* @A2 */
