@@ -3,6 +3,7 @@
   02 TYPE(OUTPUT)  INTENS(LOW)  SKIP(ON)   COLOR(&CLRDATA)
   03 TYPE(OUTPUT)  INTENS(LOW)  SKIP(ON)   COLOR(&CLRSUPG)
   04 TYPE(OUTPUT)  INTENS(LOW)  SKIP(ON)   COLOR(&CLROWNE)
+  @  TYPE(OUTPUT)  INTENS(LOW)  SKIP(ON)   COLOR(&CLRDATA)
    _ TYPE(INPUT)   INTENS(HIGH) CAPS(ON)   JUST(LEFT)   HILITE(USCORE)
    $ TYPE(OUTPUT)  INTENS(LOW)  JUST(LEFT) COLOR(TURQ)
    + TYPE(TEXT)    INTENS(LOW)  SKIP(ON)   COLOR(GREEN)
@@ -20,9 +21,9 @@
 %S  ~Group    ~SupGrp   ~Owner    ~Description
 %-------------------------------------------------------------------------------
 )MODEL CLEAR(OPTA)
-_Z+ Z        Z        œZ        Z
+_Z+ Z        Z        œZ        Z                                         @z
 )INIT
-  .ZVARS   = '(OPTA GROUP SUPGRP OWNER DATA)'
+  .ZVARS   = '(OPTA GROUP SUPGRP OWNER DATA SCIND)'
   .HELP    = #RACGRP8
   &ZCMD    = ' '
   IF (&SAMT = ' ')
@@ -43,6 +44,6 @@ _Z+ Z        Z        œZ        Z
   FIELD(ZPS00002) VAR(ZCMD) VAL('SORT SUPGRP')
   FIELD(ZPS00003) VAR(ZCMD) VAL('SORT OWNER')
   FIELD(ZPS00004) VAR(ZCMD) VAL('SORT DESC')
-)FIELD
+)Field
   FIELD(DATA) IND(SCIND,'<>') LEN(255)
 )END

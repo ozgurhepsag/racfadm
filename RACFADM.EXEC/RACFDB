@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A2  200326  RACFA    Chg temp file to LRECL=80, was 132           */
 /* @A1  200326  RACFA    Chg SAYs to QUEUE, alloc, browse, free file  */
 /* @A0  200326  LBD      Obtained REXX                                */
 /*====================================================================*/
@@ -234,7 +235,7 @@ QUEUE                                                         /* @A1 */
                                                               /* @A1 */
 WFDD = "RACFDB"                                               /* @A1 */
 "ALLOC F("WFDD") NEW REUSE",                                  /* @A1 */
-      "LRECL(132) BLKSIZE(0) RECFM(F B)",                     /* @A1 */
+      "LRECL(80) BLKSIZE(0) RECFM(F B)",                      /* @A2 */
       "UNIT(VIO) SPACE(1 5) CYLINDERS"                        /* @A1 */
 "EXECIO * DISKW "WFDD" (FINIS"                                /* @A1 */
 ADDRESS ISPEXEC "LMINIT DATAID(WFDATAID) DDNAME("WFDD")"      /* @A1 */

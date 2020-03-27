@@ -2,12 +2,19 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  26 Mar 2020 - V12R0
+     - Group and General Resources (Option 2/4)
+       * Fixed description scoll area, so it displays the <> to the
+         right of the field
+     - RACFdb (Option 6)
+       * Changed temporary file's LRECL=80, was 132
+
   26 Mar 2020 - V11R9
-     - Group and General Resources (Opt 2/4)
+     - Group and General Resources (Option 2/4)
        * Updated panels RACFGRP8 and RACFCLS2, made the description
          fields scrollable
          o Allows placing the cursor on the description field and
-           press F11 (RIGHT) or F10 (LEFT) to view the entire text
+           press F11 (RIGHT) and F10 (LEFT) to view the entire text
 
   26 Mar 2020 - V11R8
      - Menu
