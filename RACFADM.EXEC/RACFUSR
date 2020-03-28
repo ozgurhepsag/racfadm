@@ -1,5 +1,5 @@
 /*%NOCOMMENT====================* REXX *==============================*/
-/*  PURPOSE:  RACFADM - User (Option 1)                               */
+/*  PURPOSE:  RACFADM - User - User profiles - Menu option 1          */
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
@@ -437,14 +437,14 @@ LISD:
      CMDPRM = delstr(CMDPRM,mfa_pos,4)                        /* @AJ */
   end                                                         /* @AJ */
   cmd = "LU "USER CMDPRM                                      /* @BB */
-  X = OUTTRAP("WFREC.")                                       /* @A2 */
+  X = OUTTRAP("CMDREC.")                                      /* @A2 */
   ADDRESS TSO cmd                                             /* @BB */
   cmd_rc = rc                                                 /* @BS */
   if (erashow <> 'NO') then                                   /* @CU */
      call SHOWCMD                                             /* @BS */
   X = OUTTRAP("OFF")                                          /* @A2 */
   IF (cmd_rc > 0) then DO    /* Removed parms */              /* @C6 */
-     X = OUTTRAP("WFREC.")                                    /* @C6 */
+     X = OUTTRAP("CMDREC.")                                   /* @C6 */
      cmd = "LU "USER                                          /* @C6 */
      ADDRESS TSO cmd                                          /* @C6 */
      cmd_rc = rc                                              /* @C6 */
@@ -453,41 +453,41 @@ LISD:
         call SHOWCMD                                          /* @C6 */
   END                                                         /* @C6 */
   if (user = 'irrcerta') then do                              /* @AP */
-     wfrec.  = ''                                             /* @AP */
-     wfrec.0 = 3                                              /* @AP */
-     wfrec.1 = irrcerta.1                                     /* @AP */
-     wfrec.2 = irrcerta.3                                     /* @AP */
-     wfrec.3 = irrcerta.6                                     /* @AP */
+     CMDREC. = ''                                             /* @AP */
+     CMDREC.0 = 3                                             /* @AP */
+     CMDREC.1 = irrcerta.1                                    /* @AP */
+     CMDREC.2 = irrcerta.3                                    /* @AP */
+     CMDREC.3 = irrcerta.6                                    /* @AP */
   end                                                         /* @AP */
   if (user = 'irrmulti') then do                              /* @AP */
-     wfrec.  = ''                                             /* @AP */
-     wfrec.0 = 3                                              /* @AP */
-     wfrec.1 = irrmulti.1                                     /* @AP */
-     wfrec.2 = irrmulti.3                                     /* @AP */
-     wfrec.3 = irrmulti.6                                     /* @AP */
+     CMDREC. = ''                                             /* @AP */
+     CMDREC.0 = 3                                             /* @AP */
+     CMDREC.1 = irrmulti.1                                    /* @AP */
+     CMDREC.2 = irrmulti.3                                    /* @AP */
+     CMDREC.3 = irrmulti.6                                    /* @AP */
   end                                                         /* @AP */
   if (user = 'irrsitec') then do                              /* @AP */
-     wfrec.  = ''                                             /* @AP */
-     wfrec.0 = 3                                              /* @AP */
-     wfrec.1 = irrsitec.1                                     /* @AP */
-     wfrec.2 = irrsitec.3                                     /* @AP */
-     wfrec.3 = irrsitec.6                                     /* @AP */
+     CMDREC. = ''                                             /* @AP */
+     CMDREC.0 = 3                                             /* @AP */
+     CMDREC.1 = irrsitec.1                                    /* @AP */
+     CMDREC.2 = irrsitec.3                                    /* @AP */
+     CMDREC.3 = irrsitec.6                                    /* @AP */
   end                                                         /* @AP */
   ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",                  /* @A2 */
               "LRECL(132) BLKSIZE(0) RECFM(F B)",             /* @A2 */
               "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @A2 */
-  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM WFREC. FINIS"    /* @A2 */
-  "LMINIT DATAID(WFDATAID) DDNAME("DDNAME")"                  /* @A2 */
+  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM CMDREC. FINIS"   /* @A2 */
+  "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"                  /* @A2 */
   SELECT                                                      /* @B7 */
      WHEN (ERADISP = "VIEW") THEN                             /* @B7 */
-          "VIEW DATAID("WFDATAID")"                           /* @B7 */
+          "VIEW DATAID("CMDDATID")"                           /* @B7 */
      WHEN (ERADISP = "EDIT") THEN                             /* @B7 */
-          "EDIT DATAID("WFDATAID")"                           /* @B7 */
+          "EDIT DATAID("CMDDATID")"                           /* @B7 */
      OTHERWISE                                                /* @B7 */
-          "BROWSE DATAID("WFDATAID")"                         /* @B7 */
+          "BROWSE DATAID("CMDDATID")"                         /* @B7 */
   END                                                         /* @B7 */
   ADDRESS TSO "FREE FI("DDNAME")"                             /* @A2 */
-  DROP WFREC. DDNAME CMDPRM                                   /* @A2 */
+  DROP CMDREC. DDNAME CMDPRM                                  /* @A2 */
   if (cmd_rc = 0) then                                        /* @C8 */
      "TBMOD" TBLA
   else
@@ -525,7 +525,7 @@ LISP:
   DDNAME  = "ERA"RANDOM(0,99999)                              /* @AC */
   CMDPRM  = "CSDATA DFP OMVS OVM TME"                         /* @AC */
   cmd     = "LG "ID" "CMDPRM                                  /* @BB */
-  X = OUTTRAP("WFREC.")                                       /* @AC */
+  X = OUTTRAP("CMDREC.")                                      /* @AC */
   ADDRESS TSO cmd                                             /* @BB */
   cmd_rc = rc                                                 /* @BS */
   X = OUTTRAP("OFF")                                          /* @AC */
@@ -533,7 +533,7 @@ LISP:
      call SHOWCMD                                             /* @BB */
   if (cmd_rc > 0) then do /* Remove Parms */                  /* @C9 */
      cmd     = "LG "ID                                        /* @C9 */
-     X = OUTTRAP("WFREC.")                                    /* @C9 */
+     X = OUTTRAP("CMDREC.")                                   /* @C9 */
      ADDRESS TSO cmd                                          /* @C9 */
      cmd_rc = rc                                              /* @C9 */
      X = OUTTRAP("OFF")                                       /* @C9 */
@@ -543,18 +543,18 @@ LISP:
   ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",                  /* @AC */
               "LRECL(132) BLKSIZE(0) RECFM(F B)",             /* @AC */
               "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @AC */
-  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM WFREC. FINIS"    /* @AC */
-  "LMINIT DATAID(WFDATAID) DDNAME("DDNAME")"                  /* @AC */
+  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM CMDREC. FINIS"   /* @AC */
+  "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"                  /* @AC */
   SELECT                                                      /* @B7 */
      WHEN (ERADISP = "VIEW") THEN                             /* @B7 */
-          "VIEW DATAID("WFDATAID")"                           /* @B7 */
+          "VIEW DATAID("CMDDATID")"                           /* @B7 */
      WHEN (ERADISP = "EDIT") THEN                             /* @B7 */
-          "EDIT DATAID("WFDATAID")"                           /* @B7 */
+          "EDIT DATAID("CMDDATID")"                           /* @B7 */
      OTHERWISE                                                /* @B7 */
-          "BROWSE DATAID("WFDATAID")"                         /* @B7 */
+          "BROWSE DATAID("CMDDATID")"                         /* @B7 */
   END                                                         /* @B7 */
   ADDRESS TSO "FREE FI("DDNAME")"                             /* @AC */
-  DROP WFREC. DDNAME CMDPRM                                   /* @AC */
+  DROP CMDREC. DDNAME CMDPRM                                  /* @AC */
   if (cmd_rc = 0) then                                        /* @C8 */
      "TBMOD" TBLB                                             /* @AC */
   else                                                        /* @AC */

@@ -1,5 +1,5 @@
 /*%NOCOMMENT====================* REXX *==============================*/
-/*  PURPOSE:  RACFADM - DATABASE - INFORMATION                        */
+/*  PURPOSE:  RACFADM - Database - Information - Menu option 6        */
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
@@ -196,25 +196,25 @@ DO II = 1 TO DSDTNUM                 /* LOOP THROUGH ENTRIES         */
     QUEUE COPIES("-",62)                                      /* @A1 */
     QSNAME = "'"STRIP(PNAME)"'"          /*PUT QUOTES AROUND RDB NAME*/
     CALL FINDSIZE QSNAME                 /* GET THE SPACE USED VALUE */
-    QUEUE "PRIMARY #"II":"                  /* <<<               @A1 */
+    QUEUE "PRIMARY #"II":"                                    /* @A1 */
     QUEUE "  Status ......... "PSTAT                          /* @A1 */
     QUEUE "  Dsname ......... "PNAME                          /* @A1 */
     QUEUE "  Volume ......... "VOLSER                         /* @A1 */
     QUEUE "  # Buffers ...... "PNUM                           /* @A1 */
     QUEUE "  % Space used ...",                               /* @A1 */
-        "%"TRUNC(((USED_SEGS / SEG_COUNT) * 100),2) "OF",
-        SPACEUNIT"("SPACEALLOC")"
+          "%"TRUNC(((USED_SEGS / SEG_COUNT) * 100),2) "OF",
+          SPACEUNIT"("SPACEALLOC")"
     QUEUE " "                                                 /* @A1 */
     QSNAME = "'"STRIP(BNAME)"'"          /*PUT QUOTES AROUND RDB NAME*/
     CALL FINDSIZE QSNAME                 /* GET THE SPACE USED VALUE */
-    QUEUE "BACKUP  #"II":"                 /* <<<                @A1 */
+    QUEUE "BACKUP  #"II":"                                    /* @A1 */
     QUEUE "  Status ......... "BSTAT                          /* @A1 */
     QUEUE "  Dsname ......... "BNAME                          /* @A1 */
     QUEUE "  Volume ......... "VOLSER                         /* @A1 */
     QUEUE "  # Buffers ...... "BNUM                           /* @A1 */
     QUEUE "  % Space used ...",                               /* @A1 */
-        "%"TRUNC(((USED_SEGS / SEG_COUNT) * 100),2) "OF",
-        SPACEUNIT"("SPACEALLOC")"
+          "%"TRUNC(((USED_SEGS / SEG_COUNT) * 100),2) "OF",
+          SPACEUNIT"("SPACEALLOC")"
 
     DSDTPRIM = D2X(X2D(DSDTPRIM) + 352)  /* BUMP TO NEXT SLOT        */
     DSDTBACK = D2X(X2D(DSDTBACK) + 352)  /* BUMP TO NEXT SLOT        */
@@ -223,13 +223,11 @@ DO II = 1 TO DSDTNUM                 /* LOOP THROUGH ENTRIES         */
 QUEUE COPIES('-',65)                                          /* @A1 */
 QUEUE "IRRMIN00 version/release/modification ... "RACFVRMN    /* @A1 */
 QUEUE "RACF database template RMID level ....... "RACFTEMP    /* @A1 */
-/*                                                            /* @A1 */
-IF ICBTMPRL /= '0000000000000000'X THEN                       /* @A1 */
-   DO                                                         /* @A1 */
-     QUEUE "Template release/APAR level .............",       /* @A1 */
-           ICBTMPRL33"."33ICBTMPAL                            /* @A1 */
-   END                                                        /* @A1 */
-*/                                                            /* @A1 */
+                                                              /* @A1 */
+/* IF ICBTMPRL /= '0000000000000000'X THEN DO             */  /* @A1 */
+/*     QUEUE "Template release/APAR level .............", */  /* @A1 */
+/*           ICBTMPRL33"."33ICBTMPAL                      */  /* @A1 */
+/* END                                                    */  /* @A1 */
 QUEUE SYSCOM SYSDS                                            /* @A1 */
 QUEUE                                                         /* @A1 */
                                                               /* @A1 */
@@ -238,14 +236,14 @@ DDNAME = "RACFDB"                                             /* @A1 */
       "LRECL(80) BLKSIZE(0) RECFM(F B)",                      /* @A2 */
       "UNIT(VIO) SPACE(1 5) CYLINDERS"                        /* @A1 */
 "EXECIO * DISKW "DDNAME" (FINIS"                              /* @A1 */
-ADDRESS ISPEXEC "LMINIT DATAID(WFDATAID) DDNAME("DDNAME")"    /* @A1 */
+ADDRESS ISPEXEC "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"    /* @A1 */
 SELECT                                                        /* @A1 */
    WHEN (ERADISP = "VIEW") THEN                               /* @A1 */
-        ADDRESS ISPEXEC "VIEW DATAID("WFDATAID")"             /* @A1 */
+        ADDRESS ISPEXEC "VIEW DATAID("CMDDATID")"             /* @A1 */
    WHEN (ERADISP = "EDIT") THEN                               /* @A1 */
-        ADDRESS ISPEXEC "EDIT DATAID("WFDATAID")"             /* @A1 */
+        ADDRESS ISPEXEC "EDIT DATAID("CMDDATID")"             /* @A1 */
    OTHERWISE                                                  /* @A1 */
-        ADDRESS ISPEXEC "BROWSE DATAID("WFDATAID")"           /* @A1 */
+        ADDRESS ISPEXEC "BROWSE DATAID("CMDDATID")"           /* @A1 */
 END                                                           /* @A1 */
 "FREE FI("DDNAME")"                                           /* @A1 */
 EXIT
@@ -253,174 +251,166 @@ EXIT
 /*                           SUBROUTE AREA                           */
 /*--------------------------------+----------------------------------*/
 FINDSIZE:
-ARG RDSN                           /* GET RACF DATASET NAME          */
-FREE_SEGS = 0                  /* TOTAL NUMBER OF FREE SEGMENTS      */
-USED_SEGS = 0                  /* TOTAL NUMBER OF ALLOCATED SEGMENTS */
-/*--------------------------------+----------------------------------*/
-CALL $RDSN_SETUP          /*--OPEN RACF DATASET AND READ ICB BLOCK --*/
-BAM_COUNTER = 0                 /*--COUNT NUMBER OF BAMS PROCESSED --*/
+  ARG RDSN                      /* GET RACF DATASET NAME             */
+  FREE_SEGS = 0                 /* TOTAL NUMBER FREE SEGMENTS        */
+  USED_SEGS = 0                 /* TOTAL NUMBER ALLOCATED SEGMENTS   */
+  CALL $RDSN_SETUP              /* OPEN RACF DSN AND READ ICB BLOCK  */
+  BAM_COUNTER = 0               /* COUNT NUMBER OF BAMS PROCESSED    */
 
-DO FOREVER
-  BAM_COUNTER = BAM_COUNTER + 1
-/*SAY "PROCESSING BAM BLOCK " BAM_COUNTER "OF" C2D(BAM_BCNT)*/
+  DO FOREVER
+    BAM_COUNTER = BAM_COUNTER + 1
+  /*SAY "PROCESSING BAM BLOCK " BAM_COUNTER "OF" C2D(BAM_BCNT)*/
 
-  X = $GBLK(BAM_ADDR,BSIZE)    /*--READ IN A BAM BLOCK             --*/
-  PARSE VAR BLK.1   ,          /*--PARSE BAM HEADER AND MASK BITS  --*/
-          PREV_BAM_BLOCK +6, /*--PREVIOUS OR IF ZERO THE FIRST BAM --*/
-          NEXT_BAM_BLOCK +6, /*--NEXT BAM BLOCK ADDRESS            --*/
-          RBA1_BAM_BLOCK +6, /*--RBA OF 1ST. BLOCK BAM DEFINES     --*/
-          BLK_CNT +2,          /*--NO. OF BLOCKS THIS BAM DEFINES  --*/
-          BAM_DATA           /*--BAM MASK BITS (1 BIT = 1 SEGMENT) --*/
+    X = $GBLK(BAM_ADDR,BSIZE)   /*  READ IN A BAM BLOCK              */
+    PARSE VAR BLK.1   ,         /*  PARSE BAM HEADER AND MASK BITS   */
+            PREV_BAM_BLOCK +6,  /* PREVIOUS OR IF ZERO THE FIRST BAM */
+            NEXT_BAM_BLOCK +6,  /* NEXT BAM BLOCK ADDRESS            */
+            RBA1_BAM_BLOCK +6,  /* RBA OF 1ST. BLOCK BAM DEFINES     */
+            BLK_CNT +2,         /* NO. OF BLOCKS THIS BAM DEFINES    */
+            BAM_DATA            /* BAM MASK BITS (1 BIT = 1 SEGMENT) */
 
-  BLKC = C2D(BLK_CNT)     /*--EACH SEGMENT = 256 BYTES             --*/
-  X = $GET_BAM_COUNT(BAM_DATA,BLKC) /*--GET ALLOCATION DATA IN BAM --*/
-  IF C2D(NEXT_BAM_BLOCK) = 0 THEN LEAVE /*--NO MORE BAMS?          --*/
-     ELSE BAM_ADDR = NEXT_BAM_BLOCK  /*-- YES, CONTINUE PROCESSING --*/
-END                                       /*--  END OF DO FOREVER  --*/
+    BLKC = C2D(BLK_CNT)                   /* EACH SEGMENT=256 BYTES  */
+    X = $GET_BAM_COUNT(BAM_DATA,BLKC)     /* GET ALLOC. DATA IN BAM  */
+    IF C2D(NEXT_BAM_BLOCK) = 0 THEN LEAVE /* NO MORE BAMS?           */
+       ELSE BAM_ADDR = NEXT_BAM_BLOCK     /*YES, CONTINUE PROCESSING */
+  END                                     /*      END OF DO FOREVER  */
 
-/*            SAY "FREE SEGMENTS =>    " FREE_SEGS
-              SAY "USED SEGMENTS =>    " USED_SEGS
-              SAY "TOTAL SEGMENTS=>    " SEG_COUNT     */
-    "EXECIO 1 DISKR SYSRACF 1 (STEM ICB. FINIS"
-    "FREE F(SYSRACF)"
+/*            SAY "FREE SEGMENTS =>    " FREE_SEGS     */
+/*            SAY "USED SEGMENTS =>    " USED_SEGS     */
+/*            SAY "TOTAL SEGMENTS=>    " SEG_COUNT     */
+  "EXECIO 1 DISKR SYSRACF 1 (STEM ICB. FINIS"
+  "FREE F(SYSRACF)"
 RETURN
-/*---------------------------RDSN_SETUP-------------------------------
-  THIS FUNCTION WILL QUERRY THE USER FOR A RACF DATABASE NAME AND
-  ISSUE THE "ALLOC" COMMAND. THE FIRST RECORD (ICB) IS READ FROM THE
-  RACF DATABASE TO OBTAIN BAM POINTER DATA.
-  THIS FUNCTION WILL ONLY DO ELEMENTRY CHECKING TO SEE IF THE RACF
-  DATABASE NAME IS LEGIT. IT ONLY CHECKS IF THE DATA SET NAME ENTERED
-  IS CATALOGED AND IF THE BLOCK SIZE IS 4096. ANY OTHER ISSUES LIKE
-  THE WRONG DSORG OR RECFM ARE NOT CHECKED AND EXPECT ERRORS TO
-  HAPPEN DURING EXECIO PROCESSING.
----------------------------------------------------------------------*/
+/*---------------------------RDSN_SETUP-------------------------------*/
+/* THIS FUNCTION WILL QUERRY THE USER FOR A RACF DATABASE NAME AND    */
+/* ISSUE THE "ALLOC" COMMAND. THE FIRST RECORD (ICB) IS READ FROM THE */
+/* RACF DATABASE TO OBTAIN BAM POINTER DATA.                          */
+/* THIS FUNCTION WILL ONLY DO ELEMENTRY CHECKING TO SEE IF THE RACF   */
+/* DATABASE NAME IS LEGIT. IT ONLY CHECKS IF THE DATA SET NAME ENTERED*/
+/* IS CATALOGED AND IF THE BLOCK SIZE IS 4096. ANY OTHER ISSUES LIKE  */
+/* THE WRONG DSORG OR RECFM ARE NOT CHECKED AND EXPECT ERRORS TO      */
+/* HAPPEN DURING EXECIO PROCESSING.                                   */
+/*--------------------------------------------------------------------*/
 $RDSN_SETUP:
-/*-------------------------------------------------------------------*/
-/*CALL LISTDSI TO TEST IF THE RACF DATASET IS CATALOGED.             */
-/*-------------------------------------------------------------------*/
-FRC = LISTDSI(RDSN)
-IF FRC /= 0 THEN
-   DO
+  /*--------------------------------------------------------*/
+  /* CALL LISTDSI TO TEST IF THE RACF DATASET IS CATALOGED. */
+  /*--------------------------------------------------------*/
+  FRC = LISTDSI(RDSN)
+  IF FRC /= 0 THEN DO
      SAY 'ERROR: INVALID OR UNKNOWN RACF DATABASE NAME < 'RDSN '>'
      SAY "DATA SET NAME MUST BE A CATALOGED,",
          "RESTRUCTURED RACF DATABASE"
      EXIT
-   END
-BSIZE  = SYSBLKSIZE
-VOLSER = SYSVOLUME
-SPACEUNIT = SYSUNITS
-SPACEALLOC = SYSALLOC
-/*--------------------------------------------------------------------*/
-/* TEST TO SEE IF THE BLOCK SIZE IS 4096.                             */
-/*--------------------------------------------------------------------*/
-IF BSIZE /= 4096 THEN
-   DO
+  END
+  BSIZE  = SYSBLKSIZE
+  VOLSER = SYSVOLUME
+  SPACEUNIT = SYSUNITS
+  SPACEALLOC = SYSALLOC
+  /*----------------------------------------*/
+  /* TEST TO SEE IF THE BLOCK SIZE IS 4096. */
+  /*----------------------------------------*/
+  IF BSIZE /= 4096 THEN DO
      SAY "ERROR: RACF DATABASE ENTERED DOES NOT HAVE A",
          "RESTRUCTURED 4096 BLOCK SIZE."
      EXIT
-   END
-/*--------------------------------------------------------------------*/
-/* ALLOCATE AND READ IN THE ICB TO GET BAM POINTERS.                  */
-/*--------------------------------------------------------------------*/
+  END
+  /*---------------------------------------------------*/
+  /* ALLOCATE AND READ IN THE ICB TO GET BAM POINTERS. */
+  /*---------------------------------------------------*/
+  "ALLOC F(SYSRACF) REUSE DA("RDSN") SHR LRECL("BSIZE")"
+  "EXECIO 1 DISKR SYSRACF 1 (STEM ICB. "
 
-"ALLOC F(SYSRACF) REUSE DA("RDSN") SHR LRECL("BSIZE")"
-"EXECIO 1 DISKR SYSRACF 1 (STEM ICB. "
-
-BAM_BCNT = SUBSTR(ICB.1,05,4) /* NUMBER OF BAM BLOCKS DEFINED         */
-BAM_ADDR = SUBSTR(ICB.1,21,6) /* RBA OF FIRST BAM BLOCK IN CHAIN      */
-IF RACFVRMN = '' THEN
-  DO
-     RACFVRMN = SUBSTR(ICB.1,1019,6) /* TEMPLATE VERSION/RELEASE/MOD  */
-     RACFTEMP = SUBSTR(ICB.1,1057,7) /* TEMPLATE LEVEL VALUE          */
-     ICBTMPRL = SUBSTR(ICB.1,519,8) /* TEMPLATE RELEASE LEVEL        */
-     ICBTMPAL = SUBSTR(ICB.1,527,8) /* TEMPLATE APAR    LEVEL        */
+  BAM_BCNT = SUBSTR(ICB.1,05,4)       /* NUMBER OF BAM BLKS DEFINED  */
+  BAM_ADDR = SUBSTR(ICB.1,21,6)       /* RBA OF 1st BAM BLK IN CHAIN */
+  IF RACFVRMN = '' THEN DO
+     RACFVRMN = SUBSTR(ICB.1,1019,6)  /* TEMPLATE VERSION/RELEASE/MOD*/
+     RACFTEMP = SUBSTR(ICB.1,1057,7)  /* TEMPLATE LEVEL VALUE        */
+     ICBTMPRL = SUBSTR(ICB.1,519,8)   /* TEMPLATE RELEASE LEVEL      */
+     ICBTMPAL = SUBSTR(ICB.1,527,8)   /* TEMPLATE APAR    LEVEL      */
   END
 RETURN
-/**********************************************************************/
-/*---------------------------$GBLK--------------------------------------
- THIS FUNCTION WILL READ ONE RACF DATABASE RECORD. INPUT TO THIS
- ROUTINE IS THE RBA ADDRESS OF THE BLOCK TO BE READ AND THE BLOCKSIZE
- WHICH IS USED TO CACULATE THE RECORD NUMBER NEEDED IN THE EXECIO.
- RECORD NUMBER =  (RBA / BLKSIZE) + 1
- FUNCTION:  $GBLK    -GET A RACF BLOCK FROM THE DATABASE
- ARGUMENT 1 = RBA ADDRESS IN CHARACTER FORMAT
- ARGUMENT 2 = BLOCK SIZE OF THE RACF DATABASE BLOCKS IN DECIMAL
-----------------------------------------------------------------------*/
+/*---------------------------$GBLK------------------------------------*/
+/* THIS FUNCTION WILL READ ONE RACF DATABASE RECORD. INPUT TO THIS    */
+/* ROUTINE IS THE RBA ADDRESS OF THE BLOCK TO BE READ AND THE BLKSIZE */
+/* WHICH IS USED TO CACULATE THE RECORD NUMBER NEEDED IN THE EXECIO.  */
+/* RECORD NUMBER =  (RBA / BLKSIZE) + 1                               */
+/* FUNCTION:  $GBLK    -GET A RACF BLOCK FROM THE DATABASE            */
+/* ARGUMENT 1 = RBA ADDRESS IN CHARACTER FORMAT                       */
+/* ARGUMENT 2 = BLOCK SIZE OF THE RACF DATABASE BLOCKS IN DECIMAL     */
+/*--------------------------------------------------------------------*/
 $GBLK:PARSE ARG AD1,AD2
-IF AD1 = 0 THEN REC_ADDR = 1
-ELSE REC_ADDR = TRUNC(((C2D(AD1) / AD2) + 1))
-"EXECIO 1 DISKR SYSRACF "REC_ADDR" (STEM BLK. "
-RRC = RC
+  IF AD1 = 0 THEN REC_ADDR = 1
+  ELSE REC_ADDR = TRUNC(((C2D(AD1) / AD2) + 1))
+  "EXECIO 1 DISKR SYSRACF "REC_ADDR" (STEM BLK. "
+  RRC = RC
 RETURN RRC
-/**********************************************************************/
-/*------------------------$GET_BAM_COUNT--------------------------------
- THIS FUNCTION WILL COUNT THE NUMBER OF BAM BITS SET ON OR OFF
- IN A GIVEN BAM BLOCK.
- FUNCTION:  $GET_BAM_COUNT ARG1 ARG2
- ARGUMENT 1 = BAM MASK BITS (EACH BIT = 1 SEGMENT)
- ARGUMENT 2 = NUMBER OF BLOCKS THIS BAM BLOCK DEFINES
- RESULTS FROM ROUTINE:
- FREE_SEGS = TOTAL NUMBER OF FREE SEGMENTS DEFINED IN THIS BAM BLK
- USED_SEGS = TOTAL NUMBER OF USED SEGMENTS DEFINED IN THIS BAM BLK
- SEG_COUNT = SUM OF BOTH ABOVE VALUES (SAME AS NUMBER OF SEGMENTS)
- NOTE: A FREE SEGMENT = BIT MASK BIT = 1
-       A USED SEGMENT = BIT MASK BIT = 0
-----------------------------------------------------------------------*/
+/*------------------------$GET_BAM_COUNT------------------------------*/
+/* THIS FUNCTION WILL COUNT THE NUMBER OF BAM BITS SET ON OR OFF      */
+/* IN A GIVEN BAM BLOCK.                                              */
+/* FUNCTION:  $GET_BAM_COUNT ARG1 ARG2                                */
+/* ARGUMENT 1 = BAM MASK BITS (EACH BIT = 1 SEGMENT)                  */
+/* ARGUMENT 2 = NUMBER OF BLOCKS THIS BAM BLOCK DEFINES               */
+/* RESULTS FROM ROUTINE:                                              */
+/* FREE_SEGS = TOTAL NUMBER OF FREE SEGMENTS DEFINED IN THIS BAM BLK  */
+/* USED_SEGS = TOTAL NUMBER OF USED SEGMENTS DEFINED IN THIS BAM BLK  */
+/* SEG_COUNT = SUM OF BOTH ABOVE VALUES (SAME AS NUMBER OF SEGMENTS)  */
+/* NOTE: A FREE SEGMENT = BIT MASK BIT = 1                            */
+/*       A USED SEGMENT = BIT MASK BIT = 0                            */
+/*--------------------------------------------------------------------*/
 $GET_BAM_COUNT:PARSE ARG AD1,AD2
-      AD2 = (2 * AD2)
-      DO I = 1 TO AD2
-        BYTE = SUBSTR(AD1,I,1)
-        IF BITAND(BYTE,'80'X) = '80'X THEN
-            FREE_SEGS = 1 + FREE_SEGS
-            ELSE USED_SEGS = 1 + USED_SEGS
-        IF BITAND(BYTE,'40'X) = '40'X THEN
-            FREE_SEGS = 1 + FREE_SEGS
-            ELSE USED_SEGS = 1 + USED_SEGS
-        IF BITAND(BYTE,'20'X) = '20'X THEN
-            FREE_SEGS = 1 + FREE_SEGS
-            ELSE USED_SEGS = 1 + USED_SEGS
-        IF BITAND(BYTE,'10'X) = '10'X THEN
-            FREE_SEGS = 1 + FREE_SEGS
-            ELSE USED_SEGS = 1 + USED_SEGS
-        IF BITAND(BYTE,'08'X) = '08'X THEN
-            FREE_SEGS = 1 + FREE_SEGS
-            ELSE USED_SEGS = 1 + USED_SEGS
-        IF BITAND(BYTE,'04'X) = '04'X THEN
-            FREE_SEGS = 1 + FREE_SEGS
-            ELSE USED_SEGS = 1 + USED_SEGS
-        IF BITAND(BYTE,'02'X) = '02'X THEN
-            FREE_SEGS = 1 + FREE_SEGS
-            ELSE USED_SEGS = 1 + USED_SEGS
-        IF BITAND(BYTE,'01'X) = '01'X THEN
-            FREE_SEGS = 1 + FREE_SEGS
-            ELSE USED_SEGS = 1 + USED_SEGS
-      END
-      SEG_COUNT = USED_SEGS + FREE_SEGS
+  AD2 = (2 * AD2)
+  DO I = 1 TO AD2
+    BYTE = SUBSTR(AD1,I,1)
+    IF BITAND(BYTE,'80'X) = '80'X THEN
+        FREE_SEGS = 1 + FREE_SEGS
+        ELSE USED_SEGS = 1 + USED_SEGS
+    IF BITAND(BYTE,'40'X) = '40'X THEN
+        FREE_SEGS = 1 + FREE_SEGS
+        ELSE USED_SEGS = 1 + USED_SEGS
+    IF BITAND(BYTE,'20'X) = '20'X THEN
+        FREE_SEGS = 1 + FREE_SEGS
+        ELSE USED_SEGS = 1 + USED_SEGS
+    IF BITAND(BYTE,'10'X) = '10'X THEN
+        FREE_SEGS = 1 + FREE_SEGS
+        ELSE USED_SEGS = 1 + USED_SEGS
+    IF BITAND(BYTE,'08'X) = '08'X THEN
+        FREE_SEGS = 1 + FREE_SEGS
+        ELSE USED_SEGS = 1 + USED_SEGS
+    IF BITAND(BYTE,'04'X) = '04'X THEN
+        FREE_SEGS = 1 + FREE_SEGS
+        ELSE USED_SEGS = 1 + USED_SEGS
+    IF BITAND(BYTE,'02'X) = '02'X THEN
+        FREE_SEGS = 1 + FREE_SEGS
+        ELSE USED_SEGS = 1 + USED_SEGS
+    IF BITAND(BYTE,'01'X) = '01'X THEN
+        FREE_SEGS = 1 + FREE_SEGS
+        ELSE USED_SEGS = 1 + USED_SEGS
+  END
+  SEG_COUNT = USED_SEGS + FREE_SEGS
 RETURN SEG_COUNT
-/**********************************************************************/
-/*----------------------------SSVRM-----------------------------------*/
+/*--------------------------------------------------------------------*/
+/*  SSVRM                                                             */
+/*--------------------------------------------------------------------*/
 SSVRM:
- CVT      = C2D(STORAGE(10,4))                /* POINT TO CVT         */
- SMCA     = STORAGE(D2X(CVT + 196),4)         /* POINT TO  SMCA       */
- SMCA     = BITAND(SMCA,'7FFFFFFF'X)          /* ZERO HIGH ORDER BIT  */
- SMCA     = C2D(SMCA)                         /* CONVERT TO DECIMAL   */
- SMFNAME  = STORAGE(D2X(SMCA + 16),4)         /* POINT TO SMF NAME    */
- SMFNAME  = STRIP(SMFNAME,T)                  /* DEL TRAILING BLANKS  */
- ECVT     = C2D(STORAGE(D2X(CVT + 140),4))    /* POINT TO CVTECVT     */
- CVTRAC   = C2D(STORAGE(D2X(CVT + 992),4))    /* POINT TO RACF CVT    */
- RACFMID  = STORAGE(D2X(CVTRAC + 616),4)      /* RACF FMID            */
- RCVTALIS = STORAGE(D2X(CVTRAC+330),1)        /* GET RCVTALIS BYTE    */
- PRODNAM  = STORAGE(D2X(ECVT+496),16)         /* POINT TO PRODUCT NAME*/
- SSNAME   = STRIP(PRODNAM,T)                  /* DEL TRAILING BLANKS  */
- VER      = STORAGE(D2X(ECVT+512),2)          /* POINT TO VERSION     */
- REL      = STORAGE(D2X(ECVT+514),2)          /* POINT TO RELEASE     */
- MOD      = STORAGE(D2X(ECVT+516),2)          /* POINT TO MOD LEVEL   */
- VRM      = VER'.'REL'.'MOD                   /* VRM OF OS            */
-QUEUE "RACF database statistics as of: "DATE() TIME()
- QUEUE "SMF name =",
-      SMFNAME"  "SSNAME VRM"  RACF FMID = HRF"RACFMID
- QUEUE "The application identity mapping stage is set at:",
-     C2D(RCVTALIS)
- RETURN
-/**********************************************************************/
-/*------------------------END OF REXX EXEC----------------------------*/
+  CVT      = C2D(STORAGE(10,4))               /* POINT TO CVT         */
+  SMCA     = STORAGE(D2X(CVT + 196),4)        /* POINT TO  SMCA       */
+  SMCA     = BITAND(SMCA,'7FFFFFFF'X)         /* ZERO HIGH ORDER BIT  */
+  SMCA     = C2D(SMCA)                        /* CONVERT TO DECIMAL   */
+  SMFNAME  = STORAGE(D2X(SMCA + 16),4)        /* POINT TO SMF NAME    */
+  SMFNAME  = STRIP(SMFNAME,T)                 /* DEL TRAILING BLANKS  */
+  ECVT     = C2D(STORAGE(D2X(CVT + 140),4))   /* POINT TO CVTECVT     */
+  CVTRAC   = C2D(STORAGE(D2X(CVT + 992),4))   /* POINT TO RACF CVT    */
+  RACFMID  = STORAGE(D2X(CVTRAC + 616),4)     /* RACF FMID            */
+  RCVTALIS = STORAGE(D2X(CVTRAC+330),1)       /* GET RCVTALIS BYTE    */
+  PRODNAM  = STORAGE(D2X(ECVT+496),16)        /* POINT TO PRODUCT NAME*/
+  SSNAME   = STRIP(PRODNAM,T)                 /* DEL TRAILING BLANKS  */
+  VER      = STORAGE(D2X(ECVT+512),2)         /* POINT TO VERSION     */
+  REL      = STORAGE(D2X(ECVT+514),2)         /* POINT TO RELEASE     */
+  MOD      = STORAGE(D2X(ECVT+516),2)         /* POINT TO MOD LEVEL   */
+  VRM      = VER'.'REL'.'MOD                  /* VRM OF OS            */
+  QUEUE "RACF database statistics as of: "DATE() TIME()
+  QUEUE "SMF name =",
+        SMFNAME"  "SSNAME VRM"  RACF FMID = HRF"RACFMID
+  QUEUE "The application identity mapping stage is set at:",
+        C2D(RCVTALIS)
+RETURN

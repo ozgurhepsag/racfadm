@@ -2,9 +2,13 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
-  26 Mar 2020 - V12R1
+  28 Mar 2020 - V12R2
+     - Other Items
+       -- More cleanup of code in several modules
+
+  27 Mar 2020 - V12R1
      - Tutorial (Option T)
-       -- Adjustes alignment/etc in option 8, Notes
+       -- Adjusts alignment/etc in option 8, Notes
      - Other Items
        -- Minor cleanup of code in several modules
 

@@ -802,7 +802,7 @@ RETURN
 LISD:                                                         /* @A1 */
   DDNAME  = "ERA"RANDOM(0,99999)                              /* @A1 */
   cmd = "RLIST "RCLASS PROFILE" AUTH"                         /* @AF */
-  X = OUTTRAP("WFREC.")                                       /* @A1 */
+  X = OUTTRAP("CMDREC.")                                      /* @A1 */
   ADDRESS TSO cmd                                             /* @AF */
   cmd_rc = rc                                                 /* @AR */
   X = OUTTRAP("OFF")                                          /* @A1 */
@@ -810,7 +810,7 @@ LISD:                                                         /* @A1 */
      call SHOWCMD                                             /* @AF */
   if (cmd_rc > 0) then do    /* Remove parms */               /* @B2 */
      cmd = "RLIST "RCLASS PROFILE                             /* @B2 */
-     X = OUTTRAP("WFREC.")                                    /* @B2 */
+     X = OUTTRAP("CMDREC.")                                   /* @B2 */
      ADDRESS TSO cmd                                          /* @B2 */
      cmd_rc = rc                                              /* @B2 */
      X = OUTTRAP("OFF")                                       /* @B2 */
@@ -820,18 +820,18 @@ LISD:                                                         /* @A1 */
   ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",                  /* @A1 */
               "LRECL(132) BLKSIZE(0) RECFM(F B)",             /* @A1 */
               "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @A1 */
-  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM WFREC. FINIS"    /* @A1 */
-  "LMINIT DATAID(WFDATAID) DDNAME("DDNAME")"                  /* @A1 */
+  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM CMDREC. FINIS"   /* @A1 */
+  "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"                  /* @A1 */
   SELECT                                                      /* @AC */
      WHEN (ERADISP = "VIEW") THEN                             /* @AC */
-          "VIEW DATAID("WFDATAID")"                           /* @AC */
+          "VIEW DATAID("CMDDATID")"                           /* @AC */
      WHEN (ERADISP = "EDIT") THEN                             /* @AC */
-          "EDIT DATAID("WFDATAID")"                           /* @AC */
+          "EDIT DATAID("CMDDATID")"                           /* @AC */
      OTHERWISE                                                /* @AC */
-          "BROWSE DATAID("WFDATAID")"                         /* @AC */
+          "BROWSE DATAID("CMDDATID")"                         /* @AC */
   END                                                         /* @AC */
   ADDRESS TSO "FREE FI("DDNAME")"                             /* @A1 */
-  DROP WFREC. DDNAME                                          /* @A1 */
+  DROP CMDREC. DDNAME                                         /* @A1 */
   if (cmd_rc > 0) then                                        /* @AZ */
      CALL racfmsgs "ERR10" /* Generic failure */              /* @AU */
 RETURN                                                        /* @A1 */
@@ -857,14 +857,14 @@ LISP:                                                         /* @A2 */
   DDNAME  = "ERA"RANDOM(0,99999)                              /* @A2 */
   CMDPRM  = "CSDATA DFP OMVS OVM TME"                         /* @A2 */
   cmd     = "LG "ID CMDPRM                                    /* @AF */
-  X = OUTTRAP("WFREC.")                                       /* @A2 */
+  X = OUTTRAP("CMDREC.")                                      /* @A2 */
   ADDRESS TSO cmd                                             /* @AF */
   cmd_rc = rc                                                 /* @AR */
   X = OUTTRAP("OFF")                                          /* @A2 */
   if (erashow <> 'NO') then                                   /* @B6 */
      call SHOWCMD                                             /* @AF */
   if (cmd_rc > 0) then do                                     /* @A8 */
-     X = OUTTRAP("WFREC.")                                    /* @A2 */
+     X = OUTTRAP("CMDREC.")                                   /* @A2 */
      CMD     = "LU "ID                                        /* @AF */
      ADDRESS TSO cmd                                          /* @AR */
      cmd_rc = rc                                              /* @AR */
@@ -875,18 +875,18 @@ LISP:                                                         /* @A2 */
   ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",                  /* @A2 */
               "LRECL(132) BLKSIZE(0) RECFM(F B)",             /* @A2 */
               "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @A2 */
-  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM WFREC. FINIS"    /* @A2 */
-  "LMINIT DATAID(WFDATAID) DDNAME("DDNAME")"                  /* @A2 */
+  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM CMDREC. FINIS"   /* @A2 */
+  "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"                  /* @A2 */
   SELECT                                                      /* @AC */
      WHEN (ERADISP = "VIEW") THEN                             /* @AC */
-          "VIEW DATAID("WFDATAID")"                           /* @AC */
+          "VIEW DATAID("CMDDATID")"                           /* @AC */
      WHEN (ERADISP = "EDIT") THEN                             /* @AC */
-          "EDIT DATAID("WFDATAID")"                           /* @AC */
+          "EDIT DATAID("CMDDATID")"                           /* @AC */
      OTHERWISE                                                /* @AC */
-          "BROWSE DATAID("WFDATAID")"                         /* @AC */
+          "BROWSE DATAID("CMDDATID")"                         /* @AC */
   END                                                         /* @AC */
   ADDRESS TSO "FREE FI("DDNAME")"                             /* @A2 */
-  DROP WFREC. DDNAME CMDPRM                                   /* @A2 */
+  DROP CMDREC. DDNAME CMDPRM                                  /* @A2 */
   if (cmd_rc > 0) then                                        /* @B3 */
      CALL racfmsgs "ERR13"   /* Generic failure */            /* @AU */
 RETURN                                                        /* @A2 */

@@ -1,5 +1,5 @@
 /*%NOCOMMENT====================* REXX *==============================*/
-/*  PURPOSE:  RACFADM - Dataset (Option 3)                            */
+/*  PURPOSE:  RACFADM - Dataset - Dataset profiles - Menu option 3    */
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
@@ -688,9 +688,9 @@ RETURN
 /*--------------------------------------------------------------------*/
 LISD:                                                         /* @A1 */
   DDNAME  = "ERA"RANDOM(0,99999)                              /* @A1 */
-  WFLDPRM = "ALL"                                             /* @A1 */
-  CMD     = "LISTDSD DATASET('"DATASET"')" WFLDPRM            /* @B2 */
-  X = OUTTRAP("WFREC.")                                       /* @A1 */
+  CMDPRM  = "ALL"                                             /* @A1 */
+  CMD     = "LISTDSD DATASET('"DATASET"')" CMDPRM             /* @B2 */
+  X = OUTTRAP("CMDREC.")                                      /* @A1 */
   ADDRESS TSO cmd                                             /* @AI */
   cmd_rc = rc                                                 /* @AZ */
   X = OUTTRAP("OFF")                                          /* @A1 */
@@ -698,7 +698,7 @@ LISD:                                                         /* @A1 */
      call SHOWCMD                                             /* @AI */
   if (cmd_rc > 0) then do   /* Remove parms */                /* @BC */
      CMD = "LISTDSD DATASET('"DATASET"')"                     /* @BC */
-     X   = OUTTRAP("WFREC.")                                  /* @BC */
+     X   = OUTTRAP("CMDREC.")                                 /* @BC */
      ADDRESS TSO cmd                                          /* @BC */
      cmd_rc = rc                                              /* @BC */
      X   = OUTTRAP("OFF")                                     /* @BC */
@@ -708,18 +708,18 @@ LISD:                                                         /* @A1 */
   ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",                  /* @A1 */
               "LRECL(132) BLKSIZE(0) RECFM(F B)",             /* @A1 */
               "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @A1 */
-  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM WFREC. FINIS"    /* @A1 */
-  "LMINIT DATAID(WFDATAID) DDNAME("DDNAME")"                  /* @A1 */
+  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM CMDREC. FINIS"   /* @A1 */
+  "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"                  /* @A1 */
   SELECT                                                      /* @AF */
      WHEN (ERADISP = "VIEW") THEN                             /* @AF */
-          "VIEW DATAID("WFDATAID")"                           /* @AF */
+          "VIEW DATAID("CMDDATID")"                           /* @AF */
      WHEN (ERADISP = "EDIT") THEN                             /* @AF */
-          "EDIT DATAID("WFDATAID")"                           /* @AF */
+          "EDIT DATAID("CMDDATID")"                           /* @AF */
      OTHERWISE                                                /* @AF */
-          "BROWSE DATAID("WFDATAID")"                         /* @AF */
+          "BROWSE DATAID("CMDDATID")"                         /* @AF */
   END                                                         /* @AF */
   ADDRESS TSO "FREE FI("DDNAME")"                             /* @A1 */
-  DROP WFREC. DDNAME WFLDPRM                                  /* @A1 */
+  DROP CMDREC. DDNAME CMDPRM                                  /* @A1 */
   if (cmd_rc > 0) then                                        /* @BD */
      CALL racfmsgs "ERR10" /* Generic failure */              /* @B6 */
 RETURN                                                        /* @A1 */
@@ -734,14 +734,14 @@ LISP:                                                         /* @A5 */
   DDNAME  = "ERA"RANDOM(0,99999)                              /* @A5 */
   CMDPRM  = "CSDATA DFP OMVS OVM TME"                         /* @A5 */
   CMD     = "LG "ID CMDPRM                                    /* @AI */
-  X = OUTTRAP("WFREC.")                                       /* @A5 */
+  X = OUTTRAP("CMDREC.")                                      /* @A5 */
   ADDRESS TSO cmd                                             /* @AI */
   cmd_rc = rc                                                 /* @AZ */
   X = OUTTRAP("OFF")                                          /* @A5 */
   if erashow <> 'NO' then                                     /* @BJ */
      call SHOWCMD                                             /* @AI */
   if (cmd_rc > 0) then do   /* Remove parms */                /* @AB */
-     X = OUTTRAP("WFREC.")                                    /* @AI */
+     X = OUTTRAP("CMDREC.")                                   /* @AI */
      CMD     = "LU "ID                                        /* @AI */
      ADDRESS TSO cmd                                          /* @AI */
      cmd_rc = rc                                              /* @AB */
@@ -752,18 +752,18 @@ LISP:                                                         /* @A5 */
   ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",                  /* @A5 */
               "LRECL(132) BLKSIZE(0) RECFM(F B)",             /* @A5 */
               "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @A5 */
-  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM WFREC. FINIS"    /* @A5 */
-  "LMINIT DATAID(WFDATAID) DDNAME("DDNAME")"                  /* @A5 */
+  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM CMDREC. FINIS"   /* @A5 */
+  "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"                  /* @A5 */
   SELECT                                                      /* @AF */
      WHEN (ERADISP = "VIEW") THEN                             /* @AF */
-          "VIEW DATAID("WFDATAID")"                           /* @AF */
+          "VIEW DATAID("CMDDATID")"                           /* @AF */
      WHEN (ERADISP = "EDIT") THEN                             /* @AF */
-          "EDIT DATAID("WFDATAID")"                           /* @AF */
+          "EDIT DATAID("CMDDATID")"                           /* @AF */
      OTHERWISE                                                /* @AF */
-          "BROWSE DATAID("WFDATAID")"                         /* @AF */
+          "BROWSE DATAID("CMDDATID")"                         /* @AF */
   END                                                         /* @AF */
   ADDRESS TSO "FREE FI("DDNAME")"                             /* @A5 */
-  DROP WFREC. DDNAME CMDPRM                                   /* @A5 */
+  DROP CMDREC. DDNAME CMDPRM                                  /* @A5 */
   if (cmd_rc > 0) then                                        /* @BF */
      CALL racfmsgs "ERR15" /* Generic failure */              /* @B6 */
 RETURN                                                        /* @A5 */

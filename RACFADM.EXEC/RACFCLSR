@@ -1,5 +1,5 @@
 /*%NOCOMMENT====================* REXX *==============================*/
-/*  PURPOSE:  RACFADM - General resources - List classes (Menu Opt 4) */
+/*  PURPOSE:  RACFADM - General resources - List classes (Option 4)   */
 /*--------------------------------------------------------------------*/
 /* FLG  YYMhDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
@@ -243,7 +243,7 @@ RETURN
 LISP:
   DDNAME  = "ERA"RANDOM(0,99999)
   cmd     = "RL "CLASS" * ALL"                                /* @AN */
-  X = OUTTRAP("WFREC.")
+  X = OUTTRAP("CMDREC.")
   ADDRESS TSO cmd
   cmd_rc = rc
   X = OUTTRAP("OFF")
@@ -251,7 +251,7 @@ LISP:
      call SHOWCMD
   if (cmd_rc > 0) then do    /* Remove parms */               /* @AM */
      cmd     = "RL "CLASS" *"                                 /* @AN */
-     X = OUTTRAP("WFREC.")                                    /* @AM */
+     X = OUTTRAP("CMDREC.")                                   /* @AM */
      ADDRESS TSO cmd                                          /* @AM */
      cmd_rc = rc                                              /* @AM */
      X = OUTTRAP("OFF")                                       /* @AM */
@@ -261,18 +261,18 @@ LISP:
   ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",
               "LRECL(132) BLKSIZE(0) RECFM(F B)",
               "UNIT(VIO) SPACE(1 5) CYLINDERS"
-  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM WFREC. FINIS"
-  "LMINIT DATAID(WFDATAID) DDNAME("DDNAME")"
+  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM CMDREC. FINIS"
+  "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"
   SELECT
      WHEN (ERADISP = "VIEW") THEN
-          "VIEW DATAID("WFDATAID")"
+          "VIEW DATAID("CMDDATID")"
      WHEN (ERADISP = "EDIT") THEN
-          "EDIT DATAID("WFDATAID")"
+          "EDIT DATAID("CMDDATID")"
      OTHERWISE
-          "BROWSE DATAID("WFDATAID")"
+          "BROWSE DATAID("CMDDATID")"
   END
   ADDRESS TSO "FREE FI("DDNAME")"
-  DROP WFREC. DDNAME
+  DROP CMDREC. DDNAME
   if (cmd_rc > 0) then                                        /* @AC */
      CALL racfmsgs "ERR10" /* Generic failure */              /* @AC */
 RETURN

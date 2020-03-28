@@ -1,3 +1,10 @@
+/*%NOCOMMENT====================* REXX *==============================*/
+/*  PURPOSE:  RACFADM - Help - RACF commands - Menu option H          */
+/*--------------------------------------------------------------------*/
+/* FLG  YYMMDD  USERID   DESCRIPTION                                  */
+/* ---  ------  -------  -------------------------------------------- */
+/* @A0  200328  RACFA    Modified color                               */
+/*====================================================================*/
 /* --------------------  REXX Program  ----------------------------- */
  ver = '3.8'
 /* ----------------------------------------------------------------- *
@@ -190,7 +197,7 @@
  |                                                     |
  | Colors may be Blue, Turq, White, Green, Red, Yellow |
  * --------------------------------------------------- */
- clrn = 'blue'
+ clrn = 'green'                                               /* @A0 */
  clrs = 'turq'
 
 /* ----------------------------------------------- *
@@ -950,7 +957,7 @@ View_it:
    ? type(output) intens(low ) caps(off) just(asis ) color(white)
    $ type(text) intens(high) hilite(reverse)
    % type(text) intens(high) skip(on)
-   + type(text) intens(low) skip(on)
+   + type(text) intens(low) skip(on) color(green)             /* @A0 */
    # type(output) intens(high) caps(off) just(left)
      pas(on) skip(on) hilite(uscore)
    04 type(output) intens(high) caps(off) just(left)
@@ -963,8 +970,8 @@ View_it:
 %\-\ $RACF Help Pages?viewfs  $- &ver%\-\
 %Command ===>_zcmd                                 \ \%Scroll ===>_amt +
 %
-+Command: %L cmd+-Locate #RL+- Repeat Locate %Only string +- Only #R+- Refresh
-+         %S cmd+-Select #SE+- Set Viewer    %SOrt col A/D+- Sort #H+- Help
++Command: %L cmd+- Locate #RL+- Repeat Locate %Only string +- Only #R+- Refresh
++         %S cmd+- Select #SE+- Set Viewer    %SOrt col A/D+- Sort #H+- Help
 +
 %   +œt1     + 	t2       +†t3         +
 )Model
@@ -1035,7 +1042,7 @@ field(h)  var(zcmd) val(H)
 >Panel #zrach1
 )ATTR DEFAULT(%+_)
    %   TYPE(TEXT)  INTENS(HIGH) SKIP(ON)
-   +   TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(TURQ)
+   +   TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(GREEN)         /* @A0 */
    !   TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(RED)
    @   TYPE(TEXT)  INTENS(HIGH) SKIP(ON) HILITE(USCORE) COLOR(BLUE)
    _   TYPE(INPUT) INTENS(HIGH) CAPS(ON) JUST(LEFT) HILITE(USCORE)
@@ -1070,7 +1077,7 @@ field(h)  var(zcmd) val(H)
 >Panel #zrach2
 )ATTR DEFAULT(%+_)
    %   TYPE(TEXT)  INTENS(HIGH) SKIP(ON)
-   +   TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(TURQ)
+   +   TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(GREEN)         /* @A0 */
    !   TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(RED)
    @   TYPE(TEXT)  INTENS(HIGH) SKIP(ON) HILITE(USCORE) COLOR(BLUE)
    _   TYPE(INPUT) INTENS(HIGH) CAPS(ON) JUST(LEFT) HILITE(USCORE)
