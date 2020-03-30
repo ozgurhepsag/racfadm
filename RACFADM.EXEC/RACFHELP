@@ -961,11 +961,11 @@ View_it:
    # type(output) intens(high) caps(off) just(left)
      pas(on) skip(on) hilite(uscore)
    04 type(output) intens(high) caps(off) just(left)
-     pas(on) skip(on) hilite(uscore) color(&pclrn)
+     pas(on) skip(on) hilite(uscore) color(White)             /* @A0 */
    05 type(output) intens(high) caps(off) just(left)
-     pas(on) skip(on) hilite(uscore) color(&pclrc)
+     pas(on) skip(on) hilite(uscore) color(White)             /* @A0 */
    06 type(output) intens(high) caps(off) just(left)
-     pas(on) skip(on) hilite(uscore) color(&pclrd)
+     pas(on) skip(on) hilite(uscore) color(White)             /* @A0 */
 )Body  Expand(\\) Width(&zscreenw)
 %\-\ $RACF Help Pages?viewfs  $- &ver%\-\
 %Command ===>_zcmd                                 \ \%Scroll ===>_amt +

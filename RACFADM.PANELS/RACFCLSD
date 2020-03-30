@@ -3,6 +3,7 @@
   $ TYPE(OUTPUT) INTENS(LOW)  JUST(LEFT) COLOR(TURQ)
   # TYPE(OUTPUT) INTENS(LOW)  JUST(LEFT) COLOR(GREEN)
   + TYPE(TEXT)   INTENS(LOW)  SKIP(ON)   COLOR(GREEN)
+  ~ TYPE(PS)
 )BODY EXPAND(\\)
 +\-\(%RACFADM - RACF Administration+)\-\
 %Command ===>_ZCMD                                              +Scroll==>_SAMT+
@@ -10,7 +11,7 @@
 +USER:   $USER    +
 +SELECT: %S+Show,%L+List
 %
-%S   Class
+%S  ~Class
 %-------------------------------------------------------------------------------
 )MODEL CLEAR(OPTA)
 _Z+ $Z                                                                         +
@@ -28,4 +29,6 @@ _Z+ $Z                                                                         +
         IF (&SROW ^= 0)
            &OPTA = S
   VER (&OPTA,LIST,S,L)
+)PNTS
+  FIELD(ZPS00001) VAR(ZCMD) VAL('SORT CLASS')
 )END

@@ -2,7 +2,14 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
-  28 Mar 2020 - V12R2
+  30 Mar 2020 - V12R3
+     - Other Items
+       -- All column headers now allow sorting ascending and descending,
+          meaning, clicking on the column header once will sort the
+          column ascending, clicking on the column header again, will
+          sort the column descending
+
+  27 Mar 2020 - V12R2
      - Other Items
        -- More cleanup of code in several modules
 

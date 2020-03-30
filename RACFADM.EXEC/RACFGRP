@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BL  200330  RACFA    Allow point-n-shoot sort ascending/descending*/
 /* @BK  200324  RACFA    Allow both display/logging of RACF commands  */
 /* @BJ  200324  RACFA    Allow logging RACF commands to ISPF Log file */
 /* @BI  200315  RACFA    Added line cmd 'P' for RACFGRP5 panel        */
@@ -113,10 +114,12 @@ PROFL:
      return
   end
   /* profiles table display section */
-  opta = ' '
-  sort = 'GROUP,C,A'                                          /* @AU */
-  CLRGROU = "TURQ";  CLRDATA = "GREEN"   /* Col. colors */    /* @AH */
-  CLRSUPG = "GREEN"; CLROWNE = "GREEN"   /* Col. colors */    /* @BC */
+  opta     = ' '
+  sort     = 'GROUP,C,A'                                      /* @AU */
+  sortgrou = 'A'; sortsupg = 'A'         /* Sort order */     /* @BL */
+  sortowne = 'A'; sortdata = 'A'                              /* @BL */
+  CLRGROU  = "TURQ";  CLRDATA = "GREEN"  /* Col colors */     /* @AH */
+  CLRSUPG  = "GREEN"; CLROWNE = "GREEN"                       /* @BC */
   "TBSORT " tbla "FIELDS("sort")"                             /* @AU */
   "TBTOP  " tbla
   "TBDISPL" tbla "PANEL("PANEL08")"                           /* @AW */
@@ -134,19 +137,15 @@ PROFL:
      Select
         WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN DO              /* @AF */
              xtdtop   = 1                                     /* @AE */
-             if (seq = 'A') | (seq = 'D') then                /* @AF */
-                nop                                           /* @AF */
-             else                                             /* @AF */
-                seq = 'A'                                     /* @AF */
              SELECT                                           /* @A3 */
                 when (ABBREV("GROUP",PARM,1) = 1) then        /* @AT */
-                     sort = 'GROUP,C,'seq                     /* @AU */
+                     call sortseq 'GROUP'                     /* @BL */
                 when (ABBREV("SUPGRP",PARM,1) = 1) then       /* @BC */
-                     sort = 'SUPGRP,C,'seq                    /* @BC */
+                     call sortseq 'SUPGRP'                    /* @BL */
                 when (ABBREV("OWNER",PARM,1) = 1) then        /* @BC */
-                     sort = 'OWNER,C,'seq                     /* @BC */
+                     call sortseq 'OWNER'                     /* @BL */
                 when (ABBREV("DESCRIPTION",PARM,1) = 1) then  /* @AT */
-                     sort = 'DATA,C,'seq                      /* @AU */
+                     call sortseq 'DATA'                      /* @BL */
                 otherwise NOP                                 /* @A3 */
              END                                              /* @A3 */
         END                                                   /* @AF */
@@ -168,8 +167,11 @@ PROFL:
              end                                              /* @AP */
         END                                                   /* @AP */
         WHEN (ABBREV("RESET",ZCMD,1) = 1) THEN DO             /* @AE */
-             sort = 'GROUP,C,A'                               /* @AU */
+             sort     = 'GROUP,C,A'                           /* @AU */
+             sortgrou = 'A'; sortsupg = 'A'                   /* @BL */
+             sortowne = 'A'; sortdata = 'A'                   /* @BL */
              xtdtop   = 1                                     /* @AE */
+             "TBEND" tbla                                     /* @BL */
              call create_table                                /* @AP */
         END                                                   /* @AE */
         otherwise lparm = ''
@@ -231,6 +233,32 @@ PROFL:
      reta = rc
   end  /* Do while (reta < 8) */
 RETURN
+/*--------------------------------------------------------------------*/
+/*  Define sort sequence, to allow point-n-shoot sorting (A/D)   @BL  */
+/*--------------------------------------------------------------------*/
+SORTSEQ:                                                      /* @BL */
+  parse arg sortcol                                           /* @BL */
+  INTERPRET "TMPSEQ = SORT"substr(SORTCOL,1,4)                /* @BL */
+  select                                                      /* @BL */
+     when (seq <> "") then do                                 /* @BL */
+          if (seq = 'A') then                                 /* @BL */
+             tmpseq = 'D'                                     /* @BL */
+          else                                                /* @BL */
+             tmpseq = 'A'                                     /* @BL */
+          sort = sortcol',C,'seq                              /* @BL */
+     end                                                      /* @BL */
+     when (seq = ""),                                         /* @BL */
+        & (tmpseq = 'A') then do                              /* @BL */
+           sort   = sortcol',C,A'                             /* @BL */
+           tmpseq = 'D'                                       /* @BL */
+     end                                                      /* @BL */
+     Otherwise do                                             /* @BL */
+        sort   = sortcol',C,D'                                /* @BL */
+        tmpseq = 'A'                                          /* @BL */
+     end                                                      /* @BL */
+  end                                                         /* @BL */
+  INTERPRET "SORT"SUBSTR(SORTCOL,1,4)" = TMPSEQ"              /* @BL */
+RETURN                                                        /* @BL */
 /*--------------------------------------------------------------------*/
 /*  Add new profile                                                   */
 /*--------------------------------------------------------------------*/

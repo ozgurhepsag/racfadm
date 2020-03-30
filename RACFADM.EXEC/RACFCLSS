@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A6  200330  RACFA    Allow point-n-shoot sort ascending/descending*/
 /* @A5  200324  RACFA    Allow both display/logging of RACF commands  */
 /* @A4  200324  RACFA    Allow logging RACF commands to ISPF Log file */
 /* @A3  200303  RACFA    Chg 'RL class ALL' to 'RL class * ALL'       */
@@ -88,8 +89,9 @@ RETURN 0
 /*  Display permit table                                              */
 /*--------------------------------------------------------------------*/
 DISPLAY_TABLE_PERMIT:
-  opta = ' '
-  sort = 'PROFILE,C,A'                                        /* @BX */
+  opta     = ' '
+  sort     = 'PROFILE,C,A'                                    /* @BX */
+  sortprof = 0                                                /* @A6 */
   "TBSORT  "tblb" FIELDS("SORT")"                             /* @BX */
   "TBTOP   "tblb
   "TBDISPL "tblb "PANEL("PANEL08")"                           /* @AG */
@@ -105,18 +107,8 @@ DISPLAY_TABLE_PERMIT:
            "TBSKIP" TBLB "NUMBER("SROW")"                     /* @A9 */
         END                                                   /* @A9 */
      Select
-        WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN DO              /* @BX */
-             xtdtop   = 1                                     /* @BX */
-             if (seq = 'A') | (seq = 'D') then                /* @BX */
-                nop                                           /* @BX */
-             else                                             /* @BX */
-                seq = 'A'                                     /* @BX */
-             SELECT                                           /* @BX */
-                when (ABBREV("PROFILE",PARM,1) = 1) then      /* @BX */
-                     sort = 'PROFILE,C,'seq                   /* @BX */
-                otherwise NOP                                 /* @BX */
-             END                                              /* @BX */
-        END                                                   /* @BX */
+        WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN                 /* @BX */
+             call sortseq 'PROFILE'                           /* @A6 */
         WHEN (ABBREV("LOCATE",ZCMD,1) = 1) THEN               /* @BX */
              lparm = parm                                     /* @BX */
         WHEN (ABBREV("ONLY",ZCMD,1) = 1) THEN DO              /* @BX */
@@ -135,9 +127,10 @@ DISPLAY_TABLE_PERMIT:
              end                                              /* @BX */
         END                                                   /* @BX */
         WHEN (ABBREV("RESET",ZCMD,1) = 1) THEN DO             /* @BX */
-             sort = 'PROFILE,C,A'                             /* @BX */
-             rc = get_permits(class,user) /*get permits*/     /* @BX */
+             sort     = 'PROFILE,C,A'                         /* @BX */
+             sortprof = 'A'                                   /* @A6 */
              xtdtop   = 1                                     /* @BX */
+             rc = get_permits(class,user) /*get permits*/     /* @BX */
         END                                                   /* @BX */
         otherwise locvar=''
      End
@@ -174,6 +167,32 @@ DISPLAY_TABLE_PERMIT:
      reta = rc
   end  /* Do while (reta < 8) */
 RETURN 0
+/*--------------------------------------------------------------------*/
+/*  Define sort sequence, to allow point-n-shoot sorting (A/D)   @A6  */
+/*--------------------------------------------------------------------*/
+SORTSEQ:                                                      /* @A6 */
+  parse arg sortcol                                           /* @A6 */
+  INTERPRET "TMPSEQ = SORT"substr(SORTCOL,1,4)                /* @A6 */
+  select                                                      /* @A6 */
+     when (seq <> "") then do                                 /* @A6 */
+          if (seq = 'A') then                                 /* @A6 */
+             tmpseq = 'D'                                     /* @A6 */
+          else                                                /* @A6 */
+             tmpseq = 'A'                                     /* @A6 */
+          sort = sortcol',C,'seq                              /* @A6 */
+     end                                                      /* @A6 */
+     when (seq = ""),                                         /* @A6 */
+        & (tmpseq = 'A') then do                              /* @A6 */
+           sort   = sortcol',C,A'                             /* @A6 */
+           tmpseq = 'D'                                       /* @A6 */
+     end                                                      /* @A6 */
+     Otherwise do                                             /* @A6 */
+        sort   = sortcol',C,D'                                /* @A6 */
+        tmpseq = 'A'                                          /* @A6 */
+     end                                                      /* @A6 */
+  end                                                         /* @A6 */
+  INTERPRET "SORT"SUBSTR(SORTCOL,1,4)" = TMPSEQ"              /* @A6 */
+RETURN                                                        /* @A6 */
 /*--------------------------------------------------------------------*/
 /*  Select class                                                      */
 /*--------------------------------------------------------------------*/
@@ -236,8 +255,9 @@ RETURN
 /*  Display table                                                     */
 /*--------------------------------------------------------------------*/
 DISPLAY_TABLE:
-  opta = ' '
-  sort = 'CLASS,C,A'                                          /* @AD */
+  opta     = ' '
+  sort     = 'CLASS,C,A'                                      /* @AD */
+  sortclas = 0                                                /* @A6 */
   "TBSORT " tbla "FIELDS("sort")"                             /* @AD */
   "TBTOP  " tbla
   "TBDISPL" tbla "PANEL("PANEL13")"                           /* @AG */
@@ -255,18 +275,8 @@ DISPLAY_TABLE:
            "TBSKIP" TBLA "NUMBER("SROW")"                     /* @A9 */
         END                                                   /* @A9 */
      Select                                                   /* @AB */
-        WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN DO              /* @AB */
-             xtdtop   = 1                                     /* @AB */
-             if (seq = 'A') | (seq = 'D') then                /* @AB */
-                nop                                           /* @AB */
-             else                                             /* @AB */
-                seq = 'A'                                     /* @AB */
-             SELECT                                           /* @AB */
-                when (ABBREV("CLASS",PARM,1) = 1) then        /* @AB */
-                     sort = 'CLASS,C,'seq                     /* @AD */
-                otherwise NOP                                 /* @AB */
-             END                                              /* @AB */
-        END                                                   /* @AB */
+        WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN                 /* @AB */
+             call sortseq 'CLASS'                             /* @A6 */
         WHEN (ABBREV("LOCATE",ZCMD,1) = 1) THEN               /* @AB */
              lclass = parm                                    /* @AE */
         WHEN (ABBREV("ONLY",ZCMD,1) = 1) THEN DO              /* @AB */
@@ -286,7 +296,8 @@ DISPLAY_TABLE:
         END                                                   /* @AB */
         WHEN (ABBREV("RESET",ZCMD,1) = 1) THEN DO             /* @AB */
              call get_act_class                               /* @AB */
-             sort = 'CLASS,C,A'                               /* @AD */
+             sort     = 'CLASS,C,A'                           /* @AD */
+             sortclas = 'A'                                   /* @A6 */
              xtdtop   = 1                                     /* @AB */
         END                                                   /* @AB */
         otherwise NOP                                         /* @AB */

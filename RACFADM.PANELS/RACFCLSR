@@ -3,16 +3,17 @@
   $ TYPE(OUTPUT) INTENS(LOW)  JUST(LEFT) COLOR(TURQ)
   # TYPE(OUTPUT) INTENS(LOW)  JUST(LEFT) COLOR(GREEN)
   + TYPE(TEXT)   INTENS(LOW)  SKIP(ON)   COLOR(GREEN)
-  ¬  AREA(DYNAMIC) EXTEND(OFF)
-  ¨  TYPE(DATAOUT) INTENS(LOW)  COLOR(GREEN)
-  Ý  TYPE(DATAOUT) INTENS(HIGH)
+  ¬ AREA(DYNAMIC) EXTEND(OFF)
+  ¨ TYPE(DATAOUT) INTENS(LOW)  COLOR(GREEN)
+  Ý TYPE(DATAOUT) INTENS(HIGH)
+  ~ TYPE(PS)
 )BODY EXPAND(\\)
 +\-\(%RACFADM - General Resource+)\-\
 %Command ===>_ZCMD                                              +Scroll==>_SAMT+
 %
 +SELECT: ¬SELCMDS                                                              ¬
 %
-%S   Class
+%S  ~Class
 %-------------------------------------------------------------------------------
 )MODEL CLEAR(OPTA)
 _Z+ $Z        #Z                +
@@ -33,4 +34,6 @@ _Z+ $Z        #Z                +
      VER (&OPTA,LIST,S,L,R)
   ELSE
      VER (&OPTA,LIST,S,L)
+)PNTS
+  FIELD(ZPS00001) VAR(ZCMD) VAL('SORT CLASS')
 )END

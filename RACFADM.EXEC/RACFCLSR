@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMhDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AR  200330  RACFA    Allow point-n-shoot sort ascending/descending*/
 /* @AQ  200324  RACFA    Allow both display/logging of RACF commands  */
 /* @AP  200324  RACFA    Allow logging RACF commands to ISPF Log file */
 /* @AO  200303  RACFA    Chg 'RC/Ret_code' to 'cmd_rc' after EXCMD    */
@@ -113,8 +114,9 @@ RETURN
 /*  Profiles table display section                                    */
 /*--------------------------------------------------------------------*/
 DISPLAY_TABLE:
-  opta = ' '
-  sort = 'CLASS,C,A'                                          /* @AD */
+  opta     = ' '
+  sort     = 'CLASS,C,A'                                      /* @AD */
+  sortclas = 0                                                /* @AR */
   "TBSORT " tbla "FIELDS("sort")"                             /* @AD */
   "TBTOP  " tbla
   "TBDISPL" tbla "PANEL("PANEL27")"                           /* @AF */
@@ -131,18 +133,8 @@ DISPLAY_TABLE:
            "TBSKIP" TBLA "NUMBER("SROW")"                     /* @AA */
         END                                                   /* @AA */
      Select
-        WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN DO              /* @AD */
-             xtdtop   = 1                                     /* @AD */
-             if (seq = 'A') | (seq = 'D') then                /* @AD */
-                nop                                           /* @AD */
-             else                                             /* @AD */
-                seq = 'A'                                     /* @AD */
-             SELECT                                           /* @AD */
-                when (ABBREV("CLASS",PARM,1) = 1) then        /* @AD */
-                     sort = 'CLASS,C,'seq                     /* @AD */
-                otherwise NOP                                 /* @AD */
-             END                                              /* @AD */
-        END                                                   /* @AD */
+        WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN                 /* @AD */
+             call sortseq 'CLASS'                             /* @AR */
         WHEN (ABBREV("LOCATE",ZCMD,1) = 1) THEN               /* @A8 */
              lclass = parm                                    /* @A8 */
         WHEN (ABBREV("ONLY",ZCMD,1) = 1) THEN DO              /* @A9 */
@@ -162,7 +154,8 @@ DISPLAY_TABLE:
         END                                                   /* @A9 */
         WHEN (ABBREV("RESET",ZCMD,1) = 1) THEN DO             /* @A9 */
              call select_class                                /* @A9 */
-             sort = 'CLASS,C,A'                               /* @AD */
+             sort     = 'CLASS,C,A'                           /* @AD */
+             sortclas = 'A'                                   /* @AR */
              xtdtop   = 1                                     /* @A9 */
         END                                                   /* @A9 */
         OTHERWISE NOP                                         /* @A8 */
@@ -202,6 +195,32 @@ DISPLAY_TABLE:
      reta = rc
   end  /* Do while (reta < 8) */
 RETURN 0
+/*--------------------------------------------------------------------*/
+/*  Define sort sequence, to allow point-n-shoot sorting (A/D)   @AR  */
+/*--------------------------------------------------------------------*/
+SORTSEQ:                                                      /* @AR */
+  parse arg sortcol                                           /* @AR */
+  INTERPRET "TMPSEQ = SORT"substr(SORTCOL,1,4)                /* @AR */
+  select                                                      /* @AR */
+     when (seq <> "") then do                                 /* @AR */
+          if (seq = 'A') then                                 /* @AR */
+             tmpseq = 'D'                                     /* @AR */
+          else                                                /* @AR */
+             tmpseq = 'A'                                     /* @AR */
+          sort = sortcol',C,'seq                              /* @AR */
+     end                                                      /* @AR */
+     when (seq = ""),                                         /* @AR */
+        & (tmpseq = 'A') then do                              /* @AR */
+           sort   = sortcol',C,A'                             /* @AR */
+           tmpseq = 'D'                                       /* @AR */
+     end                                                      /* @AR */
+     Otherwise do                                             /* @AR */
+        sort   = sortcol',C,D'                                /* @AR */
+        tmpseq = 'A'                                          /* @AR */
+     end                                                      /* @AR */
+  end                                                         /* @AR */
+  INTERPRET "SORT"SUBSTR(SORTCOL,1,4)" = TMPSEQ"              /* @AR */
+RETURN                                                        /* @AR */
 /*--------------------------------------------------------------------*/
 /*  Refresh class                                                     */
 /*--------------------------------------------------------------------*/

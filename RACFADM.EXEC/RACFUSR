@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CX  200330  RACFA    Allow point-n-shoot sort ascending/descending*/
 /* @CW  200325  RACFA    Line cmd 'P', add '*Prof' to row             */
 /* @CV  200324  RACFA    Allow both Display/logging of RACF commands  */
 /* @CU  200324  RACFA    Allow logging RACF commands to ISPF Log file */
@@ -164,12 +165,16 @@ PROFL:
      return
   end
   /* profiles table display section */
-  opta = ' '
-  sort = 'USER,C,A'                                           /* @BJ */
-  CLRUSER = "TURQ" ; CLRNAME = "GREEN"    /* Col. colors */   /* @AY */
-  CLRDEFG = "GREEN"; CLRDATE = "GREEN"                        /* @AY */
-  CLROWNE = "GREEN"; CLRREVO = "GREEN"                        /* @AY */
-  CLRATTR = "GREEN"; CLRTSOU = "GREEN"                        /* @BJ */
+  opta     = ' '
+  sort     = 'USER,C,A'                                       /* @BJ */
+  sortuser = 'A'; sortname = 'A'         /* Sort order */     /* @CX */
+  sortdefg = 'A'; sortdate = 'D'                              /* @CX */
+  sortowne = 'A'; sortrevo = 'D'                              /* @CX */
+  sortattr = 'D'; sorttsou = 'D'                              /* @CX */
+  CLRUSER  = "TURQ" ; CLRNAME = "GREEN"  /* Col colors */     /* @AY */
+  CLRDEFG  = "GREEN"; CLRDATE = "GREEN"                       /* @AY */
+  CLROWNE  = "GREEN"; CLRREVO = "GREEN"                       /* @AY */
+  CLRATTR  = "GREEN"; CLRTSOU = "GREEN"                       /* @BJ */
   "TBSORT " tbla "FIELDS("sort")"
   "TBTOP  " tbla
   "TBDISPL" tbla "PANEL("PANEL02")"                           /* @BL */
@@ -187,27 +192,23 @@ PROFL:
      Select
         WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN DO              /* @AT */
              xtdtop   = 1                                     /* @AT */
-             if (seq = 'A') | (seq = 'D') then                /* @AU */
-                nop                                           /* @AU */
-             else                                             /* @AU */
-                seq = 'A'                                     /* @AU */
              SELECT                                           /* @A5 */
-                when (ABBREV("USERID",PARM,1) = 1) then       /* @BI */
-                     sort = 'USER,C,'seq                      /* @BJ */
-                when (ABBREV("NAME",PARM,1) = 1) then         /* @BI */
-                     sort = 'NAME,C,'seq                      /* @BJ */
+                when (ABBREV("USERID",PARM,1) = 1) then
+                     call sortseq 'USER'                      /* @CX */
+                when (ABBREV("NAME",PARM,1) = 1) then
+                     call sortseq 'NAME'                      /* @CX */
                 when (ABBREV("GROUP",PARM,1) = 1) then        /* @BI */
-                     sort = 'DEFGRP,C,'seq                    /* @BJ */
+                     call sortseq 'DEFGRP'                    /* @CX */
                 when (ABBREV("LOGON",PARM,1) = 1) then        /* @BI */
-                     sort = 'DATELGN,C,'seq                   /* @BJ */
+                     call sortseq 'DATELGN'                   /* @CX */
                 when (ABBREV("OWNER",PARM,1) = 1) then        /* @BI */
-                     sort = 'OWNER,C,'seq                     /* @BJ */
+                     call sortseq 'OWNER'                     /* @CX */
                 when (ABBREV("REV",PARM,1) = 1) then          /* @BI */
-                     sort = 'REVOKED,C,'seq                   /* @BI */
+                     call sortseq 'REVOKED'                   /* @CX */
                 when (ABBREV("ATT",PARM,1) = 1) then          /* @BN */
-                     sort = 'ATTR2,C,'seq                     /* @BO */
+                     call sortseq 'ATTR2'                     /* @CX */
                 when (ABBREV("TSO",PARM,1) = 1) then          /* @BI */
-                     sort = 'TSOUSER,C,'seq                   /* @BJ */
+                     call sortseq 'TSOUSER'                   /* @CX */
                 otherwise NOP                                 /* @A5 */
              END                                              /* @A5 */
         END                                                   /* @AT */
@@ -229,7 +230,11 @@ PROFL:
              end                                              /* @BE */
          END                                                  /* @LB */
          WHEN (ABBREV("RESET",ZCMD,1) = 1) THEN DO            /* @AS */
-              sort = 'USER,C,A'                               /* @BJ */
+              sort     = 'USER,C,A'                           /* @BJ */
+              sortuser = 'A'; sortname = 'A'                  /* @CX */
+              sortdefg = 'A'; sortdate = 'D'                  /* @CX */
+              sortowne = 'A'; sortrevo = 'D'                  /* @CX */
+              sortattr = 'D'; sorttsou = 'D'                  /* @CX */
               xtdtop   = 1                                    /* @AS */
               "TBEND" tbla                                    /* @BE */
               call create_table                               /* @BE */
@@ -337,6 +342,32 @@ PROFL:
      reta = rc
   end  /* Do while (reta < 8) */
 RETURN
+/*--------------------------------------------------------------------*/
+/*  Define sort sequence, to allow point-n-shoot sorting (A/D)   @CX  */
+/*--------------------------------------------------------------------*/
+SORTSEQ:                                                      /* @CX */
+  parse arg sortcol                                           /* @CX */
+  INTERPRET "TMPSEQ = SORT"substr(SORTCOL,1,4)                /* @CX */
+  select                                                      /* @CX */
+     when (seq <> "") then do                                 /* @CX */
+          if (seq = 'A') then                                 /* @CX */
+             tmpseq = 'D'                                     /* @CX */
+          else                                                /* @CX */
+             tmpseq = 'A'                                     /* @CX */
+          sort = sortcol',C,'seq                              /* @CX */
+     end                                                      /* @CX */
+     when (seq = ""),                                         /* @CX */
+        & (tmpseq = 'A') then do                              /* @CX */
+           sort   = sortcol',C,A'                             /* @CX */
+           tmpseq = 'D'                                       /* @CX */
+     end                                                      /* @CX */
+     Otherwise do                                             /* @CX */
+        sort   = sortcol',C,D'                                /* @CX */
+        tmpseq = 'A'                                          /* @CX */
+     end                                                      /* @CX */
+  end                                                         /* @CX */
+  INTERPRET "SORT"SUBSTR(SORTCOL,1,4)" = TMPSEQ"              /* @CX */
+RETURN                                                        /* @CX */
 /*--------------------------------------------------------------------*/
 /*  Add new profile                                                   */
 /*--------------------------------------------------------------------*/
