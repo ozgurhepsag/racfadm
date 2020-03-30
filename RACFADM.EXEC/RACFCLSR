@@ -116,7 +116,7 @@ RETURN
 DISPLAY_TABLE:
   opta     = ' '
   sort     = 'CLASS,C,A'                                      /* @AD */
-  sortclas = 0                                                /* @AR */
+  sortclas = 'D'                                              /* @AR */
   "TBSORT " tbla "FIELDS("sort")"                             /* @AD */
   "TBTOP  " tbla
   "TBDISPL" tbla "PANEL("PANEL27")"                           /* @AF */
@@ -155,7 +155,7 @@ DISPLAY_TABLE:
         WHEN (ABBREV("RESET",ZCMD,1) = 1) THEN DO             /* @A9 */
              call select_class                                /* @A9 */
              sort     = 'CLASS,C,A'                           /* @AD */
-             sortclas = 'A'                                   /* @AR */
+             sortclas = 'D'                                   /* @AR */
              xtdtop   = 1                                     /* @A9 */
         END                                                   /* @A9 */
         OTHERWISE NOP                                         /* @A8 */

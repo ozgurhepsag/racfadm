@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BM  200330  RACFA    Chg RACFDSN5 point/shoot ascending/descending*/
 /* @BL  200330  RACFA    Allow point-n-shoot sort ascending/descending*/
 /* @BK  200324  RACFA    Allow both display/logging of RACF commands  */
 /* @BJ  200324  RACFA    Allow logging RACF commands to ISPF Log file */
@@ -136,7 +137,6 @@ PROFL:
         END                                                   /* @AO */
      Select                                                   /* @AL */
         WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN DO              /* @AN */
-             xtdtop   = 1                                     /* @AN */
              SELECT                                           /* @AN */
                 when (ABBREV("PROFILE",PARM,1) = 1) then      /* @AQ */
                      call sortseq 'DATASET'                   /* @BL */
@@ -387,92 +387,67 @@ RETURN
 DISD:
   if (dataset = 'NONE') then
      return
+  tmpsort = sort                                              /* @BM */
   Do until (RB = 'NO')      /* allow rebuild option */
-     tblb = 'RCFDB'ZSCREEN  /* make table unique    */
-     "TBCREATE" TBLB "KEYS(ID) NAMES(ACC)",
-                     "REPLACE NOWRITE"
-     flags = 'OFF'
-     audit = ' '
-     owner = ' '
-     warn  = ' '
-     uacc  = ' '
-     data  = ' '
-     if (type = 'DISCRETE') then
-        type = ' '
-     cmd = "LISTDSD DA('"DATASET"') AUTH"                     /* @AI */
-     x = OUTTRAP('VAR.')
-     address TSO cmd                                          /* @AI */
-     cmd_rc = rc                                              /* @AZ */
-     x = OUTTRAP('OFF')
-     if (erashow <> 'NO') then                                /* @BJ */
-        call SHOWCMD                                          /* @AI */
-     if (type = ' ') then
-        type = 'DISCRETE'
-     Do i = 1 to var.0          /* Scan output */
-        temp = var.i
-        if (rlv > '1081') then  /* RACF 1.9 add blank */
-           temp = ' 'temp
-        l = LENGTH(temp)
-        if (uacc= ' ') then
-           if (substr(temp,2,12)= 'LEVEL  OWNER') then do
-              i     = i + 2
-              temp  = var.i
-              owner = subword(temp,2,1)
-              uacc  = subword(temp,3,1)
-              warn  = subword(temp,4,1)                       /* @A9 */
-           end
-        if (audit = ' ') then
-           if (substr(temp,2,8) = 'AUDITING') then do
-              i     = i + 2
-              temp  = var.i
-              audit = subword(temp,1,1)
-           end
-        if (data = ' ') then
-           if (substr(temp,2,17) = 'INSTALLATION DATA') then do
-              i    = i + 2
-              temp = var.i
-              data = temp
-              i    = i + 1
-              temp = var.i
-              data = data || substr(temp,2)
-           end
-        if (flags = 'ON') then do
-           if (l = 1) | (l = 2) then
-              flags = 'OUT'     /* end of access list */
-           if (l > 8) then
-              if (substr(temp,1,9) = ' ') then
-                 flags = 'OUT'  /* end of access list */
-        end
-        if (flags = 'ON') then do
-           if (substr(temp,2,10) = 'NO ENTRIES') then do
-              id  = 'NONE'        /* empty access list */
-              acc = 'DEFINED'
-           end
-           else do
-              id  = subword(temp,1,1)
-              acc = subword(temp,2,1)
-           end
-           "TBMOD" tblb
-        end
-        if (substr(temp,5,13) = 'ID     ACCESS') then do
-           flags = 'ON'      /* start of access list */
-           i     = i + 1     /* skip */
-        end
-     end  /* Loop scan output */
-
+     call create_tableb                                       /* @BM */
      /* Permit table display section */
-     rb   = 'NO'
-     optb = ' '
+     rb     = 'NO'
+     optb   = ' '                                             /* @BM */
+     sort   = 'ID,C,A'                                        /* @BM */
+     sortid = 'D'; sortacc = 'A'        /* Sort order */      /* @BM */
+     CLRID  = "TURQ"; CLRacc = "GREEN"  /* Col colors */      /* @BM */
+     "TBSORT " tbla "FIELDS("sort")"                          /* @BM */
      "TBTOP  " tblb
      "TBDISPL" tblb "PANEL("PANEL05")"                        /* @AU */
      retb = rc
      Do while (retb < 8)        /* tableb panel */
         "CONTROL DISPLAY SAVE"
+        xtdtop = ztdtop                                       /* @BM */
+        lparm  = ""                                           /* @BM */
+        PARSE VAR ZCMD ZCMD PARM SEQ                          /* @BM */
         IF (SROW <> "") & (SROW <> 0) THEN                    /* @AO */
            IF (SROW > 0) THEN DO                              /* @AO */
               "TBTOP " TBLB                                   /* @AO */
               "TBSKIP" TBLB "NUMBER("SROW")"                  /* @AO */
            END                                                /* @AO */
+        Select                                                /* @BM */
+           WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN DO           /* @BM */
+                SELECT                                        /* @BM */
+                   when (ABBREV("GROUP",PARM,1) = 1) then     /* @BM */
+                        call sortseq 'ID'                     /* @BM */
+                   when (ABBREV("ID",PARM,1) = 1) then        /* @BM */
+                        call sortseq 'ID'                     /* @BM */
+                   when (ABBREV("ACCESS",PARM,1) = 1) then    /* @BM */
+                        call sortseq 'ACC'                    /* @BM */
+                   otherwise NOP                              /* @BM */
+                END                                           /* @BM */
+           END                                                /* @BM */
+           WHEN (ABBREV("LOCATE",ZCMD,1) = 1) THEN            /* @BM */
+                lparm = parm                                  /* @BM */
+           WHEN (ABBREV("ONLY",ZCMD,1) = 1) THEN DO           /* @BM */
+                find_str = translate(parm)                    /* @BM */
+                'tbtop ' tblb                                 /* @BM */
+                'tbskip' tblb                                 /* @BM */
+                do forever                                    /* @BM */
+                   str = translate(id acc)                    /* @BM */
+                   if (pos(find_str,str) > 0) then nop        /* @BM */
+                   else 'tbdelete' tblb                       /* @BM */
+                   'tbskip' tblb                              /* @BM */
+                   if (rc > 0) then do                        /* @BM */
+                      'tbtop' tblb                            /* @BM */
+                      leave                                   /* @BM */
+                   end                                        /* @BM */
+                end                                           /* @BM */
+           END                                                /* @BM */
+           WHEN (ABBREV("RESET",ZCMD,1) = 1) THEN DO          /* @BM */
+                sort   = 'ID,C,A'                             /* @BM */
+                sortid = 'D'; sortacc = 'A'                   /* @BM */
+                xtdtop   = 1                                  /* @BM */
+                "TBEND" tblb                                  /* @BM */
+                call create_tableb                            /* @BM */
+           END                                                /* @BM */
+           otherwise NOP                                      /* @BM */
+        END /* Select */                                      /* @BM */
         Select
            when (optb = 'A') then call Addp
            when (optb = 'C') then call Chgp
@@ -500,9 +475,25 @@ DISD:
            End
         end  /* While retb= 4 */
         optb = ' '
+        PARSE VAR SORT LOCARG "," .                           /* @BM */
+        CLRID = "GREEN"; CLRACC = "GREEN"                     /* @BM */
+        INTERPRET "CLR"SUBSTR(LOCARG,1,4)" = 'TURQ'"          /* @BM */
+        "TBSORT" tblb "FIELDS("sort")"                        /* @BM */
+        "TBTOP " tblb                                         /* @BM */
+        if (lparm <> '') then do                              /* @BM */
+           ASTERICK = "*"                                     /* @BM */
+           INTERPRET LOCARG" = lparm||ASTERICK"               /* @BM */
+           PARSE VAR SORT . "," . "," SEQ                     /* @BM */
+           IF (SEQ = "D") THEN                                /* @BM */
+              CONDLIST = "LE"                                 /* @BM */
+           ELSE                                               /* @BM */
+              CONDLIST = "GE"                                 /* @BM */
+           "TBSCAN "tblb,                                     /* @BM */
+                   "ARGLIST("LOCARG") CONDLIST("CONDLIST")"   /* @BM */
+        end                                                   /* @BM */
+        else                                                  /* @BM */
+           "TBSKIP" tblb "NUMBER("XTDTOP")"                   /* @BM */
         "CONTROL DISPLAY RESTORE"
-        "TBTOP " tblb
-        "TBSKIP" tblb "NUMBER("ZTDTOP")"
         if (rb = "YES") then
            retb = 12         /* rebuild table required */
         else do
@@ -512,7 +503,84 @@ DISD:
      end  /* While retb< 8 */
      "TBEND" tblb
   end  /* Do until */
+  sort = tmpsort                                              /* @BM */
 RETURN
+/*--------------------------------------------------------------------*/
+/*  Create table 'B'                                             @BM  */
+/*--------------------------------------------------------------------*/
+CREATE_TABLEB:                                                /* @BM */
+  tblb = 'RCFDB'ZSCREEN  /* make table unique    */
+  "TBCREATE" TBLB "KEYS(ID) NAMES(ACC)",
+                  "REPLACE NOWRITE"
+  flags = 'OFF'
+  audit = ' '
+  owner = ' '
+  warn  = ' '
+  uacc  = ' '
+  data  = ' '
+  if (type = 'DISCRETE') then
+     type = ' '
+  cmd = "LISTDSD DA('"DATASET"') AUTH"                        /* @AI */
+  x = OUTTRAP('VAR.')
+  address TSO cmd                                             /* @AI */
+  cmd_rc = rc                                                 /* @AZ */
+  x = OUTTRAP('OFF')
+  if (erashow <> 'NO') then                                   /* @BJ */
+     call SHOWCMD                                             /* @AI */
+  if (type = ' ') then
+     type = 'DISCRETE'
+  Do i = 1 to var.0          /* Scan output */
+     temp = var.i
+     if (rlv > '1081') then  /* RACF 1.9 add blank */
+        temp = ' 'temp
+     l = LENGTH(temp)
+     if (uacc= ' ') then
+        if (substr(temp,2,12)= 'LEVEL  OWNER') then do
+           i     = i + 2
+           temp  = var.i
+           owner = subword(temp,2,1)
+           uacc  = subword(temp,3,1)
+           warn  = subword(temp,4,1)                          /* @A9 */
+        end
+     if (audit = ' ') then
+        if (substr(temp,2,8) = 'AUDITING') then do
+           i     = i + 2
+           temp  = var.i
+           audit = subword(temp,1,1)
+        end
+     if (data = ' ') then
+        if (substr(temp,2,17) = 'INSTALLATION DATA') then do
+           i    = i + 2
+           temp = var.i
+           data = temp
+           i    = i + 1
+           temp = var.i
+           data = data || substr(temp,2)
+        end
+     if (flags = 'ON') then do
+        if (l = 1) | (l = 2) then
+           flags = 'OUT'     /* end of access list */
+        if (l > 8) then
+           if (substr(temp,1,9) = ' ') then
+              flags = 'OUT'  /* end of access list */
+     end
+     if (flags = 'ON') then do
+        if (substr(temp,2,10) = 'NO ENTRIES') then do
+           id  = 'NONE'        /* empty access list */
+           acc = 'DEFINED'
+        end
+        else do
+           id  = subword(temp,1,1)
+           acc = subword(temp,2,1)
+        end
+        "TBMOD" tblb
+     end
+     if (substr(temp,5,13) = 'ID     ACCESS') then do
+        flags = 'ON'      /* start of access list */
+        i     = i + 1     /* skip */
+     end
+  end  /* Loop scan output */
+RETURN                                                        /* @BM */
 /*--------------------------------------------------------------------*/
 /*  Get LISTDSD info to initialize add or change option               */
 /*--------------------------------------------------------------------*/

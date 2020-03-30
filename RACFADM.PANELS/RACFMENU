@@ -1,10 +1,10 @@
 )ATTR DEFAULT(%+_)
-  _ TYPE(INPUT)  INTENS(HIGH) CAPS(ON) JUST(LEFT)   HILITE(USCORE)
-  ! TYPE(OUTPUT) INTENS(HIGH) SKIP(ON) COLOR(TURQ)
-  + TYPE(TEXT)   INTENS(LOW)  SKIP(ON) COLOR(GREEN)
-  ~  TYPE(PS)
+   _  TYPE(INPUT)  INTENS(HIGH) CAPS(ON) JUST(LEFT)   HILITE(USCORE)
+   !  TYPE(OUTPUT) INTENS(HIGH) SKIP(ON) COLOR(TURQ)
+   +  TYPE(TEXT)   INTENS(LOW)  SKIP(ON) COLOR(GREEN)
+   ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V12R3+)\-\
++\-\(%RACFADM - RACF Administration - V12R4+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options

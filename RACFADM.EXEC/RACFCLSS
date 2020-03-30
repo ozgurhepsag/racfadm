@@ -91,7 +91,7 @@ RETURN 0
 DISPLAY_TABLE_PERMIT:
   opta     = ' '
   sort     = 'PROFILE,C,A'                                    /* @BX */
-  sortprof = 0                                                /* @A6 */
+  sortprof = 'D'                                              /* @A6 */
   "TBSORT  "tblb" FIELDS("SORT")"                             /* @BX */
   "TBTOP   "tblb
   "TBDISPL "tblb "PANEL("PANEL08")"                           /* @AG */
@@ -128,7 +128,7 @@ DISPLAY_TABLE_PERMIT:
         END                                                   /* @BX */
         WHEN (ABBREV("RESET",ZCMD,1) = 1) THEN DO             /* @BX */
              sort     = 'PROFILE,C,A'                         /* @BX */
-             sortprof = 'A'                                   /* @A6 */
+             sortprof = 'D'                                   /* @A6 */
              xtdtop   = 1                                     /* @BX */
              rc = get_permits(class,user) /*get permits*/     /* @BX */
         END                                                   /* @BX */
@@ -325,7 +325,7 @@ DISPLAY_TABLE:
      end
      opta = ' '
      "TBSORT" tbla "FIELDS("sort")"                           /* @AB */
-     "TBTOP  " tbla
+     "TBTOP " tbla
      if (lclass <> '') then do                                /* @AE */
         class = lclass                                        /* @AE */
         "TBSARG" TBLA "NEXT NAMECOND(CLASS,GE)"               /* @AE */

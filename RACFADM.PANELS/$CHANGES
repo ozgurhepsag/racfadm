@@ -2,12 +2,19 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  30 Mar 2020 - V12R4
+     - User, Group, Dataset and General Resources (Option 1/2/3/4)
+       -- Line command 'S'how
+          * Added primary commands SORT, LOCATE, RESET and ONLY
+          * Column headers are now point-n-shoot sort fields
+          * Updated tutorials
+
   30 Mar 2020 - V12R3
      - Other Items
        -- All column headers now allow sorting ascending and descending,
           meaning, clicking on the column header once will sort the
           column ascending, clicking on the column header again, will
-          sort the column descending
+          sort the column descending, similar to how SDSF operates
 
   27 Mar 2020 - V12R2
      - Other Items
