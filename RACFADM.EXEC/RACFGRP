@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BN  200331  RACFA    Fix SORT order, ex line cmd and no TURQ      */
 /* @BM  200330  RACFA    Chg RACFGRP5 point/shoot ascending/descending*/
 /* @BL  200330  RACFA    Allow point-n-shoot sort ascending/descending*/
 /* @BK  200324  RACFA    Allow both display/logging of RACF commands  */
@@ -342,7 +343,7 @@ DISD:
         id = 'NONE'
         "TBMOD" tblb
      end
-     sort   = 'GROUP,C,A'                                     /* @BM */
+     sort   = 'ID,C,A'                                        /* @BN */
      sortid = 'D'; sortacce = 'A'         /* Sort order */    /* @BM */
      CLRID  = "TURQ";  CLRACC = "GREEN"   /* COL COLORS */    /* @BM */
      "TBSORT " tblb "FIELDS("sort")"                          /* @BM */
