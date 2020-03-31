@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BB  200331  RACFA    Deleted variable SELCMDS1/2, now SELCMDS     */
+/* @BA  200331  TRIDJK   Added 'P'rofile to panel                     */
 /* @B9  200330  RACFA    Chg RACFDLS5 point/shoot ascending/descending*/
 /* @B8  200330  RACFA    Allow point-n-shoot sort ascending/descending*/
 /* @B7  200324  RACFA    Allow both display/logging of RACF commands  */
@@ -73,10 +75,8 @@ ADDRESS ISPEXEC                                               /* @AG */
         "ERASINT ERAADMN ERADISP) ASIS"                       /* @AC */
   If (eratrace = 'YES') then Trace r                          /* @AE */
   If (ERAADMN = "YES") then DO                                /* @B5 */
-      SELCMDS1 = "ÝS¨Show,ÝL¨List,"||,                        /* @B5 */
-                 "ÝC¨Change,ÝA¨Add,ÝR¨Remove"                 /* @B5 */
-      SELCMDS2 = "ÝS¨Show,ÝL¨List,ÝP¨Profile,"||,             /* @B5 */
-                 "ÝC¨Change,ÝA¨Add,ÝR¨Remove"                 /* @B5 */
+      SELCMDS = "ÝS¨Show,ÝL¨List,ÝP¨Profile,"||,              /* @BB */
+                "ÝC¨Change,ÝA¨Add,ÝR¨Remove"                  /* @B5 */
   END                                                         /* @B5 */
   else
       SELCMDS = "ÝS¨Show,ÝL¨list"                             /* @AB */
@@ -168,6 +168,8 @@ PROFL:
         when (opta = 'C') then call Chgd
         when (opta = 'L') then call Lisd                      /* @A1 */
         when (opta = 'M') then call Dism
+        when (opta = 'P') then                                /* @BA */
+             call RACFPROF rclass profile                     /* @BA */
         when (opta = 'R') then call Deld
         when (opta = 'S') then call Disd
         otherwise nop
@@ -182,6 +184,8 @@ PROFL:
            when (opta = 'C') then call Chgd
            when (opta = 'L') then call Lisd                   /* @A1 */
            when (opta = 'M') then call Dism
+           when (opta = 'P') then                             /* @BA */
+                call RACFPROF rclass profile                  /* @BA */
            when (opta = 'R') then call Deld
            when (opta = 'S') then call Disd
            otherwise nop

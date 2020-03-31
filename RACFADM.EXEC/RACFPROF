@@ -12,6 +12,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AJ  200331  TRIDJK   Chg LEFT(RACF.PROFILE,8) to RACF.PROFILE     */
 /* @AI  200324  TRIDJK   Chg loop var K to seg, due to conflict       */
 /* @AH  200324  RACFA    Allow both display/logging of RACF commands  */
 /* @AG  200324  RACFA    Allow logging RACF commands to ISPF Log file */
@@ -68,7 +69,7 @@ ADDRESS ISPEXEC
   end
 
   /* Print header */
-  call sez "Profile: "LEFT(RACF.PROFILE,8),                   /* @AD */
+  call sez "Profile: "RACF.PROFILE,                           /* @AJ */
            " Segments: "||,                                   /* @AD */
            right(RACF.0,2,"0")
 

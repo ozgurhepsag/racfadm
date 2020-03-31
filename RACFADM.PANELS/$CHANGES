@@ -2,6 +2,11 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  31 Mar 2020 - V12R5
+     - General Resources (Option 4)
+       * Added 'P'rofile line command to RACFCLS2/5 panels, when
+         user has 'Administrator=Y'
+
   30 Mar 2020 - V12R4
      - User, Group, Dataset and General Resources (Option 1/2/3/4)
        -- Line command 'S'how

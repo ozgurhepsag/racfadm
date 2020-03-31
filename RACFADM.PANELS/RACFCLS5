@@ -20,7 +20,7 @@
 +WARNING:$WARN    { (YES/NO)             +AUDIT: $AUDIT
 +DATA:   $DATA
 +                                           +
-+SELECT: ¬SELCMDS2                                                             ¬
++SELECT: ¬SELCMDS                                                              ¬
 +
 %S  ~Group/ID    ~Access
 %-------------------------------------------------------------------------------
