@@ -33,7 +33,7 @@
 /* @A1  091201  ONGHENA  Created REXX   (onghena@us.ibm.com)          */
 /* @A0  060101  WELLS    Created HLASM  (brwells@us.ibm.com)          */
 /*====================================================================*/
-PANELM2 = "RACFMSG2"    /* Execute RACF Command (pop-up)   */ /* @A9 */
+PANELM2 = "RACFMSG2"    /* Display RACF command and RC     */ /* @A9 */
 arg class profile
 if (profile = "*") then do                                    /* @AF */
    call RACFMSGS ERR17                                        /* @AF */

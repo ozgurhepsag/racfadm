@@ -12,6 +12,7 @@
  RACFCLSS  Class          Search and display classes
  RACFDB    Database       Display RACF database info, menu option 6
  RACFDSN   Dataset        Display dataset profiles
+ RACFENQ   Enqueues       Display LIBDEFed panels enqueues
  RACFGRP   Group          Display group profiles, menu option 2
  RACFHELP  Help           Display TSO HELP on RACF commands
  RACFLOG   Documentation  Display changes/issues, menu option C/I

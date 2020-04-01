@@ -59,7 +59,7 @@ PANEL07 = "RACFCLS7"    /* Add access                      */ /* @AM */
 PANEL12 = "RACFCLSB"    /* List members                    */ /* @AM */
 PANEL13 = "RACFCLSC"    /* Add class                       */ /* @AM */
 PANELM1 = "RACFMSG1"    /* Confirm Request (pop-up)        */ /* @AM */
-PANELM2 = "RACFMSG2"    /* Execute RACF Command (pop-up)   */ /* @AM */
+PANELM2 = "RACFMSG2"    /* Display RACF command and RC     */ /* @AM */
 
 ADDRESS ISPEXEC                                               /* @AG */
   Arg Rclass Rfilter Rdisp

@@ -1,0 +1,81 @@
+/*%NOCOMMENT====================* REXX *==============================*/
+/*  PURPOSE:  RACFADM - Enqueues - Menu option E (hidden)             */
+/*--------------------------------------------------------------------*/
+/* FLG  YYMMDD  USERID   DESCRIPTION                                  */
+/* ---  ------  -------  -------------------------------------------- */
+/* @A0  200401  RACFA    Created REXX                                 */
+/*====================================================================*/
+PANELM2 = "RACFMSG2"    /* Display RACF command and RC     */
+QNAME   = "SYSDSN"
+DDNAME  = "RACFENQ"
+
+ADDRESS ISPEXEC
+  "VGET (ERADISP ERASHOW ERATRACE) ASIS"
+  If (eratrace = 'YES') then Trace r
+  "QLIBDEF ISPPLIB TYPE(DATASET) ID(DSNAME)"
+  if (RC > 0) then EXIT
+  RNAME = STRIP(DSNAME,,"'")
+  "QUERYENQ TABLE(ENQTBL) QNAME(QNAME) RNAME(RNAME) XSYS"
+  "TBTOP   "ENQTBL
+  "TBQUERY "ENQTBL" ROWNUM(ENUM)"
+  IF (ENUM >= 1) THEN DO
+     QUEUE "*"COPIES("-",70)"*"
+     QUEUE "*"CENTER("Enqueues - "Rname,70)"*"
+     QUEUE "*"COPIES("-",70)"*"
+     QUEUE " "
+     QUEUE "     Lpar     Disp    Jobname ",
+           Copies(" ",12)"Name"
+     QUEUE "   --------   -----   --------",
+           "  "Copies("-",25)
+     DO J = 1 TO ENUM
+        "TBSKIP "ENQTBL
+        "TBGET  "ENQTBL
+        cmd = "LU "ZENJOB
+        X = OUTTRAP("CMDREC.")
+        ADDRESS TSO cmd
+        cmd_rc = rc
+        if (erashow <> 'NO') then
+           call SHOWCMD
+        if (cmd_rc > 0) then
+           Luname = ""
+        else
+           parse var cmdrec.1 . "NAME="luname "OWNER=" .
+        X = OUTTRAP("OFF")
+        QUEUE "   "LEFT(ZENSYST,8)"   "ZENDISP"  ",
+              LEFT(ZENJOB,8)"   "Luname
+     END
+  END
+  "TBCLOSE "ENQTBL
+  QUEUE ""
+  ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",
+              "LRECL(132) BLKSIZE(0) RECFM(F B)",
+              "UNIT(VIO) SPACE(1 5) CYLINDERS"
+  ADDRESS TSO "EXECIO * DISKW "DDNAME" (FINIS"
+  "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"
+  SELECT
+     WHEN (ERADISP = "VIEW") THEN
+          "VIEW DATAID("CMDDATID")"
+     WHEN (ERADISP = "EDIT") THEN
+          "EDIT DATAID("CMDDATID")"
+     OTHERWISE
+          "BROWSE DATAID("CMDDATID")"
+  END
+  ADDRESS TSO "FREE FI("DDNAME")"
+EXIT
+/*--------------------------------------------------------------------*/
+/*  Display RACF command                                              */
+/*--------------------------------------------------------------------*/
+SHOWCMD:
+  IF (ERASHOW = "BOTH") | (ERASHOW = "DISPLAY") THEN DO
+     PARSE VAR CMD MSG1 60 MSG2 121 MSG3
+     MSG4 = "Return code = "cmd_rc
+     "ADDPOP ROW(6) COLUMN(4)"
+     "DISPLAY PANEL("PANELM2")"
+     "REMPOP"
+  END
+  IF (ERASHOW = "BOTH") | (ERASHOW = "LOG") THEN DO
+     zerrsm = "RACFADM RACFUSR  RC="cmd_rc
+     zerrlm = cmd
+     'log msg(isrz003)'
+  END
+RETURN

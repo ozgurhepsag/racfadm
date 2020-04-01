@@ -70,7 +70,7 @@ PANEL05 = "RACFDSN5"    /* Show groups and access          */ /* @AU */
 PANEL06 = "RACFDSN6"    /* Change access                   */ /* @AU */
 PANEL07 = "RACFDSN7"    /* Add access                      */ /* @AU */
 PANELM1 = "RACFMSG1"    /* Confirm Request (pop-up)        */ /* @AU */
-PANELM2 = "RACFMSG2"    /* Execute RACF Command (pop-up)   */ /* @AU */
+PANELM2 = "RACFMSG2"    /* Display RACF command and RC     */ /* @AU */
 
 ADDRESS ISPEXEC                                               /* @AJ */
   Rclass = 'DATASET'

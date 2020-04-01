@@ -2,6 +2,11 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  01 Apr 2020 - V12R7
+     - Main Menu
+       -- Added hidden option 'E', display enqueues on LIBDEF panel
+          dataset, shows who is using the application
+
   31 Mar 2020 - V12R6
      - Group (Option 2)
        -- Fixed sorted color (Turq), when typing a line command,

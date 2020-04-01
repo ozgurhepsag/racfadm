@@ -114,7 +114,7 @@ PANEL05 = "RACFUSR5"    /* Change user                     */ /* @BL */
 PANEL06 = "RACFUSR6"    /* Add user                        */ /* @BL */
 PANEL07 = "RACFUSR7"    /* Change connection               */ /* @BL */
 PANEL08 = "RACFUSR8"    /* Alter TSO segment               */ /* @BL */
-PANELM2 = "RACFMSG2"    /* Execute RACF Command (pop-up)   */ /* @BL */
+PANELM2 = "RACFMSG2"    /* Display RACF command and RC     */ /* @BL */
 
 ADDRESS ISPEXEC                                               /* @BC */
   Arg Rfilter

@@ -24,7 +24,7 @@
 /*====================================================================*/
 PANEL01 = "RACFAUT1"    /* Enter profile/class/user        */ /* @A8 */
 PANEL02 = "RACFAUT2"    /* List group/ids and access       */ /* @A8 */
-PANELM2 = "RACFMSG2"    /* Execute RACF Command  (pop-up)  */ /* @A8 */
+PANELM2 = "RACFMSG2"    /* Display RACF command and RC     */ /* @A8 */
 
 ADDRESS ISPEXEC                                               /* @A6 */
   Arg rclass profile user
