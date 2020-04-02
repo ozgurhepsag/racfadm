@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMhDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AU  200402  RACFA    Chg LRECL=132 to LRECL=80                    */
 /* @AT  200401  RACFA    Chged edit macro RACFLOGE to RACFEMAC        */
 /* @AS  200401  RACFA    VIEW/EDIT use edit macro, to turn off HILITE */
 /* @AR  200330  RACFA    Allow point-n-shoot sort ascending/descending*/
@@ -281,7 +282,7 @@ LISP:
         call SHOWCMD                                          /* @AM */
   end                                                         /* @AM */
   ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",
-              "LRECL(132) BLKSIZE(0) RECFM(F B)",
+              "LRECL(80) BLKSIZE(0) RECFM(F B)",              /* @AU */
               "UNIT(VIO) SPACE(1 5) CYLINDERS"
   ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM CMDREC. FINIS"
   "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"

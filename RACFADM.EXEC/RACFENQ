@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A5  200402  RACFA    Chg LRECL=132 to LRECL=80                    */
 /* @A4  200402  RACFA    Issue message if no LIBDEF ISPPLIB dataset   */
 /* @A3  200401  RACFA    Chged edit macro RACFLOGE to RACFEMAC        */
 /* @A2  200401  RACFA    VIEW/EDIT use edit macro, to turn off HILITE */
@@ -62,7 +63,7 @@ ADDRESS ISPEXEC
   QUEUE ""
 
   ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",
-              "LRECL(132) BLKSIZE(0) RECFM(F B)",
+              "LRECL(80) BLKSIZE(0) RECFM(F B)",              /* @A5 */
               "UNIT(VIO) SPACE(1 5) CYLINDERS"
   ADDRESS TSO "EXECIO * DISKW "DDNAME" (FINIS"
   "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"

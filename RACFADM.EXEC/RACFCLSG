@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BG  200402  RACFA    Chg LRECL=132 to LRECL=80                    */
 /* @BF  200401  RACFA    Fixed point-n-shoot default sort (RACFCLS5)  */
 /* @BE  200401  RACFA    Create subroutine to VIEW/EDIT/BROWSE        */
 /* @BD  200401  RACFA    Chged edit macro RACFLOGE to RACFEMAC        */
@@ -969,7 +970,7 @@ RETURN                                                        /* @A2 */
 /*--------------------------------------------------------------------*/
 DISPLAY_INFO:                                                 /* @BE */
   ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",                  /* @A2 */
-              "LRECL(132) BLKSIZE(0) RECFM(F B)",             /* @A2 */
+              "LRECL(80) BLKSIZE(0) RECFM(F B)",              /* @BG */
               "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @A2 */
   ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM CMDREC. FINIS"   /* @A2 */
   "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"                  /* @A2 */

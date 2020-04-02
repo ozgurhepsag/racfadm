@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BR  200402  RACFA    Chg LRECL=132 to LRECL=80                    */
 /* @BQ  200401  RACFA    Create subroutine to VIEW/EDIT/BROWSE        */
 /* @BP  200401  RACFA    Chged edit macro RACFLOGE to RACFEMAC        */
 /* @BO  200401  RACFA    VIEW/EDIT use edit macro, to turn off HILITE */
@@ -594,7 +595,7 @@ RETURN
 /*--------------------------------------------------------------------*/
 DISPLAY_INFO:                                                 /* @BQ */
   ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",                  /* @A2 */
-              "LRECL(132) BLKSIZE(0) RECFM(F B)",             /* @A2 */
+              "LRECL(80) BLKSIZE(0) RECFM(F B)",              /* @BR */
               "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @A2 */
   ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM CMDREC. FINIS"   /* @A2 */
   "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"                  /* @A2 */
