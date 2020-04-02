@@ -3,11 +3,15 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A3  200401  RACFA    Chged edit macro RACFLOGE to RACFEMAC        */
+/* @A2  200401  RACFA    VIEW/EDIT use edit macro, to turn off HILITE */
+/* @A1  200402  RACFA    Dropped array, save memory                   */
 /* @A0  200401  RACFA    Created REXX                                 */
 /*====================================================================*/
-PANELM2 = "RACFMSG2"    /* Display RACF command and RC     */
-QNAME   = "SYSDSN"
-DDNAME  = "RACFENQ"
+PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */
+EDITMACR = "RACFEMAC"                                         /* @A3 */
+QNAME    = "SYSDSN"
+DDNAME   = "RACFENQ"
 
 ADDRESS ISPEXEC
   "VGET (ERADISP ERASHOW ERATRACE) ASIS"
@@ -46,6 +50,7 @@ ADDRESS ISPEXEC
      END
   END
   "TBCLOSE "ENQTBL
+  DROP CMDREC.                                                /* @A1 */
   QUEUE ""
   ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",
               "LRECL(132) BLKSIZE(0) RECFM(F B)",
@@ -54,16 +59,16 @@ ADDRESS ISPEXEC
   "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"
   SELECT
      WHEN (ERADISP = "VIEW") THEN
-          "VIEW DATAID("CMDDATID")"
+          "VIEW DATAID("CMDDATID") MACRO("EDITMACR")"         /* @A2 */
      WHEN (ERADISP = "EDIT") THEN
-          "EDIT DATAID("CMDDATID")"
+          "EDIT DATAID("CMDDATID") MACRO("EDITMACR")"         /* @A2 */
      OTHERWISE
           "BROWSE DATAID("CMDDATID")"
   END
   ADDRESS TSO "FREE FI("DDNAME")"
 EXIT
 /*--------------------------------------------------------------------*/
-/*  Display RACF command                                              */
+/*  Display RACF command and return code                              */
 /*--------------------------------------------------------------------*/
 SHOWCMD:
   IF (ERASHOW = "BOTH") | (ERASHOW = "DISPLAY") THEN DO

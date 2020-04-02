@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A4  200401  RACFA    Chged edit macro RACFLOGE to RACFEMAC        */
+/* @A3  200401  RACFA    VIEW/EDIT use edit macro, to turn off HILITE */
 /* @A2  200326  RACFA    Chg temp file to LRECL=80, was 132           */
 /* @A1  200326  RACFA    Chg SAYs to QUEUE, alloc, browse, free file  */
 /* @A0  200326  LBD      Obtained REXX                                */
@@ -136,6 +138,8 @@
 /*           Z/OS V1R4 ON SINGLE AND SPLIT DATABASES.                */
 /*                                                                   */
 /*********************************************************************/
+EDITMACR = "RACFEMAC"                                         /* @A4 */
+
 ADDRESS ISPEXEC "VGET (ERADISP)"                              /* @A1 */
 racflmsg = "Retrieving data - Please be patient"              /* @A1 */
 ADDRESS ISPEXEC "control display lock"                        /* @A1 */
@@ -239,9 +243,11 @@ DDNAME = "RACFDB"                                             /* @A1 */
 ADDRESS ISPEXEC "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"    /* @A1 */
 SELECT                                                        /* @A1 */
    WHEN (ERADISP = "VIEW") THEN                               /* @A1 */
-        ADDRESS ISPEXEC "VIEW DATAID("CMDDATID")"             /* @A1 */
+        ADDRESS ISPEXEC "VIEW DATAID("CMDDATID")",            /* @A3 */
+                        "MACRO("EDITMACR")"                   /* @A3 */
    WHEN (ERADISP = "EDIT") THEN                               /* @A1 */
-        ADDRESS ISPEXEC "EDIT DATAID("CMDDATID")"             /* @A1 */
+        ADDRESS ISPEXEC "EDIT DATAID("CMDDATID")",            /* @A3 */
+                        "MACRO("EDITMACR")"                   /* @A3 */
    OTHERWISE                                                  /* @A1 */
         ADDRESS ISPEXEC "BROWSE DATAID("CMDDATID")"           /* @A1 */
 END                                                           /* @A1 */

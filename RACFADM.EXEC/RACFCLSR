@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMhDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AT  200401  RACFA    Chged edit macro RACFLOGE to RACFEMAC        */
+/* @AS  200401  RACFA    VIEW/EDIT use edit macro, to turn off HILITE */
 /* @AR  200330  RACFA    Allow point-n-shoot sort ascending/descending*/
 /* @AQ  200324  RACFA    Allow both display/logging of RACF commands  */
 /* @AP  200324  RACFA    Allow logging RACF commands to ISPF Log file */
@@ -32,8 +34,9 @@
 /* @A1  200119  RACFA    Placed comment boxes above procedures        */
 /* @A0  011229  NICORIZ  Created REXX, V2.1, www.rizzuto.it           */
 /*====================================================================*/
-PANEL27 = "RACFCLSR"    /* List classes (show, refresh)    */ /* @AF */
-PANELM2 = "RACFMSG2"    /* Display RACF command and RC     */ /* @AF */
+PANEL27  = "RACFCLSR"    /* List classes (show, refresh)   */ /* @AF */
+PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */ /* @AF */
+EDITMACR = "RACFEMAC"                                         /* @AT */
 
 ADDRESS ISPEXEC                                               /* @A7 */
   Arg class
@@ -284,9 +287,9 @@ LISP:
   "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"
   SELECT
      WHEN (ERADISP = "VIEW") THEN
-          "VIEW DATAID("CMDDATID")"
+          "VIEW DATAID("CMDDATID") MACRO("EDITMACR")"         /* @AS */
      WHEN (ERADISP = "EDIT") THEN
-          "EDIT DATAID("CMDDATID")"
+          "EDIT DATAID("CMDDATID") MACRO("EDITMACR")"         /* @AS */
      OTHERWISE
           "BROWSE DATAID("CMDDATID")"
   END
@@ -296,7 +299,7 @@ LISP:
      CALL racfmsgs "ERR10" /* Generic failure */              /* @AC */
 RETURN
 /*--------------------------------------------------------------------*/
-/*  Display RACF command                                         @A6  */
+/*  Display RACF command and return code                         @A6  */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @A6 */
   IF (ERASHOW = "BOTH") | (ERASHOW = "DISPLAY") THEN DO       /* @AQ */

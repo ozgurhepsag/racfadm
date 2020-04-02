@@ -171,7 +171,7 @@ GET_USER_GROUP:
   End
 RETURN
 /*--------------------------------------------------------------------*/
-/*  Display RACF command                                         @A5  */
+/*  Display RACF command and return code                         @A5  */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @A5 */
   IF (ERASHOW = "BOTH") | (ERASHOW = "DISPLAY") THEN DO       /* @AU */

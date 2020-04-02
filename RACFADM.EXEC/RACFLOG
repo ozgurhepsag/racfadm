@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A8  200401  RACFA    Chged edit macro RACFLOGE to RACFEMAC        */
 /* @A7  200303  RACFA    Def/use variable for edit macro              */
 /* @A6  200303  RACFA    Renamed edit macro to RACFDSPE, was RACFCHGE */
 /* @A5  200303  RACFA    Receive member as a parmater                 */
@@ -12,7 +13,7 @@
 /* @A1  200220  RACFA    Added capability to browse/edit/view file    */
 /* @A0  200218  RACFA    Created REXX                                 */
 /*====================================================================*/
-EDITMACR = "RACFLOGE"                                         /* @A7 */
+EDITMACR = "RACFEMAC"                                         /* @A8 */
 
 ADDRESS ISPEXEC                                               /* @A3 */
   PARSE ARG MEMBER                                            /* @A5 */

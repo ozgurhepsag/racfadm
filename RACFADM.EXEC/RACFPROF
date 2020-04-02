@@ -12,6 +12,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AL  200401  RACFA    Chged edit macro RACFLOGE to RACFEMAC        */
+/* @AK  200401  RACFA    VIEW/EDIT use edit macro, to turn off HILITE */
 /* @AJ  200331  TRIDJK   Chg LEFT(RACF.PROFILE,8) to RACF.PROFILE     */
 /* @AI  200324  TRIDJK   Chg loop var K to seg, due to conflict       */
 /* @AH  200324  RACFA    Allow both display/logging of RACF commands  */
@@ -33,7 +35,9 @@
 /* @A1  091201  ONGHENA  Created REXX   (onghena@us.ibm.com)          */
 /* @A0  060101  WELLS    Created HLASM  (brwells@us.ibm.com)          */
 /*====================================================================*/
-PANELM2 = "RACFMSG2"    /* Display RACF command and RC     */ /* @A9 */
+PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */ /* @A9 */
+EDITMACR = "RACFEMAC"                                         /* @AL */
+
 arg class profile
 if (profile = "*") then do                                    /* @AF */
    call RACFMSGS ERR17                                        /* @AF */
@@ -196,10 +200,10 @@ Address ISPExec
     exit
   end
   Select                                                      /* @A4 */
-     When (ERADISP = "EDIT") THEN                             /* @A4 */
-          'edit dataid('id')'                                 /* @A4 */
      When (ERADISP = "VIEW") THEN                             /* @A4 */
-          'view dataid('id')'                                 /* @A4 */
+          "VIEW DATAID("id") MACRO("EDITMACR")"               /* @AK */
+     When (ERADISP = "EDIT") THEN                             /* @A4 */
+          "EDIT DATAID("id") MACRO("EDITMACR")"               /* @AK */
      Otherwise                                                /* @A4 */
           'browse dataid('id')'                               /* @A4 */
   end                                                         /* @A4 */
@@ -221,7 +225,7 @@ EXCCMD:                                                       /* @A9 */
      call SHOWCMD                                             /* @A9 */
 RETURN                                                        /* @A9 */
 /*--------------------------------------------------------------------*/
-/*  Display RACF command                                         @A9  */
+/*  Display RACF command and return code                         @A9  */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @A9 */
   IF (ERASHOW = "BOTH") | (ERASHOW = "DISPLAY") THEN DO       /* @AH */

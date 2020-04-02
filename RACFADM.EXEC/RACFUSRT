@@ -193,7 +193,7 @@ ADDRESS TSO                                                   /* @AG */
      call SHOWCMD                                             /* @AG */
 RETURN                                                        /* @AG */
 /*--------------------------------------------------------------------*/
-/*  Display RACF command                                         @BB  */
+/*  Display RACF command and return code                         @BB  */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @BB */
 ADDRESS ISPEXEC                                               /* @AG */

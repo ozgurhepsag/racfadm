@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A8  200401  RACFA    Create subroutine to VIEW/EDIT/BROWSE        */
+/* @A7  200401  RACFA    VIEW/EDIT use edit macro, to turn off HILITE */
 /* @A6  200330  RACFA    Allow point-n-shoot sort ascending/descending*/
 /* @A5  200324  RACFA    Allow both display/logging of RACF commands  */
 /* @A4  200324  RACFA    Allow logging RACF commands to ISPF Log file */
@@ -361,6 +363,14 @@ LISP:                                                         /* @A1 */
      if (erashow <> 'NO') then                                /* @A4 */
         call SHOWCMD                                          /* @A1 */
   end                                                         /* @A1 */
+  call display_info                                           /* @A8 */
+  if (cmd_rc > 0) then                                        /* @A1 */
+     CALL racfmsgs "ERR10" /* Generic failure */              /* @A1 */
+RETURN                                                        /* @A1 */
+/*--------------------------------------------------------------------*/
+/*  Display information from line commands 'L' and 'P'           @A8  */
+/*--------------------------------------------------------------------*/
+DISPLAY_INFO:                                                 /* @A8 */
   ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",                  /* @A1 */
               "LRECL(132) BLKSIZE(0) RECFM(F B)",             /* @A1 */
               "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @A1 */
@@ -368,17 +378,15 @@ LISP:                                                         /* @A1 */
   "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"                  /* @A1 */
   SELECT                                                      /* @A1 */
      WHEN (ERADISP = "VIEW") THEN                             /* @A1 */
-          "VIEW DATAID("CMDDATID")"                           /* @A1 */
+          "VIEW DATAID("CMDDATID") MACRO("EDITMACR")"         /* @A7 */
      WHEN (ERADISP = "EDIT") THEN                             /* @A1 */
-          "EDIT DATAID("CMDDATID")"                           /* @A1 */
+          "EDIT DATAID("CMDDATID") MACRO("EDITMACR")"         /* @A7 */
      OTHERWISE                                                /* @A1 */
           "BROWSE DATAID("CMDDATID")"                         /* @A1 */
   END                                                         /* @A1 */
   ADDRESS TSO "FREE FI("DDNAME")"                             /* @A1 */
-  DROP CMDREC. DDNAME                                         /* @A1 */
-  if (cmd_rc > 0) then                                        /* @A1 */
-     CALL racfmsgs "ERR10" /* Generic failure */              /* @A1 */
-RETURN                                                        /* @A1 */
+  DROP CMDREC. DDNAME CMDPRM                                  /* @A8 */
+RETURN                                                        /* @A8 */
 /*--------------------------------------------------------------------*/
 /*  List class's profile                                         @A2  */
 /*--------------------------------------------------------------------*/
@@ -400,26 +408,12 @@ LISD:                                                         /* @A2 */
      if (erashow <> 'NO') then                                /* @A4 */
         call SHOWCMD                                          /* @A2 */
   end                                                         /* @A2 */
-  ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",                  /* @A2 */
-              "LRECL(132) BLKSIZE(0) RECFM(F B)",             /* @A2 */
-              "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @A2 */
-  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM CMDREC. FINIS"   /* @A2 */
-  "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"                  /* @A2 */
-  SELECT                                                      /* @A2 */
-     WHEN (ERADISP = "VIEW") THEN                             /* @A2 */
-          "VIEW DATAID("CMDDATID")"                           /* @A2 */
-     WHEN (ERADISP = "EDIT") THEN                             /* @A2 */
-          "EDIT DATAID("CMDDATID")"                           /* @A2 */
-     OTHERWISE                                                /* @A2 */
-          "BROWSE DATAID("CMDDATID")"                         /* @A2 */
-  END                                                         /* @A2 */
-  ADDRESS TSO "FREE FI("DDNAME")"                             /* @A2 */
-  DROP CMDREC. DDNAME                                         /* @A2 */
+  call display_info                                           /* @A8 */
   if (cmd_rc > 0) then                                        /* @A2 */
      CALL racfmsgs "ERR10" /* Generic failure */              /* @A2 */
 RETURN                                                        /* @A2 */
 /*--------------------------------------------------------------------*/
-/*  Display RACF command                                         @A5  */
+/*  Display RACF command and return code                         @A5  */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @A5 */
   IF (ERASHOW = "BOTH") | (ERASHOW = "DISPLAY") THEN DO       /* @A5 */

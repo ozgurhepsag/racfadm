@@ -3,6 +3,9 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BP  200401  RACFA    Create subroutine to VIEW/EDIT/BROWSE        */
+/* @BO  200401  RACFA    Chged edit macro RACFLOGE to RACFEMAC        */
+/* @BN  200401  RACFA    VIEW/EDIT use edit macro, to turn off HILITE */
 /* @BM  200330  RACFA    Chg RACFDSN5 point/shoot ascending/descending*/
 /* @BL  200330  RACFA    Allow point-n-shoot sort ascending/descending*/
 /* @BK  200324  RACFA    Allow both display/logging of RACF commands  */
@@ -62,15 +65,16 @@
 /* @A1  200110  RACFA    Added line command 'L' to list dataset       */
 /* @A0  011229  NICORIZ  Created REXX, V2.1, www.rizzuto.it           */
 /*====================================================================*/
-PANEL01 = "RACFDSN1"    /* Set filter, menu option 3       */ /* @AU */
-PANEL02 = "RACFDSN2"    /* List profiles and types         */ /* @AU */
-PANEL03 = "RACFDSN3"    /* Add profile                     */ /* @AU */
-PANEL04 = "RACFDSN4"    /* Change profile                  */ /* @AU */
-PANEL05 = "RACFDSN5"    /* Show groups and access          */ /* @AU */
-PANEL06 = "RACFDSN6"    /* Change access                   */ /* @AU */
-PANEL07 = "RACFDSN7"    /* Add access                      */ /* @AU */
-PANELM1 = "RACFMSG1"    /* Confirm Request (pop-up)        */ /* @AU */
-PANELM2 = "RACFMSG2"    /* Display RACF command and RC     */ /* @AU */
+PANEL01  = "RACFDSN1"    /* Set filter, menu option 3      */ /* @AU */
+PANEL02  = "RACFDSN2"    /* List profiles and types        */ /* @AU */
+PANEL03  = "RACFDSN3"    /* Add profile                    */ /* @AU */
+PANEL04  = "RACFDSN4"    /* Change profile                 */ /* @AU */
+PANEL05  = "RACFDSN5"    /* Show groups and access         */ /* @AU */
+PANEL06  = "RACFDSN6"    /* Change access                  */ /* @AU */
+PANEL07  = "RACFDSN7"    /* Add access                     */ /* @AU */
+PANELM1  = "RACFMSG1"    /* Confirm Request (pop-up)       */ /* @AU */
+PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */ /* @AU */
+EDITMACR = "RACFEMAC"                                         /* @BO */
 
 ADDRESS ISPEXEC                                               /* @AJ */
   Rclass = 'DATASET'
@@ -799,6 +803,14 @@ LISD:                                                         /* @A1 */
      if (erashow <> 'NO') then                                /* @BJ */
         call SHOWCMD                                          /* @BC */
   end                                                         /* @BC */
+  call display_info                                           /* @BP */
+  if (cmd_rc > 0) then                                        /* @BD */
+     CALL racfmsgs "ERR10" /* Generic failure */              /* @B6 */
+RETURN                                                        /* @A1 */
+/*--------------------------------------------------------------------*/
+/*  Display information from line commands 'L' and 'P'           @BP  */
+/*--------------------------------------------------------------------*/
+DISPLAY_INFO:
   ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",                  /* @A1 */
               "LRECL(132) BLKSIZE(0) RECFM(F B)",             /* @A1 */
               "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @A1 */
@@ -806,17 +818,15 @@ LISD:                                                         /* @A1 */
   "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"                  /* @A1 */
   SELECT                                                      /* @AF */
      WHEN (ERADISP = "VIEW") THEN                             /* @AF */
-          "VIEW DATAID("CMDDATID")"                           /* @AF */
+          "VIEW DATAID("CMDDATID") MACRO("EDITMACR")"         /* @BN */
      WHEN (ERADISP = "EDIT") THEN                             /* @AF */
-          "EDIT DATAID("CMDDATID")"                           /* @AF */
+          "EDIT DATAID("CMDDATID") MACRO("EDITMACR")"         /* @BN */
      OTHERWISE                                                /* @AF */
           "BROWSE DATAID("CMDDATID")"                         /* @AF */
   END                                                         /* @AF */
   ADDRESS TSO "FREE FI("DDNAME")"                             /* @A1 */
   DROP CMDREC. DDNAME CMDPRM                                  /* @A1 */
-  if (cmd_rc > 0) then                                        /* @BD */
-     CALL racfmsgs "ERR10" /* Generic failure */              /* @B6 */
-RETURN                                                        /* @A1 */
+RETURN                                                        /* @BP */
 /*--------------------------------------------------------------------*/
 /*  List group                                                        */
 /*--------------------------------------------------------------------*/
@@ -843,26 +853,12 @@ LISP:                                                         /* @A5 */
         call SHOWCMD                                          /* @AI */
      X = OUTTRAP("OFF")                                       /* @AI */
   end                                                         /* @AB */
-  ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",                  /* @A5 */
-              "LRECL(132) BLKSIZE(0) RECFM(F B)",             /* @A5 */
-              "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @A5 */
-  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM CMDREC. FINIS"   /* @A5 */
-  "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"                  /* @A5 */
-  SELECT                                                      /* @AF */
-     WHEN (ERADISP = "VIEW") THEN                             /* @AF */
-          "VIEW DATAID("CMDDATID")"                           /* @AF */
-     WHEN (ERADISP = "EDIT") THEN                             /* @AF */
-          "EDIT DATAID("CMDDATID")"                           /* @AF */
-     OTHERWISE                                                /* @AF */
-          "BROWSE DATAID("CMDDATID")"                         /* @AF */
-  END                                                         /* @AF */
-  ADDRESS TSO "FREE FI("DDNAME")"                             /* @A5 */
-  DROP CMDREC. DDNAME CMDPRM                                  /* @A5 */
+  call display_info                                           /* @BP */
   if (cmd_rc > 0) then                                        /* @BF */
      CALL racfmsgs "ERR15" /* Generic failure */              /* @B6 */
 RETURN                                                        /* @A5 */
 /*--------------------------------------------------------------------*/
-/*  Display RACF command                                         @AI  */
+/*  Display RACF command and return code                         @AI  */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @AI */
   IF (ERASHOW = "BOTH") | (ERASHOW = "DISPLAY") THEN DO       /* @BK */
@@ -879,7 +875,7 @@ SHOWCMD:                                                      /* @AI */
   END                                                         /* @BJ */
 RETURN                                                        /* @AI */
 /*--------------------------------------------------------------------*/
-/*  Create table                                                 @AL  */
+/*  Create table 'A'                                             @AL  */
 /*--------------------------------------------------------------------*/
 CREATE_TABLE:
   tbla = 'RCFDA'ZSCREEN

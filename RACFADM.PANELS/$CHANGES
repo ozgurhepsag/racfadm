@@ -2,6 +2,23 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  01 Apr 2020 - V12R8
+     - Main Menu
+       -- Hidden option 'E', Display Enqueues
+          * Dropped array after processing LU command to obtain
+            userid's name, reduce memory usage
+     - General Resources (Option 4)
+       * Fixed issuing a command on panel RACFCLS5 and changing the
+         sorted column color to green, when it should be turquois
+     - Other Items
+       -- REXX programs
+          * Programs viewing/editing a file
+            o Changed to use an edit macro to turn off highlighting,
+              renamed RACFLOGE to RACFEMAC, due to so many programs
+              now call/use this edit macro
+            o Moved code to a subroutine, making it easier to maintain
+          * Updated several subroutines flower box descriptions
+
   01 Apr 2020 - V12R7
      - Main Menu
        -- Added hidden option 'E', display enqueues on LIBDEF panel
