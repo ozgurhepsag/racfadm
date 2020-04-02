@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A8  200402  RACFA    Added ERR20 msg, 'Invalid security access'   */
+/* @A7  200402  RACFA    Added ERR19 msg, 'No LIBDEF ISPPLIB DSN'     */
 /* @A6  200301  RACFA    Standardize/use this module for all msgs     */
 /* @A5  200223  RACFA    Del 'address TSO "PROFILE MSGID"', not needed*/
 /* @A4  200221  RACFA    Make 'ADDRESS ISPEXEC' defualt, reduce code  */
@@ -92,6 +94,18 @@ ADDRESS ISPEXEC                                               /* @A4 */
           racflmsg = 'The TSO User Catalog defined in',
                      'Settings is invalid or null'
      end
+     WHEN (code = 'ERR19') then do                            /* @A7 */
+          racfsmsg = 'No LIBDEF ISPPLIB DSN'                  /* @A7 */
+          racflmsg = 'Unable to use this feature, due',       /* @A7 */
+                     'to there is no LIBDEFed panel dataset'  /* @A7 */
+     end                                                      /* @A7 */
+     WHEN (code = 'ERR20') then do                            /* @A8 */
+          racfsmsg = 'Invalid security access'                /* @A8 */
+          racflmsg = 'Userid does not have',                  /* @A8 */
+                     'security access to execute',            /* @A8 */
+                     'IRRXUTIL, please see Notes in',         /* @A8 */
+                     'tutorial'                               /* @A8 */
+     end                                                      /* @A8 */
      otherwise nop
   End
   "SETMSG MSG(RACF011)"

@@ -2,14 +2,24 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  02 Apr 2020 - V12R9
+     - RACFdb (Option D)
+       * Allow tracing when 'REXX trace = Y' in Settings (Option 0)
+     - Changes, Issues and Enqueue (Options C/I/E)
+       * If no LIBDEF ISPPLIB dataset exist, display error message
+     - Other Items
+       * When executing line command 'P', if userid does not have
+         security access to IRRXUTIL, display error message
+       * Fixed flag characters in RACFCLSS, @A#, @B#, @C#, etc.
+
   01 Apr 2020 - V12R8
      - Main Menu
        -- Hidden option 'E', Display Enqueues
           * Dropped array after processing LU command to obtain
             userid's name, reduce memory usage
      - General Resources (Option 4)
-       * Fixed issuing a command on panel RACFCLS5 and changing the
-         sorted column color to green, when it should be turquois
+       -- Fixed issuing a command on panel RACFCLS5 and changing the
+          sorted column color to green, when it should be turquois
      - Other Items
        -- REXX programs
           * Programs viewing/editing a file

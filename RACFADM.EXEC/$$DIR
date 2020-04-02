@@ -6,14 +6,14 @@
  --------  -------------  --------------------------------------------
  $$DIR     Directory      Document members
  RACFADM   Software       Dynamically allocate and invoke software
- RACFAUTH  Authorization  Extract authorization on a given profile
+ RACFAUTH  Authorization  Display authorization on profile, menu opt 7
  RACFCLSG  Class          Extract generic class profiles
  RACFCLSR  Class          Display class profiles, menu option 4
  RACFCLSS  Class          Search and display classes
  RACFDB    Database       Display RACF database info, menu option 6
  RACFDSN   Dataset        Display dataset profiles
  RACFEMAC  Edit macro     View/edit, turn off highlighting
- RACFENQ   Enqueues       Display LIBDEFed panels enqueues
+ RACFENQ   Enqueues       Display LIBDEF panels enqueues, menu option E
  RACFGRP   Group          Display group profiles, menu option 2
  RACFHELP  Help           Display TSO HELP on RACF commands
  RACFLOG   Documentation  Display changes/issues, menu option C/I

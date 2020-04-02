@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A9  200402  RACFA    Issue message if no LIBDEF ISPPLIB dataset   */
 /* @A8  200401  RACFA    Chged edit macro RACFLOGE to RACFEMAC        */
 /* @A7  200303  RACFA    Def/use variable for edit macro              */
 /* @A6  200303  RACFA    Renamed edit macro to RACFDSPE, was RACFCHGE */
@@ -21,6 +22,10 @@ ADDRESS ISPEXEC                                               /* @A3 */
   If (eratrace = 'YES') then Trace r                          /* @A2 */
 
   "QLIBDEF ISPPLIB TYPE(DATASET) ID(DSNAME)"
+  if (RC > 0) then do                                         /* @A9 */
+     call errormsgs ERR19                                     /* @A9 */
+     exit                                                     /* @A9 */
+  end                                                         /* @A9 */
   DSNAME = "'"STRIP(DSNAME,,"'")"("MEMBER")'"                 /* @A5 */
 
   SELECT                                                      /* @A1 */

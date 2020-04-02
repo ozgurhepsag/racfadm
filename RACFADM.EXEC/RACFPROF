@@ -12,6 +12,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AN  200402  RACFA    No sec. access to IRRXUTIL, display err msg  */
+/* @AM  200402  RACFA    Display RACF cmd, when profile has * or _    */
 /* @AL  200401  RACFA    Chged edit macro RACFLOGE to RACFEMAC        */
 /* @AK  200401  RACFA    VIEW/EDIT use edit macro, to turn off HILITE */
 /* @AJ  200331  TRIDJK   Chg LEFT(RACF.PROFILE,8) to RACF.PROFILE     */
@@ -216,13 +218,15 @@ RETURN
 EXCCMD:                                                       /* @A9 */
   if (pos('*',profile) > 0) |,                                /* @AB */
      (pos('_',profile) > 0) then do                           /* @AB */
-     cmd_rc = IRRXUTIL("EXTRACT",class,profile,"RACF","")     /* @AB */
-     RETURN                                                   /* @AB */
+     cmd = IRRXUTIL("EXTRACT",class,profile,"RACF","")        /* @AM */
   end                                                         /* @AB */
-  cmd    = "IRRXUTIL(EXTRACT,"class","profile",RACF,)"        /* @A9 */
+  else                                                        /* @AM */
+     cmd    = "IRRXUTIL(EXTRACT,"class","profile",RACF,)"     /* @A9 */
   interpret 'cmd_rc = 'cmd                                    /* @A9 */
   if (erashow <> 'NO') then                                   /* @AG */
      call SHOWCMD                                             /* @A9 */
+  if (WORD(cmd_rc,1) = 12) then                               /* @AN */
+     call racfmsgs ERR20                                      /* @AN */
 RETURN                                                        /* @A9 */
 /*--------------------------------------------------------------------*/
 /*  Display RACF command and return code                         @A9  */

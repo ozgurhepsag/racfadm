@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A4  200402  RACFA    Issue message if no LIBDEF ISPPLIB dataset   */
 /* @A3  200401  RACFA    Chged edit macro RACFLOGE to RACFEMAC        */
 /* @A2  200401  RACFA    VIEW/EDIT use edit macro, to turn off HILITE */
 /* @A1  200402  RACFA    Dropped array, save memory                   */
@@ -16,12 +17,18 @@ DDNAME   = "RACFENQ"
 ADDRESS ISPEXEC
   "VGET (ERADISP ERASHOW ERATRACE) ASIS"
   If (eratrace = 'YES') then Trace r
+
   "QLIBDEF ISPPLIB TYPE(DATASET) ID(DSNAME)"
-  if (RC > 0) then EXIT
+  if (RC > 0) then do                                         /* @A4 */
+     call errormsgs ERR19                                     /* @A4 */
+     exit                                                     /* @A4 */
+  end                                                         /* @A4 */
+
   RNAME = STRIP(DSNAME,,"'")
   "QUERYENQ TABLE(ENQTBL) QNAME(QNAME) RNAME(RNAME) XSYS"
   "TBTOP   "ENQTBL
   "TBQUERY "ENQTBL" ROWNUM(ENUM)"
+
   IF (ENUM >= 1) THEN DO
      QUEUE "*"COPIES("-",70)"*"
      QUEUE "*"CENTER("Enqueues - "Rname,70)"*"
@@ -31,6 +38,7 @@ ADDRESS ISPEXEC
            Copies(" ",12)"Name"
      QUEUE "   --------   -----   --------",
            "  "Copies("-",25)
+
      DO J = 1 TO ENUM
         "TBSKIP "ENQTBL
         "TBGET  "ENQTBL
@@ -52,6 +60,7 @@ ADDRESS ISPEXEC
   "TBCLOSE "ENQTBL
   DROP CMDREC.                                                /* @A1 */
   QUEUE ""
+
   ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",
               "LRECL(132) BLKSIZE(0) RECFM(F B)",
               "UNIT(VIO) SPACE(1 5) CYLINDERS"

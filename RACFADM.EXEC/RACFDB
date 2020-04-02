@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A5  200402  RACFA    Allow tracing, 'REXX trace = Y' in Settings  */
 /* @A4  200401  RACFA    Chged edit macro RACFLOGE to RACFEMAC        */
 /* @A3  200401  RACFA    VIEW/EDIT use edit macro, to turn off HILITE */
 /* @A2  200326  RACFA    Chg temp file to LRECL=80, was 132           */
@@ -140,7 +141,9 @@
 /*********************************************************************/
 EDITMACR = "RACFEMAC"                                         /* @A4 */
 
-ADDRESS ISPEXEC "VGET (ERADISP)"                              /* @A1 */
+ADDRESS ISPEXEC "VGET (ERADISP ERATRACE)"                     /* @A5 */
+If (eratrace = 'YES') then Trace r                            /* @A5 */
+
 racflmsg = "Retrieving data - Please be patient"              /* @A1 */
 ADDRESS ISPEXEC "control display lock"                        /* @A1 */
 ADDRESS ISPEXEC "display msg(RACF011)"                        /* @A1 */
