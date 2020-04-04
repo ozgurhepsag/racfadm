@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BH  200404  RACFA    'Admin RACF API = Y' then display 'P'rofile  */
 /* @BG  200402  RACFA    Chg LRECL=132 to LRECL=80                    */
 /* @BF  200401  RACFA    Fixed point-n-shoot default sort (RACFCLS5)  */
 /* @BE  200401  RACFA    Create subroutine to VIEW/EDIT/BROWSE        */
@@ -78,12 +79,16 @@ ADDRESS ISPEXEC                                               /* @AG */
   Rclass        = strip(rclass)
   "CONTROL ERRORS RETURN"                                     /* @AS */
   "VGET (ZSCREEN ERASHOW ERATRACE ERACONF",                   /* @AA */
-        "ERASINT ERAADMN ERADISP) ASIS"                       /* @AC */
+        "ERASINT ERAADMN ERADISP  ERARAPI) ASIS"              /* @AC */
   If (eratrace = 'YES') then Trace r                          /* @AE */
-  If (ERAADMN = "YES") then DO                                /* @B5 */
-      SELCMDS = "ÝS¨Show,ÝL¨List,ÝP¨Profile,"||,              /* @BB */
-                "ÝC¨Change,ÝA¨Add,ÝR¨Remove"                  /* @B5 */
-  END                                                         /* @B5 */
+  If (ERAADMN = "YES") then do                                /* @B5 */
+     IF (ERARAPI = "YES") THEN                                /* @BH */
+        SELCMDS = "ÝS¨Show,ÝL¨List,ÝP¨Profile,"||,            /* @BB */
+                  "ÝC¨Change,ÝA¨Add,ÝR¨Remove"                /* @B5 */
+     ELSE                                                     /* @BH */
+        SELCMDS = "ÝS¨Show,ÝL¨List,"||,                       /* @BH */
+                  "ÝC¨Change,ÝA¨Add,ÝR¨Remove"                /* @BH */
+  end                                                         /* @B5 */
   else
       SELCMDS = "ÝS¨Show,ÝL¨list"                             /* @AB */
   rlv    = SYSVAR('SYSLRACF')

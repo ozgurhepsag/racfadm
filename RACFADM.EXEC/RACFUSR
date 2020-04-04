@@ -3,6 +3,11 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BB  200404  RACFA    Fixed IRRXUTIL, needed quotes around USER    */
+/* @BA  200404  RACFA    Chk RACF cmd length, use necessary msg panel */
+/* @B9  200404  RACFA    Chged subroutine comments in flower box      */
+/* @D8  200404  RACFA    Chged message variable names                 */
+/* @D7  200404  RACFA    'Admin RACF API = Y' then display 'P'rofile  */
 /* @D6  200403  RACFA    If adding userid fails return                */
 /* @D5  200403  RACFA    Allow displaying/logging command             */
 /* @D4  200403  TRIDJK   Added RACF API opt for A and C line commands */
@@ -145,11 +150,20 @@ ADDRESS ISPEXEC                                               /* @BC */
   else                                                        /* @CP */
      TSOLIB = 'N'                                             /* @CP */
   If (ERAADMN = "YES") then do                                /* @B2 */
-      SELCMDS2 = "›S®Show›SE®Srch›L®Lst›P®Prof"||,            /* @CM */
-                 "›D®Dsn›C®Chg›A®Add›R®Rem›RS®Res"||,         /* @CM */
-                 "›RV®Rev›Z®Zap"                              /* @D4 */
-      SELCMDS3 = "›S®Show,›L®List,›P®Profile,"||,             /* @CO */
-                 "›C®Change,›A®Add,›R®Remove"                 /* @CO */
+     IF (ERARAPI = "YES") then do                             /* @D7 */
+        SELCMDS2 = "›S®Show›SE®Srch›L®Lst›P®Prof"||,          /* @CM */
+                   "›D®Dsn›C®Chg›A®Add›R®Rem›RS®Res"||,       /* @CM */
+                   "›RV®Rev›Z®Zap"                            /* @D4 */
+        SELCMDS3 = "›S®Show,›L®List,›P®Profile,"||,           /* @CO */
+                   "›C®Change,›A®Add,›R®Remove"               /* @CO */
+     end                                                      /* @D7 */
+     else do                                                  /* @D7 */
+        SELCMDS2 = "›S®Show›SE®Srch›L®List"||,                /* @D7 */
+                   "›D®Dsn›C®Chg›A®Add›R®Rem›RS®Res"||,       /* @D7 */
+                   "›RV®Rev›Z®Zap"                            /* @D7 */
+        SELCMDS3 = "›S®Show,›L®List,"||,                      /* @D7 */
+                   "›C®Change,›A®Add,›R®Remove"               /* @D7 */
+     end                                                      /* @D7 */
   end
   else do
       SELCMDS2 = "›S®Show,›SE®Search,›L®list,›D®Dsn"          /* @BW */
@@ -1139,11 +1153,14 @@ RETURN                                                        /* @AP */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @BB */
   IF (ERASHOW = "BOTH") | (ERASHOW = "DISPLAY") THEN DO       /* @CV */
-     PARSE VAR CMD MSG1 60 MSG2 121 MSG3 181 MSG32 241 MSG33 301 MSG34
-     /* PARSE updated for PANELM3 */                          /* @D4 */
-     MSG4 = "Return code = "cmd_rc                            /* @BS */
+     PARSE VAR CMD MSG1   60 MSG2 121 MSG3 181 MSG3A,         /* @D8 */
+               241 MSG3B 301 MSG3C                            /* @D8 */
+     MSG4 = "Return code = "cmd_rc                            /* @D8 */
      "ADDPOP ROW(6) COLUMN(4)"                                /* @BB */
-     "DISPLAY PANEL("PANELM3")"                               /* @D4 */
+     if (MSG3A = "") THEN                                     /* @BA */
+        "DISPLAY PANEL("PANELM2")"                            /* @D4 */
+     else                                                     /* @BA */
+        "DISPLAY PANEL("PANELM3")"                            /* @D4 */
      "REMPOP"                                                 /* @BB */
   END                                                         /* @CU */
   IF (ERASHOW = "BOTH") | (ERASHOW = "LOG") THEN DO           /* @CV */
@@ -1233,7 +1250,7 @@ CREATE_TABLE:                                                 /* @BE */
   end  /* Do i=1 to var.0 */
 RETURN                                                        /* @BE */
 /*--------------------------------------------------------------------*/
-/*  Add new profile (Radmin panel)                               @D4  */
+/*  Add new profile, when 'Admin RACF API = Y'                   @B9  */
 /*--------------------------------------------------------------------*/
 @ADDD:                                                        /* @D4 */
   action = '*Insert'                                          /* @D4 */
@@ -1304,10 +1321,10 @@ RETURN                                                        /* @BE */
   call disd /* Connect basic group */                         /* @D4 */
 RETURN                                                        /* @D4 */
 /*--------------------------------------------------------------------*/
-/*  Change profile (Radmin panel)                                @D4  */
+/*  Change profile, when 'Admin RACF API = Y'                    @B9  */
 /*--------------------------------------------------------------------*/
 @CHGD:                                                        /* @D4 */
-  action      = "*Modify"                                     /* @D4 */
+  action = "*Modify"                                          /* @D4 */
   "DISPLAY PANEL("PANEL02@")"                                 /* @D4 */
   if (rc = 8) then                                            /* @D4 */
      return                                                   /* @D4 */
@@ -1378,10 +1395,10 @@ RETURN                                                        /* @D4 */
   "TBMOD" tbla                                                /* @D4 */
 RETURN                                                        /* @D4 */
 /*--------------------------------------------------------------------*/
-/*  Delete profile attributes                                    @D4  */
+/*  Delete profile attributes, when 'Admin RACF API = Y'         @D4  */
 /*--------------------------------------------------------------------*/
 @NOATTR:                                                      /* @D4 */
-  action      = "*Zap"                                        /* @D4 */
+  action = "*Zap"                                             /* @D4 */
   "DISPLAY PANEL("PANEL02#")"                                 /* @D4 */
   if (rc = 8) then                                            /* @D4 */
      return                                                   /* @D4 */
@@ -1391,10 +1408,10 @@ RETURN                                                        /* @D4 */
   "TBMOD" tbla                                                /* @D4 */
 RETURN                                                        /* @D4 */
 /*--------------------------------------------------------------------*/
-/*  Check for TSO segment, REVOKED, and ATTRIBUTES               @D4  */
+/*  Chk TSO segment/REVOKED/ATTRIB, when 'Admin RACF API = Y'    @D4  */
 /*--------------------------------------------------------------------*/
 @CHKATTR:                                                     /* @D4 */
-  cmd = "IRRXUTIL(EXTRACT,USER,"user",RACF,)"                 /* @D5 */
+  cmd = "IRRXUTIL(EXTRACT,'USER',"user",RACF,)"               /* @BB */
   interpret 'cmd_rc = 'cmd                                    /* @D5 */
   if (erashow <> 'NO') then                                   /* @D5 */
      call SHOWCMD                                             /* @D5 */

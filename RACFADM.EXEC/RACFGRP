@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BS  200404  RACFA    'Admin RACF API = Y' then display 'P'rofile  */
 /* @BR  200402  RACFA    Chg LRECL=132 to LRECL=80                    */
 /* @BQ  200401  RACFA    Create subroutine to VIEW/EDIT/BROWSE        */
 /* @BP  200401  RACFA    Chged edit macro RACFLOGE to RACFEMAC        */
@@ -88,12 +89,17 @@ ADDRESS ISPEXEC                                               /* @AO */
   end                                                         /* @AB */
   "CONTROL ERRORS RETURN"                                     /* @B1 */
   "VGET (ZSCREEN ERASHOW ERATRACE ERASINT",                   /* @AI */
-        "ERAADMN ERADISP) ASIS"                               /* @AK */
+        "ERAADMN ERADISP ERARAPI) ASIS"                       /* @BS */
   If (eratrace = 'YES') then Trace r                          /* @AM */
   If (ERAADMN = "YES") then                                   /* @B2 */
-      SELCMDS = "ÝS¨Show,ÝL¨List,ÝP¨Profile,"||,              /* @BH */
-                "ÝC¨Change,ÝA¨Add,"||,                        /* @BH */
-                "ÝR¨Remove"                                   /* @BH */
+     If (ERARAPI = "YES") then                                /* @BS */
+        SELCMDS = "ÝS¨Show,ÝL¨List,ÝP¨Profile,"||,            /* @BH */
+                  "ÝC¨Change,ÝA¨Add,"||,                      /* @BH */
+                  "ÝR¨Remove"                                 /* @BH */
+     Else                                                     /* @BS */
+        SELCMDS = "ÝS¨Show,ÝL¨List,"||,                       /* @BS */
+                  "ÝC¨Change,ÝA¨Add,"||,                      /* @BS */
+                  "ÝR¨Remove"                                 /* @BS */
   else
       SELCMDS = "ÝS¨Show,ÝL¨list"                             /* @AJ */
   rlv    = SYSVAR('SYSLRACF')

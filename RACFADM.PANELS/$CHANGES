@@ -2,17 +2,28 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  04 Apr 2020 - V13R3
+     - User (Option 1)
+       -- When Settings (option 0) is:
+          * 'Admin RACF API = Y' and it executes IRRXUTIL, place
+            single quotes around a parameter
+          * "RACF Command = Y', the panel to display (RACFMSG3)
+            very long RACF commands, the variables were not coded
+            correctly
+     - Changes (Option C)
+       -- Corrected some more bullets (syntax/grammar)
+
   04 Apr 2020 - V13R2
      - Settings (Option 0)
-       * Changed wording and comments of 'RACF admin API' field
+       -- Changed wording and comments of 'RACF admin API' field
      - User and Group (Option 1/2)
-       * Only display line command 'P'rofile when Settings (Option 0)
-         'Admin RACF API = Y'
-       * Check length of RACF command, and use appropriate message
-         panel (RACFMSG2/3), when Settings (Option 0) 'RACF Command=Y'
+       -- Only display line command 'P'rofile when Settings (Option 0)
+          'Admin RACF API = Y'
+       -- Check length of RACF command, and use appropriate message
+          panel (RACFMSG2/3), when Settings (Option 0) 'RACF Command=Y'
      - Other Items
-       * Updated $DIR member in panel dataset
-       * Updated subroutine flower boxs in REXX program RACFUSR
+       -- Updated $DIR member in panel dataset
+       -- Updated subroutine flower boxes in REXX program RACFUSR
 
   03 Apr 2020 - V13R1
      - Settings (Option 0)
