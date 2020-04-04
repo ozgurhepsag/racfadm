@@ -53,9 +53,12 @@
  RACFGRP8  Group          List groups and descriptions
  RACFMENU  Menu           Main menu
  RACFMSG1  Message        'Confirm Request' (pop-up panel)
- RACFMSG2  Message        'Execute RACF Command' (pop-up panel)
+ RACFMSG2  Message        'RACF Command = Y', 3 lines (pop-up panel)
+ RACFMSG3  Message        'RACF Command = Y', 7 lines (pop-up panel)
  RACFPRMJ  Parameter      RACF parameters, menu option 5
  RACFPRMU  Parameter      Settings, customize options, menu option 0
+ RACFUSR#  User           Chnage user, when 'RACF Admin API = 'Y'
+ RACFUSR@  User           Add user, when 'RACF Admin API = 'Y'
  RACFUSRT  User           Add, change and delete a TSO userid
  RACFUSR1  User           Set filter, menu option 1
  RACFUSR2  User           List userids (admin/user)

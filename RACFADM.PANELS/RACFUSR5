@@ -11,19 +11,19 @@
 +
 +PROFILE   %===>$USER    { (Userid)
 +
-+OWNER     %===>_OWNER   { (Owner of profile)
-+DFLTGRP   %===>_DEFGRP  { (Default group)
-+NAME      %===>_NAME                                      { (Last, first name)
-+TSO       %===>_Z{        (Y=Yes, N=No)
++OWNER  %===>_OWNER   { (Owner of profile)
++DFLTGRP%===>_DEFGRP  { (Default group)
++NAME   %===>_NAME                                      { (Last, first name)
++TSO    %===>_Z{        (Y=Yes, N=No)
 +
-+ATTRIBUTES%===>+SPECIAL   _Z{ (Y=Yes, N=No)
-+                OPERATIONS_Z{ (Y=Yes, N=No)
-+                AUDITOR   _Z{ (Y=Yes, N=No)
++ATTRIB %===>+SPECIAL   _Z{ (Y=Yes, N=No)
++             OPERATIONS_Z{ (Y=Yes, N=No)
++             AUDITOR   _Z{ (Y=Yes, N=No)
 +
 +
-%                Installation Data (no quotes)
-%                --------------------------------------------------------------
-+DATA      %===>_DATA
+%             Installation Data (no quotes)
+%             -----------------------------------------------------------------
++DATA   %===>_DATA
 +
 +
 +

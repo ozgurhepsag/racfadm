@@ -8,17 +8,17 @@
 %
 +Add RACF%USER+profile: %ADDUSER+command
 +
-+PROFILE   %===>_USER    { (Enter%NEW{name)
++PROFILE %===>_USER    { (Enter%NEW{name)
 +
-+OWNER     %===>_OWNER   { (Owner of profile)
-+SUPGROUP  %===>_DEFGRP  { (Default group)
-+NAME      %===>_NAME                                      { (Last, first name)
-+ATTRIBUTES%===>_ATTR
++OWNER   %===>_OWNER   { (Owner of profile)
++SUPGROUP%===>_DEFGRP  { (Default group)
++NAME    %===>_NAME                                      { (Last, first name)
++ATTRIB  %===>_ATTR
 +
 +
-%                Installation Data (no quotes)
-%                --------------------------------------------------------------
-+DATA      %===>_DATA
+%              Installation Data (no quotes)
+%              ----------------------------------------------------------------
++DATA    %===>_DATA
 +
 +
 +

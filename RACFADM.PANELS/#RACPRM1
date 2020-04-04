@@ -3,12 +3,16 @@
    !  TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(TURQ)
    +  TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
-%Tutorial+\-\(%RACFADM - Settings - 1 of 2+)\-\%Tutorial
+%Tutorial+\-\(%RACFADM - Settings - 1 of 3+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
 +General:
 !  Administrator   +Specify full administrator authority,+providing more line
-+                  +commands: A Add, C Change, etc.%(Y=Yes, N=No is default)
++                  +commands: Add, Change, etc.%(Y=Yes, N=No is default)
++
+!  Admin RACF API  %Yes+to execute the RACF API module (IRRXUTIL) to add and
++                   change a userid or%No+to use RACF commands ADDUSER and
++                   ALTUSER (Default)
 +
 !  Default filter  +Specify a default search string, when selecting menu
 +                  +option 1 (Userid), 2 (Group) and 3 (Dataset)
@@ -18,11 +22,7 @@
 %                   100=Default)
 +
 !  Display files   +Display reports/files in%Browse, Edit or View+mode when
-+                  +using line commands: L, P, etc.%(View=Default)
-+
-!  Confirm panel   +Specify whether each modify operation must be confirmed
-+                  %(Y=Yes is default, N=No)
-+
++                  +using line commands: List, Profile, etc.%(View=Default)
 +
 +
 + \ \ (press%ENTER+to continue) \ \

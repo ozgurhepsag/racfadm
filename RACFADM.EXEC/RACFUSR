@@ -3,6 +3,9 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @D6  200403  RACFA    If adding userid fails return                */
+/* @D5  200403  RACFA    Allow displaying/logging command             */
+/* @D4  200403  TRIDJK   Added RACF API opt for A and C line commands */
 /* @D3  200402  RACFA    Chg LRECL=132 to LRECL=80                    */
 /* @D2  200401  RACFA    Create subroutine to VIEW/EDIT/BROWSE        */
 /* @D1  200401  RACFA    Chged edit macro RACFLOGE to RACFEMAC        */
@@ -111,7 +114,9 @@
 /* @A0  011229  NICORIZ  Created REXX, V2.1, www.rizzuto.it           */
 /*====================================================================*/
 PANEL01  = "RACFUSR1"    /* Set filter, menu option 1      */ /* @BL */
-PANEL02  = "RACFUSR2"    /* List userids (admin/user)      */ /* @BL */
+PANEL02  = "RACFUSR2"    /* List userids (admin/user)      */ /* @D4 */
+PANEL02@ = "RACFUSR@"    /* Insert/Modify userids (Radmin) */ /* @D4 */
+PANEL02# = "RACFUSR#"    /* Zap userids (admin)            */ /* @D4 */
 PANEL03  = "RACFUSR3"    /* Show groups and access         */ /* @BL */
 PANEL04  = "RACFUSR4"    /* Connect profile                */ /* @BL */
 PANEL05  = "RACFUSR5"    /* Change user                    */ /* @BL */
@@ -119,6 +124,7 @@ PANEL06  = "RACFUSR6"    /* Add user                       */ /* @BL */
 PANEL07  = "RACFUSR7"    /* Change connection              */ /* @BL */
 PANEL08  = "RACFUSR8"    /* Alter TSO segment              */ /* @BL */
 PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */ /* @BL */
+PANELM3  = "RACFMSG3"    /* Display RACF command (Radmin)  */ /* @D4 */
 EDITMACR = "RACFEMAC"                                         /* @D1 */
 
 ADDRESS ISPEXEC                                               /* @BC */
@@ -131,7 +137,7 @@ ADDRESS ISPEXEC                                               /* @BC */
   Rclass = 'USER'
   lparm  =''                              /* Locate parm */   /* @A5 */
   "CONTROL ERRORS RETURN"                                     /* @B1 */
-  "VGET (ZSCREEN ERASHOW ERATRACE ERAISPP",                   /* @CF */
+  "VGET (ZSCREEN ERASHOW ERARAPI ERATRACE ERAISPP",           /* @D4 */
         "ERAULIB ERAADMN ERASINT ERADISP) ASIS"               /* @B7 */
   If (eratrace = 'YES') then Trace r                          /* @BA */
   If (ERAULIB <> "") then                                     /* @CP */
@@ -141,7 +147,7 @@ ADDRESS ISPEXEC                                               /* @BC */
   If (ERAADMN = "YES") then do                                /* @B2 */
       SELCMDS2 = "›S®Show›SE®Srch›L®Lst›P®Prof"||,            /* @CM */
                  "›D®Dsn›C®Chg›A®Add›R®Rem›RS®Res"||,         /* @CM */
-                 "›RV®Rev"                                    /* @CM */
+                 "›RV®Rev›Z®Zap"                              /* @D4 */
       SELCMDS3 = "›S®Show,›L®List,›P®Profile,"||,             /* @CO */
                  "›C®Change,›A®Add,›R®Remove"                 /* @CO */
   end
@@ -248,8 +254,18 @@ PROFL:
      End /* Select */
      ZCMD = ""; PARM = ""                                     /* @A5 */
      Select
-        when (opta = 'A')  then call Addd
-        when (opta = 'C')  then call Chgd
+        when (opta = 'A')  then do                            /* @D4 */
+          if (erarapi = 'YES') then                           /* @D4 */
+             call @Addd                                       /* @D4 */
+          else                                                /* @D4 */
+             call Addd                                        /* @D4 */
+        end                                                   /* @D4 */
+        when (opta = 'C')  then do                            /* @D4 */
+          if (erarapi = 'YES') then                           /* @D4 */
+             call @Chgd                                       /* @D4 */
+          else                                                /* @D4 */
+             call Chgd                                        /* @D4 */
+        end                                                   /* @D4 */
         when (opta = 'D')  then do                            /* @BW */
              "CONTROL DISPLAY SAVE"                           /* @BW */
              "SELECT PGM(ISRDSLST)",                          /* @BW */
@@ -276,6 +292,7 @@ PROFL:
              "TBMOD" TBLA                                     /* @BD */
         end
         when (opta = 'XR') then call Xrefd                    /* @AL */
+        when (opta = 'Z')  then call @Noattr                  /* @D4 */
         otherwise nop
      End
      Do while (reta = 4)   /* process multi selection */
@@ -289,8 +306,18 @@ PROFL:
               "TBSKIP" TBLA "NUMBER("SROW")"                  /* @BG */
            END                                                /* @BG */
         Select
-           when (opta = 'A')  then call Addd
-           when (opta = 'C')  then call Chgd
+           when (opta = 'A')  then do                         /* @D4 */
+             if (erarapi = 'YES') then                        /* @D4 */
+                call @Addd                                    /* @D4 */
+             else                                             /* @D4 */
+                call Addd                                     /* @D4 */
+           end                                                /* @D4 */
+           when (opta = 'C')  then do                         /* @D4 */
+             if (erarapi = 'YES') then                        /* @D4 */
+                call @Chgd                                    /* @D4 */
+             else                                             /* @D4 */
+                call Chgd                                     /* @D4 */
+           end                                                /* @D4 */
            when (opta = 'D')  then do                         /* @BW */
                 "CONTROL DISPLAY SAVE"                        /* @BW */
                 "SELECT PGM(ISRDSLST)",                       /* @BW */
@@ -317,6 +344,7 @@ PROFL:
                 "TBMOD" TBLA                                  /* @BD */
            end
            when (opta = 'XR') then call Xrefd                 /* @AL */
+           when (opta = 'Z')  then call @Noattr               /* @D4 */
            otherwise nop
         End
      end  /* Do while (reta < 4) */
@@ -1064,7 +1092,7 @@ RETURN
 /*--------------------------------------------------------------------*/
 EXCMD:
   signal off error
-  arg cmd
+  parse arg cmd    /* preserve lower case for OMVS seg */     /* @D4 */
   x = OUTTRAP('msg.')
   address TSO cmd                                             /* @BR */
   cmd_rc = rc                                                 /* @BS */
@@ -1111,10 +1139,11 @@ RETURN                                                        /* @AP */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @BB */
   IF (ERASHOW = "BOTH") | (ERASHOW = "DISPLAY") THEN DO       /* @CV */
-     PARSE VAR CMD MSG1 60 MSG2 121 MSG3                      /* @BB */
+     PARSE VAR CMD MSG1 60 MSG2 121 MSG3 181 MSG32 241 MSG33 301 MSG34
+     /* PARSE updated for PANELM3 */                          /* @D4 */
      MSG4 = "Return code = "cmd_rc                            /* @BS */
      "ADDPOP ROW(6) COLUMN(4)"                                /* @BB */
-     "DISPLAY PANEL("PANELM2")"                               /* @BL */
+     "DISPLAY PANEL("PANELM3")"                               /* @D4 */
      "REMPOP"                                                 /* @BB */
   END                                                         /* @CU */
   IF (ERASHOW = "BOTH") | (ERASHOW = "LOG") THEN DO           /* @CV */
@@ -1203,3 +1232,193 @@ CREATE_TABLE:                                                 /* @BE */
      "TBMOD" tbla
   end  /* Do i=1 to var.0 */
 RETURN                                                        /* @BE */
+/*--------------------------------------------------------------------*/
+/*  Add new profile (Radmin panel)                               @D4  */
+/*--------------------------------------------------------------------*/
+@ADDD:                                                        /* @D4 */
+  action = '*Insert'                                          /* @D4 */
+  "DISPLAY PANEL("PANEL02@")"                                 /* @D4 */
+  if (rc = 8) then                                            /* @D4 */
+     return                                                   /* @D4 */
+  pswd = 'ADM'left(date('S'),4)                               /* @D4 */
+  cmd = 'ADDUSER 'user' OWNER('bowner') PASSWORD('pswd')'||,  /* @D4 */
+        ' DFLTGRP('defgrp') NAME('''name''') ' attr           /* @D4 */
+  if (ohome||oprogram = '') then                              /* @D4 */
+     nop                                                      /* @D4 */
+  else do                                                     /* @D4 */
+     parse value '' with o1 o2                                /* @D4 */
+     cmd = cmd||,                                             /* @D4 */
+           ' OMVS('                                           /* @D4 */
+           if ohome    <> '' then o1 = 'HOME('ohome')'        /* @D4 */
+           if oprogram <> '' then o2 = 'PROGRAM('oprogram')'  /* @D4 */
+           cmd = cmd||o1 o2 'AUTOUID'||,                      /* @D4 */
+           ')'                                                /* @D4 */
+  end                                                         /* @D4 */
+  if (tsoproc||tsoacct||tsosize||tsounit = '') then           /* @D4 */
+     nop                                                      /* @D4 */
+  else do                                                     /* @D4 */
+     parse value '' with t1 t2 t3 t4                          /* @D4 */
+     cmd = cmd||,                                             /* @D4 */
+           ' TSO('                                            /* @D4 */
+           if tsoproc <> '' then t1 = 'PROC('tsoproc')'       /* @D4 */
+           if tsoacct <> '' then t2 = 'ACCTNUM('tsoacct')'    /* @D4 */
+           if tsosize <> '' then t3 = 'SIZE('tsosize')'       /* @D4 */
+           if tsounit <> '' then t4 = 'UNIT('tsounit')'       /* @D4 */
+           cmd = cmd||t1 t2 t3 t4||,                          /* @D4 */
+           ')'                                                /* @D4 */
+    end                                                       /* @D4 */
+  if (copclass||copident||copprty||ctimeout = '') then        /* @D4 */
+     nop                                                      /* @D4 */
+  else do                                                     /* @D4 */
+     parse value '' with c1 c2 c3 c4                          /* @D4 */
+     cmd = cmd||,                                             /* @D4 */
+           ' CICS('                                           /* @D4 */
+           if copclass <> '' then c1 = 'OPCLASS('copclass')'  /* @D4 */
+           if copident <> '' then c2 = 'OPIDENT('copident')'  /* @D4 */
+           if copprty  <> '' then c3 = 'OPPRTY('copprty')'    /* @D4 */
+           if ctimeout <> '' then c4 = 'TIMEOUT('ctimeout')'  /* @D4 */
+           cmd = cmd||c1 c2 c3 c4||,                          /* @D4 */
+           ')'                                                /* @D4 */
+  end                                                         /* @D4 */
+  if (ddatacls||dmgmtcls||dstorcls = '') then                 /* @D4 */
+     nop                                                      /* @D4 */
+  else do                                                     /* @D4 */
+     parse value '' with d1 d2 d3                             /* @D4 */
+     cmd = cmd||,                                             /* @D4 */
+           ' DFP('                                            /* @D4 */
+           if ddatacls <> '' then d1 = 'DATACLAS('ddatacls')' /* @D4 */
+           if dmgmtcls <> '' then d2 = 'MGMTCLAS('dmgmtcls')' /* @D4 */
+           if dstorcls <> '' then d3 = 'STORCLAS('dstorcls')' /* @D4 */
+           cmd = cmd||d1 d2 d3||,                             /* @D4 */
+           ')'                                                /* @D4 */
+  end                                                         /* @D4 */
+  call excmd cmd                                              /* @D4 */
+  if (cmd_rc > 0) then                                        /* @D6 */
+     return                                                   /* @D6 */
+  ret_code = RACFUSRT('ADDD' user tsoproc,                    /* @D4 */
+             tsoacct defgrp bowner)                           /* @D4 */
+  if (ret_code > 0) then                                      /* @D6 */
+     return                                                   /* @D6 */
+  call @chkattr                                               /* @D4 */
+  "TBMOD" TBLA                                                /* @D4 */
+  call disd /* Connect basic group */                         /* @D4 */
+RETURN                                                        /* @D4 */
+/*--------------------------------------------------------------------*/
+/*  Change profile (Radmin panel)                                @D4  */
+/*--------------------------------------------------------------------*/
+@CHGD:                                                        /* @D4 */
+  action      = "*Modify"                                     /* @D4 */
+  "DISPLAY PANEL("PANEL02@")"                                 /* @D4 */
+  if (rc = 8) then                                            /* @D4 */
+     return                                                   /* @D4 */
+  cmd = 'ALTUSER 'user' OWNER('bowner')'||,                   /* @D4 */
+        ' DFLTGRP('defgrp') NAME('''name''') ' attr           /* @D4 */
+  if (ohome||oprogram = '') then                              /* @D4 */
+     nop                                                      /* @D4 */
+  else do                                                     /* @D4 */
+     parse value '' with o1 o2                                /* @D4 */
+     cmd = cmd||,                                             /* @D4 */
+           ' OMVS('                                           /* @D4 */
+           if ohome    <> '' then o1 = 'HOME('ohome')'        /* @D4 */
+           if oprogram <> '' then o2 = 'PROGRAM('oprogram')'  /* @D4 */
+           cmd = cmd||o1 o2 'AUTOUID'||,                      /* @D4 */
+           ')'                                                /* @D4 */
+  end                                                         /* @D4 */
+  if (tsoproc||tsoacct||tsosize||tsounit = '') then           /* @D4 */
+     nop                                                      /* @D4 */
+  else do                                                     /* @D4 */
+      parse value '' with t1 t2 t3 t4                         /* @D4 */
+      cmd = cmd||,                                            /* @D4 */
+            ' TSO('                                           /* @D4 */
+            if tsoproc <> '' then t1 = 'PROC('tsoproc')'      /* @D4 */
+            if tsoacct <> '' then t2 = 'ACCTNUM('tsoacct')'   /* @D4 */
+            if tsosize <> '' then t3 = 'SIZE('tsosize')'      /* @D4 */
+            if tsounit <> '' then t4 = 'UNIT('tsounit')'      /* @D4 */
+            cmd = cmd||t1 t2 t3 t4||,                         /* @D4 */
+            ')'                                               /* @D4 */
+    end                                                       /* @D4 */
+  if (copclass||copident||copprty||ctimeout = '') then        /* @D4 */
+     nop                                                      /* @D4 */
+  else do                                                     /* @D4 */
+     parse value '' with c1 c2 c3 c4                          /* @D4 */
+     cmd = cmd||,                                             /* @D4 */
+           ' CICS('                                           /* @D4 */
+           if copclass <> '' then c1 = 'OPCLASS('copclass')'  /* @D4 */
+           if copident <> '' then c2 = 'OPIDENT('copident')'  /* @D4 */
+           if copprty  <> '' then c3 = 'OPPRTY('copprty')'    /* @D4 */
+           if ctimeout <> '' then c4 = 'TIMEOUT('ctimeout')'  /* @D4 */
+           cmd = cmd||c1 c2 c3 c4||,                          /* @D4 */
+           ')'                                                /* @D4 */
+  end                                                         /* @D4 */
+  if (ddatacls||dmgmtcls||dstorcls = '') then                 /* @D4 */
+     nop                                                      /* @D4 */
+  else do                                                     /* @D4 */
+     parse value '' with d1 d2 d3                             /* @D4 */
+     cmd = cmd||,                                             /* @D4 */
+           ' DFP('                                            /* @D4 */
+           if ddatacls <> '' then d1 = 'DATACLAS('ddatacls')' /* @D4 */
+           if dmgmtcls <> '' then d2 = 'MGMTCLAS('dmgmtcls')' /* @D4 */
+           if dstorcls <> '' then d3 = 'STORCLAS('dstorcls')' /* @D4 */
+           cmd = cmd||d1 d2 d3||,                             /* @D4 */
+           ')'                                                /* @D4 */
+  end                                                         /* @D4 */
+  call excmd cmd                                              /* @D4 */
+  if (cmd_rc > 0) then                                        /* @D6 */
+     return                                                   /* @D6 */
+  call @chkattr                                               /* @D4 */
+  /*- Authorize logon and account to default group  -*/       /* @D4 */
+  if (tsouser = 'YES') then do                                /* @D4 */
+     cmd = "PE "tsoacct" CLASS(ACCTNUM) ACC(READ)",           /* @D4 */
+           "ID("defgrp")"                                     /* @D4 */
+     call excmd cmd                                           /* @D4 */
+     cmd = "PE "tsoproc" CLASS(TSOPROC) ACC(READ)",           /* @D4 */
+           "ID("defgrp")"                                     /* @D4 */
+     call excmd cmd                                           /* @D4 */
+  end                                                         /* @D4 */
+  "TBMOD" tbla                                                /* @D4 */
+RETURN                                                        /* @D4 */
+/*--------------------------------------------------------------------*/
+/*  Delete profile attributes                                    @D4  */
+/*--------------------------------------------------------------------*/
+@NOATTR:                                                      /* @D4 */
+  action      = "*Zap"                                        /* @D4 */
+  "DISPLAY PANEL("PANEL02#")"                                 /* @D4 */
+  if (rc = 8) then                                            /* @D4 */
+     return                                                   /* @D4 */
+  cmd = 'ALTUSER 'user nos                                    /* @D4 */
+  call excmd cmd                                              /* @D4 */
+  call @chkattr                                               /* @D4 */
+  "TBMOD" tbla                                                /* @D4 */
+RETURN                                                        /* @D4 */
+/*--------------------------------------------------------------------*/
+/*  Check for TSO segment, REVOKED, and ATTRIBUTES               @D4  */
+/*--------------------------------------------------------------------*/
+@CHKATTR:                                                     /* @D4 */
+  cmd = "IRRXUTIL(EXTRACT,USER,"user",RACF,)"                 /* @D5 */
+  interpret 'cmd_rc = 'cmd                                    /* @D5 */
+  if (erashow <> 'NO') then                                   /* @D5 */
+     call SHOWCMD                                             /* @D5 */
+  if (WORD(cmd_rc,1) <> 0) then do                            /* @D5 */
+     call racfmsgs ERR20                                      /* @D5 */
+     return                                                   /* @D4 */
+  end                                                         /* @D5 */
+  tsouser = 'NO'                                              /* @D4 */
+  do seg=1 to racf.0                                          /* @D4 */
+     if (racf.seg = 'TSO') then                               /* @D4 */
+        tsouser = 'YES'                                       /* @D4 */
+  end                                                         /* @D4 */
+  if (racf.base.revokefl.1 = 'TRUE') then                     /* @D4 */
+     revoked = 'YES'                                          /* @D4 */
+  else                                                        /* @D4 */
+     revoked = 'NO'                                           /* @D4 */
+  if racf.base.special.1 = 'TRUE' |,                          /* @D4 */
+     racf.base.oper.1    = 'TRUE' |,                          /* @D4 */
+     racf.base.grpacc.1  = 'TRUE' |,                          /* @D4 */
+     racf.base.auditor.1 = 'TRUE' |,                          /* @D4 */
+     racf.base.roaudit.1 = 'TRUE' |,                          /* @D4 */
+     racf.base.rest.1    = 'TRUE' |,                          /* @D4 */
+     racf.base.adsp.1    = 'TRUE' then                        /* @D4 */
+     attr2 = 'YES'                                            /* @D4 */
+  else                                                        /* @D4 */
+     attr2 = 'NO'                                             /* @D4 */
+RETURN                                                        /* @D4 */

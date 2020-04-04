@@ -1,0 +1,35 @@
+)ATTR DEFAULT(%+_)
+   _  TYPE(INPUT)  INTENS(HIGH) CAPS(ON)   JUST(LEFT)   HILITE(USCORE)
+   }  TYPE(INPUT)  INTENS(HIGH) CAPS(OFF)  JUST(LEFT)   HILITE(USCORE)
+   {  TYPE(TEXT)   INTENS(LOW)  SKIP(ON)   COLOR(BLUE)
+   +  TYPE(TEXT)   INTENS(LOW)  SKIP(ON)   COLOR(GREEN)
+)BODY EXPAND(\\)
++\-\(%RACFADM - User Profiles+)\-\
+%Command ===>_ZCMD
+%
++Alt RACF%USER+profile: %ALTUSER+command
++
++PROFILE %===>_USER    {
++
+{Enter%ALTUSER{operands to%ZAP{(delete) fields/segments from the user profile:
++
++OPERANDS%===>_NOS
+
+
+                                  +
++
+{NOTSO          NOCICS             NODFP              NOOMVS
+{  TSO(NOPROC)    CICS(NOOPCLASS)    DFP(NODATACLAS)    OMVS(NOHOME)
+{  TSO(NOACCT)    CICS(NOOPIDENT)    DFP(NOSTORCLAS)    OMVS(NOPROGRAM)
+{  TSO(NOSIZE)    CICS(NOOPPRTY)     DFP(NOMGMTCLAS)
+{  TSO(NOUNIT)    CICS(NOTIMEOUT)
+{
+{NOSPECIAL   NOOPERATIONS   NOGRPACC   NOAUDITOR   NOADSP                     {
+{NOROAUDIT   NORESTRICTED   NO.......
+)INIT
+  .CURSOR = NOS
+  .HELP   = #RACMENU
+  &NOS    = ''
+)PROC
+  VER (&USER,NB)
+)END

@@ -1,0 +1,112 @@
+)ATTR DEFAULT(%+_)
+   _  TYPE(INPUT)  INTENS(HIGH) CAPS(ON)   JUST(LEFT)   HILITE(USCORE)
+   }  TYPE(INPUT)  INTENS(HIGH) CAPS(OFF)  JUST(LEFT)   HILITE(USCORE)
+   {  TYPE(TEXT)   INTENS(LOW)  SKIP(ON)   COLOR(BLUE)
+   +  TYPE(TEXT)   INTENS(LOW)  SKIP(ON)   COLOR(GREEN)
+   Ý  TYPE(DATAOUT) INTENS(LOW) COLOR(GREEN)
+   ¨  TYPE(DATAOUT) INTENS(HIGH)
+   ^  AREA(DYNAMIC) EXTEND(OFF)
+)BODY EXPAND(\\)
++\-\(%RACFADM - User Profiles+)\-\
+%Command ===>_ZCMD
+%
+^USRTITL                                           ^
++
+%Base Segment:
++ PROFILE%===>_USER    { (Enter%NEW{name for Add)
++ OWNER  %===>_BOWNER  { (Owner of profile)
++ DFLTGRP%===>_DEFGRP  { (Default group)
++ NAME   %===>_NAME                                      { (Last, first name)
++ ATTRIB %===>_ATTR
++
+%TSO Segment:             %OMVS Segment:
++ PROC   %===>_TSOPROC {   +HOME      %===>}OHOME
++ ACCT   %===>_TSOACCT {   +PROGRAM   %===>}OPROGRAM
++ SIZE   %===>_TSOSIZE{
++ UNIT   %===>_TSOUNIT {
++
+%CICS Segment:            %DFP Segment:
++ OPCLASS%===>_Z +         +DATACLAS  %===>_DDATACLS{
++ OPIDENT%===>_Z  +        +STORCLAS  %===>_DSTORCLS{
++ OPPRTY %===>_Z  +        +MGMTCLAS  %===>_DMGMTCLS{
++ TIMEOUT%===>_Z   +
+)INIT
+  .ZVARS  = '(COPCLASS COPIDENT COPPRTY CTIMEOUT)'
+  .CURSOR = USER
+  .HELP   = #RACMENU
+  &OLDUSR = &USER
+  &FROM   = &USER
+  IF (&USER = NONE)
+     &USER = &RFILTER
+  IF (&ACTION = '*Insert')
+     &USRTITL = 'ÝAdd RACF¨USERÝprofile: ¨ADDUSERÝcommand'
+  IF (&ACTION = '*Modify')
+     &USRTITL = 'ÝAlt RACF¨USERÝprofile: ¨ALTUSERÝcommand'
+
+  *Rexx(*)
+     rxrc=IRRXUTIL("EXTRACT","USER",user,"RACF","")
+     if (word(rxrc,1) <> 0) then do
+        say 'IRRXUTIL return code:'rxrc
+        exit
+     end
+
+     attr = ''
+     if racf.base.special.1 = 'TRUE' then attr = attr || 'SPECIAL '
+     if racf.base.oper.1    = 'TRUE' then attr = attr || 'OPERATIONS '
+     if racf.base.grpacc.1  = 'TRUE' then attr = attr || 'GRPACC '
+     if racf.base.auditor.1 = 'TRUE' then attr = attr || 'AUDITOR '
+     if racf.base.roaudit.1 = 'TRUE' then attr = attr || 'ROAUDIT '
+     if racf.base.rest.1    = 'TRUE' then attr = attr || 'RESTRICTED '
+     if racf.base.adsp.1    = 'TRUE' then attr = attr || 'ADSP '
+
+     bowner  = racf.base.owner.1
+     defgrp  = racf.base.dfltgrp.1
+     name    = racf.base.name.1
+
+     tsoproc = racf.tso.proc.1
+     tsoacct = racf.tso.acctnum.1
+     tsosize = racf.tso.size.1
+     tsounit = racf.tso.unit.1
+
+     ohome    = racf.omvs.home.1
+     oprogram = racf.omvs.program.1
+
+     copclass = racf.cics.opclass.1
+     copident = racf.cics.opident.1
+     copprty  = racf.cics.opprty.1
+     ctimeout = racf.cics.timeout.1
+
+     ddatacls = racf.dfp.dataclas.1
+     dstorcls = racf.dfp.storclas.1
+     dmgmtcls = racf.dfp.mgmtclas.1
+  *EndRexx
+)PROC
+  IF (&ACTION = '*Insert')
+     IF (&OLDUSR = &USER)
+        &USER = ' '
+  VER (&USER,NB)
+  VER (&BOWNER,NB,NAME)
+  VER (&DEFGRP,NB,NAME)
+  VER (&NAME,NB)
+  IF (&TSOPROC NE &Z)
+     VER (&TSOACCT,NB)
+     VER (&TSOSIZE,NB,NUM)
+     VER (&TSOUNIT,NB)
+  IF (&TSOACCT NE &Z)
+     VER (&TSOPROC,NB,NAME)
+     VER (&TSOSIZE,NB,NUM)
+     VER (&TSOUNIT,NB)
+  IF (&TSOSIZE NE &Z)
+     VER (&TSOPROC,NB,NAME)
+     VER (&TSOACCT,NB)
+     VER (&TSOUNIT,NB)
+  IF (&TSOUNIT NE &Z)
+     VER (&TSOPROC,NB,NAME)
+     VER (&TSOACCT,NB)
+     VER (&TSOSIZE,NB,NUM)
+  VER (&COPCLASS,NUM)
+  VER (&COPPRTY,NUM)
+  VER (&CTIMEOUT,NUM)
+)FIELD
+  FIELD(ATTR) LEN(80) SCROLL(ZSCRL)
+)END

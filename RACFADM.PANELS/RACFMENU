@@ -4,7 +4,7 @@
    +  TYPE(TEXT)   INTENS(LOW)  SKIP(ON) COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V13R0+)\-\
++\-\(%RACFADM - RACF Administration - V13R2+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options
@@ -32,20 +32,24 @@
   .HELP   = #RACMENU
   &ZPRIM  = YES        /* Always a primary option menu */
 
-  VGET (ERAADMN ERASINT ERADISP ERACONF ERASHOW ERATRACE) PROFILE
-  IF (&ERAADMN  = &Z)        /*- Set default settings -*/
-      &ERAADMN  = 'NO'       /* Administrator   = NO   */
+  VGET (ERAADMN ERARAPI ERASINT ERADISP ERACONF ERASHOW +
+        ERATRACE) PROFILE
+  IF (&ERAADMN  NE YES, NO)  /*--- Set default settings ---*/
+      &ERAADMN  = 'NO'       /* Administrator       = NO   */
+  IF (&ERARAPI  NE YES, NO)
+      &ERARAPI  = 'NO'       /* RACF API (IRRXUTIL) = NO   */
   IF (&ERASINT  = &Z)
-      &ERASINT  = '100'      /* Status interval = 100  */
-  IF (&ERADISP  = &Z)
-      &ERADISP  = 'VIEW'     /* Display files   = VIEW */
-  IF (&ERACONF  = &Z)
-      &ERACONF  = 'YES'      /* Confirm panel   = YES  */
-  IF (&ERASHOW  = &Z)
-      &ERASHOW  = 'NO'       /* RACF commands   = NO   */
-  IF (&ERATRACE = &Z)
-      &ERATRACE = 'NO'       /* REXX trace      = NO   */
-  VPUT (ERAADMN ERASINT ERADISP ERACONF ERASHOW ERATRACE) PROFILE
+      &ERASINT  = '100'      /* Status interval     = 100  */
+  IF (&ERADISP  NE BROWSE, EDIT, VIEW)
+      &ERADISP  = 'VIEW'     /* Display files       = VIEW */
+  IF (&ERACONF  NE YES, NO)
+      &ERACONF  = 'YES'      /* Confirm panel       = YES  */
+  IF (&ERASHOW  NE DISPLAY, LOG, BOTH, NO)
+      &ERASHOW  = 'NO'       /* RACF commands       = NO   */
+  IF (&ERATRACE NE YES, NO)
+      &ERATRACE = 'NO'       /* REXX trace          = NO   */
+  VPUT (ERAADMN ERARAPI ERASINT ERADISP ERACONF ERASHOW +
+        ERATRACE) PROFILE
 
   &RACFVER = &Z              /*- Obtain RACF/Sys Info -*/
   &RACFDSN = &Z

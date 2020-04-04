@@ -2,6 +2,29 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  04 Apr 2020 - V13R2
+     - Settings (Option 0)
+       * Changed wording and comments of 'RACF admin API' field
+     - User and Group (Option 1/2)
+       * Only display line command 'P'rofile when Settings (Option 0)
+         'Admin RACF API = Y'
+       * Check length of RACF command, and use appropriate message
+         panel (RACFMSG2/3), when Settings (Option 0) 'RACF Command=Y'
+     - Other Items
+       * Updated $DIR member in panel dataset
+       * Updated subroutine flower boxs in REXX program RACFUSR
+
+  03 Apr 2020 - V13R1
+     - Settings (Option 0)
+       -- Added 'RACF admin API = Y/N', allows using IRRXUTIL to
+          add/change userids
+     - User (Option 1)
+       -- Added line command 'Z', Zap, Zap user profile segments (admin)
+     - Changes (Option C)
+       -- Corrected several bullets, some were not accurate
+     - Tutorials (Option T)
+       -- Updated Settings and User tutorials
+
   02 Apr 2020 - V13R0
      - Changes (Option C)
        -- Standardized bullets
@@ -11,7 +34,7 @@
        -- Updated $$DIR in panel dataset
 
   02 Apr 2020 - V12R9
-     - RACFdb (Option D)
+     - RACFdb (Option 6)
        -- Allow tracing when 'REXX trace = Y' in Settings (Option 0)
      - Changes, Issues and Enqueue (Options C/I/E)
        -- If no LIBDEF ISPPLIB dataset exist, display error message
@@ -22,7 +45,7 @@
 
   01 Apr 2020 - V12R8
      - Main Menu
-       -- Hidden option 'E', Display Enqueues
+       -- Enqueues (Hidden option E)
           * Dropped array after processing LU command to obtain
             userid's name, reduce memory usage
      - General Resources (Option 4)

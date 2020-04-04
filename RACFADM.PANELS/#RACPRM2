@@ -3,27 +3,27 @@
    !  TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(TURQ)
    +  TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
-%Tutorial+\-\(%RACFADM - Settings - 2 of 2+)\-\%Tutorial
+%Tutorial+\-\(%RACFADM - Settings - 2 of 3+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
 +General:
+!  Confirm panel   +Specify whether each modify operation must be confirmed
++
 !  RACF commands   +To view the RACF commands executed, type in the following:
 +                    %Display+in pop-up panel
 +                    %Log+to the ISPF Log file
 +                    %Both+in a pop-up panel and the ISPF Log file
 +                    %No+do not display/log (default)
 +
-!  REXX trace      +Enter%Yes+to trace the execution of the REXX programs, and
+!  REXX trace      %Yes+to trace the execution of REXX programs and
 +                  %No+to not display trace data (default)
 +
 +Adding TSO userid:
-!  User catalog    +Specify the TSO user catalog in which all new TSO user
-+                  +aliases are to be defined
+!  User catalog    +The TSO user catalog to define all new TSO user aliases
 +
-!  ISPPROF dataset +Specify the name of the TSO profile
+!  ISPPROF dataset +The name of the TSO profile
 +
-!  JOBLIB dataset  +Specify an initial job library to be allocated
-+                  +for new TSO users
+!  JOBLIB dataset  +The job library to be allocated for new TSO users
 +
 + \ \ (press%ENTER+to continue) \ \
 )PROC
