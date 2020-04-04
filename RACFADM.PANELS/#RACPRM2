@@ -10,10 +10,10 @@
 !  Confirm panel   +Specify whether each modify operation must be confirmed
 +
 !  RACF commands   +To view the RACF commands executed, type in the following:
-+                    %Display+in pop-up panel
-+                    %Log+to the ISPF Log file
-+                    %Both+in a pop-up panel and the ISPF Log file
-+                    %No+do not display/log (default)
++                     %Display+in pop-up panel
++                     %Log+to the ISPF Log file
++                     %Both+in a pop-up panel and the ISPF Log file
++                     %No+do not display/log (default)
 +
 !  REXX trace      %Yes+to trace the execution of REXX programs and
 +                  %No+to not display trace data (default)

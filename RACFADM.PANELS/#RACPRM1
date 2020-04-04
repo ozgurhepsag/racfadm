@@ -10,9 +10,9 @@
 !  Administrator   +Specify full administrator authority,+providing more line
 +                  +commands: Add, Change, etc.%(Y=Yes, N=No is default)
 +
-!  Admin RACF API  %Yes+to execute the RACF API module (IRRXUTIL) to add and
-+                   change a userid or%No+to use RACF commands ADDUSER and
-+                   ALTUSER (Default)
+!  Admin RACF API  %Yes+to use RACF API module (IRRXUTIL) to obtain information
++                   when adding/changing a userid and allow access to use the
++                   line command 'P'rofile,%No+is the default
 +
 !  Default filter  +Specify a default search string, when selecting menu
 +                  +option 1 (Userid), 2 (Group) and 3 (Dataset)

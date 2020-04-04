@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BC  200404  RACFA    Fixed IRRXUTIL, needed quotes around variable*/
 /* @BB  200404  RACFA    Fixed IRRXUTIL, needed quotes around USER    */
 /* @BA  200404  RACFA    Chk RACF cmd length, use necessary msg panel */
 /* @B9  200404  RACFA    Chged subroutine comments in flower box      */
@@ -1411,7 +1412,7 @@ RETURN                                                        /* @D4 */
 /*  Chk TSO segment/REVOKED/ATTRIB, when 'Admin RACF API = Y'    @D4  */
 /*--------------------------------------------------------------------*/
 @CHKATTR:                                                     /* @D4 */
-  cmd = "IRRXUTIL(EXTRACT,'USER',"user",RACF,)"               /* @BB */
+  cmd = "IRRXUTIL('EXTRACT','USER','"user"','RACF',)"         /* @BC */
   interpret 'cmd_rc = 'cmd                                    /* @D5 */
   if (erashow <> 'NO') then                                   /* @D5 */
      call SHOWCMD                                             /* @D5 */

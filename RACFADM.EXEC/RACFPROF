@@ -12,6 +12,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AP  200403  RACFA    Fix IRRXUTIL, needed single quotes on parms  */
 /* @AO  200403  RACFA    Chged 'cmd' var to text, so SHOWCMD works    */
 /* @AN  200402  RACFA    No sec. access to IRRXUTIL, display err msg  */
 /* @AM  200402  RACFA    Display RACF cmd, when profile has * or _    */
@@ -217,12 +218,7 @@ RETURN
 /*  Execute IRRUXTIL command                                     @A9  */
 /*--------------------------------------------------------------------*/
 EXCCMD:                                                       /* @A9 */
-  if (pos('*',profile) > 0) |,                                /* @AB */
-     (pos('_',profile) > 0) then do                           /* @AB */
-     cmd = "IRRXUTIL(EXTRACT,"class","profile",RACF,'')"      /* @AO */
-  end                                                         /* @AB */
-  else                                                        /* @AM */
-     cmd = "IRRXUTIL(EXTRACT,"class","profile",RACF,)"        /* @A9 */
+  cmd = "IRRXUTIL('EXTRACT','"class"','"profile"','RACF',)"   /* @AP */
   interpret 'cmd_rc = 'cmd                                    /* @A9 */
   if (erashow <> 'NO') then                                   /* @AG */
      call SHOWCMD                                             /* @A9 */

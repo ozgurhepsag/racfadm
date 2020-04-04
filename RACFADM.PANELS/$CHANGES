@@ -2,6 +2,24 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  04 Apr 2020 - V13R5
+     - Settings (Option 0)
+       -- Changed comments to the right of 'Admin RACF API' field
+       -- Changed tutorial to better document 'Admin RACF API' field
+     - Other items
+       -- Removed displaying 'type' to the right of the profile in the
+          panel RACFAUT1, not needed
+
+  04 Apr 2020 - V13R4
+     - User (Option 1)
+       -- When Settings (option 0) is 'Admin RACF API', placed single
+          quotes around the variable userid (PGM=RACFUSR), like what
+          was done for RACFPROF module, in next bullet
+     - User and Group (Option 1/2)
+       -- Line command 'P'rofile, when executing IRRXUTIL to obtain
+          information, the parameters needed have single quotes
+          around them (PGM=RACFPROF)
+
   04 Apr 2020 - V13R3
      - User (Option 1)
        -- When Settings (option 0) is:

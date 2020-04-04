@@ -10,7 +10,7 @@
 %
 %General:
 +  Administrator{....._Z~   (Y=Yes, N=No)              {Administrator authority
-+  Admin RACF API{...._Z~   (Y=Yes, N=No)              {IRRXUTIL add/chg userid
++  Admin RACF API{...._Z~   (Y=Yes, N=No)              {IRRXUTIL to add/chg/prof
 +  Default filter{...._Z                              { Default search string
 +  Status interval{..._Z   ~(0-9999)                   {Progress message number
 +  Display files{....._Z~   (B=Browse, E=Edit, V=View) {Display reports/files
