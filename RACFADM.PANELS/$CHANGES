@@ -2,6 +2,16 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  06 Apr 2020 - V13R6
+     - User (Option 1)
+       -- Line command 'A'dd, changed default password to be the
+          userid, when Settings (option 0) 'Admin RACF API = Y'
+       -- Line command 'C'hange, display '<>' to the far right of the
+          'Attrib' field, informing user it is scrollable
+     - Group (Option 2)
+       -- Line command 'S'howing, add displaying 'SUBGRPS' at top
+          panel, scrollable field (<>)
+
   04 Apr 2020 - V13R5
      - Settings (Option 0)
        -- Changed comments to the right of 'Admin RACF API' field

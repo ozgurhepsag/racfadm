@@ -4,6 +4,7 @@
    _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON)   JUST(LEFT)   HILITE(USCORE)
    $  TYPE(OUTPUT)  INTENS(LOW)  JUST(LEFT) COLOR(TURQ)
    #  TYPE(OUTPUT)  INTENS(LOW)  JUST(LEFT) COLOR(GREEN)
+   @  TYPE(OUTPUT)  INTENS(HIGH) SKIP(ON)   COLOR(RED)
    {  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)   COLOR(BLUE)
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)   COLOR(GREEN)
    ¬  AREA(DYNAMIC) EXTEND(OFF)
@@ -18,6 +19,7 @@
 +SUPGRP: $SUPGRP  { (Superior group)
 +OWNER:  $OWNER   { (Owner of profile)
 +DATA:   $DATA
++SUBGRPS:$SUBGRP                                                             @Z
 +                                                                  +
 +SELECT: ¬SELCMDS                                                              ¬
 +
@@ -26,7 +28,7 @@
 )MODEL
 _Z+ Z         Z
 )INIT
-  .ZVARS   ='(OPTB ID ACC)'
+  .ZVARS   ='(SCIND OPTB ID ACC)'
   .HELP    = #RACGRP8
   IF (&SAMT = ' ')
       &SAMT = &ZSCED
@@ -45,4 +47,6 @@ _Z+ Z         Z
 )PNTS
   FIELD(ZPS00001) VAR(ZCMD) VAL('SORT USERID')
   FIELD(ZPS00002) VAR(ZCMD) VAL('SORT ACCESS')
+)FIELD
+  FIELD(SUBGRP) IND(SCIND,'<>') LEN(255)
 )END

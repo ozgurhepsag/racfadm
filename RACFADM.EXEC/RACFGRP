@@ -3,6 +3,9 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BX  200406  RACFA    Remove spaces between sub-groups             */
+/* @BU  200406  RACFA    Added 'NONE' to subgroups when NO SUBGROUPS  */
+/* @BT  200406  TRIDJK   Added subgroups to RACFGRP5 panel            */
 /* @BS  200404  RACFA    'Admin RACF API = Y' then display 'P'rofile  */
 /* @BR  200402  RACFA    Chg LRECL=132 to LRECL=80                    */
 /* @BQ  200401  RACFA    Create subroutine to VIEW/EDIT/BROWSE        */
@@ -473,12 +476,13 @@ CREATE_TABLEB:                                                /* @BM */
   tblb = 'TB'ZSCREEN||SECONDS   /* table name unique */
   "TBCREATE" TBLB "KEYS(ID) NAMES(ACC)",
                   "REPLACE NOWRITE"
-  flags = 'OFF'
-  audit = ' '
-  owner = ' '
-  uacc  = ' '
-  data  = ' '
-  cmd   = "LG "group                                          /* @AN */
+  flags  = 'OFF'
+  audit  = ' '
+  owner  = ' '
+  subgrp = 'NONE'                                             /* @BU */
+  uacc   = ' '
+  data   = ' '
+  cmd    = "LG "group                                         /* @AN */
   x = OUTTRAP('VAR.')
   address TSO cmd                                             /* @AN */
   cmd_rc = rc                                                 /* @AZ */
@@ -507,6 +511,23 @@ CREATE_TABLEB:                                                /* @BM */
               (substr(temp,5,5) <> 'MODEL') then
               data = data || strip(substr(temp,23,45),'t')
          end
+     if (subgrp = 'NONE') then                                /* @BU */
+        if (subword(temp,1,1) = 'SUBGROUP(S)=') then do       /* @BT */
+           temp = var.i                                       /* @BT */
+           subgrp = substr(temp,18,54)                        /* @BT */
+           i    = i + 1                                       /* @BT */
+           temp = var.i                                       /* @BT */
+           do while substr(temp,1,17) = ' '                   /* @BT */
+              subgrp = subgrp""substr(temp,18,54)             /* @BT */
+              i    = i + 1                                    /* @BT */
+              temp = var.i                                    /* @BT */
+           end                                                /* @BT */
+           tmpsubgrp = subgrp                                 /* @BX */
+           subgrp    = word(tmpsubgrp,1)                      /* @BX */
+           do JJ = 2 TO WORDS(tmpsubgrp)                      /* @BX */
+              subgrp = subgrp" "WORD(tmpsubgrp,JJ)            /* @BX */
+           end                                                /* @BX */
+        end                                                   /* @BT */
      if (flags = 'ON') then do
         if (l = 1) | (l = 2) then
            flags = 'OUT'     /* end access list */

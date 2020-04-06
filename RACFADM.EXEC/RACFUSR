@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BD  200406  RACFA    'Admin RACF API = Y', chged password to user */
 /* @BC  200404  RACFA    Fixed IRRXUTIL, needed quotes around variable*/
 /* @BB  200404  RACFA    Fixed IRRXUTIL, needed quotes around USER    */
 /* @BA  200404  RACFA    Chk RACF cmd length, use necessary msg panel */
@@ -1259,7 +1260,7 @@ RETURN                                                        /* @BE */
   if (rc = 8) then                                            /* @D4 */
      return                                                   /* @D4 */
   pswd = 'ADM'left(date('S'),4)                               /* @D4 */
-  cmd = 'ADDUSER 'user' OWNER('bowner') PASSWORD('pswd')'||,  /* @D4 */
+  cmd = 'ADDUSER 'user' OWNER('bowner') PASSWORD('user')'||,  /* @BD */
         ' DFLTGRP('defgrp') NAME('''name''') ' attr           /* @D4 */
   if (ohome||oprogram = '') then                              /* @D4 */
      nop                                                      /* @D4 */
