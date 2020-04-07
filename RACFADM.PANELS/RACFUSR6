@@ -8,7 +8,7 @@
 %
 +Add RACF%USER+profile: %ADDUSER+command
 +
-+PROFILE %===>_USER    { (Enter%NEW{name)
++PROFILE %===>_USER    { (Enter%NEW{userid)   +PASSWORD%===>_PSWD    +
 +
 +OWNER   %===>_OWNER   { (Owner of profile)
 +SUPGROUP%===>_DEFGRP  { (Default group)
@@ -31,6 +31,7 @@
   .HELP   = #RACMENU
   &OLDUSR = &USER
   &FROM   = &USER
+  &PSWD   = &Z
   IF (&USER = NONE)
       &USER = &RFILTER
 )PROC

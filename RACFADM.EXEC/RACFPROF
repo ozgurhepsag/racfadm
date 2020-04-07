@@ -12,6 +12,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AQ  200407  RACFA    Remove unnecessary spaces in group/profile   */
 /* @AP  200403  RACFA    Fix IRRXUTIL, needed single quotes on parms  */
 /* @AO  200403  RACFA    Chged 'cmd' var to text, so SHOWCMD works    */
 /* @AN  200402  RACFA    No sec. access to IRRXUTIL, display err msg  */
@@ -218,6 +219,8 @@ RETURN
 /*  Execute IRRUXTIL command                                     @A9  */
 /*--------------------------------------------------------------------*/
 EXCCMD:                                                       /* @A9 */
+  class   = STRIP(class)                                      /* @AQ */
+  profile = STRIP(profile)                                    /* @AQ */
   cmd = "IRRXUTIL('EXTRACT','"class"','"profile"','RACF',)"   /* @AP */
   interpret 'cmd_rc = 'cmd                                    /* @A9 */
   if (erashow <> 'NO') then                                   /* @AG */

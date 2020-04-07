@@ -3,7 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @A0  200328  RACFA    Modified color                               */
+/* @A0  200328  RACFA    Modified color/title                         */
 /*====================================================================*/
 /* --------------------  REXX Program  ----------------------------- */
  ver = '3.8'
@@ -967,7 +967,7 @@ View_it:
    06 type(output) intens(high) caps(off) just(left)
      pas(on) skip(on) hilite(uscore) color(White)             /* @A0 */
 )Body  Expand(\\) Width(&zscreenw)
-%\-\ $RACF Help Pages?viewfs  $- &ver%\-\
+%\-\ $RACF Commands?viewfs  $- &ver%\-\
 %Command ===>_zcmd                                 \ \%Scroll ===>_amt +
 %
 +Command: %L cmd+- Locate #RL+- Repeat Locate %Only string +- Only #R+- Refresh

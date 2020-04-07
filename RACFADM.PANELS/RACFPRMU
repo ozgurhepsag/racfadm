@@ -15,8 +15,8 @@
 +  Status interval{..._Z   ~(0-9999)                   {Progress message number
 +  Display files{....._Z~   (B=Browse, E=Edit, V=View) {Display reports/files
 +  Confirm panel{....._Z~   (Y=Yes, N=No)              {Confirm command request
-+  RACF commands{....._Z~   (D=Display, L=Log, B=Both, N=No) {View commands
-+  REXX trace{........_Z~   (Y=Yes, N=No)              {Start REXX trace
++  RACF commands{....._Z~   (D=Display, L=Log, B=Both, N=No) {View RACF commands
++  REXX trace{........_Z~   (Y=Yes, N=No)              {Trace REXX programs
 +
 %Adding TSO userids:
 +  User catalog{......_Z                              { z/OS alias catalog

@@ -4,6 +4,7 @@
    _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON)   JUST(LEFT)   HILITE(USCORE)
    $  TYPE(OUTPUT)  INTENS(LOW)  JUST(LEFT) COLOR(TURQ)
    #  TYPE(OUTPUT)  INTENS(LOW)  JUST(LEFT) COLOR(GREEN)
+   @  TYPE(OUTPUT)  INTENS(HIGH) SKIP(ON)   COLOR(TURQ)
    {  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)   COLOR(BLUE)
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)   COLOR(GREEN)
    ¬  AREA(DYNAMIC) EXTEND(OFF)
@@ -17,7 +18,7 @@
 +PROFILE:$USER
 +NAME:   $NAME
 +OWNER:  $OWNER   { (Owner of profile)
-+ATTRIB: $ATTR
++ATTRIB: $ATTR                                                               @Z
 +
 +SELECT: ¬SELCMDS3                                                             ¬
 +
@@ -26,11 +27,13 @@
 )MODEL
 _Z+ Z         Z
 )INIT
-  .ZVARS   = '(OPTB ID ACC)'
+  .ZVARS   = '(SCIND OPTB ID ACC)'
   .HELP    = #RACGRP8
   &ZCMD    = ' '
   IF (&SAMT = ' ')
       &SAMT = &ZSCED
+  IF (&ATTR = ' ')
+      &ATTR = 'NONE'
 )PROC
   &SROW = &Z
   IF (&ZCMD = &Z)
@@ -42,7 +45,11 @@ _Z+ Z         Z
      VER (&OPTB,LIST,S,L,P,C,A,R,/)
   ELSE
      VER (&OPTB,LIST,S,L,/)
+  IF (&ATTR = 'NONE')
+      &ATTR = ' '
 )PNTS
   FIELD(ZPS00001) VAR(ZCMD) VAL('SORT GROUP')
   FIELD(ZPS00002) VAR(ZCMD) VAL('SORT ACC')
+)FIELD
+  FIELD(ATTR) IND(SCIND,'<>') LEN(255)
 )END

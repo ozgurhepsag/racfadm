@@ -2,6 +2,27 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  07 Apr 2020 - V13R7
+     - User (Option 0)
+       -- Reworded comments to the right of several fields (RACFPRMU)
+     - User (Option 1)
+       -- Removed unnecessary password variable code (RACFUSR)
+       -- When 'A'dding a userid, added field PASSWORD, default is
+          the new userid if one is not specified (RACFUSR6/@)
+       -- When 'S'howing a userid and ATTRIB is blank, display NONE
+          and made field scrollable, right/left, <> (RACFUSR3)
+       -- When 'SE'arching a userid, 'S'howing a class and 'S'howing
+          a profile, made DATA field scrollable, right/left (RACFAUT2)
+       -- Fixed line command 'P'frofile, removed unnecessary spaces
+          in profile name, prevent RC=12 when executing IRRXUTIL
+          (RACFPROF)
+     - Group (Option 2)
+       -- When 'A'dding, 'C'hanging and 'S'howing a group, made DATA
+          field scrollable, right/left, <> (RACFGRP2/4/5)
+     - Other Items
+       -- Corrected sequencing flag characters (@??) in REXX progams
+          (RACFUSR/RACFCLSS)
+
   06 Apr 2020 - V13R6
      - User (Option 1)
        -- Line command 'A'dd, changed default password to be the

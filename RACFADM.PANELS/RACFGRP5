@@ -18,7 +18,7 @@
 +PROFILE:$GROUP
 +SUPGRP: $SUPGRP  { (Superior group)
 +OWNER:  $OWNER   { (Owner of profile)
-+DATA:   $DATA
++DATA:   $DATA                                                               @Z
 +SUBGRPS:$SUBGRP                                                             @Z
 +                                                                  +
 +SELECT: ¬SELCMDS                                                              ¬
@@ -28,7 +28,7 @@
 )MODEL
 _Z+ Z         Z
 )INIT
-  .ZVARS   ='(SCIND OPTB ID ACC)'
+  .ZVARS   ='(SCIND1 SCIND2 OPTB ID ACC)'
   .HELP    = #RACGRP8
   IF (&SAMT = ' ')
       &SAMT = &ZSCED
@@ -48,5 +48,6 @@ _Z+ Z         Z
   FIELD(ZPS00001) VAR(ZCMD) VAL('SORT USERID')
   FIELD(ZPS00002) VAR(ZCMD) VAL('SORT ACCESS')
 )FIELD
-  FIELD(SUBGRP) IND(SCIND,'<>') LEN(255)
+  FIELD(DATA)   IND(SCIND1,'<>') LEN(255)
+  FIELD(SUBGRP) IND(SCIND2,'<>') LEN(255)
 )END

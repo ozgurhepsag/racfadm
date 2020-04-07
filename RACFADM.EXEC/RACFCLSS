@@ -3,21 +3,21 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @CA  200402  RACFA    Chg LRECL=132 to LRECL=80                    */
-/* @C9  200402  RACFA    Fixed VIEW/EDIT, was missing edit macro var. */
-/* @C8  200401  RACFA    Create subroutine to VIEW/EDIT/BROWSE        */
-/* @C7  200401  RACFA    VIEW/EDIT use edit macro, to turn off HILITE */
-/* @C6  200330  RACFA    Allow point-n-shoot sort ascending/descending*/
-/* @C5  200324  RACFA    Allow both display/logging of RACF commands  */
-/* @C4  200324  RACFA    Allow logging RACF commands to ISPF Log file */
-/* @C3  200303  RACFA    Chg 'RL class ALL' to 'RL class * ALL'       */
-/* @C2  200303  RACFA    Added line cmd 'L-List' to class's profile   */
-/* @C1  200303  RACFA    Added line cmd 'L-List' to class             */
-/* @BZ  200302  RACFA    Fixed SORT cmd for class profiles            */
-/* @BY  200302  RACFA    Chk/honor 'Status Interval' for cls profiles */
-/* @BX  200302  RACFA    Add SORT/LOCATE/ONLY/RESET for class profiles*/
-/* @BW  200301  RACFA    Chk for 'NO ENTRIES MEET SEARCH CRITERIA'    */
-/* @BU  200226  RACFA    Fix @AK chg, chg ret_code to cmd_rc          */
+/* @B1  200402  RACFA    Chg LRECL=132 to LRECL=80                    */
+/* @AZ  200402  RACFA    Fixed VIEW/EDIT, was missing edit macro var. */
+/* @AY  200401  RACFA    Create subroutine to VIEW/EDIT/BROWSE        */
+/* @AX  200401  RACFA    VIEW/EDIT use edit macro, to turn off HILITE */
+/* @AW  200330  RACFA    Allow point-n-shoot sort ascending/descending*/
+/* @AV  200324  RACFA    Allow both display/logging of RACF commands  */
+/* @AU  200324  RACFA    Allow logging RACF commands to ISPF Log file */
+/* @AT  200303  RACFA    Chg 'RL class ALL' to 'RL class * ALL'       */
+/* @AS  200303  RACFA    Added line cmd 'L-List' to class's profile   */
+/* @AR  200303  RACFA    Added line cmd 'L-List' to class             */
+/* @AQ  200302  RACFA    Fixed SORT cmd for class profiles            */
+/* @AP  200302  RACFA    Chk/honor 'Status Interval' for cls profiles */
+/* @AO  200302  RACFA    Add SORT/LOCATE/ONLY/RESET for class profiles*/
+/* @AN  200301  RACFA    Chk for 'NO ENTRIES MEET SEARCH CRITERIA'    */
+/* @AM  200226  RACFA    Fix @AK chg, chg ret_code to cmd_rc          */
 /* @AL  200226  RACFA    Added 'CONTROL ERRORS RETURN'                */
 /* @AK  200226  RACFA    Removed double quotes before/after cmd       */
 /* @AJ  200225  RACFA    Del address TSO "PROFILE PREF("USERID()")"   */
@@ -44,13 +44,13 @@
 PANEL08  = "RACFCLS8"    /* List classes and profiles      */ /* @AI */
 PANEL13  = "RACFCLSD"    /* Add class                      */ /* @AG */
 PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */ /* @AG */
-EDITMACR = "RACFEMAC"                                         /* @C9 */
+EDITMACR = "RACFEMAC"                                         /* @AZ */
 
 ADDRESS ISPEXEC                                               /* @A6 */
   Arg user
   selection = 0  /* something selected */
   "CONTROL ERRORS RETURN"                                     /* @AL */
-  "VGET (ZSCREEN ERATRACE ERASHOW ERASINT ERADISP) ASIS"      /* @C1 */
+  "VGET (ZSCREEN ERATRACE ERASHOW ERASINT ERADISP) ASIS"      /* @AR */
   If (eratrace = 'YES') then Trace r                          /* @A4 */
   rlv = SYSVAR('SYSLRACF')
 
@@ -63,8 +63,8 @@ EXIT
 /*  Get permits                                                       */
 /*--------------------------------------------------------------------*/
 GET_PERMITS:
-  tblb    = 'TB'ZSCREEN||SECONDS  /* table name unique */     /* @BX */
-  "TBCREATE" tblb" KEYS(CLASS PROFILE) REPLACE NOWRITE"       /* @BX */
+  tblb    = 'TB'ZSCREEN||SECONDS  /* table name unique */     /* @AO */
+  "TBCREATE" tblb" KEYS(CLASS PROFILE) REPLACE NOWRITE"       /* @AO */
   class = arg(1)
   user  = arg(2)
   cmd   = "SEARCH CLASS("class") USER("user")"                /* @A5 */
@@ -72,20 +72,20 @@ GET_PERMITS:
   address TSO cmd                                             /* @A5 */
   cmd_rc = rc                                                 /* @AK */
   x = OUTTRAP('OFF')
-  if (erashow <> 'NO') then                                   /* @C4 */
+  if (erashow <> 'NO') then                                   /* @AU */
      call SHOWCMD                                             /* @A5 */
   Do i = 1 to var.0   /* Scan output */
      profile = subword(var.i,1,1)
-     If (profile = "NO") then                                 /* @BW */
+     If (profile = "NO") then                                 /* @AN */
         LEAVE         /* NO ENTRIES MEET SEARCH CRITERIA */
      if (profile <> 'ICH31005I') then do
-        IF (ERASINT <> 0) THEN DO     /* Status interval */   /* @BY */
-           IF (I//ERASINT = 0) THEN DO                        /* @BY */
+        IF (ERASINT <> 0) THEN DO     /* Status interval */   /* @AP */
+           IF (I//ERASINT = 0) THEN DO                        /* @AP */
               n1 = i; n2 = var.0
               "control display lock"
               "display msg(RACF012)"
-           end                                                /* @BY */
-        end                                                   /* @BY */
+           end                                                /* @AP */
+        end                                                   /* @AP */
         "TBMOD" tblb
      end
   end /* end_do i=1     */
@@ -95,52 +95,52 @@ RETURN 0
 /*--------------------------------------------------------------------*/
 DISPLAY_TABLE_PERMIT:
   opta     = ' '
-  sort     = 'PROFILE,C,A'                                    /* @BX */
-  sortprof = 'D'                                              /* @C6 */
-  "TBSORT  "tblb" FIELDS("SORT")"                             /* @BX */
+  sort     = 'PROFILE,C,A'                                    /* @AO */
+  sortprof = 'D'                                              /* @AW */
+  "TBSORT  "tblb" FIELDS("SORT")"                             /* @AO */
   "TBTOP   "tblb
   "TBDISPL "tblb "PANEL("PANEL08")"                           /* @AG */
   reta = rc
   do while (rc < 8)  /* tablea */
      "CONTROL DISPLAY SAVE"
      xtdtop = ztdtop
-     lparm  = ""                                              /* @BX */
-     PARSE VAR ZCMD ZCMD PARM SEQ                             /* @BX */
+     lparm  = ""                                              /* @AO */
+     PARSE VAR ZCMD ZCMD PARM SEQ                             /* @AO */
      IF (SROW <> "") & (SROW <> 0) THEN                       /* @A9 */
         IF (SROW > 0) THEN DO                                 /* @A9 */
            "TBTOP " TBLB                                      /* @A9 */
            "TBSKIP" TBLB "NUMBER("SROW")"                     /* @A9 */
         END                                                   /* @A9 */
      Select
-        WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN                 /* @BX */
-             call sortseq 'PROFILE'                           /* @C6 */
-        WHEN (ABBREV("LOCATE",ZCMD,1) = 1) THEN               /* @BX */
-             lparm = parm                                     /* @BX */
-        WHEN (ABBREV("ONLY",ZCMD,1) = 1) THEN DO              /* @BX */
-             find_str = translate(parm)                       /* @BX */
-             'tbtop ' tblb                                    /* @BX */
-             'tbskip' tblb                                    /* @BX */
-             do forever                                       /* @BX */
-                str = translate(profile)                      /* @BX */
-                if (pos(find_str,str) > 0) then nop           /* @BX */
-                else 'tbdelete' tblb                          /* @BX */
-                'tbskip' tblb                                 /* @BX */
-                if (rc > 0) then do                           /* @BX */
-                   'tbtop' tblb                               /* @BX */
-                   leave                                      /* @BX */
-                end                                           /* @BX */
-             end                                              /* @BX */
-        END                                                   /* @BX */
-        WHEN (ABBREV("RESET",ZCMD,1) = 1) THEN DO             /* @BX */
-             sort     = 'PROFILE,C,A'                         /* @BX */
-             sortprof = 'D'                                   /* @C6 */
-             xtdtop   = 1                                     /* @BX */
-             rc = get_permits(class,user) /*get permits*/     /* @BX */
-        END                                                   /* @BX */
+        WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN                 /* @AO */
+             call sortseq 'PROFILE'                           /* @AW */
+        WHEN (ABBREV("LOCATE",ZCMD,1) = 1) THEN               /* @AO */
+             lparm = parm                                     /* @AO */
+        WHEN (ABBREV("ONLY",ZCMD,1) = 1) THEN DO              /* @AO */
+             find_str = translate(parm)                       /* @AO */
+             'tbtop ' tblb                                    /* @AO */
+             'tbskip' tblb                                    /* @AO */
+             do forever                                       /* @AO */
+                str = translate(profile)                      /* @AO */
+                if (pos(find_str,str) > 0) then nop           /* @AO */
+                else 'tbdelete' tblb                          /* @AO */
+                'tbskip' tblb                                 /* @AO */
+                if (rc > 0) then do                           /* @AO */
+                   'tbtop' tblb                               /* @AO */
+                   leave                                      /* @AO */
+                end                                           /* @AO */
+             end                                              /* @AO */
+        END                                                   /* @AO */
+        WHEN (ABBREV("RESET",ZCMD,1) = 1) THEN DO             /* @AO */
+             sort     = 'PROFILE,C,A'                         /* @AO */
+             sortprof = 'D'                                   /* @AW */
+             xtdtop   = 1                                     /* @AO */
+             rc = get_permits(class,user) /*get permits*/     /* @AO */
+        END                                                   /* @AO */
         otherwise locvar=''
      End
      Select
-        when (opta = 'L') then call lisd                      /* @C2 */
+        when (opta = 'L') then call lisd                      /* @AS */
         when (opta = 'S') then x = RACFAUTH(class profile user)
         otherwise nop
      End
@@ -156,14 +156,14 @@ DISPLAY_TABLE_PERMIT:
         End
      end
      opta = ' '
-     "TBSORT "tblb" FIELDS("SORT")"                           /* @BZ */
-     "TBTOP  "tblb                                            /* @BX */
+     "TBSORT "tblb" FIELDS("SORT")"                           /* @AQ */
+     "TBTOP  "tblb                                            /* @AO */
      if (lparm <> '') then do
-        ASTERICK = "*"                                        /* @BX */
-        LOCARG   = "PROFILE"                                  /* @BX */
-        INTERPRET LOCARG" = lparm||ASTERICK"                  /* @BX */
-        "TBSCAN "tblb,                                        /* @BX */
-                "ARGLIST("LOCARG") CONDLIST(GE)"              /* @BX */
+        ASTERICK = "*"                                        /* @AO */
+        LOCARG   = "PROFILE"                                  /* @AO */
+        INTERPRET LOCARG" = lparm||ASTERICK"                  /* @AO */
+        "TBSCAN "tblb,                                        /* @AO */
+                "ARGLIST("LOCARG") CONDLIST(GE)"              /* @AO */
      end
      else
         "TBSKIP" tblb "NUMBER("XTDTOP")"
@@ -173,31 +173,31 @@ DISPLAY_TABLE_PERMIT:
   end  /* Do while (reta < 8) */
 RETURN 0
 /*--------------------------------------------------------------------*/
-/*  Define sort sequence, to allow point-n-shoot sorting (A/D)   @C6  */
+/*  Define sort sequence, to allow point-n-shoot sorting (A/D)   @AW  */
 /*--------------------------------------------------------------------*/
-SORTSEQ:                                                      /* @C6 */
-  parse arg sortcol                                           /* @C6 */
-  INTERPRET "TMPSEQ = SORT"substr(SORTCOL,1,4)                /* @C6 */
-  select                                                      /* @C6 */
-     when (seq <> "") then do                                 /* @C6 */
-          if (seq = 'A') then                                 /* @C6 */
-             tmpseq = 'D'                                     /* @C6 */
-          else                                                /* @C6 */
-             tmpseq = 'A'                                     /* @C6 */
-          sort = sortcol',C,'seq                              /* @C6 */
-     end                                                      /* @C6 */
-     when (seq = ""),                                         /* @C6 */
-        & (tmpseq = 'A') then do                              /* @C6 */
-           sort   = sortcol',C,A'                             /* @C6 */
-           tmpseq = 'D'                                       /* @C6 */
-     end                                                      /* @C6 */
-     Otherwise do                                             /* @C6 */
-        sort   = sortcol',C,D'                                /* @C6 */
-        tmpseq = 'A'                                          /* @C6 */
-     end                                                      /* @C6 */
-  end                                                         /* @C6 */
-  INTERPRET "SORT"SUBSTR(SORTCOL,1,4)" = TMPSEQ"              /* @C6 */
-RETURN                                                        /* @C6 */
+SORTSEQ:                                                      /* @AW */
+  parse arg sortcol                                           /* @AW */
+  INTERPRET "TMPSEQ = SORT"substr(SORTCOL,1,4)                /* @AW */
+  select                                                      /* @AW */
+     when (seq <> "") then do                                 /* @AW */
+          if (seq = 'A') then                                 /* @AW */
+             tmpseq = 'D'                                     /* @AW */
+          else                                                /* @AW */
+             tmpseq = 'A'                                     /* @AW */
+          sort = sortcol',C,'seq                              /* @AW */
+     end                                                      /* @AW */
+     when (seq = ""),                                         /* @AW */
+        & (tmpseq = 'A') then do                              /* @AW */
+           sort   = sortcol',C,A'                             /* @AW */
+           tmpseq = 'D'                                       /* @AW */
+     end                                                      /* @AW */
+     Otherwise do                                             /* @AW */
+        sort   = sortcol',C,D'                                /* @AW */
+        tmpseq = 'A'                                          /* @AW */
+     end                                                      /* @AW */
+  end                                                         /* @AW */
+  INTERPRET "SORT"SUBSTR(SORTCOL,1,4)" = TMPSEQ"              /* @AW */
+RETURN                                                        /* @AW */
 /*--------------------------------------------------------------------*/
 /*  Select class                                                      */
 /*--------------------------------------------------------------------*/
@@ -220,7 +220,7 @@ GET_ACT_CLASS:
   address TSO cmd                                             /* @A5 */
   cmd_rc = rc                                                 /* @AK */
   x = OUTTRAP('OFF')
-  if (erashow <> 'NO') then                                   /* @C4 */
+  if (erashow <> 'NO') then                                   /* @AU */
      call SHOWCMD                                             /* @A5 */
   Do i = 1 to var.0           /* Scan output */
      temp = var.i
@@ -262,7 +262,7 @@ RETURN
 DISPLAY_TABLE:
   opta     = ' '
   sort     = 'CLASS,C,A'                                      /* @AD */
-  sortclas = 0                                                /* @C6 */
+  sortclas = 0                                                /* @AW */
   "TBSORT " tbla "FIELDS("sort")"                             /* @AD */
   "TBTOP  " tbla
   "TBDISPL" tbla "PANEL("PANEL13")"                           /* @AG */
@@ -281,7 +281,7 @@ DISPLAY_TABLE:
         END                                                   /* @A9 */
      Select                                                   /* @AB */
         WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN                 /* @AB */
-             call sortseq 'CLASS'                             /* @C6 */
+             call sortseq 'CLASS'                             /* @AW */
         WHEN (ABBREV("LOCATE",ZCMD,1) = 1) THEN               /* @AB */
              lclass = parm                                    /* @AE */
         WHEN (ABBREV("ONLY",ZCMD,1) = 1) THEN DO              /* @AB */
@@ -302,13 +302,13 @@ DISPLAY_TABLE:
         WHEN (ABBREV("RESET",ZCMD,1) = 1) THEN DO             /* @AB */
              call get_act_class                               /* @AB */
              sort     = 'CLASS,C,A'                           /* @AD */
-             sortclas = 'A'                                   /* @C6 */
+             sortclas = 'A'                                   /* @AW */
              xtdtop   = 1                                     /* @AB */
         END                                                   /* @AB */
         otherwise NOP                                         /* @AB */
      END /* Select */                                         /* @AB */
      select
-        when (opta = 'L') then call lisp                      /* @C1 */
+        when (opta = 'L') then call lisp                      /* @AR */
         when (opta = 'S') then do
              DISPCLS = CLASS                                  /* @AC */
              rc = get_permits(class,user) /*get permits*/
@@ -322,7 +322,7 @@ DISPLAY_TABLE:
         reta = rc
         "CONTROL DISPLAY SAVE"
         Select
-           when (opta = 'L') then call lisp                   /* @C1 */
+           when (opta = 'L') then call lisp                   /* @AR */
            when (opta = 'S') then
                 rc = get_permits(class,user) /*get permits*/
            otherwise nop
@@ -346,92 +346,92 @@ DISPLAY_TABLE:
   end  /* Do while (reta < 8) */
 RETURN 0
 /*--------------------------------------------------------------------*/
-/*  List class                                                   @C1  */
+/*  List class                                                   @AR  */
 /*--------------------------------------------------------------------*/
-LISP:                                                         /* @C1 */
-  DDNAME  = "ERA"RANDOM(0,99999)                              /* @C1 */
-  cmd     = "RL "CLASS" * ALL"                                /* @C3 */
-  X = OUTTRAP("CMDREC.")                                      /* @C1 */
-  ADDRESS TSO cmd                                             /* @C1 */
-  cmd_rc = rc                                                 /* @C1 */
-  X = OUTTRAP("OFF")                                          /* @C1 */
-  if (erashow <> 'NO') then                                   /* @C4 */
-     call SHOWCMD                                             /* @C1 */
-  if (cmd_rc > 0) then do   /* Remove parms */                /* @C1 */
-     cmd     = "RL "CLASS" *"                                 /* @C3 */
-     X = OUTTRAP("CMDREC.")                                   /* @C1 */
-     ADDRESS TSO cmd                                          /* @C1 */
-     cmd_rc = rc                                              /* @C1 */
-     X = OUTTRAP("OFF")                                       /* @C1 */
-     if (erashow <> 'NO') then                                /* @C4 */
-        call SHOWCMD                                          /* @C1 */
-  end                                                         /* @C1 */
+LISP:                                                         /* @AR */
+  DDNAME  = "ERA"RANDOM(0,99999)                              /* @AR */
+  cmd     = "RL "CLASS" * ALL"                                /* @AT */
+  X = OUTTRAP("CMDREC.")                                      /* @AR */
+  ADDRESS TSO cmd                                             /* @AR */
+  cmd_rc = rc                                                 /* @AR */
+  X = OUTTRAP("OFF")                                          /* @AR */
+  if (erashow <> 'NO') then                                   /* @AU */
+     call SHOWCMD                                             /* @AR */
+  if (cmd_rc > 0) then do   /* Remove parms */                /* @AR */
+     cmd     = "RL "CLASS" *"                                 /* @AT */
+     X = OUTTRAP("CMDREC.")                                   /* @AR */
+     ADDRESS TSO cmd                                          /* @AR */
+     cmd_rc = rc                                              /* @AR */
+     X = OUTTRAP("OFF")                                       /* @AR */
+     if (erashow <> 'NO') then                                /* @AU */
+        call SHOWCMD                                          /* @AR */
+  end                                                         /* @AR */
   call display_info                                           /* @A8 */
-  if (cmd_rc > 0) then                                        /* @C1 */
-     CALL racfmsgs "ERR10" /* Generic failure */              /* @C1 */
-RETURN                                                        /* @C1 */
+  if (cmd_rc > 0) then                                        /* @AR */
+     CALL racfmsgs "ERR10" /* Generic failure */              /* @AR */
+RETURN                                                        /* @AR */
 /*--------------------------------------------------------------------*/
-/*  Display information from line commands 'L' and 'P'           @C8  */
+/*  Display information from line commands 'L' and 'P'           @AY  */
 /*--------------------------------------------------------------------*/
-DISPLAY_INFO:                                                 /* @C8 */
-  ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",                  /* @C1 */
-              "LRECL(80) BLKSIZE(0) RECFM(F B)",              /* @CA */
-              "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @C1 */
-  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM CMDREC. FINIS"   /* @C1 */
-  "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"                  /* @C1 */
-  SELECT                                                      /* @C1 */
-     WHEN (ERADISP = "VIEW") THEN                             /* @C1 */
-          "VIEW DATAID("CMDDATID") MACRO("EDITMACR")"         /* @C7 */
-     WHEN (ERADISP = "EDIT") THEN                             /* @C1 */
-          "EDIT DATAID("CMDDATID") MACRO("EDITMACR")"         /* @C7 */
-     OTHERWISE                                                /* @C1 */
-          "BROWSE DATAID("CMDDATID")"                         /* @C1 */
-  END                                                         /* @C1 */
-  ADDRESS TSO "FREE FI("DDNAME")"                             /* @C1 */
-  DROP CMDREC. DDNAME CMDPRM                                  /* @C8 */
-RETURN                                                        /* @C8 */
+DISPLAY_INFO:                                                 /* @AY */
+  ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",                  /* @AR */
+              "LRECL(80) BLKSIZE(0) RECFM(F B)",              /* @B1 */
+              "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @AR */
+  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM CMDREC. FINIS"   /* @AR */
+  "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"                  /* @AR */
+  SELECT                                                      /* @AR */
+     WHEN (ERADISP = "VIEW") THEN                             /* @AR */
+          "VIEW DATAID("CMDDATID") MACRO("EDITMACR")"         /* @AX */
+     WHEN (ERADISP = "EDIT") THEN                             /* @AR */
+          "EDIT DATAID("CMDDATID") MACRO("EDITMACR")"         /* @AX */
+     OTHERWISE                                                /* @AR */
+          "BROWSE DATAID("CMDDATID")"                         /* @AR */
+  END                                                         /* @AR */
+  ADDRESS TSO "FREE FI("DDNAME")"                             /* @AR */
+  DROP CMDREC. DDNAME CMDPRM                                  /* @AY */
+RETURN                                                        /* @AY */
 /*--------------------------------------------------------------------*/
-/*  List class's profile                                         @C2  */
+/*  List class's profile                                         @AS  */
 /*--------------------------------------------------------------------*/
-LISD:                                                         /* @C2 */
-  DDNAME = "ERA"RANDOM(0,99999)                               /* @C2 */
-  cmd  = "RLIST "CLASS PROFILE" AUTH"                         /* @C2 */
-  X    = OUTTRAP("CMDREC.")                                   /* @C2 */
-  ADDRESS TSO cmd                                             /* @C2 */
-  cmd_rc = rc                                                 /* @C2 */
-  X    = OUTTRAP("OFF")                                       /* @C2 */
-  if (erashow <> 'NO') then                                   /* @C4 */
-     call SHOWCMD                                             /* @C2 */
-  if (cmd_rc > 0) then do    /* Remove parms */               /* @C2 */
-     cmd = "RLIST "RCLASS PROFILE                             /* @C2 */
-     X = OUTTRAP("CMDREC.")                                   /* @C2 */
-     ADDRESS TSO cmd                                          /* @C2 */
-     cmd_rc = rc                                              /* @C2 */
-     X = OUTTRAP("OFF")                                       /* @C2 */
-     if (erashow <> 'NO') then                                /* @C4 */
-        call SHOWCMD                                          /* @C2 */
-  end                                                         /* @C2 */
+LISD:                                                         /* @AS */
+  DDNAME = "ERA"RANDOM(0,99999)                               /* @AS */
+  cmd  = "RLIST "CLASS PROFILE" AUTH"                         /* @AS */
+  X    = OUTTRAP("CMDREC.")                                   /* @AS */
+  ADDRESS TSO cmd                                             /* @AS */
+  cmd_rc = rc                                                 /* @AS */
+  X    = OUTTRAP("OFF")                                       /* @AS */
+  if (erashow <> 'NO') then                                   /* @AU */
+     call SHOWCMD                                             /* @AS */
+  if (cmd_rc > 0) then do    /* Remove parms */               /* @AS */
+     cmd = "RLIST "RCLASS PROFILE                             /* @AS */
+     X = OUTTRAP("CMDREC.")                                   /* @AS */
+     ADDRESS TSO cmd                                          /* @AS */
+     cmd_rc = rc                                              /* @AS */
+     X = OUTTRAP("OFF")                                       /* @AS */
+     if (erashow <> 'NO') then                                /* @AU */
+        call SHOWCMD                                          /* @AS */
+  end                                                         /* @AS */
   call display_info                                           /* @A8 */
-  if (cmd_rc > 0) then                                        /* @C2 */
-     CALL racfmsgs "ERR10" /* Generic failure */              /* @C2 */
-RETURN                                                        /* @C2 */
+  if (cmd_rc > 0) then                                        /* @AS */
+     CALL racfmsgs "ERR10" /* Generic failure */              /* @AS */
+RETURN                                                        /* @AS */
 /*--------------------------------------------------------------------*/
-/*  Display RACF command and return code                         @C5  */
+/*  Display RACF command and return code                         @AV  */
 /*--------------------------------------------------------------------*/
-SHOWCMD:                                                      /* @C5 */
-  IF (ERASHOW = "BOTH") | (ERASHOW = "DISPLAY") THEN DO       /* @C5 */
-     PARSE VAR CMD MSG1 60 MSG2 121 MSG3                      /* @C5 */
+SHOWCMD:                                                      /* @AV */
+  IF (ERASHOW = "BOTH") | (ERASHOW = "DISPLAY") THEN DO       /* @AV */
+     PARSE VAR CMD MSG1 60 MSG2 121 MSG3                      /* @AV */
      MSG4 = "Return code = "cmd_rc                            /* @AK */
      "ADDPOP ROW(6) COLUMN(4)"                                /* @AH */
      "DISPLAY PANEL("PANELM2")"                               /* @AG */
      "REMPOP"                                                 /* @AH */
-  END                                                         /* @C4 */
-  IF (ERASHOW = "BOTH") | (ERASHOW = "LOG") THEN DO           /* @C5 */
-     zerrsm = "RACFADM RACFCLSS RC="cmd_rc                    /* @C4 */
-     zerrlm = cmd                                             /* @C4 */
-     'log msg(isrz003)'                                       /* @C4 */
-  END                                                         /* @C4 */
-RETURN                                                        /* @C5 */
+  END                                                         /* @AU */
+  IF (ERASHOW = "BOTH") | (ERASHOW = "LOG") THEN DO           /* @AV */
+     zerrsm = "RACFADM RACFCLSS RC="cmd_rc                    /* @AU */
+     zerrlm = cmd                                             /* @AU */
+     'log msg(isrz003)'                                       /* @AU */
+  END                                                         /* @AU */
+RETURN                                                        /* @AV */
 /*--------------------------------------------------------------------*/
 /*  Error message                                                     */
 /*--------------------------------------------------------------------*/

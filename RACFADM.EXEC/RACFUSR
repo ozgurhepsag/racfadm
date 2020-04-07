@@ -3,11 +3,12 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @BD  200406  RACFA    'Admin RACF API = Y', chged password to user */
-/* @BC  200404  RACFA    Fixed IRRXUTIL, needed quotes around variable*/
-/* @BB  200404  RACFA    Fixed IRRXUTIL, needed quotes around USER    */
-/* @BA  200404  RACFA    Chk RACF cmd length, use necessary msg panel */
-/* @B9  200404  RACFA    Chged subroutine comments in flower box      */
+/* @DE  200407  RACFA    Let user type in password on panel           */
+/* @DD  200406  RACFA    'Admin RACF API = Y', chged password to user */
+/* @DC  200404  RACFA    Fixed IRRXUTIL, needed quotes around variable*/
+/* @DB  200404  RACFA    Fixed IRRXUTIL, needed quotes around USER    */
+/* @DA  200404  RACFA    Chk RACF cmd length, use necessary msg panel */
+/* @D9  200404  RACFA    Chged subroutine comments in flower box      */
 /* @D8  200404  RACFA    Chged message variable names                 */
 /* @D7  200404  RACFA    'Admin RACF API = Y' then display 'P'rofile  */
 /* @D6  200403  RACFA    If adding userid fails return                */
@@ -436,9 +437,11 @@ ADDD:
   if (data <> ' ') then
      xtr = xtr "DATA('"data"')"
   datelgn = 'UNKNOWN'
+  if (pswd = '') then                                         /* @DE */
+     pswd = user                                              /* @DE */
   call EXCMD "ADDUSER ("user")",
              "OWN("owner") DFLTGRP("defgrp")",
-             "NAME('"name"') PASSWORD("user")" XTR ATTR       /* @C2 */
+             "NAME('"name"') PASSWORD("pswd")" XTR ATTR       /* @DE */
   if (tsouser = 'YES') & (cmd_rc = 0) then DO                 /* @CB */
      ret_code = RACFUSRT('ADDD' user tsoproc,                 /* @C4 */
                 tsoacct defgrp owner tsolib)                  /* @C4 */
@@ -1159,9 +1162,9 @@ SHOWCMD:                                                      /* @BB */
                241 MSG3B 301 MSG3C                            /* @D8 */
      MSG4 = "Return code = "cmd_rc                            /* @D8 */
      "ADDPOP ROW(6) COLUMN(4)"                                /* @BB */
-     if (MSG3A = "") THEN                                     /* @BA */
+     if (MSG3A = "") THEN                                     /* @DA */
         "DISPLAY PANEL("PANELM2")"                            /* @D4 */
-     else                                                     /* @BA */
+     else                                                     /* @DA */
         "DISPLAY PANEL("PANELM3")"                            /* @D4 */
      "REMPOP"                                                 /* @BB */
   END                                                         /* @CU */
@@ -1252,15 +1255,16 @@ CREATE_TABLE:                                                 /* @BE */
   end  /* Do i=1 to var.0 */
 RETURN                                                        /* @BE */
 /*--------------------------------------------------------------------*/
-/*  Add new profile, when 'Admin RACF API = Y'                   @B9  */
+/*  Add new profile, when 'Admin RACF API = Y'                   @D9  */
 /*--------------------------------------------------------------------*/
 @ADDD:                                                        /* @D4 */
   action = '*Insert'                                          /* @D4 */
   "DISPLAY PANEL("PANEL02@")"                                 /* @D4 */
   if (rc = 8) then                                            /* @D4 */
      return                                                   /* @D4 */
-  pswd = 'ADM'left(date('S'),4)                               /* @D4 */
-  cmd = 'ADDUSER 'user' OWNER('bowner') PASSWORD('user')'||,  /* @BD */
+  if (pswd = '') then                                         /* @DE */
+     pswd = user                                              /* @DE */
+  cmd = 'ADDUSER 'user' OWNER('bowner') PASSWORD('pswd')'||,  /* @DE */
         ' DFLTGRP('defgrp') NAME('''name''') ' attr           /* @D4 */
   if (ohome||oprogram = '') then                              /* @D4 */
      nop                                                      /* @D4 */
@@ -1323,7 +1327,7 @@ RETURN                                                        /* @BE */
   call disd /* Connect basic group */                         /* @D4 */
 RETURN                                                        /* @D4 */
 /*--------------------------------------------------------------------*/
-/*  Change profile, when 'Admin RACF API = Y'                    @B9  */
+/*  Change profile, when 'Admin RACF API = Y'                    @D9  */
 /*--------------------------------------------------------------------*/
 @CHGD:                                                        /* @D4 */
   action = "*Modify"                                          /* @D4 */
@@ -1413,7 +1417,7 @@ RETURN                                                        /* @D4 */
 /*  Chk TSO segment/REVOKED/ATTRIB, when 'Admin RACF API = Y'    @D4  */
 /*--------------------------------------------------------------------*/
 @CHKATTR:                                                     /* @D4 */
-  cmd = "IRRXUTIL('EXTRACT','USER','"user"','RACF',)"         /* @BC */
+  cmd = "IRRXUTIL('EXTRACT','USER','"user"','RACF',)"         /* @DC */
   interpret 'cmd_rc = 'cmd                                    /* @D5 */
   if (erashow <> 'NO') then                                   /* @D5 */
      call SHOWCMD                                             /* @D5 */

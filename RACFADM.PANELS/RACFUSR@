@@ -14,7 +14,7 @@
 ^USRTITL                                           ^
 +
 %Base Segment:
-+ PROFILE%===>_USER    { (Enter%NEW{name for Add)
++ PROFILE%===>_USER    { (Enter userid)       +PASSWORD%===>_PSWD    +
 + OWNER  %===>_BOWNER  { (Owner of profile)
 + DFLTGRP%===>_DEFGRP  { (Default group)
 + NAME   %===>_NAME                                      { (Last, first name)
@@ -37,6 +37,7 @@
   .HELP   = #RACMENU
   &OLDUSR = &USER
   &FROM   = &USER
+  &PSWD   = &Z
   IF (&USER = NONE)
      &USER = &RFILTER
   IF (&ACTION = '*Insert')

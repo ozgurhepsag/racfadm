@@ -1,7 +1,8 @@
 )ATTR DEFAULT(%+_)
-   _  TYPE(INPUT) INTENS(HIGH) CAPS(ON) JUST(LEFT)   HILITE(USCORE)
-   {  TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(BLUE)
-   +  TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(GREEN)
+   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON) JUST(LEFT)   HILITE(USCORE)
+   @  TYPE(OUTPUT)  INTENS(HIGH) SKIP(ON) COLOR(RED)
+   {  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(BLUE)
+   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
 +\-\(%RACFADM - Group Profiles+)\-\
 %Command ===>_ZCMD                                              +Scroll==>_SAMT+
@@ -15,8 +16,8 @@
 +
 +
 %              Installation Data: (no quotes)
-%              ----------------------------------------------------------------
-+DATA    %===>_DATA
+%              --------------------------------------------------------------
++DATA    %===>_DATA                                                          @Z
 +
 +
 +
@@ -29,6 +30,7 @@
 )INIT
   .CURSOR = GROUP
   .HELP   = #RACMENU
+  .ZVARS   ='(SCIND)'
   &OLDGRP = &GROUP
   &FROM   = &GROUP
   IF (&GROUP = NONE)
@@ -40,4 +42,6 @@
   VER (&OWNER,NB,NAME)
   VER (&SUPGRP,NB,NAME)
   VER (&DATA,NB)
+)FIELD
+  FIELD(DATA) IND(SCIND,'<>') LEN(255)
 )END
