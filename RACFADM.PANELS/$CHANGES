@@ -2,6 +2,15 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  07 Apr 2020 - V13R8
+     - Settings (Option 0)
+       * 'JOBLLIB dataset' is now optional, prior when providing
+         'User catalog' this field was required, updated tutorial
+     - Other Items
+       * Standardized )ATTR section on all panels, making it easier
+         to cut/paste entries, and keep fields aligned
+       * Fixed some more flag characters (@??) in REXX programs
+
   07 Apr 2020 - V13R7
      - User (Option 0)
        -- Reworded comments to the right of several fields (RACFPRMU)
