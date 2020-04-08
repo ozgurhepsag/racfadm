@@ -3,7 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @BX  200406  RACFA    Remove spaces between sub-groups             */
+/* @BW  200407  RACFA    EXCMD removed 'else msg_var = 1 to msg.0'    */
+/* @BV  200406  RACFA    Remove spaces between sub-groups             */
 /* @BU  200406  RACFA    Added 'NONE' to subgroups when NO SUBGROUPS  */
 /* @BT  200406  TRIDJK   Added subgroups to RACFGRP5 panel            */
 /* @BS  200404  RACFA    'Admin RACF API = Y' then display 'P'rofile  */
@@ -522,11 +523,11 @@ CREATE_TABLEB:                                                /* @BM */
               i    = i + 1                                    /* @BT */
               temp = var.i                                    /* @BT */
            end                                                /* @BT */
-           tmpsubgrp = subgrp                                 /* @BX */
-           subgrp    = word(tmpsubgrp,1)                      /* @BX */
-           do JJ = 2 TO WORDS(tmpsubgrp)                      /* @BX */
-              subgrp = subgrp" "WORD(tmpsubgrp,JJ)            /* @BX */
-           end                                                /* @BX */
+           tmpsubgrp = subgrp                                 /* @BV */
+           subgrp    = word(tmpsubgrp,1)                      /* @BV */
+           do JJ = 2 TO WORDS(tmpsubgrp)                      /* @BV */
+              subgrp = subgrp" "WORD(tmpsubgrp,JJ)            /* @BV */
+           end                                                /* @BV */
         end                                                   /* @BT */
      if (flags = 'ON') then do
         if (l = 1) | (l = 2) then
@@ -776,8 +777,6 @@ EXCMD:
   if (subword(msg.1,1,1)= 'ICH11009I') |,
      (subword(msg.1,1,1)= 'ICH10006I') |,
      (subword(msg.1,1,1)= 'ICH06011I') then raclist = 'YES'
-  else
-     msg_var = 1 to msg.0
 RETURN
 /*--------------------------------------------------------------------*/
 /*  Display RACF command and return code                         @AN  */

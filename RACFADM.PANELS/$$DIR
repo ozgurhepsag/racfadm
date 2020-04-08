@@ -57,6 +57,7 @@
  RACFMSG3  Message        'RACF Command = Y', 7 lines (pop-up panel)
  RACFPRMJ  Parameter      RACF parameters, menu option 5
  RACFPRMU  Parameter      Settings, customize options, menu option 0
+ RACFPSWD  Password       Reset userid password, opt P and line cmd PW
  RACFUSR#  User           Chnage user, when 'RACF Admin API = 'Y'
  RACFUSR@  User           Add user, when 'RACF Admin API = 'Y'
  RACFUSRT  User           Add, change and delete a TSO userid

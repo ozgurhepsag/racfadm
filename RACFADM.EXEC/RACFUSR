@@ -3,6 +3,10 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @DI  200407  RACFA    Added another dynamic area to RACFUSR2 panel */
+/* @DH  200407  RACFA    Display PW when 'Admin RACF API = N'         */
+/* @DG  200407  RACFA    Added line command 'PW', Password            */
+/* @DF  200407  RACFA    EXCMD removed 'else msg_var = 1 to msg.0'    */
 /* @DE  200407  RACFA    Let user type in password on panel           */
 /* @DD  200406  RACFA    'Admin RACF API = Y', chged password to user */
 /* @DC  200404  RACFA    Fixed IRRXUTIL, needed quotes around variable*/
@@ -154,22 +158,25 @@ ADDRESS ISPEXEC                                               /* @BC */
      TSOLIB = 'N'                                             /* @CP */
   If (ERAADMN = "YES") then do                                /* @B2 */
      IF (ERARAPI = "YES") then do                             /* @D7 */
-        SELCMDS2 = "›S®Show›SE®Srch›L®Lst›P®Prof"||,          /* @CM */
-                   "›D®Dsn›C®Chg›A®Add›R®Rem›RS®Res"||,       /* @CM */
-                   "›RV®Rev›Z®Zap"                            /* @D4 */
+        SELCMD2A = "›S®Show›SE®Srch›L®List›P®Prof"||,         /* @DI */
+                   "›D®Dsn›PW®Pswd›C®Chg›A®Add›R®Rem"||,      /* @DI */
+                   "›RS®Res"                                  /* @DI */
+        SELCMD2B = " ›RV®Rev›Z®Zap"                           /* @DI */
         SELCMDS3 = "›S®Show,›L®List,›P®Profile,"||,           /* @CO */
                    "›C®Change,›A®Add,›R®Remove"               /* @CO */
      end                                                      /* @D7 */
      else do                                                  /* @D7 */
-        SELCMDS2 = "›S®Show›SE®Srch›L®List"||,                /* @D7 */
-                   "›D®Dsn›C®Chg›A®Add›R®Rem›RS®Res"||,       /* @D7 */
-                   "›RV®Rev›Z®Zap"                            /* @D7 */
+        SELCMD2A = "›S®Show›SE®Srch›L®List"||,                /* @DI */
+                   "›D®Dsn›PW®Pswd›C®Chg›A®Add›R®Rem"||,      /* @DI */
+                   "›R®Rem›RS®Res"                            /* @DI */
+        SELCMD2B = "›RV®Rev›Z®Zap"                            /* @DI */
         SELCMDS3 = "›S®Show,›L®List,"||,                      /* @D7 */
                    "›C®Change,›A®Add,›R®Remove"               /* @D7 */
      end                                                      /* @D7 */
   end
   else do
-      SELCMDS2 = "›S®Show,›SE®Search,›L®list,›D®Dsn"          /* @BW */
+      SELCMD2A = "›S®Show,›SE®Search,›L®list,›D®Dsn"          /* @DI */
+      SELCMD2B = ""                                           /* @DI */
       SELCMDS3 = "›S®Show,›L®list"                            /* @B8 */
   end
   rlv       = SYSVAR('SYSLRACF')
@@ -298,6 +305,13 @@ PROFL:
              action = '*Prof'                                 /* @CW */
              "TBMOD" TBLA                                     /* @CW */
         end                                                   /* @CW */
+        when (opta = 'PW') then do                            /* @DG */
+             RC = RACFPSWD(user)                              /* @DG */
+             if (RC = 0) then do                              /* @DG */
+                action = '*Pswd'                              /* @DG */
+                "TBMOD" TBLA                                  /* @DG */
+             end                                              /* @DG */
+        end
         when (opta = 'R')  then call Deld
         when (opta = 'RS') then call Resd
         when (opta = 'RV') then call Revd
@@ -350,6 +364,13 @@ PROFL:
                 action = '*Prof'                              /* @CW */
                 "TBMOD" TBLA                                  /* @CW */
            end                                                /* @CW */
+           when (opta = 'PW') then do                         /* @DG */
+                rc = RACFPSWD(user)                           /* @DG */
+                if (RC = 0) then do                           /* @DG */
+                   action = '*Pswd'                           /* @DG */
+                   "TBMOD" TBLA                               /* @DG */
+                end                                           /* @DG */
+           end
            when (opta = 'R')  then call Deld
            when (opta = 'RS') then call Resd
            when (opta = 'RV') then call Revd
@@ -1121,8 +1142,6 @@ EXCMD:
   if (subword(msg.1,1,1)= 'ICH11009I') |,
      (subword(msg.1,1,1)= 'ICH10006I') |,
      (subword(msg.1,1,1)= 'ICH06011I') then raclist = 'YES'
-  else
-     msg_var = 1 to msg.0
 RETURN
 /*--------------------------------------------------------------------*/
 /*  Xref command                                                      */

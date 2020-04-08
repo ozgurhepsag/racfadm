@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BS  200407  RACFA    EXCMD removed 'else msg_var = 1 to msg.0'    */
 /* @BR  200404  RACFA    'Admin RACF API = Y' then display 'P'rofile  */
 /* @BQ  200402  RACFA    Chg LRECL=132 to LRECL=80                    */
 /* @BP  200401  RACFA    Create subroutine to VIEW/EDIT/BROWSE        */
@@ -784,8 +785,6 @@ EXCMD:
   if (subword(msg.1,1,1) = 'ICH11009I') |,
      (subword(msg.1,1,1) = 'ICH10006I') |,
      (subword(msg.1,1,1) = 'ICH06011I') then raclist = 'YES'
-  else
-     msg_var = 1 to msg.0
 RETURN
 /*--------------------------------------------------------------------*/
 /*  List dataset                                                      */

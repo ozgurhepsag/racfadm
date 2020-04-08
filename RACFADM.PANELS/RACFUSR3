@@ -42,9 +42,9 @@ _Z+ Z         Z
         IF (&SROW ^= 0)
            &OPTB = S
   IF (&ERAADMN = YES)
-     VER (&OPTB,LIST,S,L,P,C,A,R,/)
+     VER (&OPTB,LIST,S,L,P,C,A,R)
   ELSE
-     VER (&OPTB,LIST,S,L,/)
+     VER (&OPTB,LIST,S,L)
   IF (&ATTR = 'NONE')
       &ATTR = ' '
 )PNTS

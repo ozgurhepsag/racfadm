@@ -5,7 +5,9 @@
    {  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)   COLOR(BLUE)
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)   COLOR(GREEN)
    Ý  TYPE(DATAOUT) INTENS(LOW)  COLOR(GREEN)
+   ~  TYPE(DATAOUT) INTENS(LOW)  COLOR(BLUE)
    ¨  TYPE(DATAOUT) INTENS(HIGH)
+   !  TYPE(DATAIN)  INTENS(HIGH) CAPS(ON)   JUST(LEFT)   HILITE(USCORE)
    ^  AREA(DYNAMIC) EXTEND(OFF)
 )BODY EXPAND(\\)
 +\-\(%RACFADM - User Profiles+)\-\
@@ -14,7 +16,7 @@
 ^USRTITL                                           ^
 +
 %Base Segment:
-+ PROFILE%===>_USER    { (Enter userid)       +PASSWORD%===>_PSWD    +
++ PROFILE%===>_USER    {^USERTXT           ^+ ^PASSFLD              ^+
 + OWNER  %===>_BOWNER  { (Owner of profile)
 + DFLTGRP%===>_DEFGRP  { (Default group)
 + NAME   %===>_NAME                                      { (Last, first name)
@@ -42,8 +44,12 @@
      &USER = &RFILTER
   IF (&ACTION = '*Insert')
      &USRTITL = 'ÝAdd RACF¨USERÝprofile: ¨ADDUSERÝcommand'
+     &USERTXT = '~(Enter¨NEW~userid)'
+     &PASSFLD = 'ÝPASSWORD¨===>!        ¨'
   IF (&ACTION = '*Modify')
      &USRTITL = 'ÝAlt RACF¨USERÝprofile: ¨ALTUSERÝcommand'
+     &USERTXT = '~(Enter userid)'
+     &PASSFLD = ''
 
   *Rexx(*)
      rxrc=IRRXUTIL("EXTRACT","USER",user,"RACF","")
@@ -83,6 +89,9 @@
      dmgmtcls = racf.dfp.mgmtclas.1
   *EndRexx
 )PROC
+  *REXX (PASSFLD, PSWD)           /* Get password */
+     PSWD = SUBSTR(PASSFLD,16)
+  *ENDREXX
   IF (&ACTION = '*Insert')
      IF (&OLDUSR = &USER)
         &USER = ' '

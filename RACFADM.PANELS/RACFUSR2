@@ -19,8 +19,8 @@
 +\-\(%RACFADM - User Profiles+)\-\
 %Command ===>_ZCMD                                              +Scroll==>_SAMT+
 %
-+FILTER:$RFILTER
-+SELECT:¬SELCMDS2                                                              ¬
++FILTER:$RFILTER                                              ¬SELCMD2B        ¬
++SELECT:¬SELCMD2A                                                              ¬
 %
 %S         ~Userid  ~Name                ~Group   ~Logon   ~Owner   ~Rev~Att~TSO
 %-------------------------------------------------------------------------------
@@ -42,9 +42,9 @@ _Z ^Z      Z       Z                   Z       œZ       	Z       †Z  Z  —Z
            &OPTA = S
   /* Line command: XR is not displayed (hidden) */
   IF (&ERAADMN = YES)
-     VER (&OPTA,LIST,S,SE,L,P,D,C,A,R,RS,RV,XR,/,I,M,Z)
+     VER (&OPTA,LIST,S,SE,L,P,D,C,A,R,RS,RV,PW,XR,Z)
   ELSE
-     VER (&OPTA,LIST,S,SE,L,D,/)
+     VER (&OPTA,LIST,S,SE,L,D)
 )PNTS
   FIELD(ZPS00001) VAR(ZCMD) VAL('SORT USERID')
   FIELD(ZPS00002) VAR(ZCMD) VAL('SORT NAME')

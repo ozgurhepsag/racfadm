@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMhDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AV  200407  RACFA    EXCMD removed 'else msg_var = 1 to msg.0'    */
 /* @AU  200402  RACFA    Chg LRECL=132 to LRECL=80                    */
 /* @AT  200401  RACFA    Chged edit macro RACFLOGE to RACFEMAC        */
 /* @AS  200401  RACFA    VIEW/EDIT use edit macro, to turn off HILITE */
@@ -257,8 +258,6 @@ EXCMD:
      (subword(msg.1,1,1)= 'ICH10006I') |,
      (subword(msg.1,1,1)= 'ICH06011I') then
      raclist = 'YES'
-  else
-     msg_var = 1 to msg.0                                     /* @A3 */
 RETURN
 /*--------------------------------------------------------------------*/
 /*  List class                                                   @AL  */

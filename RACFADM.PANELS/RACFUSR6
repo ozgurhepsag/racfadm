@@ -1,4 +1,5 @@
 )ATTR DEFAULT(%+_)
+   @  TYPE(OUTPUT)  INTENS(HIGH) SKIP(ON)   COLOR(TURQ)
    _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON)   JUST(LEFT)   HILITE(USCORE)
    {  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)   COLOR(BLUE)
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)   COLOR(GREEN)
@@ -17,8 +18,8 @@
 +
 +
 %              Installation Data (no quotes)
-%              ----------------------------------------------------------------
-+DATA    %===>_DATA
+%              --------------------------------------------------------------
++DATA    %===>_DATA                                                          @Z
 +
 +
 +
@@ -27,6 +28,7 @@
 +
 +\ \Press%ENTER+to process or%END+to exit\ \
 )INIT
+  .ZVARS  = '(SCIND)'
   .CURSOR = USER
   .HELP   = #RACMENU
   &OLDUSR = &USER
@@ -41,4 +43,6 @@
   VER (&OWNER,NB,NAME)
   VER (&DEFGRP,NB,NAME)
   VER (&NAME,NB)
+)FIELD
+  FIELD(DATA) IND(SCIND,'<>') LEN(255)
 )END

@@ -2,6 +2,40 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  07 Apr 2020 - V14R2
+     - Menu
+       -- Fixed hidden option 7, RACFAUTH, it is now option 8
+
+  07 Apr 2020 - V14R1
+     - Menu
+       -- Changed option 'P', Password Reset, to option 5, and
+          renumbered the RACFprm (6) and RACFdb (7), reason for doing
+          this is all numbered entries have something to do with the
+          RACF database, where alphabetic characters (A-Z) is for
+          for informational items (Changes, Issues, etc.)
+     - User (Option 1)
+       -- Due to administrators now have so many line commands, two of
+          the line commands will be displayed to the far right above
+          the other line commands
+       -- Only display the 'PASSWORD ==>' field when 'A'dding a new
+          userid, prior was displaying it when executing 'C'hange
+          line command
+       -- Only display '(Enter new userid)' text to the right of
+          the userid field when 'A'dding a new userid, and when
+          'C'hanging a userid display '(Enter userid)'
+       -- When Settings (option 0) 'Admin RACF API = N', changed the
+          panels (RACFUSR5/6) to allow scolling the 'DATA' field when
+          adding/changing a userid
+
+  07 Apr 2020 - V13R9
+     - Main Menu
+       -- Added option 'P', Password reset
+     - User (Option 1)
+       -- Added line command 'PW', Password reset, and updated tutorial
+     - Other Items
+       -- Removed unnessary code from EXCMD subroutine, no longer
+          needed (RACFUSR, RACFGRP, RACFDSN, RACFCLSR and RACFCLSG)
+
   07 Apr 2020 - V13R8
      - Settings (Option 0)
        * 'JOBLLIB dataset' is now optional, prior when providing

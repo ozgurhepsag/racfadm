@@ -22,6 +22,7 @@
  RACFPRMJ  Parameter      Display RACF parameters, menu option 5
  RACFPRMU  Parameter      Customize settings, menu option 0
  RACFPROF  Profile        Execute line cmd 'P', extract/display profile
+ RACFPSWD  Password       Reset userid password (opt P and line cmd PW)
  RACFUSR   User           Display userid profiles, menu option 1
  RACFUSRT  User           Add, delete and change TSO userid
  RACFUSRX  User           Userid cross reference report (line cmd XR)
