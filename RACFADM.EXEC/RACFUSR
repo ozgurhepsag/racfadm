@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BK  200408  RACFA    Chg 'Dataset = NO' to NONE                   */
 /* @DJ  200408  RACFA    Removed duplicate line cmd (R-Rem)           */
 /* @DI  200407  RACFA    Added another dynamic area to RACFUSR2 panel */
 /* @DH  200407  RACFA    Display PW when 'Admin RACF API = N'         */
@@ -196,7 +197,7 @@ EXIT
 /*--------------------------------------------------------------------*/
 PROFL:
   call create_table                                           /* @BE */
-  if (USER = 'INVALID') | (USER = 'NO') THEN DO               /* @C5 */
+  if (USER = 'INVALID') | (USER = 'NONE') THEN DO             /* @BK */
      "TBEND" tbla
      call racfmsgs 'ERR16'                                    /* @C5 */
      return

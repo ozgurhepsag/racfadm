@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BT  200408  RACFA    Chg 'Dataset = NO' to NONE                   */
 /* @BS  200407  RACFA    EXCMD removed 'else msg_var = 1 to msg.0'    */
 /* @BR  200404  RACFA    'Admin RACF API = Y' then display 'P'rofile  */
 /* @BQ  200402  RACFA    Chg LRECL=132 to LRECL=80                    */
@@ -119,7 +120,7 @@ EXIT
 /*--------------------------------------------------------------------*/
 PROFL:
   call create_table
-  if (dataset = 'INVALID') | (dataset = 'NO') THEN DO         /* @B5 */
+  if (dataset = 'INVALID') | (dataset = 'NONE') THEN DO       /* @BT */
      "TBEND" tbla
      if (cmd_rc > 0) then DO                                  /* @B5 */
         call racfmsgs 'ERR16'                                 /* @B5 */

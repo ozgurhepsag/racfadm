@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BX  200408  RACFA    Chg 'Group = NO' to NONE                     */
 /* @BW  200407  RACFA    EXCMD removed 'else msg_var = 1 to msg.0'    */
 /* @BV  200406  RACFA    Remove spaces between sub-groups             */
 /* @BU  200406  RACFA    Added 'NONE' to subgroups when NO SUBGROUPS  */
@@ -122,7 +123,7 @@ EXIT
 /*--------------------------------------------------------------------*/
 PROFL:
   call create_table                                           /* @AP */
-  if (group = 'INVALID') | (group = 'NO') then do             /* @B3 */
+  if (group = 'INVALID') | (group = 'NONE') then do           /* @BX */
      "TBEND" tbla
      if (cmd_rc > 0) then DO                                  /* @C5 */
         call racfmsgs 'ERR16'                                 /* @B3 */

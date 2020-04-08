@@ -2,6 +2,11 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  08 Apr 2020 - V14R4
+     - Other Items
+       -- Line command 'P'rofile, check if entry is 'NONE', if so,
+          display message
+
   08 Apr 2020 - V14R3
      - User (Option 1)
        -- When Settings (option 0) is 'Admin RACF API = N' and
