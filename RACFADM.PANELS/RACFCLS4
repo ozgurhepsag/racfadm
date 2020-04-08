@@ -9,19 +9,19 @@
 %
 +Change+RACF%&RCLASS +profile: %RALTER+command
 +
-+PROFILE %===>$PROFILE                                       +$TYPE
++PROFILE%===>$PROFILE                                       +$TYPE
 +
 {Change one or more of the fields below:
 +
-+OWNER   %===>_OWNER   { (Owner of profile)
-+UACC    %===>_UACC    { (Access level, NONE/EXECUTE/READ/UPDATE/ALTER/CONTROL)
-+WARNING %===>_Z  {      (Warn or fail access, YES/NO)
-+DATA    %===>_DATA
++OWNER  %===>_OWNER   { (Owner of profile)
++UACC   %===>_UACC    { (Access level, NONE/EXECUTE/READ/UPDATE/ALTER/CONTROL)
++WARNING%===>_Z  {      (Warn or fail access, YES/NO)
++DATA   %===>_DATA
 +
 {To change data to blanks enter%NONE
 +
-+FAILURE %===>_FAIL    { (Failure level to audit, normally READ)
-+SUCCESS %===>_SUCC    { (Success level to audit, normally blank)
++FAILURE%===>_FAIL    { (Failure level to audit, normally READ)
++SUCCESS%===>_SUCC    { (Success level to audit, normally blank)
 +
 {Previous%AUDIT{values are lost if either of the above audit fields is updated
 +

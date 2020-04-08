@@ -9,10 +9,10 @@
 %
 +Connect RACF%USER+profile: %CONNECT+command
 +
-+PROFILE:     $USER    +$NAME
++PROFILE%===>$USER    +$NAME
 +
-+ID      %===>_ID      { (User or group)
-+ACC     %===>_ACC     { (Access level, USE/JOIN)
++ID     %===>_ID      { (User or group)
++ACC    %===>_ACC     { (Access level, USE/JOIN)
 +
 +
 +

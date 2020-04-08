@@ -1,8 +1,8 @@
 )ATTR DEFAULT(%+_)
-   @  TYPE(OUTPUT)  INTENS(HIGH) SKIP(ON)   COLOR(TURQ)
-   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON)   JUST(LEFT)   HILITE(USCORE)
-   {  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)   COLOR(BLUE)
-   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)   COLOR(GREEN)
+   @  TYPE(OUTPUT)  INTENS(HIGH) SKIP(ON)
+   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON) JUST(LEFT)   HILITE(USCORE)
+   {  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(BLUE)
+   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
 +\-\(%RACFADM - User Profiles+)\-\
 %Command ===>_ZCMD                                              +Scroll==>_SAMT+
@@ -14,7 +14,7 @@
 +OWNER   %===>_OWNER   { (Owner of profile)
 +SUPGROUP%===>_DEFGRP  { (Default group)
 +NAME    %===>_NAME                                      { (Last, first name)
-+ATTRIB  %===>_ATTR
++ATTRIB  %===>_ATTR                                                          @Z
 +
 +
 %              Installation Data (no quotes)
@@ -28,7 +28,7 @@
 +
 +\ \Press%ENTER+to process or%END+to exit\ \
 )INIT
-  .ZVARS  = '(SCIND)'
+  .ZVARS  = '(SCIND1 SCIND2)'
   .CURSOR = USER
   .HELP   = #RACMENU
   &OLDUSR = &USER
@@ -44,5 +44,6 @@
   VER (&DEFGRP,NB,NAME)
   VER (&NAME,NB)
 )FIELD
-  FIELD(DATA) IND(SCIND,'<>') LEN(255)
+  FIELD(ATTR) IND(SCIND1,'<>') LEN(255)
+  FIELD(DATA) IND(SCIND2,'<>') LEN(255)
 )END

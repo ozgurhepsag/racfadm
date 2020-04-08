@@ -1,5 +1,5 @@
 )ATTR DEFAULT(%+_)
-   @  TYPE(OUTPUT)  INTENS(HIGH) SKIP(ON)   COLOR(RED)
+   @  TYPE(OUTPUT)  INTENS(HIGH) SKIP(ON)
    _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON)   JUST(LEFT)   HILITE(USCORE)
    }  TYPE(INPUT)   INTENS(HIGH) CAPS(OFF)  JUST(LEFT)   HILITE(USCORE)
    {  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)   COLOR(BLUE)
@@ -23,15 +23,15 @@
 + ATTRIB %===>_ATTR                                                          @Z
 +
 %TSO Segment:             %OMVS Segment:
-+ PROC   %===>_TSOPROC {   +HOME      %===>}OHOME
-+ ACCT   %===>_TSOACCT {   +PROGRAM   %===>}OPROGRAM
++ PROC   %===>_TSOPROC {   +HOME    %===>}OHOME
++ ACCT   %===>_TSOACCT {   +PROGRAM %===>}OPROGRAM
 + SIZE   %===>_TSOSIZE{
 + UNIT   %===>_TSOUNIT {
 +
 %CICS Segment:            %DFP Segment:
-+ OPCLASS%===>_Z +         +DATACLAS  %===>_DDATACLS{
-+ OPIDENT%===>_Z  +        +STORCLAS  %===>_DSTORCLS{
-+ OPPRTY %===>_Z  +        +MGMTCLAS  %===>_DMGMTCLS{
++ OPCLASS%===>_Z +         +DATACLAS%===>_DDATACLS{
++ OPIDENT%===>_Z  +        +STORCLAS%===>_DSTORCLS{
++ OPPRTY %===>_Z  +        +MGMTCLAS%===>_DMGMTCLS{
 + TIMEOUT%===>_Z   +
 )INIT
   .ZVARS  = '(SCIND COPCLASS COPIDENT COPPRTY CTIMEOUT)'

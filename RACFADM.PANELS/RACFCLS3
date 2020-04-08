@@ -8,22 +8,22 @@
 %
 +Add RACF%_RCLASS  +profile: %RDEFINE+command and optionally a%PERMIT+
 +
-+PROFILE %===>_PROFILE                                         {(Enter%NEW{name)
-+TYPE    %===>_TYPE    { (Enter%NEW{type)
++PROFILE%===>_PROFILE                                         {(Enter%NEW{name)
++TYPE   %===>_TYPE    { (Enter%NEW{type)
 +
-+OWNER   %===>_OWNER   { (Owner of profile)
-+UACC    %===>_UACC    { (Access level, NONE/EXECUTE/READ/UPDATE/ALTER/CONTROL)
-+WARNING %===>_Z  {      (Warn or fail access, YES/NO)
-+DATA    %===>_DATA
++OWNER  %===>_OWNER   { (Owner of profile)
++UACC   %===>_UACC    { (Access level, NONE/EXECUTE/READ/UPDATE/ALTER/CONTROL)
++WARNING%===>_Z  {      (Warn or fail access, YES/NO)
++DATA   %===>_DATA
 +
-+FROM    %===>_FROM                     +%===>_FCLASS   { (Profile and Class)
++FROM   %===>_FROM                     +%===>_FCLASS   { (Profile and Class)
 +
 {If%FROM{is set to a generic profile name then the%ACCESS LIST{from this
 {profile is added to the new profile with a permit command immediately.
 %Blank{the FROM field out, if you do%not{want this%permit{command done.
 +
-+FAILURE %===>_FAIL    { (Failure level to audit, normally READ)
-+SUCCESS %===>_SUCC    { (Success level to audit, normally blank)
++FAILURE%===>_FAIL    { (Failure level to audit, normally READ)
++SUCCESS%===>_SUCC    { (Success level to audit, normally blank)
 +
 +\ \Press%ENTER+to process or%END+to exit\ \
 )INIT

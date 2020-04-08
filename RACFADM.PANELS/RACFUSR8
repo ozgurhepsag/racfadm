@@ -9,13 +9,13 @@
 %
 +Alt RACF%USER+profile: %ALTUSER+command
 +
-+PROFILE   %===>$USER    { (Userid)
++PROFILE%===>$USER    { (Userid)
 +
-+TSOPROC   %===>_TSOPROC { (TSO logon procedure)
-+TSOACCT   %===>_TSOACCT { (TSO account number)
-+TSOSIZE   %===>_TSOSIZE{  (TSO A/S size)
-+TSOUNIT   %===>_TSOUNIT { (TSO temporary files unit)
-+TSOLIB    %===>_Z{        (Y=Yes, N=No)
++TSOPROC%===>_TSOPROC { (TSO logon procedure)
++TSOACCT%===>_TSOACCT { (TSO account number)
++TSOSIZE%===>_TSOSIZE{  (TSO A/S size)
++TSOUNIT%===>_TSOUNIT { (TSO temporary files unit)
++TSOLIB %===>_Z{        (Y=Yes, N=No)
 +
 +
 +

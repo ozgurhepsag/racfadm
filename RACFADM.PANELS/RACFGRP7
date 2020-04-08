@@ -10,12 +10,12 @@
 +Add RACF%GROUP+connection: %CONNECT+command
 +
 +
-+PROFILE %===>$GROUP   { (Group profile)
++PROFILE%===>$GROUP   { (Group profile)
 +
 {Change one or more of the fields below:+
 +
-+USER    %===>_ID      { (Enter%NEW{name)
-+ACC     %===>_ACC     { (Access level, USE/JOIN)
++USER   %===>_ID      { (Enter%NEW{name)
++ACC    %===>_ACC     { (Access level, USE/JOIN)
 +
 +
 +

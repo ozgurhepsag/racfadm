@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @DJ  200408  RACFA    Removed duplicate line cmd (R-Rem)           */
 /* @DI  200407  RACFA    Added another dynamic area to RACFUSR2 panel */
 /* @DH  200407  RACFA    Display PW when 'Admin RACF API = N'         */
 /* @DG  200407  RACFA    Added line command 'PW', Password            */
@@ -168,8 +169,8 @@ ADDRESS ISPEXEC                                               /* @BC */
      else do                                                  /* @D7 */
         SELCMD2A = "›S®Show›SE®Srch›L®List"||,                /* @DI */
                    "›D®Dsn›PW®Pswd›C®Chg›A®Add›R®Rem"||,      /* @DI */
-                   "›R®Rem›RS®Res"                            /* @DI */
-        SELCMD2B = "›RV®Rev›Z®Zap"                            /* @DI */
+                   "›RS®Res›RV®Rev"                           /* @DJ */
+        SELCMD2B = "       ›Z®Zap"                            /* @DJ */
         SELCMDS3 = "›S®Show,›L®List,"||,                      /* @D7 */
                    "›C®Change,›A®Add,›R®Remove"               /* @D7 */
      end                                                      /* @D7 */

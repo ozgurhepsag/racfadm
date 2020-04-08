@@ -2,6 +2,19 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  08 Apr 2020 - V14R3
+     - User (Option 1)
+       -- When Settings (option 0) is 'Admin RACF API = N' and
+          'Admin RACF API = N'
+          * Removed duplicate line command 'R Rem' from being displayed
+          * Made the 'ATTR' field scrollable, when 'A'dding a userid
+     - Dataset (Option 2)
+       -- Made the 'DATA' field scrollable, when 'A'dding and 'C'hanging
+     - Other Items
+       -- Standardized/aligned fields on several panels
+       -- Standardized the color of scroll fields (<>), making it
+          easier to see/identify
+
   07 Apr 2020 - V14R2
      - Menu
        -- Fixed hidden option 7, RACFAUTH, it is now option 8
