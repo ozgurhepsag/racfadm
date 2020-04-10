@@ -510,7 +510,7 @@ DISD:
      sortid   = 'D'; sortacc  = 'A'                           /* @BF */
      CLRID = "TURQ"; CLRACC = "GREEN"   /* Col. colors */     /* @B9 */
      "TBSORT " tblb "FIELDS("sort")"                          /* @B9 */
-     "TBTOP " tblb
+     "TBTOP  " tblb
      /* ability to perform actions on different profile */
      Real_profile = profile||rclass
      Profchg      ='NO'

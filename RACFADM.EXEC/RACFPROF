@@ -12,6 +12,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AR  200410  RACFA    Chk for 'None', display message              */
 /* @AQ  200407  RACFA    Remove unnecessary spaces in group/profile   */
 /* @AP  200403  RACFA    Fix IRRXUTIL, needed single quotes on parms  */
 /* @AO  200403  RACFA    Chged 'cmd' var to text, so SHOWCMD works    */
@@ -44,10 +45,18 @@ PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */ /* @A9 */
 EDITMACR = "RACFEMAC"                                         /* @AL */
 
 arg class profile
-if (profile = "*") then do                                    /* @AF */
-   call RACFMSGS ERR17                                        /* @AF */
-   return                                                     /* @AF */
-end                                                           /* @AF */
+Select                                                        /* @AR */
+   When (profile = "*") then do                               /* @AF */
+      call RACFMSGS ERR17                                     /* @AF */
+      return                                                  /* @AF */
+   end                                                        /* @AF */
+   When (profile = "NONE") then do                            /* @AR */
+      call RACFMSGS ERR21                                     /* @AR */
+      return                                                  /* @AR */
+   end                                                        /* @AR */
+   otherwise                                                  /* @AR */
+      nop                                                     /* @AR */
+end                                                           /* @AR */
 
 /* Initialize VIEW output stem */                             /* @A3 */
 irrxout. = ''

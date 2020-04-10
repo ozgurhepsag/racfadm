@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A9  200410  RACFA    Added ERR21 msg, 'Invalid entry - NONE'      */
 /* @A8  200402  RACFA    Added ERR20 msg, 'Invalid security access'   */
 /* @A7  200402  RACFA    Added ERR19 msg, 'No LIBDEF ISPPLIB DSN'     */
 /* @A6  200301  RACFA    Standardize/use this module for all msgs     */
@@ -106,6 +107,10 @@ ADDRESS ISPEXEC                                               /* @A4 */
                      'IRRXUTIL, please see Notes in',         /* @A8 */
                      'tutorial'                               /* @A8 */
      end                                                      /* @A8 */
+     WHEN (code = 'ERR21') then do                            /* @A9 */
+          racfsmsg = 'Invalid entry'                          /* @A9 */
+          racflmsg = 'NO and NONE are invalid entries.'       /* @A9 */
+     end                                                      /* @A9 */
      otherwise nop
   End
   "SETMSG MSG(RACF011)"

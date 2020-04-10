@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BU  200410  RACFA    Fixed sorting entries prior to displaying    */
 /* @BT  200408  RACFA    Chg 'Dataset = NO' to NONE                   */
 /* @BS  200407  RACFA    EXCMD removed 'else msg_var = 1 to msg.0'    */
 /* @BR  200404  RACFA    'Admin RACF API = Y' then display 'P'rofile  */
@@ -120,7 +121,7 @@ EXIT
 /*--------------------------------------------------------------------*/
 PROFL:
   call create_table
-  if (dataset = 'INVALID') | (dataset = 'NONE') THEN DO       /* @BT */
+  if (dataset = 'INVALID') | (dataset = 'NO') THEN DO         /* @B5 */
      "TBEND" tbla
      if (cmd_rc > 0) then DO                                  /* @B5 */
         call racfmsgs 'ERR16'                                 /* @B5 */
@@ -397,8 +398,10 @@ RETURN
 /*  Display profile permits                                           */
 /*--------------------------------------------------------------------*/
 DISD:
-  if (dataset = 'NONE') then
+  if (dataset = 'NONE') then do                               /* @BU */
+     call racfmsgs ERR21                                      /* @BU */
      return
+  end                                                         /* @BU */
   tmpsort = sort                                              /* @BM */
   Do until (RB = 'NO')      /* allow rebuild option */
      call create_tableb                                       /* @BM */
@@ -408,7 +411,7 @@ DISD:
      sort   = 'ID,C,A'                                        /* @BM */
      sortid = 'D'; sortacc = 'A'        /* Sort order */      /* @BM */
      CLRID  = "TURQ"; CLRacc = "GREEN"  /* Col colors */      /* @BM */
-     "TBSORT " tbla "FIELDS("sort")"                          /* @BM */
+     "TBSORT " tblb "FIELDS("sort")"                          /* @BU */
      "TBTOP  " tblb
      "TBDISPL" tblb "PANEL("PANEL05")"                        /* @AU */
      retb = rc

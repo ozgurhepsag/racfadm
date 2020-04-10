@@ -3,7 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @BX  200408  RACFA    Chg 'Group = NO' to NONE                     */
+/* @BY  200410  RACFA    Do not display 'Segment' or 'Command'        */
+/* @BX  200410  RACFA    If id = 'None' only allow line cmd 'A'dd     */
 /* @BW  200407  RACFA    EXCMD removed 'else msg_var = 1 to msg.0'    */
 /* @BV  200406  RACFA    Remove spaces between sub-groups             */
 /* @BU  200406  RACFA    Added 'NONE' to subgroups when NO SUBGROUPS  */
@@ -123,7 +124,7 @@ EXIT
 /*--------------------------------------------------------------------*/
 PROFL:
   call create_table                                           /* @AP */
-  if (group = 'INVALID') | (group = 'NONE') then do           /* @BX */
+  if (group = 'INVALID') | (group = 'NO') then do             /* @B3 */
      "TBEND" tbla
      if (cmd_rc > 0) then DO                                  /* @C5 */
         call racfmsgs 'ERR16'                                 /* @B3 */
@@ -412,22 +413,9 @@ DISD:
            END                                                /* @BM */
            otherwise lparm = ''                               /* @BM */
         End  /* Select */                                     /* @BM */
-        Select
-           when (optb = 'A')  then call Addp
-           when (optb = 'C')  then call Chgp
-           when (optb = 'L')  then call Lisp                  /* @A5 */
-           when (optb = 'P') then                             /* @BI */
-                call RACFPROF 'USER' id                       /* @BI */
-           when (optb = 'R')  then call Delp
-           when (optb = 'S')  then call RACFUSR id
-           when (optb = 'SE') then call RACFCLSS id
-           otherwise nop
-        End
-        Do while (retb = 4)   /* process multi-section */
-           "CONTROL DISPLAY RESTORE"
-           "TBDISPL" tblb
-           retb = rc
-           "CONTROL DISPLAY SAVE"
+        if (optb <> 'A') & (id = 'NONE') then                 /* @BX */
+           Call RACFMSGS ERR21                                /* @BX */
+        else do                                               /* @BX */
            Select
               when (optb = 'A')  then call Addp
               when (optb = 'C')  then call Chgp
@@ -439,6 +427,23 @@ DISD:
               when (optb = 'SE') then call RACFCLSS id
               otherwise nop
            End
+           Do while (retb = 4)   /* process multi-section */
+              "CONTROL DISPLAY RESTORE"
+              "TBDISPL" tblb
+              retb = rc
+              "CONTROL DISPLAY SAVE"
+              Select
+                 when (optb = 'A')  then call Addp
+                 when (optb = 'C')  then call Chgp
+                 when (optb = 'L')  then call Lisp            /* @A5 */
+                 when (optb = 'P') then                       /* @BI */
+                      call RACFPROF 'USER' id                 /* @BI */
+                 when (optb = 'R')  then call Delp
+                 when (optb = 'S')  then call RACFUSR id
+                 when (optb = 'SE') then call RACFCLSS id
+                 otherwise nop
+              End
+           end /* If 'None' */                                /* @BX */
         end /* While retb= 4 */
         optb = ' '
         "CONTROL DISPLAY RESTORE"
@@ -539,6 +544,8 @@ CREATE_TABLEB:                                                /* @BM */
      end
      if (flags = 'ON') then do
         if (substr(temp,2,10) = 'No Command') then iterate    /* @B4 */
+        if (substr(temp,2,10) = 'Command Au') then iterate    /* @BY */
+        if (substr(temp,2,10) = 'Segment:  ') then iterate    /* @BY */
         if (substr(temp,2,10) = 'NO ENTRIES') then do
            id  = 'NONE'       /* empty access list */
            acc = 'DEFINED'
@@ -803,7 +810,7 @@ CREATE_TABLE:                                                 /* @AP */
   seconds = TIME('S')
   tbla    = 'TA'ZSCREEN||SECONDS  /* table name unique */
   "TBCREATE" tbla "KEYS(GROUP) NAMES(DATA SUPGRP OWNER)",     /* @BC */
-    "REPLACE NOWRITE"
+           "REPLACE NOWRITE"
   cmd = "SEARCH FILTER("RFILTER") CLASS("rclass")"            /* @AN */
   x = OUTTRAP('var.')
   address TSO cmd                                             /* @AN */

@@ -2,10 +2,22 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  08 Apr 2020 - V14R5
+     - Dataset (Group 2)
+       -- Display error message when typing in a line command next
+          to an userid of 'NONE', only exception is 'A'dd
+       -- Do not display invalid userids, like 'Segment' or 'Command'
+     - Dataset (Option 3)
+       -- Fixed sorting 'Group/Id' when selecting profile, was not
+          sorted in ascending order
+     - Other Items
+       -- Backed out change implemented below in V14R4
+
   08 Apr 2020 - V14R4
      - Other Items
-       -- Line command 'P'rofile, check if entry is 'NONE', if so,
-          display message
+       -- If RACF search command to generate a selection list has
+          no entries ('NONE') then display message on RACFUSR1,
+          RACFGRP1 and RACFDSN1 panels.
 
   08 Apr 2020 - V14R3
      - User (Option 1)
