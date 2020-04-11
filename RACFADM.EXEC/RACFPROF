@@ -42,7 +42,7 @@
 /* @A0  060101  WELLS    Created HLASM  (brwells@us.ibm.com)          */
 /*====================================================================*/
 PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */ /* @A9 */
-EDITMACR = "RACFEMAC"                                         /* @AL */
+EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @AL */
 
 arg class profile
 Select                                                        /* @AR */
@@ -50,6 +50,10 @@ Select                                                        /* @AR */
       call RACFMSGS ERR17                                     /* @AF */
       return                                                  /* @AF */
    end                                                        /* @AF */
+   When (profile = "NO") then do                              /* @AR */
+      call RACFMSGS ERR21                                     /* @AR */
+      return                                                  /* @AR */
+   end                                                        /* @AR */
    When (profile = "NONE") then do                            /* @AR */
       call RACFMSGS ERR21                                     /* @AR */
       return                                                  /* @AR */
@@ -144,7 +148,7 @@ ADDRESS ISPEXEC
   /* --------------------------------- */                     /* @A3 */
   /* Display connect groups for user   */                     /* @A3 */
   /* --------------------------------- */                     /* @A3 */
-  if class = 'USER' then do
+  if (class = 'USER') then do
      gcnt = racf.base.connects.repeatcount
      call sez 'Connect Groups:  ' 'Fields:'right(gcnt,2,"0")
      do i = 1 to gcnt

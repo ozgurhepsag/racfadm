@@ -11,11 +11,11 @@
 +
 +
 +PROFILE%===>$GROUP   { (Group name)
-+USER   %===>$ID      { (Userid)
++USERID %===>$ID      { (Userid)
 +
 +Change the field below:
 +
-+ACC    %===>_ACC     { (Access level, USE/JOIN)
++ACCESS %===>_ACC     { (Access level, USE/JOIN)
 +
 +
 +

@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V14R5+)\-\
++\-\(%RACFADM - RACF Administration - V14R7+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options
@@ -30,7 +30,7 @@
 )INIT
   .CURSOR = ZCMD
   .HELP   = #RACMENU
-  &ZPRIM  = YES        /* Always a primary option menu */
+  &ZPRIM  = YES              /* Make a primary option menu */
 
   VGET (ERAADMN ERARAPI ERASINT ERADISP ERACONF ERASHOW +
         ERATRACE) PROFILE
@@ -51,7 +51,7 @@
   VPUT (ERAADMN ERARAPI ERASINT ERADISP ERACONF ERASHOW +
         ERATRACE) PROFILE
 
-  &RACFVER = &Z              /*- Obtain RACF/Sys Info -*/
+  &RACFVER = &Z              /*--- Obtain RACF/Sys Info ---*/
   &RACFDSN = &Z
   &RACFGRP = &Z
   &RACFNAM = &Z

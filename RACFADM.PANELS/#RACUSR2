@@ -17,7 +17,7 @@
 %  S  !Show        +List of groups connected to the user
 %  SE !Search      +Analyze user access to general resource profiles
 %  L  !List        +Issue LISTUSER command
-%  P  !Profile     +List user profile using Radmin extract (admin)
+%  P  !Profile     +List user profile using IRRXUTIL (admin)
 %  D  !Dsn         +Display datasets
 %  C  !Change      +Change user attributes (admin)
 %  A  !Add         +Define a new user (admin)

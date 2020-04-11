@@ -14,7 +14,7 @@
 /* @A1  200220  RACFA    Added capability to browse/edit/view file    */
 /* @A0  200218  RACFA    Created REXX                                 */
 /*====================================================================*/
-EDITMACR = "RACFEMAC"                                         /* @A8 */
+EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @A8 */
 
 ADDRESS ISPEXEC                                               /* @A3 */
   PARSE ARG MEMBER                                            /* @A5 */

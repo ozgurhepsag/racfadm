@@ -44,7 +44,7 @@
 PANEL08  = "RACFCLS8"    /* List classes and profiles      */ /* @AI */
 PANEL13  = "RACFCLSD"    /* Add class                      */ /* @AG */
 PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */ /* @AG */
-EDITMACR = "RACFEMAC"                                         /* @AZ */
+EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @AZ */
 
 ADDRESS ISPEXEC                                               /* @A6 */
   Arg user

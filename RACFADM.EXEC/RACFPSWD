@@ -52,7 +52,7 @@ NEWPSWD:
   do forever
      pick = random(1,length(choices))
      /* No repeating characters */
-     if pos(chars.pick,password) > 0 then
+     if (pos(chars.pick,password) > 0) then
         nop
      else
         password = password||chars.pick

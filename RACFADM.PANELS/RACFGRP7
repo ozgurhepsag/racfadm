@@ -14,8 +14,8 @@
 +
 {Change one or more of the fields below:+
 +
-+USER   %===>_ID      { (Enter%NEW{name)
-+ACC    %===>_ACC     { (Access level, USE/JOIN)
++USERID %===>_ID      { (Enter%NEW{name)
++ACCESS %===>_ACC     { (Access level, USE/JOIN)
 +
 +
 +

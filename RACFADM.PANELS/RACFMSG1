@@ -9,7 +9,6 @@ $message
 +Are you sure?
 +
 +Press%ENTER+to process or%END+to exit
-)INIT
 )PROC
   &CKEY = .PFKEY
   IF (&CKEY = ' ')

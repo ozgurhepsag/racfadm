@@ -109,7 +109,7 @@ ADDRESS ISPEXEC                                               /* @A4 */
      end                                                      /* @A8 */
      WHEN (code = 'ERR21') then do                            /* @A9 */
           racfsmsg = 'Invalid entry'                          /* @A9 */
-          racflmsg = 'NO and NONE are invalid entries.'       /* @A9 */
+          racflmsg = 'NO and NONE are not valid entries.'     /* @A9 */
      end                                                      /* @A9 */
      otherwise nop
   End

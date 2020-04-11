@@ -138,7 +138,7 @@ PANEL07  = "RACFUSR7"    /* Change connection              */ /* @BL */
 PANEL08  = "RACFUSR8"    /* Alter TSO segment              */ /* @BL */
 PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */ /* @BL */
 PANELM3  = "RACFMSG3"    /* Display RACF command (Radmin)  */ /* @D4 */
-EDITMACR = "RACFEMAC"                                         /* @D1 */
+EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @D1 */
 
 ADDRESS ISPEXEC                                               /* @BC */
   Arg Rfilter
@@ -1372,38 +1372,38 @@ RETURN                                                        /* @D4 */
   else do                                                     /* @D4 */
       parse value '' with t1 t2 t3 t4                         /* @D4 */
       cmd = cmd||,                                            /* @D4 */
-            ' TSO('                                           /* @D4 */
-            if tsoproc <> '' then t1 = 'PROC('tsoproc')'      /* @D4 */
-            if tsoacct <> '' then t2 = 'ACCTNUM('tsoacct')'   /* @D4 */
-            if tsosize <> '' then t3 = 'SIZE('tsosize')'      /* @D4 */
-            if tsounit <> '' then t4 = 'UNIT('tsounit')'      /* @D4 */
-            cmd = cmd||t1 t2 t3 t4||,                         /* @D4 */
-            ')'                                               /* @D4 */
+          ' TSO('                                             /* @D4 */
+          if (tsoproc <> '') then t1 = 'PROC('tsoproc')'      /* @D4 */
+          if (tsoacct <> '') then t2 = 'ACCTNUM('tsoacct')'   /* @D4 */
+          if (tsosize <> '') then t3 = 'SIZE('tsosize')'      /* @D4 */
+          if (tsounit <> '') then t4 = 'UNIT('tsounit')'      /* @D4 */
+          cmd = cmd||t1 t2 t3 t4||,                           /* @D4 */
+          ')'                                                 /* @D4 */
     end                                                       /* @D4 */
   if (copclass||copident||copprty||ctimeout = '') then        /* @D4 */
      nop                                                      /* @D4 */
   else do                                                     /* @D4 */
      parse value '' with c1 c2 c3 c4                          /* @D4 */
      cmd = cmd||,                                             /* @D4 */
-           ' CICS('                                           /* @D4 */
-           if copclass <> '' then c1 = 'OPCLASS('copclass')'  /* @D4 */
-           if copident <> '' then c2 = 'OPIDENT('copident')'  /* @D4 */
-           if copprty  <> '' then c3 = 'OPPRTY('copprty')'    /* @D4 */
-           if ctimeout <> '' then c4 = 'TIMEOUT('ctimeout')'  /* @D4 */
-           cmd = cmd||c1 c2 c3 c4||,                          /* @D4 */
-           ')'                                                /* @D4 */
+         ' CICS('                                             /* @D4 */
+         if (copclass <> '') then c1 = 'OPCLASS('copclass')'  /* @D4 */
+         if (copident <> '') then c2 = 'OPIDENT('copident')'  /* @D4 */
+         if (copprty  <> '') then c3 = 'OPPRTY('copprty')'    /* @D4 */
+         if (ctimeout <> '') then c4 = 'TIMEOUT('ctimeout')'  /* @D4 */
+         cmd = cmd||c1 c2 c3 c4||,                            /* @D4 */
+         ')'                                                  /* @D4 */
   end                                                         /* @D4 */
   if (ddatacls||dmgmtcls||dstorcls = '') then                 /* @D4 */
      nop                                                      /* @D4 */
   else do                                                     /* @D4 */
      parse value '' with d1 d2 d3                             /* @D4 */
      cmd = cmd||,                                             /* @D4 */
-           ' DFP('                                            /* @D4 */
-           if ddatacls <> '' then d1 = 'DATACLAS('ddatacls')' /* @D4 */
-           if dmgmtcls <> '' then d2 = 'MGMTCLAS('dmgmtcls')' /* @D4 */
-           if dstorcls <> '' then d3 = 'STORCLAS('dstorcls')' /* @D4 */
-           cmd = cmd||d1 d2 d3||,                             /* @D4 */
-           ')'                                                /* @D4 */
+         ' DFP('                                              /* @D4 */
+         if (ddatacls <> '') then d1 = 'DATACLAS('ddatacls')' /* @D4 */
+         if (dmgmtcls <> '') then d2 = 'MGMTCLAS('dmgmtcls')' /* @D4 */
+         if (dstorcls <> '') then d3 = 'STORCLAS('dstorcls')' /* @D4 */
+         cmd = cmd||d1 d2 d3||,                               /* @D4 */
+         ')'                                                  /* @D4 */
   end                                                         /* @D4 */
   call excmd cmd                                              /* @D4 */
   if (cmd_rc > 0) then                                        /* @D6 */
@@ -1454,13 +1454,13 @@ RETURN                                                        /* @D4 */
      revoked = 'YES'                                          /* @D4 */
   else                                                        /* @D4 */
      revoked = 'NO'                                           /* @D4 */
-  if racf.base.special.1 = 'TRUE' |,                          /* @D4 */
-     racf.base.oper.1    = 'TRUE' |,                          /* @D4 */
-     racf.base.grpacc.1  = 'TRUE' |,                          /* @D4 */
-     racf.base.auditor.1 = 'TRUE' |,                          /* @D4 */
-     racf.base.roaudit.1 = 'TRUE' |,                          /* @D4 */
-     racf.base.rest.1    = 'TRUE' |,                          /* @D4 */
-     racf.base.adsp.1    = 'TRUE' then                        /* @D4 */
+  if (racf.base.special.1 = 'TRUE') |,                        /* @D4 */
+     (racf.base.oper.1    = 'TRUE') |,                        /* @D4 */
+     (racf.base.grpacc.1  = 'TRUE') |,                        /* @D4 */
+     (racf.base.auditor.1 = 'TRUE') |,                        /* @D4 */
+     (racf.base.roaudit.1 = 'TRUE') |,                        /* @D4 */
+     (racf.base.rest.1    = 'TRUE') |,                        /* @D4 */
+     (racf.base.adsp.1    = 'TRUE') then                      /* @D4 */
      attr2 = 'YES'                                            /* @D4 */
   else                                                        /* @D4 */
      attr2 = 'NO'                                             /* @D4 */

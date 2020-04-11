@@ -83,7 +83,7 @@ PANEL07  = "RACFGRP7"    /* Add connection                 */ /* @AW */
 PANEL08  = "RACFGRP8"    /* List groups and descriptions   */ /* @AW */
 PANELM1  = "RACFMSG1"    /* Confirm Request (pop-up)       */ /* @AW */
 PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */ /* @AW */
-EDITMACR = "RACFEMAC"                                         /* @BP */
+EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @BP */
 
 ADDRESS ISPEXEC                                               /* @AO */
   Rclass = 'GROUP'

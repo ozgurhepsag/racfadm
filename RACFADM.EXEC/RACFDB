@@ -139,7 +139,7 @@
 /*           Z/OS V1R4 ON SINGLE AND SPLIT DATABASES.                */
 /*                                                                   */
 /*********************************************************************/
-EDITMACR = "RACFEMAC"                                         /* @A4 */
+EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @A4 */
 
 ADDRESS ISPEXEC "VGET (ERADISP ERATRACE)"                     /* @A5 */
 If (eratrace = 'YES') then Trace r                            /* @A5 */

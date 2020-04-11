@@ -8,7 +8,7 @@
 %
 +PROFILE%===>_PROFILE
 +CLASS  %===>_RCLASS  +
-+USER   %===>_USER    +
++USERID %===>_USER    +
 +
 {Use this function to determine if and how a user is authorized to a given
 {resource.

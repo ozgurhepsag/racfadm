@@ -81,5 +81,4 @@
 + When program{.....................$RCVTSWHE+
 )INIT
   .HELP   = #RACMENU
-)PROC
 )END

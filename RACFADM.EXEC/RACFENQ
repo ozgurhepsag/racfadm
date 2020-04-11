@@ -11,7 +11,7 @@
 /* @A0  200401  RACFA    Created REXX                                 */
 /*====================================================================*/
 PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */
-EDITMACR = "RACFEMAC"                                         /* @A3 */
+EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @A3 */
 QNAME    = "SYSDSN"
 DDNAME   = "RACFENQ"
 

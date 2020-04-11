@@ -67,7 +67,7 @@ PANEL12  = "RACFCLSB"    /* List members                   */ /* @AM */
 PANEL13  = "RACFCLSC"    /* Add class                      */ /* @AM */
 PANELM1  = "RACFMSG1"    /* Confirm Request (pop-up)       */ /* @AM */
 PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */ /* @AM */
-EDITMACR = "RACFEMAC"                                         /* @BD */
+EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @BD */
 
 ADDRESS ISPEXEC                                               /* @AG */
   Arg Rclass Rfilter Rdisp

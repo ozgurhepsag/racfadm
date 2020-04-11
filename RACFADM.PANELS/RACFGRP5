@@ -29,7 +29,7 @@
 _Z+ Z         Z
 )INIT
   .ZVARS   ='(SCIND1 SCIND2 OPTB ID ACC)'
-  .HELP    = #RACGRP8
+  .HELP    = #RACGRP5
   IF (&SAMT = ' ')
       &SAMT = &ZSCED
   &ZCMD = ' '

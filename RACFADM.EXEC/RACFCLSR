@@ -38,7 +38,7 @@
 /*====================================================================*/
 PANEL27  = "RACFCLSR"    /* List classes (show, refresh)   */ /* @AF */
 PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */ /* @AF */
-EDITMACR = "RACFEMAC"                                         /* @AT */
+EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @AT */
 
 ADDRESS ISPEXEC                                               /* @A7 */
   Arg class

@@ -2,8 +2,26 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  11 Apr 2020 - V14R7
+     - Other Items
+       -- Updated tutorials (#RACFCLS2, #RACFGRP5/8, #RACFDSN5 and
+          #RACFUSR2
+       -- Minor code tweak/cleanup in several modules
+       -- Updated $DIR members
+       -- Corrected bullets in $CHANGES
+
+  08 Apr 2020 - V14R6
+     - Other Items
+       -- Standardized panels RACFAUT1 and RACFGRP6/9, changed field
+          names, 'USER' to 'USERID' and 'ACC' to 'ACCESS'
+       -- Added two new tutorial panels, #RACDSN5/GRP5, updated
+          RACFDSN5/GRP5 to display these tutorials when F1 is pressed
+       -- Updated tutorial panel #RACFGRP8
+       -- Corrected several bullets in $CHANGES
+       -- Updated $DIR panel member
+
   08 Apr 2020 - V14R5
-     - Dataset (Group 2)
+     - Group (Option 2)
        -- Display error message when typing in a line command next
           to an userid of 'NONE', only exception is 'A'dd
        -- Do not display invalid userids, like 'Segment' or 'Command'
