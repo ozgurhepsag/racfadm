@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @DK  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @DJ  200408  RACFA    Removed duplicate line cmd (R-Rem)           */
 /* @DI  200407  RACFA    Added another dynamic area to RACFUSR2 panel */
 /* @DH  200407  RACFA    Display PW when 'Admin RACF API = N'         */
@@ -152,7 +153,13 @@ ADDRESS ISPEXEC                                               /* @BC */
   "CONTROL ERRORS RETURN"                                     /* @B1 */
   "VGET (ZSCREEN ERASHOW ERARAPI ERATRACE ERAISPP",           /* @D4 */
         "ERAULIB ERAADMN ERASINT ERADISP) ASIS"               /* @B7 */
-  If (eratrace = 'YES') then Trace r                          /* @BA */
+  If (eratrace <> 'NO') then do                               /* @DK */
+     parse source . . REXXPGM .                               /* @DK */
+     Say "*"COPIES("-",70)"*"                                 /* @DK */
+     Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @DK */
+     Say "*"COPIES("-",70)"*"                                 /* @DK */
+     interpret "Trace "SUBSTR(ERATRACE,1,1)                   /* @DK */
+  end                                                         /* @DK */
   If (ERAULIB <> "") then                                     /* @CP */
      TSOLIB = 'Y'                                             /* @CP */
   else                                                        /* @CP */
@@ -190,6 +197,12 @@ ADDRESS ISPEXEC                                               /* @BC */
      if (called <> 'YES') then
         "DISPLAY PANEL("PANEL01")"                            /* @BL */
   End
+
+  If (eratrace <> 'NO') then do                               /* @DK */
+     Say "*"COPIES("-",70)"*"                                 /* @DK */
+     Say "*"Center("End Program = "REXXPGM,70)"*"             /* @DK */
+     Say "*"COPIES("-",70)"*"                                 /* @DK */
+  end                                                         /* @DK */
 EXIT
 /*--------------------------------------------------------------------*/
 /*  Show all profiles for a filter                                    */

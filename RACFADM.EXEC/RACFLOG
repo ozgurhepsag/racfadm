@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AA  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @A9  200402  RACFA    Issue message if no LIBDEF ISPPLIB dataset   */
 /* @A8  200401  RACFA    Chged edit macro RACFLOGE to RACFEMAC        */
 /* @A7  200303  RACFA    Def/use variable for edit macro              */
@@ -19,12 +20,18 @@ EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @A8 */
 ADDRESS ISPEXEC                                               /* @A3 */
   PARSE ARG MEMBER                                            /* @A5 */
   "VGET (ERADISP ERATRACE) ASIS"                              /* @A2 */
-  If (eratrace = 'YES') then Trace r                          /* @A2 */
+  If (eratrace <> 'NO') then do                               /* @AA */
+     parse source . . REXXPGM .                               /* @AA */
+     Say "*"COPIES("-",70)"*"                                 /* @AA */
+     Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AA */
+     Say "*"COPIES("-",70)"*"                                 /* @AA */
+     interpret "Trace "SUBSTR(ERATRACE,1,1)                   /* @AA */
+  end                                                         /* @AA */
 
   "QLIBDEF ISPPLIB TYPE(DATASET) ID(DSNAME)"
   if (RC > 0) then do                                         /* @A9 */
      call errormsgs ERR19                                     /* @A9 */
-     exit                                                     /* @A9 */
+     call Goodbye                                             /* @AA */
   end                                                         /* @A9 */
   DSNAME = "'"STRIP(DSNAME,,"'")"("MEMBER")'"                 /* @A5 */
 
@@ -36,3 +43,15 @@ ADDRESS ISPEXEC                                               /* @A3 */
      OTHERWISE                                                /* @A1 */
           "BROWSE DATASET("DSNAME")"                          /* @A1 */
   END                                                         /* @A1 */
+  call Goodbye                                                /* @AA */
+EXIT                                                          /* @AA */
+/*--------------------------------------------------------------------*/
+/*  Check tracing is on, display flower box                      @AA  */
+/*--------------------------------------------------------------------*/
+GOODBYE:                                                      /* @AA */
+  If (eratrace <> 'NO') then do                               /* @AA */
+     Say "*"COPIES("-",70)"*"                                 /* @AA */
+     Say "*"Center("End Program = "REXXPGM,70)"*"             /* @AA */
+     Say "*"COPIES("-",70)"*"                                 /* @AA */
+  end                                                         /* @AA */
+EXIT                                                          /* @AA */

@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BV  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @BU  200410  RACFA    Fixed sorting entries prior to displaying    */
 /* @BT  200408  RACFA    Chg 'Dataset = NO' to NONE                   */
 /* @BS  200407  RACFA    EXCMD removed 'else msg_var = 1 to msg.0'    */
@@ -86,7 +87,13 @@ ADDRESS ISPEXEC                                               /* @AJ */
   "CONTROL ERRORS RETURN"                                     /* @B1 */
   "VGET (ZSCREEN ERASHOW ERATRACE ERAFLTR",                   /* @AD */
         "ERAADMN ERASINT ERADISP  ERARAPI) ASIS"              /* @BH */
-  If (eratrace = 'YES') then Trace r                          /* @AH */
+  If (eratrace <> 'NO') then do                               /* @BV */
+     parse source . . REXXPGM .                               /* @BV */
+     Say "*"COPIES("-",70)"*"                                 /* @BV */
+     Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @BV */
+     Say "*"COPIES("-",70)"*"                                 /* @BV */
+     interpret "Trace "SUBSTR(ERATRACE,1,1)                   /* @BV */
+  end                                                         /* @BV */
   If (ERAADMN = "YES") then do                                /* @B2 */
      SELCMDS2 = "ÝS¨Show,ÝL¨List,ÝD¨Dsn,ÝC¨Change,"||,        /* @B9 */
                 "ÝA¨Add,ÝR¨Remove"                            /* @B4 */
@@ -115,6 +122,12 @@ ADDRESS ISPEXEC                                               /* @AJ */
      If (Sure_? = 'YES') then                                 /* @A3 */
         call EXCMD "SETROPTS GENERIC(DATASET)"                /* @A3 */
   End                                                         /* @A3 */
+
+  If (eratrace <> 'NO') then do                               /* @BW */
+     Say "*"COPIES("-",70)"*"                                 /* @BW */
+     Say "*"Center("End Program = "REXXPGM,70)"*"             /* @BW */
+     Say "*"COPIES("-",70)"*"                                 /* @BW */
+  end                                                         /* @BW */
 EXIT
 /*--------------------------------------------------------------------*/
 /*  Show all profiles for a filter                                    */

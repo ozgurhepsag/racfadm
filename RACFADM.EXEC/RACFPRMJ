@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A6  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @A5  200224  RACFA    Place panels at top of REXX in variables     */
 /* @A4  200221  RACFA    Make 'ADDRESS ISPEXEC' defualt, reduce code  */
 /* @A3  200220  RACFA    Added ERATRACE=YES, then TRACE R             */
@@ -14,7 +15,14 @@ PANEL19 = "RACFPRMJ"    /* RACF parameters, menu option 5  */ /* @A5 */
 
 ADDRESS ISPEXEC                                               /* @A4 */
   "VGET (ERATRACE) ASIS"                                      /* @A3 */
-  If (eratrace = 'YES') then Trace r                          /* @A3 */
+  If (eratrace <> 'NO') then do                               /* @A6 */
+     parse source . . REXXPGM .                               /* @A6 */
+     Say "*"COPIES("-",70)"*"                                 /* @A6 */
+     Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A6 */
+     Say "*"COPIES("-",70)"*"                                 /* @A6 */
+     interpret "Trace "SUBSTR(ERATRACE,1,1)                   /* @A6 */
+  end                                                         /* @A6 */
+
   cvt     = c2x(storage(10,4))              /* cvt address            */
   cvtrac$ = d2x((x2d(cvt))+992)             /* cvt + 3E0 = cvtrac $   */
   cvtrac  = c2x(storage(cvtrac$,4))         /* cvtrac = access cntl   */
@@ -32,6 +40,12 @@ ADDRESS ISPEXEC                                               /* @A4 */
   call Racf_tape_options
   call Racf_statistics
   'display panel('PANEL19')'                                  /* @A5 */
+
+  If (eratrace <> 'NO') then do                               /* @A6 */
+     Say "*"COPIES("-",70)"*"                                 /* @A6 */
+     Say "*"Center("End Program = "REXXPGM,70)"*"             /* @A6 */
+     Say "*"COPIES("-",70)"*"                                 /* @A6 */
+  end                                                         /* @A6 */
 
 RETURN 0000                                 /* exit                   */
 /*--------------------------------------------------------------------*/

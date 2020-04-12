@@ -2,6 +2,20 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  12 Apr 2020 - V14R8
+     - Settings (Option 0)
+       -- Updated 'REXX trace' field
+          * Allow tracing labels or results, prior was only results,
+            o Default is no
+            o Updated tutorial
+          * When tracing, display flower box with REXX program's name
+            at invocation and exiting
+            o Allowing one to easily see what program is being
+              invoked/executed
+     - RACFdb (Option 6)
+       -- Changed SAYs to ISPF messages, when unable to obtain
+          RACF Database information
+
   11 Apr 2020 - V14R7
      - Other Items
        -- Updated tutorials (#RACFCLS2, #RACFGRP5/8, #RACFDSN5 and
@@ -72,7 +86,7 @@
           the userid field when 'A'dding a new userid, and when
           'C'hanging a userid display '(Enter userid)'
        -- When Settings (option 0) 'Admin RACF API = N', changed the
-          panels (RACFUSR5/6) to allow scolling the 'DATA' field when
+          panels (RACFUSR5/6) to allow scrolling the 'DATA' field when
           adding/changing a userid
 
   07 Apr 2020 - V13R9
@@ -81,7 +95,7 @@
      - User (Option 1)
        -- Added line command 'PW', Password reset, and updated tutorial
      - Other Items
-       -- Removed unnessary code from EXCMD subroutine, no longer
+       -- Removed unnecessary code from EXCMD subroutine, no longer
           needed (RACFUSR, RACFGRP, RACFDSN, RACFCLSR and RACFCLSG)
 
   07 Apr 2020 - V13R8

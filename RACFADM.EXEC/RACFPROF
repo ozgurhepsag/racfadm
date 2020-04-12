@@ -12,6 +12,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AS  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @AR  200410  RACFA    Chk for 'None', display message              */
 /* @AQ  200407  RACFA    Remove unnecessary spaces in group/profile   */
 /* @AP  200403  RACFA    Fix IRRXUTIL, needed single quotes on parms  */
@@ -68,7 +69,13 @@ irrx     = 0
 
 ADDRESS ISPEXEC
   "VGET (ERADISP ERASHOW ERATRACE) ASIS"                      /* @A9 */
-  If (eratrace = 'YES') then Trace r                          /* @AA */
+  If (eratrace <> 'NO') then do                               /* @AS */
+     parse source . . REXXPGM .                               /* @AS */
+     Say "*"COPIES("-",70)"*"                                 /* @AS */
+     Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AS */
+     Say "*"COPIES("-",70)"*"                                 /* @AS */
+     interpret "Trace "SUBSTR(ERATRACE,1,1)                   /* @AS */
+  end                                                         /* @AS */
 
   /* Call IRRXUTIL to extract the desired profile */
   call exccmd                                                 /* @A9 */
@@ -86,7 +93,7 @@ ADDRESS ISPEXEC
            call sez "R_admin failure"
         irrxout.0 = irrx
         call do_view_stem irrxout
-        exit 8
+        call Goodbye                                          /* @AS */
      end
   end
 
@@ -161,7 +168,18 @@ ADDRESS ISPEXEC
   /* --------------------------------- */                     /* @A3 */
   irrxout.0 = irrx
   call do_view_stem irrxout
+  call Goodbye                                                /* @AS */
 EXIT
+/*--------------------------------------------------------------------*/
+/*  Check tracing is on, display flower box                      @AS  */
+/*--------------------------------------------------------------------*/
+GOODBYE:                                                      /* @AS */
+  If (eratrace <> 'NO') then do                               /* @AS */
+     Say "*"COPIES("-",70)"*"                                 /* @AS */
+     Say "*"Center("End Program = "REXXPGM,70)"*"             /* @AS */
+     Say "*"COPIES("-",70)"*"                                 /* @AS */
+  end                                                         /* @AS */
+EXIT                                                          /* @AS */
 /*--------------------------------------------------------------------*/
 /*  Break up the line of data since it is larger than 50 chrs    @AC  */
 /*--------------------------------------------------------------------*/
@@ -215,7 +233,7 @@ Address ISPExec
      zedsmsg = 'Error'
      zedlmsg = 'Error.  LMINIT failed for VIO output file'
     'setmsg msg(isrz001)'
-    exit
+    call Goodbye                                              /* @AS */
   end
   Select                                                      /* @A4 */
      When (ERADISP = "VIEW") THEN                             /* @A4 */

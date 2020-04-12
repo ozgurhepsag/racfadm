@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A4  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @A3  200407  RACFA    Ensure REMPOP is accomplished when F3 (END)  */
 /* @A2  200407  RACFA    Made panel a variable                        */
 /* @A1  200407  RACFA    Removed unnecessary ISPF variables           */
@@ -14,13 +15,22 @@ PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */
 parse arg userid
 Address ISPExec
   "VGET (ERASHOW ERATRACE ERAADMN) ASIS"                      /* @A1 */
-  If (eratrace = 'YES') then Trace r
+  If (eratrace <> 'NO') then do                               /* @A4 */
+     parse source . . REXXPGM .                               /* @A4 */
+     Say "*"COPIES("-",70)"*"                                 /* @A4 */
+     Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A4 */
+     Say "*"COPIES("-",70)"*"                                 /* @A4 */
+     interpret "Trace "SUBSTR(ERATRACE,1,1)                   /* @A4 */
+  end                                                         /* @A4 */
   pswd = newpswd()
   'ADDPOP'
   'DISPLAY PANEL('panelpw')'                                  /* @A2 */
   disprc = RC                                                 /* @A3 */
   'REMPOP'
-  if (disprc = 8) then EXIT 8                                 /* @A3 */
+  if (disprc = 8) then do                                     /* @A3 */
+     cmd_rc = 8                                               /* @A4 */
+     call Goodbye                                             /* @A4 */
+  end                                                         /* @A4 */
   added = ''
   if (resume = 'Y') then
      added = 'RESUME'
@@ -35,7 +45,18 @@ Address ISPExec
      racflmsg = userid 'password reset to 'pswd
      "SETMSG MSG(RACF011)"
   end
+  call Goodbye                                                /* @A4 */
 EXIT cmd_rc                                                   /* @A3 */
+/*--------------------------------------------------------------------*/
+/*  Check tracing is on, display flower box                      @A4  */
+/*--------------------------------------------------------------------*/
+GOODBYE:                                                      /* @A4 */
+  If (eratrace <> 'NO') then do                               /* @A4 */
+     Say "*"COPIES("-",70)"*"                                 /* @A4 */
+     Say "*"Center("End Program = "REXXPGM,70)"*"             /* @A4 */
+     Say "*"COPIES("-",70)"*"                                 /* @A4 */
+  end                                                         /* @A4 */
+EXIT cmd_rc                                                   /* @A4 */
 /*--------------------------------------------------------------------*/
 /*  Generate password                                                 */
 /*--------------------------------------------------------------------*/

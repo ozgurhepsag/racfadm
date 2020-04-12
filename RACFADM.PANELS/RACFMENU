@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V14R7+)\-\
++\-\(%RACFADM - RACF Administration - V14R8+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options
@@ -46,7 +46,7 @@
       &ERACONF  = 'YES'      /* Confirm panel       = YES  */
   IF (&ERASHOW  NE DISPLAY, LOG, BOTH, NO)
       &ERASHOW  = 'NO'       /* RACF commands       = NO   */
-  IF (&ERATRACE NE YES, NO)
+  IF (&ERATRACE NE LABELS, RESULTS, NO)
       &ERATRACE = 'NO'       /* REXX trace          = NO   */
   VPUT (ERAADMN ERARAPI ERASINT ERADISP ERACONF ERASHOW +
         ERATRACE) PROFILE

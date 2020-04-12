@@ -20,8 +20,9 @@
  #RACMENU  Tutorial       Main menu, menu option T
  #RACNOTE  Tutorial       RACF notes (setup/use info)
  #RACPRMJ  Tutorial       JES2 parameters
- #RACPRM1  Tutorial       Settings - Customize options (1 of 2)
- #RACPRM2  Tutorial       Settings - Customize options (2 of 2)
+ #RACPRM1  Tutorial       Settings - Customize options (1 of 3)
+ #RACPRM2  Tutorial       Settings - Customize options (2 of 3)
+ #RACPRM3  Tutorial       Settings - Customize options (3 of 3)
  #RACPUBL  Tutorial       RACF publications
  #RACUSR2  Tutorial       User profile
  RACFAUT1  Authorization  Enter profile/class/user, menu opt 8 (hidden)

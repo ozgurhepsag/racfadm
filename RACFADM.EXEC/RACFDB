@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A7  200412  RACFA    Chg SAY to ISPF message                      */
+/* @A6  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @A5  200402  RACFA    Allow tracing, 'REXX trace = Y' in Settings  */
 /* @A4  200401  RACFA    Chged edit macro RACFLOGE to RACFEMAC        */
 /* @A3  200401  RACFA    VIEW/EDIT use edit macro, to turn off HILITE */
@@ -142,7 +144,13 @@
 EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @A4 */
 
 ADDRESS ISPEXEC "VGET (ERADISP ERATRACE)"                     /* @A5 */
-If (eratrace = 'YES') then Trace r                            /* @A5 */
+If (eratrace <> 'NO') then do                                 /* @A6 */
+   parse source . . REXXPGM .                                 /* @A6 */
+   Say "*"COPIES("-",70)"*"                                   /* @A6 */
+   Say "*"Center("Begin Program = "REXXPGM,70)"*"             /* @A6 */
+   Say "*"COPIES("-",70)"*"                                   /* @A6 */
+   interpret "Trace "SUBSTR(ERATRACE,1,1)                     /* @A6 */
+end                                                           /* @A6 */
 
 racflmsg = "Retrieving data - Please be patient"              /* @A1 */
 ADDRESS ISPEXEC "control display lock"                        /* @A1 */
@@ -255,7 +263,18 @@ SELECT                                                        /* @A1 */
         ADDRESS ISPEXEC "BROWSE DATAID("CMDDATID")"           /* @A1 */
 END                                                           /* @A1 */
 "FREE FI("DDNAME")"                                           /* @A1 */
+call Goodbye                                                  /* @A6 */
 EXIT
+/*--------------------------------------------------------------------*/
+/*  Check tracing is on, display flower box                      @A6  */
+/*--------------------------------------------------------------------*/
+GOODBYE:                                                      /* @A6 */
+  If (eratrace <> 'NO') then do                               /* @A6 */
+     Say "*"COPIES("-",70)"*"                                 /* @A6 */
+     Say "*"Center("End Program = "REXXPGM,70)"*"             /* @A6 */
+     Say "*"COPIES("-",70)"*"                                 /* @A6 */
+  end                                                         /* @A6 */
+EXIT                                                          /* @A6 */
 /*--------------------------------+----------------------------------*/
 /*                           SUBROUTE AREA                           */
 /*--------------------------------+----------------------------------*/
@@ -305,11 +324,14 @@ $RDSN_SETUP:
   /* CALL LISTDSI TO TEST IF THE RACF DATASET IS CATALOGED. */
   /*--------------------------------------------------------*/
   FRC = LISTDSI(RDSN)
-  IF FRC /= 0 THEN DO
-     SAY 'ERROR: INVALID OR UNKNOWN RACF DATABASE NAME < 'RDSN '>'
-     SAY "DATA SET NAME MUST BE A CATALOGED,",
-         "RESTRUCTURED RACF DATABASE"
-     EXIT
+  IF (FRC /= 0) THEN DO
+     racfsmsg = ''                                            /* @A7 */
+     racflmsg = 'Invalid or unknown RACF',                    /* @A7 */
+                'database name: 'RDSN'. ',                    /* @A7 */
+                'Dataset must be cataloged,',                 /* @A7 */
+                'restructured RACF database.'                 /* @A7 */
+     "SETMSG MSG(RACF011)"                                    /* @A7 */
+     call Goodbye                                             /* @A6 */
   END
   BSIZE  = SYSBLKSIZE
   VOLSER = SYSVOLUME
@@ -318,10 +340,12 @@ $RDSN_SETUP:
   /*----------------------------------------*/
   /* TEST TO SEE IF THE BLOCK SIZE IS 4096. */
   /*----------------------------------------*/
-  IF BSIZE /= 4096 THEN DO
-     SAY "ERROR: RACF DATABASE ENTERED DOES NOT HAVE A",
-         "RESTRUCTURED 4096 BLOCK SIZE."
-     EXIT
+  IF (BSIZE /= 4096) THEN DO
+     racfsmsg = ''                                            /* @A7 */
+     racflmsg = "RACF database entered does not have a",      /* @A7 */
+                "restructured 4096 block size."               /* @A7 */
+     "SETMSG MSG(RACF011)"                                    /* @A7 */
+     call Goodbye                                             /* @A6 */
   END
   /*---------------------------------------------------*/
   /* ALLOCATE AND READ IN THE ICB TO GET BAM POINTERS. */

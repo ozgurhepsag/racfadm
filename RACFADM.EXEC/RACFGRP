@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BZ  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @BY  200410  RACFA    Do not display 'Segment' or 'Command'        */
 /* @BX  200410  RACFA    If id = 'None' only allow line cmd 'A'dd     */
 /* @BW  200407  RACFA    EXCMD removed 'else msg_var = 1 to msg.0'    */
@@ -96,7 +97,13 @@ ADDRESS ISPEXEC                                               /* @AO */
   "CONTROL ERRORS RETURN"                                     /* @B1 */
   "VGET (ZSCREEN ERASHOW ERATRACE ERASINT",                   /* @AI */
         "ERAADMN ERADISP ERARAPI) ASIS"                       /* @BS */
-  If (eratrace = 'YES') then Trace r                          /* @AM */
+  If (eratrace <> 'NO') then do                               /* @BZ */
+     parse source . . REXXPGM .                               /* @BZ */
+     Say "*"COPIES("-",70)"*"                                 /* @BZ */
+     Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @BZ */
+     Say "*"COPIES("-",70)"*"                                 /* @BZ */
+     interpret "Trace "SUBSTR(ERATRACE,1,1)                   /* @BZ */
+  end
   If (ERAADMN = "YES") then                                   /* @B2 */
      If (ERARAPI = "YES") then                                /* @BS */
         SELCMDS = "ÝS¨Show,ÝL¨List,ÝP¨Profile,"||,            /* @BH */
@@ -118,6 +125,12 @@ ADDRESS ISPEXEC                                               /* @AO */
         "DISPLAY PANEL("PANEL01")"                            /* @AW */
      end
   end
+
+  If (eratrace <> 'NO') then do                               /* @BZ */
+     Say "*"COPIES("-",70)"*"                                 /* @BZ */
+     Say "*"Center("End Program = "REXXPGM,70)"*"             /* @BZ */
+     Say "*"COPIES("-",70)"*"                                 /* @BZ */
+  end                                                         /* @BZ */
 EXIT
 /*--------------------------------------------------------------------*/
 /*  Show all profiles for a filter                                    */

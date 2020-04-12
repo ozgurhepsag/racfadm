@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A6  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @A5  200402  RACFA    Chg LRECL=132 to LRECL=80                    */
 /* @A4  200402  RACFA    Issue message if no LIBDEF ISPPLIB dataset   */
 /* @A3  200401  RACFA    Chged edit macro RACFLOGE to RACFEMAC        */
@@ -17,13 +18,19 @@ DDNAME   = "RACFENQ"
 
 ADDRESS ISPEXEC
   "VGET (ERADISP ERASHOW ERATRACE) ASIS"
-  If (eratrace = 'YES') then Trace r
+  If (eratrace <> 'NO') then do                               /* @A6 */
+     parse source . . REXXPGM .                               /* @A6 */
+     Say "*"COPIES("-",70)"*"                                 /* @A6 */
+     Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A6 */
+     Say "*"COPIES("-",70)"*"                                 /* @A6 */
+     interpret "Trace "SUBSTR(ERATRACE,1,1)                   /* @A6 */
+  end                                                         /* @A6 */
 
   "QLIBDEF ISPPLIB TYPE(DATASET) ID(DSNAME)"
   if (RC > 0) then do                                         /* @A4 */
      call errormsgs ERR19                                     /* @A4 */
-     exit                                                     /* @A4 */
-  end                                                         /* @A4 */
+     call Goodbye                                             /* @A4 */
+  end                                                         /* @A6 */
 
   RNAME = STRIP(DSNAME,,"'")
   "QUERYENQ TABLE(ENQTBL) QNAME(QNAME) RNAME(RNAME) XSYS"
@@ -76,7 +83,18 @@ ADDRESS ISPEXEC
           "BROWSE DATAID("CMDDATID")"
   END
   ADDRESS TSO "FREE FI("DDNAME")"
+  call Goodbye                                                /* @A6 */
 EXIT
+/*--------------------------------------------------------------------*/
+/*  Check tracing is on, display flower box                      @A6  */
+/*--------------------------------------------------------------------*/
+GOODBYE:                                                      /* @A6 */
+  If (eratrace <> 'NO') then do                               /* @A6 */
+     Say "*"COPIES("-",70)"*"                                 /* @A6 */
+     Say "*"Center("End Program = "REXXPGM,70)"*"             /* @A6 */
+     Say "*"COPIES("-",70)"*"                                 /* @A6 */
+  end                                                         /* @A6 */
+EXIT                                                          /* @A6 */
 /*--------------------------------------------------------------------*/
 /*  Display RACF command and return code                              */
 /*--------------------------------------------------------------------*/

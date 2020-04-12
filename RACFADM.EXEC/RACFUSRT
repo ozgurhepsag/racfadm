@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AT  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @AS  200324  RACFA    Allow both display/logging of RACF commands  */
 /* @AR  200324  RACFA    Allow logging RACF commands to ISPF Log file */
 /* @AQ  200320  RACFA    Del all users dsns, prior was ISPPROF/JOBLIB */
@@ -40,7 +41,13 @@ X       = MSG("OFF")    /* No informational messages       */ /* @AD */
 
 ADDRESS ISPEXEC                                               /* @AF */
   "VGET (ERASHOW ERATRACE ERAISPP ERACTLG ERAULIB) ASIS"      /* @A4 */
-  If (eratrace = 'YES') then Trace r                          /* @A6 */
+  If (eratrace <> 'NO') then do                               /* @AT */
+     parse source . . REXXPGM .                               /* @AT */
+     Say "*"COPIES("-",70)"*"                                 /* @AT */
+     Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AT */
+     Say "*"COPIES("-",70)"*"                                 /* @AT */
+     interpret "Trace "SUBSTR(ERATRACE,1,1)                   /* @AT */
+  end                                                         /* @AT */
 
   rc      = GETEGN(ERAEGN,53,'01','NO','YES')  /* egn=Y/N */  /* @AE */
   ASTERIC = "*"                                               /* @AE */
@@ -50,28 +57,33 @@ ADDRESS ISPEXEC                                               /* @AF */
   parse arg era_cmd user tsoproc tsoacct defgrp owner joblib  /* @AH */
   interpret 'signal ' era_cmd
 /*--------------------------------------------------------------------*/
-/*  Add/change userid datasets                                        */
+/*  Change userid                                                     */
 /*--------------------------------------------------------------------*/
 CHGD:
+  cmd_rc = 0
+  call goodbye                                                /* @AT */
 RETURN RC                                                     /* @AJ */
+/*--------------------------------------------------------------------*/
+/*  Add userid                                                        */
+/*--------------------------------------------------------------------*/
 ADDD:                                                         /* @AJ */
   cmd = "ADDSD  ('"user"."ASTERIC"') UACC(READ)",             /* @AG */
         "OWNER("owner")"                                      /* @AG */
   call exccmd                                                 /* @AG */
   IF (cmd_rc > 0) then                                        /* @AM */
-     return cmd_rc                                            /* @AM */
+     call Goodbye                                             /* @AT */
 
   /*- Authorize Library allocation                -*/
   cmd = "PERMIT '"user"."ASTERIC"' GEN ACC(ALTER)",           /* @AG */
                  "ID("USERID()")"                             /* @AG */
   call exccmd                                                 /* @AG */
   IF (cmd_rc > 0) then                                        /* @AM */
-     return cmd_rc                                            /* @AM */
+     call Goodbye                                             /* @AT */
 
   cmd = "SETROPTS REFRESH GENERIC(DATASET)"                   /* @AG */
   call exccmd                                                 /* @AG */
   IF (cmd_rc > 0) then                                        /* @AM */
-     return cmd_rc                                            /* @AM */
+     call Goodbye                                             /* @AT */
 
   /*- Delete user alias for datasets -*/
   cmd = "DEL '"user"' ALIAS PURGE"                            /* @AG */
@@ -82,7 +94,7 @@ ADDD:                                                         /* @AJ */
   call exccmd                                                 /* @AG */
   IF (cmd_rc > 0) then do                                     /* @AO */
      call racfmsgs ERR018  /* Invalid user catalog */         /* @AO */
-     return cmd_rc                                            /* @AM */
+     call Goodbye                                             /* @AT */
   end                                                         /* @AO */
 
   /*- Allocate ISPF profile          -*/
@@ -109,31 +121,31 @@ ADDD:                                                         /* @AJ */
   cmd = "PE "tsoacct" CLASS(ACCTNUM) ACC(READ) ID("defgrp")"  /* @AG */
   call exccmd                                                 /* @AG */
   IF (cmd_rc > 0) then                                        /* @AM */
-     return cmd_rc                                            /* @AM */
+     call Goodbye                                             /* @AT */
   cmd = "PE "tsoproc" CLASS(TSOPROC) ACC(READ) ID("defgrp")"  /* @AG */
   call exccmd                                                 /* @AG */
   IF (cmd_rc > 0) then                                        /* @AM */
-     return cmd_rc                                            /* @AM */
+     call Goodbye                                             /* @AT */
 
   cmd = "SETROPTS RACLIST(ACCTNUM) REFRESH"                   /* @AG */
   call exccmd                                                 /* @AG */
   IF (cmd_rc > 0) then                                        /* @AM */
-     return cmd_rc                                            /* @AM */
+     call Goodbye                                             /* @AT */
   cmd = "SETROPTS RACLIST(TSOPROC) REFRESH"                   /* @AG */
   call exccmd                                                 /* @AG */
   IF (cmd_rc > 0) then                                        /* @AM */
-     return cmd_rc                                            /* @AM */
+     call Goodbye                                             /* @AT */
 
   call Delete_Admin_permits
 RETURN RC
 /*--------------------------------------------------------------------*/
-/*  Delete userid dataset profile                                     */
+/*  Delete userid                                                     */
 /*--------------------------------------------------------------------*/
 DELD:
   cmd = "DELDSD  ('"user"."ASTERIC"')"                        /* @AG */
   call exccmd                                                 /* @AG */
   IF (cmd_rc > 0) then                                        /* @AM */
-     return cmd_rc                                            /* @AM */
+     call Goodbye                                             /* @AT */
 
   X = OUTTRAP("REC.")                                         /* @AQ */
   ADDRESS TSO "LISTCAT LEV('"user"')"                         /* @AQ */
@@ -149,20 +161,20 @@ DELD:
 
   cmd = "DELETE ('"user"') ALIAS"                             /* @AK */
   call exccmd                                                 /* @AG */
-RETURN cmd_rc                                                 /* @AM */
+call Goodbye                                                  /* @AT */
 /*--------------------------------------------------------------------*/
-/*  Delete temporary autorizations for RACF administrator             */
+/*  Delete temporary authorizations for RACF administrator            */
 /*--------------------------------------------------------------------*/
 DELETE_ADMIN_PERMITS:
   cmd = "PERMIT '"user"."ASTERIC"' GEN DELETE",               /* @AG */
                  "ID("USERID()")"                             /* @AG */
   call exccmd                                                 /* @AG */
   IF (cmd_rc > 0) then                                        /* @AM */
-     return cmd_rc                                            /* @AM */
+     call Goodbye                                             /* @AT */
 
   cmd = "SETROPTS REFRESH GENERIC(DATASET)"                   /* @AG */
   call exccmd                                                 /* @AG */
-RETURN cmd_rc
+call Goodbye                                                  /* @AT */
 /*--------------------------------------------------------------------*/
 /*  Enhanced Generic Name (EGN) = Yes or No                           */
 /*--------------------------------------------------------------------*/
@@ -210,3 +222,13 @@ ADDRESS ISPEXEC                                               /* @AG */
      'log msg(isrz003)'                                       /* @AR */
   END                                                         /* @AR */
 RETURN                                                        /* @BB */
+/*--------------------------------------------------------------------*/
+/*  Check tracing is on, display flower box                      @AT  */
+/*--------------------------------------------------------------------*/
+GOODBYE:                                                      /* @AT */
+  If (eratrace <> 'NO') then do                               /* @AT */
+     Say "*"COPIES("-",70)"*"                                 /* @AT */
+     Say "*"Center("End Program = "REXXPGM,70)"*"             /* @AT */
+     Say "*"COPIES("-",70)"*"                                 /* @AT */
+  end                                                         /* @AT */
+EXIT CMD_RC                                                   /* @AT */

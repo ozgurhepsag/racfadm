@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A4  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @A3  200301  RACFA    Standardize messaging                        */
 /* @A2  200221  RACFA    Make 'ADDRESS ISPEXEC' defualt, reduce code  */
 /* @A1  200220  RACFA    Added ERATRACE=YES, then TRACE R             */
@@ -10,7 +11,13 @@
 /*====================================================================*/
 ADDRESS ISPEXEC                                               /* @A2 */
   "VGET (ERATRACE) ASIS"                                      /* @A1 */
-  If (eratrace = 'YES') then Trace r                          /* @A1 */
+  If (eratrace <> 'NO') then do                               /* @A4 */
+     parse source . . REXXPGM .                               /* @A4 */
+     Say "*"COPIES("-",70)"*"                                 /* @A4 */
+     Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A4 */
+     Say "*"COPIES("-",70)"*"                                 /* @A4 */
+     interpret "Trace "SUBSTR(ERATRACE,1,1)                   /* @A4 */
+  end                                                         /* @A4 */
   /*--------------------------------------------*/
   /*  Call IRRUT100 for cross reference report  */
   /*--------------------------------------------*/
@@ -43,7 +50,7 @@ Address ISPExec
      racfsmsg = 'Allocation error'                            /* @A3 */
      racflmsg = 'LMINIT failed for SYSPRINT'                  /* @A3 */
      'setmsg msg(racf001)'                                    /* @A3 */
-     exit
+     call Goodbye                                             /* @DK */
   end
   'Browse dataid('id')'
   'lmfree dataid('id')'
@@ -52,4 +59,16 @@ Address TSO
   'delstack'
   'free  f(sysut1 sysprint sysin)'
   'alloc f(sysin) ds(*) reuse'
-RETURN
+
+  call Goodbye
+EXIT
+/*--------------------------------------------------------------------*/
+/*  Check tracing is on, display flower box                      @DK  */
+/*--------------------------------------------------------------------*/
+GOODBYE:                                                      /* @DK */
+  If (eratrace <> 'NO') then do                               /* @DK */
+     Say "*"COPIES("-",70)"*"                                 /* @DK */
+     Say "*"Center("End Program = "REXXPGM,70)"*"             /* @DK */
+     Say "*"COPIES("-",70)"*"                                 /* @DK */
+  end                                                         /* @DK */
+EXIT                                                          /* @DK */

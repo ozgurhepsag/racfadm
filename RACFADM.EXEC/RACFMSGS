@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AA  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @A9  200410  RACFA    Added ERR21 msg, 'Invalid entry - NONE'      */
 /* @A8  200402  RACFA    Added ERR20 msg, 'Invalid security access'   */
 /* @A7  200402  RACFA    Added ERR19 msg, 'No LIBDEF ISPPLIB DSN'     */
@@ -17,7 +18,13 @@
 ADDRESS ISPEXEC                                               /* @A4 */
   Arg code
   "VGET (ERATRACE) ASIS"                                      /* @A2 */
-  If (eratrace = 'YES') then Trace r                          /* @A3 */
+  If (eratrace <> 'NO') then do                               /* @AA */
+     parse source . . REXXPGM .                               /* @AA */
+     Say "*"COPIES("-",70)"*"                                 /* @AA */
+     Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AA */
+     Say "*"COPIES("-",70)"*"                                 /* @AA */
+     interpret "Trace "SUBSTR(ERATRACE,1,1)                   /* @AA */
+  end                                                         /* @AA */
 
   racfsmsg = ''; racflsmsg = ''
   Select
@@ -114,4 +121,10 @@ ADDRESS ISPEXEC                                               /* @A4 */
      otherwise nop
   End
   "SETMSG MSG(RACF011)"
+
+  If (eratrace <> 'NO') then do                               /* @AA */
+     Say "*"COPIES("-",70)"*"                                 /* @AA */
+     Say "*"Center("End Program = "REXXPGM,70)"*"             /* @AA */
+     Say "*"COPIES("-",70)"*"                                 /* @AA */
+  end                                                         /* @AA */
 RETURN

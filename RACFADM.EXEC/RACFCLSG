@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BJ  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @BI  200407  RACFA    EXCMD removed 'else msg_var = 1 to msg.0'    */
 /* @BH  200404  RACFA    'Admin RACF API = Y' then display 'P'rofile  */
 /* @BG  200402  RACFA    Chg LRECL=132 to LRECL=80                    */
@@ -81,7 +82,13 @@ ADDRESS ISPEXEC                                               /* @AG */
   "CONTROL ERRORS RETURN"                                     /* @AS */
   "VGET (ZSCREEN ERASHOW ERATRACE ERACONF",                   /* @AA */
         "ERASINT ERAADMN ERADISP  ERARAPI) ASIS"              /* @AC */
-  If (eratrace = 'YES') then Trace r                          /* @AE */
+  If (eratrace <> 'NO') then do                               /* @BJ */
+     parse source . . REXXPGM .                               /* @BJ */
+     Say "*"COPIES("-",70)"*"                                 /* @BJ */
+     Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @BJ */
+     Say "*"COPIES("-",70)"*"                                 /* @BJ */
+     interpret "Trace "SUBSTR(ERATRACE,1,1)                   /* @BJ */
+  end
   If (ERAADMN = "YES") then do                                /* @B5 */
      IF (ERARAPI = "YES") THEN                                /* @BH */
         SELCMDS = "ÝS¨Show,ÝL¨List,ÝP¨Profile,"||,            /* @BB */
@@ -116,6 +123,11 @@ ADDRESS ISPEXEC                                               /* @AG */
            call SHOWCMD                                       /* @AF */
      end
   end
+  If (eratrace <> 'NO') then do                               /* @BJ */
+     Say "*"COPIES("-",70)"*"                                 /* @BJ */
+     Say "*"Center("End Program = "REXXPGM,70)"*"             /* @BJ */
+     Say "*"COPIES("-",70)"*"                                 /* @BJ */
+  end                                                         /* @BJ */
 RETURN 0
 /*--------------------------------------------------------------------*/
 /*  Show all profiles for a filter                                    */

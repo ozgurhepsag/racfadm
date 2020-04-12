@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @B3  200412  RACFA    Deleted subroutine 'ERROR', not needed       */
+/* @B2  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @B1  200402  RACFA    Chg LRECL=132 to LRECL=80                    */
 /* @AZ  200402  RACFA    Fixed VIEW/EDIT, was missing edit macro var. */
 /* @AY  200401  RACFA    Create subroutine to VIEW/EDIT/BROWSE        */
@@ -51,13 +53,25 @@ ADDRESS ISPEXEC                                               /* @A6 */
   selection = 0  /* something selected */
   "CONTROL ERRORS RETURN"                                     /* @AL */
   "VGET (ZSCREEN ERATRACE ERASHOW ERASINT ERADISP) ASIS"      /* @AR */
-  If (eratrace = 'YES') then Trace r                          /* @A4 */
+  If (eratrace <> 'NO') then do                               /* @B2 */
+     parse source . . REXXPGM .                               /* @B2 */
+     Say "*"COPIES("-",70)"*"                                 /* @B2 */
+     Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @B2 */
+     Say "*"COPIES("-",70)"*"                                 /* @B2 */
+     interpret "Trace "SUBSTR(ERATRACE,1,1)                   /* @B2 */
+  end                                                         /* @B2 */
   rlv = SYSVAR('SYSLRACF')
 
   seconds = time('S')
   call Select_class
   if selection then rc = display_table_permit()
   "TBEND" tblb
+
+  If (eratrace <> 'NO') then do                               /* @B2 */
+     Say "*"COPIES("-",70)"*"                                 /* @B2 */
+     Say "*"Center("End Program = "REXXPGM,70)"*"             /* @B2 */
+     Say "*"COPIES("-",70)"*"                                 /* @B2 */
+  end                                                         /* @B2 */
 EXIT
 /*--------------------------------------------------------------------*/
 /*  Get permits                                                       */
@@ -432,9 +446,3 @@ SHOWCMD:                                                      /* @AV */
      'log msg(isrz003)'                                       /* @AU */
   END                                                         /* @AU */
 RETURN                                                        /* @AV */
-/*--------------------------------------------------------------------*/
-/*  Error message                                                     */
-/*--------------------------------------------------------------------*/
-ERROR:
-  say 'Error RACFCLSS at line 'sigl
-EXIT

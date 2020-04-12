@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AI  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @AH  200324  RACFA    Allow both display/logging of RACF commands  */
 /* @AG  200324  RACFA    Allow logging RACF commands to ISPF Log file */
 /* @AF  200303  RACFA    Del 'EXCMD' procedure, not referenced        */
@@ -30,7 +31,13 @@ ADDRESS ISPEXEC                                               /* @A6 */
   Arg rclass profile user
   "CONTROL ERRORS RETURN"                                     /* @AC */
   "VGET (ZSCREEN ERASHOW ERATRACE) ASIS"                      /* @A3 */
-  If (eratrace = 'YES') then Trace r                          /* @A4 */
+  If (eratrace <> 'NO') then do                               /* @AI */
+     parse source . . REXXPGM .                               /* @AI */
+     Say "*"COPIES("-",70)"*"                                 /* @AI */
+     Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AI */
+     Say "*"COPIES("-",70)"*"                                 /* @AI */
+     interpret "Trace "SUBSTR(ERATRACE,1,1)                   /* @AI */
+  end
 
   rlv    = SYSVAR('SYSLRACF')
   called = SYSVAR('SYSNEST')
@@ -48,6 +55,11 @@ ADDRESS ISPEXEC                                               /* @A6 */
         ret_code = rc
      end
   end
+  If (eratrace <> 'NO') then do                               /* @AI */
+     Say "*"COPIES("-",70)"*"                                 /* @AI */
+     Say "*"Center("End Program = "REXXPGM,70)"*"             /* @AI */
+     Say "*"COPIES("-",70)"*"                                 /* @AI */
+  end                                                         /* @AI */
 RETURN 0
 /*--------------------------------------------------------------------*/
 /*  Display profile permits                                           */

@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A8  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @A7  200228  RACFA    Removed ERASHOW from VGET, not used          */
 /* @A6  200224  RACFA    Standardize quotes, chg single to double     */
 /* @A5  200224  RACFA    Place panels at top of REXX in variables     */
@@ -18,7 +19,13 @@ ADDRESS ISPEXEC                                               /* @A3 */
   Arg message
   Signal off error
   "VGET (ERATRACE) ASIS"                                      /* @A7 */
-  If (eratrace = 'YES') then Trace r                          /* @A3 */
+  If (eratrace <> 'NO') then do                               /* @A8 */
+     parse source . . REXXPGM .                               /* @A8 */
+     Say "*"COPIES("-",70)"*"                                 /* @A8 */
+     Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A8 */
+     Say "*"COPIES("-",70)"*"                                 /* @A8 */
+     interpret "Trace "SUBSTR(ERATRACE,1,1)                   /* @A8 */
+  end                                                         /* @A8 */
 
   answer  = 'NO'
   zwinttl = 'CONFIRM REQUEST'
@@ -35,4 +42,9 @@ ADDRESS ISPEXEC                                               /* @A3 */
   End
   zwinttl = ' '
 
+  If (eratrace <> 'NO') then do                               /* @A8 */
+     Say "*"COPIES("-",70)"*"                                 /* @A8 */
+     Say "*"Center("End Program = "REXXPGM,70)"*"             /* @A8 */
+     Say "*"COPIES("-",70)"*"                                 /* @A8 */
+  end                                                         /* @A8 */
 RETURN answer

@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMhDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AW  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @AV  200407  RACFA    EXCMD removed 'else msg_var = 1 to msg.0'    */
 /* @AU  200402  RACFA    Chg LRECL=132 to LRECL=80                    */
 /* @AT  200401  RACFA    Chged edit macro RACFLOGE to RACFEMAC        */
@@ -44,7 +45,13 @@ ADDRESS ISPEXEC                                               /* @A7 */
   Arg class
   "CONTROL ERRORS RETURN"                                     /* @AJ */
   "VGET (ZSCREEN ERAADMN ERASHOW ERATRACE ERADISP) ASIS"      /* @AL */
-  If (eratrace = 'YES') then Trace r                          /* @A5 */
+  If (eratrace <> 'NO') then do                               /* @AW */
+     parse source . . REXXPGM .                               /* @AW */
+     Say "*"COPIES("-",70)"*"                                 /* @AW */
+     Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AW */
+     Say "*"COPIES("-",70)"*"                                 /* @AW */
+     interpret "Trace "SUBSTR(ERATRACE,1,1)                   /* @AW */
+  end                                                         /* @AW */
   If (ERAADMN = "YES") then                                   /* @AC */
       SELCMDS = "ÝS¨Show,ÝL¨List,ÝR¨Refresh"                  /* @AL */
   else                                                        /* @AC */
@@ -58,6 +65,12 @@ ADDRESS ISPEXEC                                               /* @A7 */
   END                                                         /* @A9 */
   else
      call RACFCLSG class '**' 'YES' /*generic prof routine*/
+
+  If (eratrace <> 'NO') then do                               /* @AW */
+     Say "*"COPIES("-",70)"*"                                 /* @AW */
+     Say "*"Center("End Program = "REXXPGM,70)"*"             /* @AW */
+     Say "*"COPIES("-",70)"*"                                 /* @AW */
+  end                                                         /* @AW */
 EXIT
 /*--------------------------------------------------------------------*/
 /*  Select class                                                      */

@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A4  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @A3  200224  RACFA    Place panels at top of REXX in variables     */
 /* @A2  200221  RACFA    Make 'ADDRESS ISPEXEC' defualt, reduce code  */
 /* @A1  200220  RACFA    Added ERATRACE=YES, then TRACE R             */
@@ -12,5 +13,19 @@ PANEL30 = "RACFPRMU"    /* Settings, menu option 0         */ /* @A3 */
 
 ADDRESS ISPEXEC                                               /* @A2 */
   "VGET (ERATRACE) ASIS"                                      /* @A1 */
-  If (eratrace = 'YES') then Trace r                          /* @A1 */
+  If (eratrace <> 'NO') then do                               /* @A4 */
+     parse source . . REXXPGM .                               /* @A4 */
+     Say "*"COPIES("-",70)"*"                                 /* @A4 */
+     Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A4 */
+     Say "*"COPIES("-",70)"*"                                 /* @A4 */
+     interpret "Trace "SUBSTR(ERATRACE,1,1)                   /* @A4 */
+  end                                                         /* @A4 */
+
   "Display Panel("PANEL30")"                                  /* @A3 */
+
+  If (eratrace <> 'NO') then do                               /* @A4 */
+     Say "*"COPIES("-",70)"*"                                 /* @A4 */
+     Say "*"Center("End Program = "REXXPGM,70)"*"             /* @A4 */
+     Say "*"COPIES("-",70)"*"                                 /* @A4 */
+  end                                                         /* @A4 */
+EXIT                                                          /* @A4 */
