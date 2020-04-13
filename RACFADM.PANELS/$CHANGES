@@ -2,20 +2,33 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  13 Apr 2020 - V15R4
+     - Enqueues (Option E)
+       -- Take into account user may have 'TSO PROFILE MSGID', making
+          placing a message as the 1st word of text string
+            IKJ79326I Application-level CLIST DDNAME=SYS#####"
+
+  13 Apr 2020 - V15R3
+     - Enqueues (Option E)
+       -- Chged code, to take into consideration, the RACFADM REXX
+          dataset could be ALTLIB as EXEC, instead of CLIST
+     - Other Items
+       -- Changed wording on ERR07 in RACFMSGS
+
   13 Apr 2020 - V15R2
      - Enqueues (Option E)
-       * If 'TSO ALTLIB DISPLAY' does not return below statement,
-         skip displaying ALTLIB dataset
-           "Application-level CLIST DDNAME=SYS#####"
+       -- If 'TSO ALTLIB DISPLAY' does not return below statement,
+          skip displaying ALTLIB dataset
+            "Application-level CLIST DDNAME=SYS#####"
      - User and Enqueues (Option U/E)
-       * Use PARSE SOURCE to assign the program name as the
-         DDname when allocating files, in hopes of assisting in
-         trouble-shooting
+       -- Use PARSE SOURCE to assign the program name as the
+          DDname when allocating files, in hopes of assisting in
+          trouble-shooting
 
   13 Apr 2020 - V15R1
      - Settings (Option 0)
        -- Enhanced 'REXX Trace' to display only the REXX program name
-          o Updated tutorial
+          * Updated tutorial
 
   12 Apr 2020 - V15R0
      - Main Menu

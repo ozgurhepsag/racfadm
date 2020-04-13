@@ -14,7 +14,7 @@
 %  Reset           +Redisplay all rows and sort first column
 +
 +Line Commands
-%  S  !Show        +List of groups connected to the user
+%  S  !Show        +List of groups user is connected to
 %  SE !Search      +Analyze user access to general resource profiles
 %  L  !List        +Issue LISTUSER command
 %  P  !Profile     +List user profile using IRRXUTIL (admin)

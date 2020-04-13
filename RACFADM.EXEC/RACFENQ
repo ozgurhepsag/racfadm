@@ -3,6 +3,9 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AD  200413  RACFA    Take into account, PROFILE MSGID(ON)         */
+/* @AC  200413  RACFA    Del ver word 2 is CLIST, some may be EXEC    */
+/* @AB  200413  RACFA    Added more comments above 'GET_CLIST_DSN'    */
 /* @AA  200413  RACFA    If ALTLIB, not have 'Appl Lev', skip code    */
 /* @A9  200413  RACFA    Get REXX pgm name and use as DD name         */
 /* @A8  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
@@ -138,17 +141,30 @@ RETURN                                                        /* @A7 */
 /*--------------------------------------------------------------------*/
 /*  Get CLIST dataset name                                       @A7  */
 /*--------------------------------------------------------------------*/
+/*  1) The 'ALTLIB DISPLAY' statement, will look for                  */
+/*     'Application-level' in the display in order to obtain          */
+/*     the DDname of the ALTLIBed dataset                             */
+/*       Current search order (by DDNAME) is:                         */
+/*       Application-level CLIST DDNAME=SYS00529                      */
+/*       System-level EXEC       DDNAME=SYSEXEC                       */
+/*       System-level CLIST      DDNAME=SYSPROC                       */
+/*  2) The 'LISTA STATUS' will display all the DDnames and datasets   */
+/*     allocated, allowing the capability to obtain the dataset name  */
+/*     allocated to the 'Application-level CLIST' ddname (SYS#####)   */
+/*--------------------------------------------------------------------*/
 GET_CLIST_DSN:                                                /* @A7 */
 ADDRESS TSO                                                   /* @A7 */
   X = OUTTRAP("REC.")                                         /* @A7 */
   "ALTLIB DISPLAY"                                            /* @A7 */
   X = OUTTRAP("OFF")                                          /* @A7 */
-                                                              /* @A7 */
-  PARSE VAR REC.2 W1 W2 "DDNAME="DDALTLIB                     /* @A7 */
+
+  IF (SUBSTR(REC.2,1,3) = "IKJ") THEN                         /* @AD */
+     PARSE VAR REC.2 . W1 W2 "DDNAME="DDALTLIB                /* @AD */
+  ELSE                                                        /* @AD */
+     PARSE VAR REC.2 W1 W2 "DDNAME="DDALTLIB                  /* @A7 */
   DROP REC.                                                   /* @A7 */
   CLISTRC = 0                                                 /* @AA */
-  IF (W1 <> "Application-level"),                             /* @A7 */
-   & (W2 <> "CLIST") THEN DO                                  /* @A7 */
+  IF (W1 <> "Application-level") THEN DO                      /* @AC */
      CLISTRC = 8                                              /* @AA */
      return                                                   /* @A7 */
   END                                                         /* @AA */
