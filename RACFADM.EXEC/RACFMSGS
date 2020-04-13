@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AC  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
 /* @AB  200412  RACFA    Chged ERR19 msg, inlude ALTLIB in msg        */
 /* @AA  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @A9  200410  RACFA    Added ERR21 msg, 'Invalid entry - NONE'      */
@@ -24,7 +25,8 @@ ADDRESS ISPEXEC                                               /* @A4 */
      Say "*"COPIES("-",70)"*"                                 /* @AA */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AA */
      Say "*"COPIES("-",70)"*"                                 /* @AA */
-     interpret "Trace "SUBSTR(ERATRACE,1,1)                   /* @AA */
+     if (eratrace <> 'PROGRAMS') THEN                         /* @AC */
+        interpret "Trace "SUBSTR(ERATRACE,1,1)                /* @AA */
   end                                                         /* @AA */
 
   racfsmsg = ''; racflsmsg = ''

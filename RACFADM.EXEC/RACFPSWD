@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A5  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
 /* @A4  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @A3  200407  RACFA    Ensure REMPOP is accomplished when F3 (END)  */
 /* @A2  200407  RACFA    Made panel a variable                        */
@@ -20,7 +21,8 @@ Address ISPExec
      Say "*"COPIES("-",70)"*"                                 /* @A4 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A4 */
      Say "*"COPIES("-",70)"*"                                 /* @A4 */
-     interpret "Trace "SUBSTR(ERATRACE,1,1)                   /* @A4 */
+     if (eratrace <> 'PROGRAMS') THEN                         /* @A5 */
+        interpret "Trace "SUBSTR(ERATRACE,1,1)                /* @A4 */
   end                                                         /* @A4 */
   pswd = newpswd()
   'ADDPOP'

@@ -15,8 +15,8 @@
 +  Status interval{..._Z   ~(0-9999)                   {Progress message number
 +  Display files{....._Z~   (B=Browse, E=Edit, V=View) {Display reports/files
 +  Confirm panel{....._Z~   (Y=Yes, N=No)              {Confirm command request
-+  RACF commands{....._Z~   (D=Display, L=Log, B=Both, N=No) {View RACF commands
-+  REXX trace{........_Z~   (L=Labels, R=Results, N=No){Trace REXX programs
++  RACF commands{....._Z~   (D=Display, L=Log, B=Both, N=No)    {View  RACF cmds
++  REXX trace{........_Z~   (L=Labels, P=Pgms, R=Results, N=No) {Trace REXX pgms
 +
 %Adding TSO userids:
 +  User catalog{......_Z                              { z/OS alias catalog
@@ -30,7 +30,7 @@
   &ERACONF  = TRANS (&ERACONF  YES,Y NO,N *,*)
   &ERASHOW  = TRANS (&ERASHOW  DISPLAY,D LOG,L BOTH,B NO,N *,*)
   &ERADISP  = TRANS (&ERADISP  BROWSE,B EDIT,E VIEW,V *,*)
-  &ERATRACE = TRANS (&ERATRACE LABELS,L RESULTS,R, NO,N *,*)
+  &ERATRACE = TRANS (&ERATRACE LABELS,L PROGRAMS,P RESULTS,R NO,N *,*)
   .ZVARS = '(ERAADMN ERARAPI  ERAFLTR ERASINT ERADISP ERACONF +
              ERASHOW ERATRACE ERACTLG ERAISPP ERAULIB)'
   .HELP   = #RACPRM1
@@ -41,14 +41,14 @@
   &ERACONF  = TRANS (&ERACONF  Y,YES, N,NO *,*)
   &ERASHOW  = TRANS (&ERASHOW  D,DISPLAY L,LOG B,BOTH N,NO *,*)
   &ERADISP  = TRANS (&ERADISP  B,BROWSE E,EDIT V,VIEW *,*)
-  &ERATRACE = TRANS (&ERATRACE L,LABELS R,RESULTS N,NO *,*)
+  &ERATRACE = TRANS (&ERATRACE L,LABELS P,PROGRAMS R,RESULTS, N,NO *,*)
   VER  (&ERAADMN,NB,LIST,NO,YES)
   VER  (&ERARAPI,NB,LIST,NO,YES)
   VER  (&ERASINT,NB,RANGE,0,9999)
   VER  (&ERADISP,NB,LIST,BROWSE,EDIT,VIEW)
   VER  (&ERACONF,NB,LIST,NO,YES)
   VER  (&ERASHOW,NB,LIST,DISPLAY,LOG,BOTH,NO)
-  VER  (&ERATRACE,NB,LIST,LABELS,RESULTS,NO)
+  VER  (&ERATRACE,NB,LIST,LABELS,PROGRAMS,RESULTS,NO)
   IF (&ERACTLG NE ' ')
      VER (&ERAISPP,NB)
   VPUT (ERAADMN  ERARAPI ERAFLTR ERASINT ERADISP ERACONF ERASHOW +

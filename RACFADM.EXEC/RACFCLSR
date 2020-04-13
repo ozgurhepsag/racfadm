@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMhDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AX  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
 /* @AW  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @AV  200407  RACFA    EXCMD removed 'else msg_var = 1 to msg.0'    */
 /* @AU  200402  RACFA    Chg LRECL=132 to LRECL=80                    */
@@ -50,7 +51,8 @@ ADDRESS ISPEXEC                                               /* @A7 */
      Say "*"COPIES("-",70)"*"                                 /* @AW */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AW */
      Say "*"COPIES("-",70)"*"                                 /* @AW */
-     interpret "Trace "SUBSTR(ERATRACE,1,1)                   /* @AW */
+     if (eratrace <> 'PROGRAMS') THEN                         /* @AX */
+        interpret "Trace "SUBSTR(ERATRACE,1,1)                /* @AW */
   end                                                         /* @AW */
   If (ERAADMN = "YES") then                                   /* @AC */
       SELCMDS = "ÝS¨Show,ÝL¨List,ÝR¨Refresh"                  /* @AL */

@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A7  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
 /* @A6  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @A5  200224  RACFA    Place panels at top of REXX in variables     */
 /* @A4  200221  RACFA    Make 'ADDRESS ISPEXEC' defualt, reduce code  */
@@ -20,7 +21,8 @@ ADDRESS ISPEXEC                                               /* @A4 */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A6 */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */
-     interpret "Trace "SUBSTR(ERATRACE,1,1)                   /* @A6 */
+     if (eratrace <> 'PROGRAMS') THEN                         /* @A7 */
+        interpret "Trace "SUBSTR(ERATRACE,1,1)                /* @A6 */
   end                                                         /* @A6 */
 
   cvt     = c2x(storage(10,4))              /* cvt address            */

@@ -7,11 +7,11 @@
 %Command ===>_ZCMD                                                             +
 %
 +Adding TSO userid:
+!  User catalog    +The TSO user catalog to define all new TSO user aliases
++
+!  ISPPROF dataset +The name of the TSO profile
++
 !  JOBLIB dataset  +The job library to be allocated for new TSO users (Optional)
-+
-+
-+
-+
 +
 +
 +

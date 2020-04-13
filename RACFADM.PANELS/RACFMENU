@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V15R0+)\-\
++\-\(%RACFADM - RACF Administration - V15R1+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options        %C ~Changes  +Version/updates
@@ -46,7 +46,7 @@
       &ERACONF  = 'YES'      /* Confirm panel       = YES  */
   IF (&ERASHOW  NE DISPLAY, LOG, BOTH, NO)
       &ERASHOW  = 'NO'       /* RACF commands       = NO   */
-  IF (&ERATRACE NE LABELS, RESULTS, NO)
+  IF (&ERATRACE NE LABELS, PROGRAMS, RESULTS, NO)
       &ERATRACE = 'NO'       /* REXX trace          = NO   */
   VPUT (ERAADMN ERARAPI ERASINT ERADISP ERACONF ERASHOW +
         ERATRACE) PROFILE
@@ -90,7 +90,7 @@
       7,'CMD(%RACFDB)'
       8,'CMD(%RACFAUTH)'                  /* Hidden option */
       C,'CMD(%RACFLOG $CHANGES)'
-      E,'CMD(%RACFENQ)'                   /* Hidden option */
+      E,'CMD(%RACFENQ)'
       H,'CMD(%RACFHELP)'
       I,'CMD(%RACFLOG $ISSUES)'
       T,'PGM(ISPTUTOR) PARM(#RACMENU)'

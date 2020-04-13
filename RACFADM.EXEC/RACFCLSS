@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @B4  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
 /* @B3  200412  RACFA    Deleted subroutine 'ERROR', not needed       */
 /* @B2  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @B1  200402  RACFA    Chg LRECL=132 to LRECL=80                    */
@@ -58,7 +59,8 @@ ADDRESS ISPEXEC                                               /* @A6 */
      Say "*"COPIES("-",70)"*"                                 /* @B2 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @B2 */
      Say "*"COPIES("-",70)"*"                                 /* @B2 */
-     interpret "Trace "SUBSTR(ERATRACE,1,1)                   /* @B2 */
+     if (eratrace <> 'PROGRAMS') THEN                         /* @B4 */
+        interpret "Trace "SUBSTR(ERATRACE,1,1)                /* @B2 */
   end                                                         /* @B2 */
   rlv = SYSVAR('SYSLRACF')
 

@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @C1  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
 /* @BZ  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @BY  200410  RACFA    Do not display 'Segment' or 'Command'        */
 /* @BX  200410  RACFA    If id = 'None' only allow line cmd 'A'dd     */
@@ -102,7 +103,8 @@ ADDRESS ISPEXEC                                               /* @AO */
      Say "*"COPIES("-",70)"*"                                 /* @BZ */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @BZ */
      Say "*"COPIES("-",70)"*"                                 /* @BZ */
-     interpret "Trace "SUBSTR(ERATRACE,1,1)                   /* @BZ */
+     if (eratrace <> 'PROGRAMS') THEN                         /* @C1 */
+        interpret "Trace "SUBSTR(ERATRACE,1,1)                /* @BZ */
   end
   If (ERAADMN = "YES") then                                   /* @B2 */
      If (ERARAPI = "YES") then                                /* @BS */

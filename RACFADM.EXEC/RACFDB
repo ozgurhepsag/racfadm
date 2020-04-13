@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A8  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
 /* @A7  200412  RACFA    Chg SAY to ISPF message                      */
 /* @A6  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @A5  200402  RACFA    Allow tracing, 'REXX trace = Y' in Settings  */
@@ -149,7 +150,8 @@ If (eratrace <> 'NO') then do                                 /* @A6 */
    Say "*"COPIES("-",70)"*"                                   /* @A6 */
    Say "*"Center("Begin Program = "REXXPGM,70)"*"             /* @A6 */
    Say "*"COPIES("-",70)"*"                                   /* @A6 */
-   interpret "Trace "SUBSTR(ERATRACE,1,1)                     /* @A6 */
+   if (eratrace <> 'PROGRAMS') THEN                           /* @A8 */
+      interpret "Trace "SUBSTR(ERATRACE,1,1)                  /* @A6 */
 end                                                           /* @A6 */
 
 racflmsg = "Retrieving data - Please be patient"              /* @A1 */

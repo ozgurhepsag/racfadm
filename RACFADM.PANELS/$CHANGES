@@ -2,6 +2,11 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  12 Apr 2020 - V15R1
+     - Settings (Option 0)
+       -- Enhanced 'REXX Trace' to display only the REXX program name
+          o Updated tutorial
+
   12 Apr 2020 - V15R0
      - Main Menu
        -- Alphabetic (A-Z) entries are now displayed on the right

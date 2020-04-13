@@ -16,14 +16,14 @@
 +                     %No+do not display/log (default)
 +
 !  REXX trace      +Allow tracing REXX programs
-+                     %Labels,+display only executed subroutines/labels
-+                     %Results,+display all commands and results
++                     %Labels,+display programs/subroutines/labels
++                     %Programs,+display REXX program names
++                     %Results,+display commands and results
 +                     %No,+turn off tracing (default)
 +
-+Adding TSO userid:
-!  User catalog    +The TSO user catalog to define all new TSO user aliases
 +
-!  ISPPROF dataset +The name of the TSO profile
++
++
 +
 + \ \ (press%ENTER+to continue) \ \
 )PROC

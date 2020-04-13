@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AB  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
 /* @AA  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @A9  200402  RACFA    Issue message if no LIBDEF ISPPLIB dataset   */
 /* @A8  200401  RACFA    Chged edit macro RACFLOGE to RACFEMAC        */
@@ -25,7 +26,8 @@ ADDRESS ISPEXEC                                               /* @A3 */
      Say "*"COPIES("-",70)"*"                                 /* @AA */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AA */
      Say "*"COPIES("-",70)"*"                                 /* @AA */
-     interpret "Trace "SUBSTR(ERATRACE,1,1)                   /* @AA */
+     if (eratrace <> 'PROGRAMS') THEN                         /* @AB */
+        interpret "Trace "SUBSTR(ERATRACE,1,1)                /* @AA */
   end                                                         /* @AA */
 
   "QLIBDEF ISPPLIB TYPE(DATASET) ID(DSNAME)"
