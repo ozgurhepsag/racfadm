@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AD  200413  RACFA    Chg ERR07                                    */
 /* @AC  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
 /* @AB  200412  RACFA    Chged ERR19 msg, inlude ALTLIB in msg        */
 /* @AA  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
@@ -57,7 +58,7 @@ ADDRESS ISPEXEC                                               /* @A4 */
      end
      when (code = 'ERR07') then do
           racfsmsg = 'Alter profile failed'
-          racflmsg = 'Unable to alter the permit'
+          racflmsg = 'Unable to alter the profile'            /* @AD */
      end
      when (code = 'ERR08') then do
           racfsmsg = 'Filter is invalid'

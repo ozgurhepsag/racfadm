@@ -2,7 +2,17 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
-  12 Apr 2020 - V15R1
+  13 Apr 2020 - V15R2
+     - Enqueues (Option E)
+       * If 'TSO ALTLIB DISPLAY' does not return below statement,
+         skip displaying ALTLIB dataset
+           "Application-level CLIST DDNAME=SYS#####"
+     - User and Enqueues (Option U/E)
+       * Use PARSE SOURCE to assign the program name as the
+         DDname when allocating files, in hopes of assisting in
+         trouble-shooting
+
+  13 Apr 2020 - V15R1
      - Settings (Option 0)
        -- Enhanced 'REXX Trace' to display only the REXX program name
           o Updated tutorial

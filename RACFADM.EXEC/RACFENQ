@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AA  200413  RACFA    If ALTLIB, not have 'Appl Lev', skip code    */
+/* @A9  200413  RACFA    Get REXX pgm name and use as DD name         */
 /* @A8  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
 /* @A7  200412  RACFA    Add enqueues for msgs and REXX dsns          */
 /* @A6  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
@@ -16,8 +18,8 @@
 PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */
 EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @A3 */
 QNAME    = "SYSDSN"
-DDNAME   = "RACFENQ"
 ENQRC    = 0
+parse source . . DDNAME .                                     /* @A9 */
 
 ADDRESS ISPEXEC
   "VGET (ERADISP ERASHOW ERATRACE) ASIS"
@@ -73,8 +75,14 @@ EXIT                                                          /* @A6 */
 /*--------------------------------------------------------------------*/
 GET_ENQS:                                                     /* @A7 */
   PARSE ARG DDQLIB                                            /* @A7 */
-  IF (DDQLIB = "CLIST") THEN                                  /* @A7 */
+  IF (DDQLIB = "CLIST") THEN DO                               /* @AA */
      CALL GET_CLIST_DSN                                       /* @A7 */
+     IF (CLISTRC = 8) THEN DO                                 /* @AA */
+        call racfmsgs ERR19                                   /* @AA */
+        ENQRC = ENQRC + 8                                     /* @AA */
+        return                                                /* @AA */
+     END                                                      /* @AA */
+  END                                                         /* @AA */
   ELSE DO                                                     /* @A7 */
      "QLIBDEF "DDQLIB" TYPE(DATASET) ID(DSNAME)"              /* @A7 */
      if (RC > 0) then do                                      /* @A4 */
@@ -138,9 +146,12 @@ ADDRESS TSO                                                   /* @A7 */
                                                               /* @A7 */
   PARSE VAR REC.2 W1 W2 "DDNAME="DDALTLIB                     /* @A7 */
   DROP REC.                                                   /* @A7 */
+  CLISTRC = 0                                                 /* @AA */
   IF (W1 <> "Application-level"),                             /* @A7 */
-   & (W2 <> "CLIST") THEN                                     /* @A7 */
-     return 8                                                 /* @A7 */
+   & (W2 <> "CLIST") THEN DO                                  /* @A7 */
+     CLISTRC = 8                                              /* @AA */
+     return                                                   /* @A7 */
+  END                                                         /* @AA */
                                                               /* @A7 */
   X = OUTTRAP("REC.")                                         /* @A7 */
   "LISTA STATUS"                                              /* @A7 */

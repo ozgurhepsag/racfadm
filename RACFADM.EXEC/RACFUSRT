@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AW  200413  RACFA    Get REXX pgm name and use as DD name         */
 /* @AV  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
 /* @AU  200412  RACFA    Fixed returning RC                           */
 /* @AT  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
@@ -40,6 +41,7 @@
 PANEL29 = "RACFUSRT"    /* Add, chg and del a TSO userid   */ /* @A9 */
 PANELM2 = "RACFMSG2"    /* Display RACF command and RC     */ /* @AW */
 X       = MSG("OFF")    /* No informational messages       */ /* @AD */
+parse source . . DDNAME .                                     /* @AW */
 
 ADDRESS ISPEXEC                                               /* @AF */
   "VGET (ERASHOW ERATRACE ERAISPP ERACTLG ERAULIB) ASIS"      /* @A4 */
@@ -101,22 +103,23 @@ ADDD:                                                         /* @AJ */
   end                                                         /* @AO */
 
   /*- Allocate ISPF profile          -*/
-  cmd = "ALLOC FILE(DD1) DATASET('"user"."eraispp"')",        /* @AG */
+  cmd = "ALLOC FILE("DDNAME") DATASET('"user"."eraispp"')",   /* @AW */
               "NEW SPACE(5,5) CYLINDERS",                     /* @AG */
               "BLKSIZE(0) LRECL(80) RECFM(F B)",              /* @AG */
               "CATALOG DIR(250)"                              /* @AG */
   call exccmd                                                 /* @AG */
-  cmd = "FREE FILE(DD1)"                                      /* @AG */
+  cmd = "FREE FILE("DDNAME")"                                 /* @AW */
   call exccmd                                                 /* @AG */
 
   /*- Allocate joblib library        -*/
   if joblib='Y' then do                                       /* @AP */
-     cmd = "ALLOC FILE(DD2) DATASET('"user"."eraulib"')",     /* @AG */
+     cmd = "ALLOC FILE("DDNAME")",                            /* @AW */
+                  "DATASET('"user"."eraulib"')",              /* @AG */
                   "NEW SPACE(5,5) CYLINDERS",                 /* @AG */
                   "BLKSIZE(0) LRECL(80) RECFM(F B)",          /* @AG */
                   "CATALOG DIR(250)"                          /* @AG */
      call exccmd                                              /* @AG */
-     cmd = "FREE FILE(DD2)"                                   /* @AG */
+     cmd = "FREE FILE("DDNAME")"                              /* @AW */
      call exccmd                                              /* @AG */
   end
 
