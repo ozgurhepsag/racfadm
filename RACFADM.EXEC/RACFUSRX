@@ -63,7 +63,7 @@ Address TSO
   call Goodbye
 EXIT
 /*--------------------------------------------------------------------*/
-/*  Check tracing is on, display flower box                      @DK  */
+/*  If tracing is on, display flower box                         @DK  */
 /*--------------------------------------------------------------------*/
 GOODBYE:                                                      /* @DK */
   If (eratrace <> 'NO') then do                               /* @DK */

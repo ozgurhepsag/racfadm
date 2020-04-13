@@ -2,17 +2,35 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  12 Apr 2020 - V15R0
+     - Main Menu
+       -- Alphabetic (A-Z) entries are now displayed on the right
+          hand side of the menu
+       -- Unhide Enqueues (option E)
+     - Enqueues (Option E)
+       -- Added displaying RACFADM's REXX and message dataset names
+          and enqueues
+
+  12 Apr 2020 - V14R9
+     - User (Option 1)
+       -- When Settings (option 0) is 'Admin RACF API = Y', and
+          'A'dding or 'C'hanging a userid, if unsuccessfull,
+          display error message
+     - Changes (Option C)
+       -- Corrected bullets logged in V14R8
+
   12 Apr 2020 - V14R8
      - Settings (Option 0)
        -- Updated 'REXX trace' field
-          * Allow tracing labels or results, prior was only results,
+          * Allow tracing subroutines/labels or commands/results,
+            prior was only results
             o Default is no
             o Updated tutorial
           * When tracing, display flower box with REXX program's name
             at invocation and exiting
             o Allowing one to easily see what program is being
               invoked/executed
-     - RACFdb (Option 6)
+     - RACFdb (Option 7)
        -- Changed SAYs to ISPF messages, when unable to obtain
           RACF Database information
 

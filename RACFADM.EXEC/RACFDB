@@ -266,7 +266,7 @@ END                                                           /* @A1 */
 call Goodbye                                                  /* @A6 */
 EXIT
 /*--------------------------------------------------------------------*/
-/*  Check tracing is on, display flower box                      @A6  */
+/*  If tracing is on, display flower box                         @A6  */
 /*--------------------------------------------------------------------*/
 GOODBYE:                                                      /* @A6 */
   If (eratrace <> 'NO') then do                               /* @A6 */

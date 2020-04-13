@@ -295,7 +295,7 @@ ADDD:
   call EXCMD "RDEF "RCLASS" ("PROFILE") OWN("OWNER")",
              "UACC("UACC")" aud xtr wrn
   if (cmd_rc > 0) then do                                     /* @B4 */
-     CALL racfmsgs 'ERR01' /* Add DSD failed */               /* @AU */
+     CALL racfmsgs 'ERR01' /* Add failed */                   /* @AU */
      return
   end
   x = msg('OFF')

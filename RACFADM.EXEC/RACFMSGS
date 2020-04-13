@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AB  200412  RACFA    Chged ERR19 msg, inlude ALTLIB in msg        */
 /* @AA  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @A9  200410  RACFA    Added ERR21 msg, 'Invalid entry - NONE'      */
 /* @A8  200402  RACFA    Added ERR20 msg, 'Invalid security access'   */
@@ -103,9 +104,10 @@ ADDRESS ISPEXEC                                               /* @A4 */
                      'Settings is invalid or null'
      end
      WHEN (code = 'ERR19') then do                            /* @A7 */
-          racfsmsg = 'No LIBDEF ISPPLIB DSN'                  /* @A7 */
-          racflmsg = 'Unable to use this feature, due',       /* @A7 */
-                     'to there is no LIBDEFed panel dataset'  /* @A7 */
+          racfsmsg = 'Error LIBDEF/ALTLIB DSN'                /* @AB */
+          racflmsg = 'Unable to determine the LIBDEFed',      /* @AB */
+                     'or ALTLIBed datasets used to',          /* @AB */
+                     'invoke RACFADM.'                        /* @AB */
      end                                                      /* @A7 */
      WHEN (code = 'ERR20') then do                            /* @A8 */
           racfsmsg = 'Invalid security access'                /* @A8 */

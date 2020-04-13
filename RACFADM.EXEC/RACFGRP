@@ -308,7 +308,7 @@ ADDD:
   call EXCMD "AG ("group") OWNER("owner")",
              "SUPGROUP("supgrp")" xtr
   if (cmd_rc > 0) then do                                     /* @BA */
-     CALL racfmsgs 'ERR01' /* Add DSD failed */               /* @B5 */
+     CALL racfmsgs 'ERR01' /* Add failed */                   /* @B5 */
      return
   end
   "TBMOD" TBLA

@@ -171,7 +171,7 @@ ADDRESS ISPEXEC
   call Goodbye                                                /* @AS */
 EXIT
 /*--------------------------------------------------------------------*/
-/*  Check tracing is on, display flower box                      @AS  */
+/*  If tracing is on, display flower box                         @AS  */
 /*--------------------------------------------------------------------*/
 GOODBYE:                                                      /* @AS */
   If (eratrace <> 'NO') then do                               /* @AS */

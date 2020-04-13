@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A7  200412  RACFA    Add enqueues for msgs and REXX dsns          */
 /* @A6  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @A5  200402  RACFA    Chg LRECL=132 to LRECL=80                    */
 /* @A4  200402  RACFA    Issue message if no LIBDEF ISPPLIB dataset   */
@@ -15,6 +16,7 @@ PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */
 EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @A3 */
 QNAME    = "SYSDSN"
 DDNAME   = "RACFENQ"
+ENQRC    = 0
 
 ADDRESS ISPEXEC
   "VGET (ERADISP ERASHOW ERATRACE) ASIS"
@@ -26,47 +28,16 @@ ADDRESS ISPEXEC
      interpret "Trace "SUBSTR(ERATRACE,1,1)                   /* @A6 */
   end                                                         /* @A6 */
 
-  "QLIBDEF ISPPLIB TYPE(DATASET) ID(DSNAME)"
-  if (RC > 0) then do                                         /* @A4 */
-     call errormsgs ERR19                                     /* @A4 */
-     call Goodbye                                             /* @A4 */
-  end                                                         /* @A6 */
-
-  RNAME = STRIP(DSNAME,,"'")
-  "QUERYENQ TABLE(ENQTBL) QNAME(QNAME) RNAME(RNAME) XSYS"
-  "TBTOP   "ENQTBL
-  "TBQUERY "ENQTBL" ROWNUM(ENUM)"
-
-  IF (ENUM >= 1) THEN DO
-     QUEUE "*"COPIES("-",70)"*"
-     QUEUE "*"CENTER("Enqueues - "Rname,70)"*"
-     QUEUE "*"COPIES("-",70)"*"
-     QUEUE " "
-     QUEUE "     Lpar     Disp    Jobname ",
-           Copies(" ",12)"Name"
-     QUEUE "   --------   -----   --------",
-           "  "Copies("-",25)
-
-     DO J = 1 TO ENUM
-        "TBSKIP "ENQTBL
-        "TBGET  "ENQTBL
-        cmd = "LU "ZENJOB
-        X = OUTTRAP("CMDREC.")
-        ADDRESS TSO cmd
-        cmd_rc = rc
-        if (erashow <> 'NO') then
-           call SHOWCMD
-        if (cmd_rc > 0) then
-           Luname = ""
-        else
-           parse var cmdrec.1 . "NAME="luname "OWNER=" .
-        X = OUTTRAP("OFF")
-        QUEUE "   "LEFT(ZENSYST,8)"   "ZENDISP"  ",
-              LEFT(ZENJOB,8)"   "Luname
-     END
-  END
-  "TBCLOSE "ENQTBL
-  DROP CMDREC.                                                /* @A1 */
+  QUEUE "*"COPIES("-",70)"*"
+  QUEUE "*"CENTER("Enqueues",70)"*"
+  QUEUE "*"COPIES("-",70)"*"
+  call Get_enqs "CLIST"                                       /* @A7 */
+  call Get_enqs "ISPPLIB"                                     /* @A7 */
+  call Get_enqs "ISPMLIB"                                     /* @A7 */
+  IF (ENQRC = 24) THEN DO                                     /* @A7 */
+     ADDRESS TSO "DELSTACK"                                   /* @A7 */
+     RETURN                                                   /* @A7 */
+  END                                                         /* @A7 */
   QUEUE ""
 
   ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",
@@ -86,7 +57,7 @@ ADDRESS ISPEXEC
   call Goodbye                                                /* @A6 */
 EXIT
 /*--------------------------------------------------------------------*/
-/*  Check tracing is on, display flower box                      @A6  */
+/*  If tracing is on, display flower box                         @A6  */
 /*--------------------------------------------------------------------*/
 GOODBYE:                                                      /* @A6 */
   If (eratrace <> 'NO') then do                               /* @A6 */
@@ -95,6 +66,94 @@ GOODBYE:                                                      /* @A6 */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */
   end                                                         /* @A6 */
 EXIT                                                          /* @A6 */
+/*--------------------------------------------------------------------*/
+/*  Obtain enqueues on datasets                                  @A7  */
+/*--------------------------------------------------------------------*/
+GET_ENQS:                                                     /* @A7 */
+  PARSE ARG DDQLIB                                            /* @A7 */
+  IF (DDQLIB = "CLIST") THEN                                  /* @A7 */
+     CALL GET_CLIST_DSN                                       /* @A7 */
+  ELSE DO                                                     /* @A7 */
+     "QLIBDEF "DDQLIB" TYPE(DATASET) ID(DSNAME)"              /* @A7 */
+     if (RC > 0) then do                                      /* @A4 */
+        call racfmsgs ERR19                                   /* @A4 */
+        ENQRC = ENQRC + 8                                     /* @A7 */
+        return                                                /* @A7 */
+     end                                                      /* @A6 */
+  END                                                         /* @A7 */
+
+  RNAME = STRIP(DSNAME,,"'")
+  "QUERYENQ TABLE(ENQTBL) QNAME(QNAME) RNAME(RNAME) XSYS"
+  "TBTOP   "ENQTBL
+  "TBQUERY "ENQTBL" ROWNUM(ENUM)"
+
+  IF (ENUM = 0) THEN DO                                       /* @A7 */
+     "TBCLOSE "ENQTBL                                         /* @A7 */
+     call racfmsgs ERR19                                     /* @A7 */
+     ENQRC = ENQRC + 8                                        /* @A7 */
+     RETURN                                                   /* @A7 */
+  END                                                         /* @A7 */
+  ELSE DO                                                     /* @A7 */
+     QUEUE " "
+     QUEUE "  DSN = "Rname"  ",                               /* @A7 */
+           "Enqueues = "strip(enum,'L',0)                     /* @A7 */
+     QUEUE " "
+     QUEUE "         Lpar     Disp    Jobname ",              /* @A7 */
+           Copies(" ",12)"Name"
+     QUEUE "       --------   -----   --------",              /* @A7 */
+           "  "Copies("-",25)
+
+     DO J = 1 TO ENUM
+        "TBSKIP "ENQTBL
+        "TBGET  "ENQTBL
+        cmd = "LU "ZENJOB
+        X = OUTTRAP("CMDREC.")
+        ADDRESS TSO cmd
+        cmd_rc = rc
+        if (erashow <> 'NO') then
+           call SHOWCMD
+        if (cmd_rc > 0) then
+           Luname = ""
+        else
+           parse var cmdrec.1 . "NAME="luname "OWNER=" .
+        X = OUTTRAP("OFF")
+        QUEUE "       "LEFT(ZENSYST,8)"   "ZENDISP"  ",       /* @A7 */
+              LEFT(ZENJOB,8)"   "Luname
+     END
+  END
+  "TBCLOSE "ENQTBL
+  QUEUE " "                                                   /* @A7 */
+  DROP CMDREC.                                                /* @A1 */
+RETURN                                                        /* @A7 */
+/*--------------------------------------------------------------------*/
+/*  Get CLIST dataset name                                       @A7  */
+/*--------------------------------------------------------------------*/
+GET_CLIST_DSN:                                                /* @A7 */
+ADDRESS TSO                                                   /* @A7 */
+  X = OUTTRAP("REC.")                                         /* @A7 */
+  "ALTLIB DISPLAY"                                            /* @A7 */
+  X = OUTTRAP("OFF")                                          /* @A7 */
+                                                              /* @A7 */
+  PARSE VAR REC.2 W1 W2 "DDNAME="DDALTLIB                     /* @A7 */
+  DROP REC.                                                   /* @A7 */
+  IF (W1 <> "Application-level"),                             /* @A7 */
+   & (W2 <> "CLIST") THEN                                     /* @A7 */
+     return 8                                                 /* @A7 */
+                                                              /* @A7 */
+  X = OUTTRAP("REC.")                                         /* @A7 */
+  "LISTA STATUS"                                              /* @A7 */
+  X = OUTTRAP("OFF")                                          /* @A7 */
+  do J = 1 TO REC.0                                           /* @A7 */
+     PARSE VAR REC.J W1 .                                     /* @A7 */
+     IF (W1 = DDALTLIB) THEN DO                               /* @A7 */
+        K = J - 1                                             /* @A7 */
+        DSNAME = REC.K                                        /* @A7 */
+        LEAVE                                                 /* @A7 */
+     END                                                      /* @A7 */
+  end                                                         /* @A7 */
+  DROP REC. W1 DDALTLIB                                       /* @A7 */
+ADDRESS ISPEXEC                                               /* @A7 */
+RETURN                                                        /* @A7 */
 /*--------------------------------------------------------------------*/
 /*  Display RACF command and return code                              */
 /*--------------------------------------------------------------------*/

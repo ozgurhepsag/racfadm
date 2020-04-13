@@ -316,7 +316,7 @@ ADDD:
   call EXCMD "ADDSD '"DATASET"' OWN("OWNER")",                          wrn
              "UACC("UACC")" type aud xtr                                wrn
   if (cmd_rc > 0) then do                                     /* @BE */
-     CALL racfmsgs 'ERR01' /* Add DSD failed */               /* @B6 */
+     CALL racfmsgs 'ERR01' /* Add failed */                   /* @B6 */
      return
   end
   x = msg('OFF')

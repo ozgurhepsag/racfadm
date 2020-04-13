@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AU  200412  RACFA    Fixed returning RC                           */
 /* @AT  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @AS  200324  RACFA    Allow both display/logging of RACF commands  */
 /* @AR  200324  RACFA    Allow logging RACF commands to ISPF Log file */
@@ -223,7 +224,7 @@ ADDRESS ISPEXEC                                               /* @AG */
   END                                                         /* @AR */
 RETURN                                                        /* @BB */
 /*--------------------------------------------------------------------*/
-/*  Check tracing is on, display flower box                      @AT  */
+/*  If tracing is on, display flower box                         @AT  */
 /*--------------------------------------------------------------------*/
 GOODBYE:                                                      /* @AT */
   If (eratrace <> 'NO') then do                               /* @AT */
@@ -231,4 +232,4 @@ GOODBYE:                                                      /* @AT */
      Say "*"Center("End Program = "REXXPGM,70)"*"             /* @AT */
      Say "*"COPIES("-",70)"*"                                 /* @AT */
   end                                                         /* @AT */
-EXIT CMD_RC                                                   /* @AT */
+RETURN CMD_RC                                                 /* @AU */

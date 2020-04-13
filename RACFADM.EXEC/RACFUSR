@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @DL  200412  RACFA    If line cmds Add/Change fail, display err msg*/
 /* @DK  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @DJ  200408  RACFA    Removed duplicate line cmd (R-Rem)           */
 /* @DI  200407  RACFA    Added another dynamic area to RACFUSR2 panel */
@@ -478,9 +479,9 @@ ADDD:
              "OWN("owner") DFLTGRP("defgrp")",
              "NAME('"name"') PASSWORD("pswd")" XTR ATTR       /* @DE */
   if (tsouser = 'YES') & (cmd_rc = 0) then DO                 /* @CB */
-     ret_code = RACFUSRT('ADDD' user tsoproc,                 /* @C4 */
-                tsoacct defgrp owner tsolib)                  /* @C4 */
-     if (ret_code = 0) then DO
+     cmd_rc = RACFUSRT('ADDD' user tsoproc,                   /* @DL */
+              tsoacct defgrp owner tsolib)                    /* @C4 */
+     if (cmd_rc = 0) then DO                                  /* @DL */
          call EXCMD "ALTUSER ("USER")",
              "OWN("owner") DFLTGRP("defgrp")",
              "NAME('"name"')" XTR ATTR,                       /* @CD */
@@ -489,7 +490,7 @@ ADDD:
      END
   END
   IF (cmd_rc > 0) then DO                                     /* @CA */
-     CALL racfmsgs 'ERR01' /* Add DSD failed */
+     CALL racfmsgs 'ERR01' /* Add failed */
      return
   END
 
@@ -1349,12 +1350,16 @@ RETURN                                                        /* @BE */
            ')'                                                /* @D4 */
   end                                                         /* @D4 */
   call excmd cmd                                              /* @D4 */
-  if (cmd_rc > 0) then                                        /* @D6 */
+  if (cmd_rc > 0) then do                                     /* @DL */
+     call racfmsgs ERR01       /* Add failed */               /* @DL */
      return                                                   /* @D6 */
-  ret_code = RACFUSRT('ADDD' user tsoproc,                    /* @D4 */
-             tsoacct defgrp bowner)                           /* @D4 */
-  if (ret_code > 0) then                                      /* @D6 */
+  end                                                         /* @DL */
+  cmd_rc = RACFUSRT('ADDD' user tsoproc,                      /* @DL */
+           tsoacct defgrp bowner)                             /* @D4 */
+  if (cmd_rc > 0) then do                                     /* @DL */
+     call racfmsgs ERR01       /* Add failed */               /* @DL */
      return                                                   /* @D6 */
+  end                                                         /* @DL */
   call @chkattr                                               /* @D4 */
   "TBMOD" TBLA                                                /* @D4 */
   call disd /* Connect basic group */                         /* @D4 */
@@ -1419,17 +1424,23 @@ RETURN                                                        /* @D4 */
          ')'                                                  /* @D4 */
   end                                                         /* @D4 */
   call excmd cmd                                              /* @D4 */
-  if (cmd_rc > 0) then                                        /* @D6 */
+  if (cmd_rc > 0) then do                                     /* @DL */
+     call racfmsgs ERR07     /* Changed failed */             /* @DL */
      return                                                   /* @D6 */
+  end                                                         /* @DL */
   call @chkattr                                               /* @D4 */
   /*- Authorize logon and account to default group  -*/       /* @D4 */
   if (tsouser = 'YES') then do                                /* @D4 */
      cmd = "PE "tsoacct" CLASS(ACCTNUM) ACC(READ)",           /* @D4 */
            "ID("defgrp")"                                     /* @D4 */
      call excmd cmd                                           /* @D4 */
+     if (cmd_rc > 0) then                                     /* @DL */
+        call racfmsgs ERR03   /* Permit failed */             /* @DL */
      cmd = "PE "tsoproc" CLASS(TSOPROC) ACC(READ)",           /* @D4 */
            "ID("defgrp")"                                     /* @D4 */
      call excmd cmd                                           /* @D4 */
+     if (cmd_rc > 0) then                                     /* @DL */
+        call racfmsgs ERR03   /* Permit failed */             /* @DL */
   end                                                         /* @D4 */
   "TBMOD" tbla                                                /* @D4 */
 RETURN                                                        /* @D4 */

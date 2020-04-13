@@ -48,7 +48,7 @@ Address ISPExec
   call Goodbye                                                /* @A4 */
 EXIT cmd_rc                                                   /* @A3 */
 /*--------------------------------------------------------------------*/
-/*  Check tracing is on, display flower box                      @A4  */
+/*  If tracing is on, display flower box                         @A4  */
 /*--------------------------------------------------------------------*/
 GOODBYE:                                                      /* @A4 */
   If (eratrace <> 'NO') then do                               /* @A4 */
