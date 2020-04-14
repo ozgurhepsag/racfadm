@@ -15,32 +15,34 @@
 +user authorization searching across classes, and displaying the group from
 +which an authorization is granted.
 +
-%Written in customizable Rexx,+RACFADM includes an exec to automate creation
-+of aliases or data sets when creating a new TSO user and can browse all RACF
-+system options from a single, scrollable display.
++Adding a new TSO user will create the alias and necessary datasets.  Also,
++the RACF system parameters can be displayed.
 +
 +The following topics are presented in sequence, or may be selected by number:
 +
-+  %0 ~Settings            %4 ~General resource    %8 ~DSN access authority
-+  %1 ~User profiles       %5 ~RACF parameters     %9 ~Res access authority
-+  %2 ~Group profiles      %6 ~RACF databases      %10~Publications
-+  %3 ~Dataset profiles    %7 ~Enqueues            %11~Notes
++  %0 ~Settings            %5 ~RACF parameters        %10~Publications
++  %1 ~User profiles       %6 ~RACF databases         %11~Notes
++  %2 ~Group profiles      %7 ~Enqueues               %12~Acknowlegements
++  %3 ~Dataset profiles    %8 ~DSN access authority
++  %4 ~General resources   %9 ~Res access authority
 )PROC
-&ZSEL = TRANS(&ZCMD 0,#RACPRM1 1,#RACUSR2  2,#RACGRP8  3,#RACDSN2
-                    4,#RACCLSR 5,#RACPRMJ  6,#RACDB    7,#RACENQ
-                    8,#RACDSNA 9,#RACCLSA 10,#RACPUBL 11,#RACNOTE *,'?')
+&ZSEL = TRANS(&ZCMD 0,#RACPRM1  1,#RACUSR2   2,#RACGRP8   3,#RACDSN2
+                    4,#RACCLSR  5,#RACPRMJ   6,#RACDB     7,#RACENQ
+                    8,#RACDSNA  9,#RACCLSA  10,#RACPUBL  11,#RACNOTE
+                    12,#RACACKN *,'?')
 &ZUP  = #RACMENU
 )PNTS
   FIELD(ZPS00001) VAR(ZCMD) VAL('0')
-  FIELD(ZPS00002) VAR(ZCMD) VAL('4')
-  FIELD(ZPS00003) VAR(ZCMD) VAL('8')
+  FIELD(ZPS00002) VAR(ZCMD) VAL('5')
+  FIELD(ZPS00003) VAR(ZCMD) VAL('10')
   FIELD(ZPS00004) VAR(ZCMD) VAL('1')
-  FIELD(ZPS00005) VAR(ZCMD) VAL('5')
-  FIELD(ZPS00006) VAR(ZCMD) VAL('9')
+  FIELD(ZPS00005) VAR(ZCMD) VAL('6')
+  FIELD(ZPS00006) VAR(ZCMD) VAL('11')
   FIELD(ZPS00007) VAR(ZCMD) VAL('2')
-  FIELD(ZPS00008) VAR(ZCMD) VAL('6')
-  FIELD(ZPS00009) VAR(ZCMD) VAL('10')
+  FIELD(ZPS00008) VAR(ZCMD) VAL('7')
+  FIELD(ZPS00009) VAR(ZCMD) VAL('12')
   FIELD(ZPS00010) VAR(ZCMD) VAL('3')
-  FIELD(ZPS00011) VAR(ZCMD) VAL('7')
-  FIELD(ZPS00012) VAR(ZCMD) VAL('11')
+  FIELD(ZPS00011) VAR(ZCMD) VAL('8')
+  FIELD(ZPS00012) VAR(ZCMD) VAL('4')
+  FIELD(ZPS00013) VAR(ZCMD) VAL('9')
 )END

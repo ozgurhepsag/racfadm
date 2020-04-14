@@ -1,0 +1,27 @@
+)ATTR DEFAULT(%+_)
+   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON) JUST(LEFT) HILITE(USCORE)
+   !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
+   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
+)BODY EXPAND(\\)
+%Tutorial+\-\(%RACFADM - Acknowledgements+)\-\%Tutorial
+%Command ===>_ZCMD                                                             +
+%
++  The source code can be obtained from:
+!    CBT File 417
++      Https://cbttape.org
+!    GitHub
++      https://github.com/lbdyck/racfadm
++
++  The following are all the people who particpated in developing%RACFADM,
++  by last name, in alphabetical order:
+!    Beaver, Steve
+!    Dyck, Lionel B.
+!    Golob, Sam
+!    Kalinich, John
+!    Koss, Bruce
+!    Kuiper, Henri
+!    Rizzuto, Nico
+!    Smith, William
+)PROC
+  &ZUP     = #RACACKN
+)END

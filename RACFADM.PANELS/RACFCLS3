@@ -3,7 +3,7 @@
    {  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)   COLOR(BLUE)
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)   COLOR(GREEN)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - General Resource+)\-\
++\-\(%RACFADM - General Resources+)\-\
 %Command ===>_ZCMD                                              +Scroll==>_SAMT+
 %
 +Add RACF%_RCLASS  +profile: %RDEFINE+command and optionally a%PERMIT+

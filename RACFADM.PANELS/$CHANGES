@@ -2,6 +2,15 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  14 Apr 2020 - V15R7
+     - User (Option 1)
+       -- Fixed adding a userid, missing a return code
+     - Tutorial (Option T)
+       -- Added option '13 Acknowledgements', listing everyone who
+          participated in this endevor/project
+     - Other Items
+       -- Updated panels $DIR member
+
   14 Apr 2020 - V15R6
      - Main Menu
        -- Added hidden option 'B, BookMgr, RACF Manuals'

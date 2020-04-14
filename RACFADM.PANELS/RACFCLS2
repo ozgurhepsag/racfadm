@@ -11,7 +11,7 @@
    Ý  TYPE(DATAOUT) INTENS(HIGH)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - General Resource+)\-\
++\-\(%RACFADM - General Resources+)\-\
 %Command ===>_ZCMD                                              +Scroll==>_SAMT+
 %
 +CLASS:  $RCLASS

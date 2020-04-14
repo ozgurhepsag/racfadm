@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
    $  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(YELLOW)
 )BODY EXPAND(\\)
-%Tutorial+\-\(%RACFADM - General Resource Profiles+)\-\%Tutorial
+%Tutorial+\-\(%RACFADM - General Resources+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
 !   %UACC                 General Resources Access Authority
