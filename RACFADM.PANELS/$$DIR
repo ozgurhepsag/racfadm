@@ -12,9 +12,11 @@
  #RACCLSS  Tutorial       List classes (show)
  #RACCLS8  Tutorial       List classes and profiles
  #RACCLS9  Tutorial       List profiles and descriptions
+ #RACDB    Tutorial       RACF database information
  #RACDSNA  Tutorial       Add/change dataset profile
  #RACDSN2  Tutorial       Dataset profile
  #RACDSN5  Tutorial       Dataset's group/id profile
+ #RACENQ   Tutorial       Enqueue information
  #RACGRP5  Tutorial       Group's userids profiles
  #RACGRP8  Tutorial       Group profile
  #RACMENU  Tutorial       Main menu, menu option T

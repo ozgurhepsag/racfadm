@@ -20,8 +20,8 @@
 /*====================================================================*/
 PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */
 EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @A3 */
-QNAME    = "SYSDSN"
-ENQRC    = 0
+QNAME    = "SYSDSN"      /* MAJOR resource name for DSNs   */
+ENQRC    = 0             /* Verify ALTLIB/LIBDEFs exist    */
 parse source . . DDNAME .                                     /* @A9 */
 
 ADDRESS ISPEXEC
@@ -102,7 +102,7 @@ GET_ENQS:                                                     /* @A7 */
 
   IF (ENUM = 0) THEN DO                                       /* @A7 */
      "TBCLOSE "ENQTBL                                         /* @A7 */
-     call racfmsgs ERR19                                     /* @A7 */
+     call racfmsgs ERR19                                      /* @A7 */
      ENQRC = ENQRC + 8                                        /* @A7 */
      RETURN                                                   /* @A7 */
   END                                                         /* @A7 */
@@ -157,7 +157,7 @@ ADDRESS TSO                                                   /* @A7 */
   X = OUTTRAP("REC.")                                         /* @A7 */
   "ALTLIB DISPLAY"                                            /* @A7 */
   X = OUTTRAP("OFF")                                          /* @A7 */
-
+                                                              /* @A7 */
   IF (SUBSTR(REC.2,1,3) = "IKJ") THEN                         /* @AD */
      PARSE VAR REC.2 . W1 W2 "DDNAME="DDALTLIB                /* @AD */
   ELSE                                                        /* @AD */

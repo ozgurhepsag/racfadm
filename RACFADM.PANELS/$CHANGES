@@ -2,6 +2,14 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  14 Apr 2020 - V15R5
+     - Tutorials (Option T)
+       -- Added help panels for:
+          * RACFdb (option 7)
+          * Enqueues (option E)
+     - Other Items
+       -- Minor code cleanup
+
   13 Apr 2020 - V15R4
      - Enqueues (Option E)
        -- Take into account user may have 'TSO PROFILE MSGID', making

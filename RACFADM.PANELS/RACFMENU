@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V15R4+)\-\
++\-\(%RACFADM - RACF Administration - V15R5+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options        %C ~Changes  +Version/updates
@@ -14,7 +14,7 @@
 %   4 ~General  +General resources        %T ~Tutorial +Help
 %   5 ~Password +Password reset           %X ~Exit     +Terminate
 %   6 ~RACFprms +RACF parameters
-%   7 ~RACFdb   +RACF database
+%   7 ~RACFdb   +RACF databases
 %
 %
 %

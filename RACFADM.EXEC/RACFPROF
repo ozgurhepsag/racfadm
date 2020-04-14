@@ -79,7 +79,7 @@ ADDRESS ISPEXEC
         interpret "Trace "SUBSTR(ERATRACE,1,1)                /* @AS */
   end                                                         /* @AS */
 
-  /* Call IRRXUTIL to extract the desired profile */
+  /* Call IRRXUTIL to extract the desired profile        */
   call exccmd                                                 /* @A9 */
 
   /* Check return code and exit if problem is discovered */
@@ -111,10 +111,10 @@ ADDRESS ISPEXEC
                     right(RACF.segname.0,2,"0")
      /* Run through the fields in this segment */
      do l = 1 to RACF.segname.0
-        fieldName = RACF.segname.l /* Get next field name   */
+        fieldName = RACF.segname.l /* Get next field name */
 
-        /* If repeat header, handle the repeat group.      */
-        /* Tricky part, to keep the repeat group together  */
+        /* If repeat header, handle the repeat group.     */
+        /* Tricky part, to keep the repeat group together */
         if (RACF.segname.fieldname.repeatcount > 0) then do
            /* Get dimension (number of fields in a group)
               and cardinality (number of groups) */
@@ -126,7 +126,7 @@ ADDRESS ISPEXEC
 
             /* For each repeat group */
            do rpt = 1 to repeats
-              /* Run through each of the fields */
+                 /* Run thru each of the fields */
               do dim = 1 to dimension
                  /* Get repeat group field name */
                  subfld = RACF.segname.fieldname.SUBFIELD.dim
@@ -135,7 +135,7 @@ ADDRESS ISPEXEC
                           RACF.segname.subfld.rpt
               end /* dim */
               call sez "  "COPIES("-",44)
-           end  /* repeats */
+           end /* repeats */
         end /* repeat header */
         else if (RACF.segname.fieldname.REPEATING = "TRUE") then do
            /* Skip repeating fields because */
@@ -144,13 +144,13 @@ ADDRESS ISPEXEC
            /* repeatheader was processed    */
         end
         else do /* not repeating */
-           /* Display value for this field */
+           /* Display value for this field  */
            if (fieldname = "DATA") THEN                       /* @AC */
               call linegt55                                   /* @AC */
            else
               call sez "  "left(fieldname,8)||,               /* @A7 */
                        ": "RACF.segname.fieldname.1
-        end    /* not repeating */
+        end /* not repeating */
      end /* fields */
   end /* segments */
 
