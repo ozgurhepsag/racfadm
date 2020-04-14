@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V15R5+)\-\
++\-\(%RACFADM - RACF Administration - V15R6+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options        %C ~Changes  +Version/updates
@@ -88,8 +88,10 @@
       5,'CMD(%RACFPSWD)'
       6,'CMD(%RACFPRMJ)'
       7,'CMD(%RACFDB)'
-      8,'CMD(%RACFAUTH)'                  /* Hidden option */
+      8,'CMD(%RACFAUTH)'                                    /* Hidden */
+      B,'CMD(%BOOKMGR SHELF(''EOYBOOK.ICHZBKC0.BKSHELF''))' /* Hidden */
       C,'CMD(%RACFLOG $CHANGES)'
+
       E,'CMD(%RACFENQ)'
       H,'CMD(%RACFHELP)'
       I,'CMD(%RACFLOG $ISSUES)'

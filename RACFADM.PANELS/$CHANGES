@@ -2,6 +2,15 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  14 Apr 2020 - V15R6
+     - Main Menu
+       -- Added hidden option 'B, BookMgr, RACF Manuals'
+     - Tutorials (Option T)
+       -- Added a second panel to option '10 Publications', containing
+          educational websites
+     - Other Items
+       -- Updated panels $DIR member
+
   14 Apr 2020 - V15R5
      - Tutorials (Option T)
        -- Added help panels for:
