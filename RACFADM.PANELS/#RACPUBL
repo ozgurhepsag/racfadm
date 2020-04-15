@@ -1,27 +1,28 @@
 )ATTR DEFAULT(%+~)
    ~  TYPE(INPUT)   INTENS(HIGH) CAPS(ON) JUST(LEFT) HILITE(USCORE)
    !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
+   @  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(RED)
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
-%Tutorial+\-\(%RACFADM - Publications+)\-\%Tutorial
+%Tutorial+\-\(%RACFADM - Publications - 1 of 2+)\-\%Tutorial
 %Command ===>~ZCMD
 +
-+ Below are websites to%RACF publications and downloads,+cut and paste
-+ the URL into a browser.
++  Below are websites to%RACF publications and downloads,+cut and paste
++  the URL into a browser.
 +
-!   z/OS Internet Library
-+     https://www-01.ibr.com/servers/resourcelink/svc00100.nsf/
-+           pages/zosinternetLibrary
+!    z/OS Internet Library
+@      https://www-01.ibr.com/servers/resourcelink/svc00100.nsf/
+@            pages/zosinternetLibrary
 +
-!   z/OS Security Server RACF PDF Collection
-+     https://www.ibm.com/support/knowledgecenter/SSLTBW_2.4.0/
-+            com.ibm.zos.v2r4.ich
+!    z/OS Security Server RACF PDF Collection
+@      https://www.ibm.com/support/knowledgecenter/SSLTBW_2.4.0/
+@           com.ibm.zos.v2r4.ich
 +
-!   IBM Redbooks+(type%RACF+in the New Search box)
-+     https://www.redbooks.ibm.com/Redbooks.nsf/searchsite?SearchView
+!    IBM Redbooks+(type%RACF+in the New Search box)
+@      https://www.redbooks.ibm.com/Redbooks.nsf/searchsite?SearchView
 +
-!   z/OS GitHub RACF Download Collection
-+     https://github.com/IBM/IBM-Z-zOS/tree/master/zOS-RACF/Downloads
+!    z/OS GitHub RACF Download Collection
+@      https://github.com/IBM/IBM-Z-zOS/tree/master/zOS-RACF/Downloads
 +
 +
 +

@@ -6,11 +6,11 @@
 %Tutorial+\-\(%RACFADM - Enqueues+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
-+ %Enqueues+displays the datasets allocated via%LIBDEF/ALTLIB+used
-+  to invoke%RACFADM+and any jobs/stcs/users with enqueues on these
++ %Enqueues+displays datasets allocated via%LIBDEF/ALTLIB+used to
++  invoke%RACFADM+and any jobs/stcs/users with enqueues on these
 +  datasets.
 +
-+  This will provide insight to who and when they are using the
++  This will provide insight to who and when people are using the
 +  utility.  Assisting in planning when to rollout/implement changes
 +  to this utility, without impacting anyone.
 )PROC

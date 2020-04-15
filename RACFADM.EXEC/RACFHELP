@@ -3,7 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @A0  200328  RACFA    Modified color/title                         */
+/* @A1  200328  RACFA    Modified color/title                         */
+/* @A0  200320  RACFA    Obtained code from CBT file 314 (ZTSOHELP)   */
 /*====================================================================*/
 /* --------------------  REXX Program  ----------------------------- */
  ver = '3.8'
@@ -197,7 +198,7 @@
  |                                                     |
  | Colors may be Blue, Turq, White, Green, Red, Yellow |
  * --------------------------------------------------- */
- clrn = 'green'                                               /* @A0 */
+ clrn = 'green'                                               /* @A1 */
  clrs = 'turq'
 
 /* ----------------------------------------------- *
@@ -957,15 +958,15 @@ View_it:
    ? type(output) intens(low ) caps(off) just(asis ) color(white)
    $ type(text) intens(high) hilite(reverse)
    % type(text) intens(high) skip(on)
-   + type(text) intens(low) skip(on) color(green)             /* @A0 */
+   + type(text) intens(low) skip(on) color(green)             /* @A1 */
    # type(output) intens(high) caps(off) just(left)
      pas(on) skip(on) hilite(uscore)
    04 type(output) intens(high) caps(off) just(left)
-     pas(on) skip(on) hilite(uscore) color(White)             /* @A0 */
+     pas(on) skip(on) hilite(uscore) color(White)             /* @A1 */
    05 type(output) intens(high) caps(off) just(left)
-     pas(on) skip(on) hilite(uscore) color(White)             /* @A0 */
+     pas(on) skip(on) hilite(uscore) color(White)             /* @A1 */
    06 type(output) intens(high) caps(off) just(left)
-     pas(on) skip(on) hilite(uscore) color(White)             /* @A0 */
+     pas(on) skip(on) hilite(uscore) color(White)             /* @A1 */
 )Body  Expand(\\) Width(&zscreenw)
 %\-\ $RACF Commands?viewfs  $- &ver%\-\
 %Command ===>_zcmd                                 \ \%Scroll ===>_amt +
@@ -1042,7 +1043,7 @@ field(h)  var(zcmd) val(H)
 >Panel #zrach1
 )ATTR DEFAULT(%+_)
    %   TYPE(TEXT)  INTENS(HIGH) SKIP(ON)
-   +   TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(GREEN)         /* @A0 */
+   +   TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(GREEN)         /* @A1 */
    !   TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(RED)
    @   TYPE(TEXT)  INTENS(HIGH) SKIP(ON) HILITE(USCORE) COLOR(BLUE)
    _   TYPE(INPUT) INTENS(HIGH) CAPS(ON) JUST(LEFT) HILITE(USCORE)
@@ -1077,7 +1078,7 @@ field(h)  var(zcmd) val(H)
 >Panel #zrach2
 )ATTR DEFAULT(%+_)
    %   TYPE(TEXT)  INTENS(HIGH) SKIP(ON)
-   +   TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(GREEN)         /* @A0 */
+   +   TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(GREEN)         /* @A1 */
    !   TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(RED)
    @   TYPE(TEXT)  INTENS(HIGH) SKIP(ON) HILITE(USCORE) COLOR(BLUE)
    _   TYPE(INPUT) INTENS(HIGH) CAPS(ON) JUST(LEFT) HILITE(USCORE)

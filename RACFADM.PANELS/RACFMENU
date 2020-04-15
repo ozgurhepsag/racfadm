@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V15R7+)\-\
++\-\(%RACFADM - RACF Administration - V15R8+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options        %C ~Changes  +Version/updates
@@ -91,7 +91,6 @@
       8,'CMD(%RACFAUTH)'                                    /* Hidden */
       B,'CMD(%BOOKMGR SHELF(''EOYBOOK.ICHZBKC0.BKSHELF''))' /* Hidden */
       C,'CMD(%RACFLOG $CHANGES)'
-
       E,'CMD(%RACFENQ)'
       H,'CMD(%RACFHELP)'
       I,'CMD(%RACFLOG $ISSUES)'
@@ -115,3 +114,19 @@
   FIELD(ZPS00013) VAR(ZCMD) VAL('6')
   FIELD(ZPS00014) VAR(ZCMD) VAL('7')
 )END
+/*--------------------------------------------------------------------*/
+/*                             Comments                               */
+/*--------------------------------------------------------------------*/
+/*                                                                    */
+/*  1) This panel is defined as a primary menu, allowing the          */
+/*     capability to type =1, =2, =n to skip around from one          */
+/*     panel to another                                               */
+/*                                                                    */
+/*  2) The default Settings (option 0) are defined in the )INIT       */
+/*     section of this panel                                          */
+/*                                                                    */
+/*  3) Below options are hidden, not displayed on the menu:           */
+/*       8  RACFAuth  Analyze ACL for general resources               */
+/*       B  BookMgr   RACF manuals                                    */
+/*                                                                    */
+/*--------------------------------------------------------------------*/

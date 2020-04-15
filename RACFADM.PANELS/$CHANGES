@@ -2,9 +2,22 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  15 Apr 2020 - V15R8
+     - Main Menu
+       -- Added comments at the bottom of panel RACFMENU, documenting
+          defining the default settings, hidden options, etc.
+     - Tutorials (Option T)
+       -- Updated tutorial panels (#RACACKN, #RACDB, #RACENQ, #RACNOTE
+          #RACPUBL and #RACPUBS)
+     - Other Items
+       -- Updated previous bullets in $CHANGES to make them more
+          accurate
+       -- Added a few comments to REXX programs
+
   14 Apr 2020 - V15R7
      - User (Option 1)
-       -- Fixed adding a userid, missing a return code
+       -- Fixed adding/deleting a userid, RACFUSRT was not passing
+          back a return code, when called
      - Tutorial (Option T)
        -- Added option '13 Acknowledgements', listing everyone who
           participated in this endevor/project
@@ -357,7 +370,7 @@
   26 Mar 2020 - V11R7
      - Menu
        -- Made the menu a primary menu, allowing the capability to type
-          =1, =2, =n to skip around frome one panel to another
+          =1, =2, =n to skip around from one panel to another
 
   26 Mar 2020 - V11R6
      - Menu
