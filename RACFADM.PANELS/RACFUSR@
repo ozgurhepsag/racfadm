@@ -121,3 +121,19 @@
 )FIELD
   FIELD(ATTR) IND(SCIND,'<>') LEN(255)
 )END
+/*--------------------------------------------------------------------*/
+/*                             Comments                               */
+/*--------------------------------------------------------------------*/
+/*                                                                    */
+/*  1) To display/use this panel, the user must have the Settings     */
+/*     (menu option 0) turned on                                      */
+/*                                                                    */
+/*       Administrator ..... Y                                        */
+/*       Admin RACF API .... Y                                        */
+/*                                                                    */
+/*  2) The )INIT section executes REXX code to obtain userid          */
+/*     information (ATTR, TSOPROC, etc.) by invoking IRRXUTIL         */
+/*                                                                    */
+/*  3) The 'ATTR' field is a scrollable field                         */
+/*                                                                    */
+/*--------------------------------------------------------------------*/

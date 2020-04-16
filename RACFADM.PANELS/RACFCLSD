@@ -32,3 +32,15 @@ _Z+ $Z                                                                         +
 )PNTS
   FIELD(ZPS00001) VAR(ZCMD) VAL('SORT CLASS')
 )END
+/*--------------------------------------------------------------------*/
+/*                             Comments                               */
+/*--------------------------------------------------------------------*/
+/*                                                                    */
+/*  1) The column headers are point-n-shoot fields to sort the data   */
+/*     in ascending or descending order                               */
+/*                                                                    */
+/*  2) In the )PROC section there is code (&SROW) to determine if     */
+/*     the user tabbed down to a row and pressed ENTER to select      */
+/*     an entry                                                       */
+/*                                                                    */
+/*--------------------------------------------------------------------*/

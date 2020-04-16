@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V15R8+)\-\
++\-\(%RACFADM - RACF Administration - V15R9+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options        %C ~Changes  +Version/updates
@@ -125,8 +125,18 @@
 /*  2) The default Settings (option 0) are defined in the )INIT       */
 /*     section of this panel                                          */
 /*                                                                    */
-/*  3) Below options are hidden, not displayed on the menu:           */
+/*  3) The variables contain the full word, no abbreviations, in      */
+/*     hopes of making it easier to understand/maintain code          */
+/*                                                                    */
+/*  4) Below options are hidden, not displayed on the menu:           */
 /*       8  RACFAuth  Analyze ACL for general resources               */
 /*       B  BookMgr   RACF manuals                                    */
+/*                                                                    */
+/*  5) The )INIT section executes a REXX code to obtain the           */
+/*     information displayed at the bottom of the panel (RACF,        */
+/*     Dbase, z/OS, etc)                                              */
+/*                                                                    */
+/*  6) The menu entries (Settings, User, etc.) are point-n-shoot      */
+/*     fields                                                         */
 /*                                                                    */
 /*--------------------------------------------------------------------*/

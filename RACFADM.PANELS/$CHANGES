@@ -2,6 +2,11 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  16 Apr 2020 - V15R9
+     - Other Items
+       -- Added comments to the bottom of several panels, in hopes
+          of assisting someone in maintaining them
+
   15 Apr 2020 - V15R8
      - Main Menu
        -- Added comments at the bottom of panel RACFMENU, documenting

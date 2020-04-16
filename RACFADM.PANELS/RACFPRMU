@@ -54,3 +54,11 @@
   VPUT (ERAADMN  ERARAPI ERAFLTR ERASINT ERADISP ERACONF ERASHOW +
         ERATRACE ERACTLG ERAISPP ERAULIB) PROFILE
 )END
+/*--------------------------------------------------------------------*/
+/*                             Comments                               */
+/*--------------------------------------------------------------------*/
+/*                                                                    */
+/*  1) The variables contain the full word, no abbreviations, in      */
+/*     hopes of making it easier to understand/maintain code          */
+/*                                                                    */
+/*--------------------------------------------------------------------*/

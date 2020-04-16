@@ -37,3 +37,12 @@ _Z+  $Z           +
            &OPTB = A
   VER (&OPTB,LIST,A,R)
 )END
+/*--------------------------------------------------------------------*/
+/*                             Comments                               */
+/*--------------------------------------------------------------------*/
+/*                                                                    */
+/*  1) In the )PROC section there is code (&SROW) to determine if     */
+/*     the user tabbed down to a row and pressed ENTER to select      */
+/*     an entry                                                       */
+/*                                                                    */
+/*--------------------------------------------------------------------*/
