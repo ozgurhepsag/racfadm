@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AE  200416  RACFA    Display enqueues on RACF database            */
 /* @AD  200413  RACFA    Take into account, PROFILE MSGID(ON)         */
 /* @AC  200413  RACFA    Del ver word 2 is CLIST, some may be EXEC    */
 /* @AB  200413  RACFA    Added more comments above 'GET_CLIST_DSN'    */
@@ -41,7 +42,8 @@ ADDRESS ISPEXEC
   call Get_enqs "CLIST"                                       /* @A7 */
   call Get_enqs "ISPPLIB"                                     /* @A7 */
   call Get_enqs "ISPMLIB"                                     /* @A7 */
-  IF (ENQRC = 24) THEN DO                                     /* @A7 */
+  call Get_enqs "RACFDB"                                      /* @AE */
+  IF (ENQRC = 32) THEN DO                                     /* @AE */
      ADDRESS TSO "DELSTACK"                                   /* @A7 */
      RETURN                                                   /* @A7 */
   END                                                         /* @A7 */
@@ -78,30 +80,36 @@ EXIT                                                          /* @A6 */
 /*--------------------------------------------------------------------*/
 GET_ENQS:                                                     /* @A7 */
   PARSE ARG DDQLIB                                            /* @A7 */
-  IF (DDQLIB = "CLIST") THEN DO                               /* @AA */
-     CALL GET_CLIST_DSN                                       /* @A7 */
-     IF (CLISTRC = 8) THEN DO                                 /* @AA */
-        call racfmsgs ERR19                                   /* @AA */
-        ENQRC = ENQRC + 8                                     /* @AA */
-        return                                                /* @AA */
-     END                                                      /* @AA */
-  END                                                         /* @AA */
-  ELSE DO                                                     /* @A7 */
-     "QLIBDEF "DDQLIB" TYPE(DATASET) ID(DSNAME)"              /* @A7 */
-     if (RC > 0) then do                                      /* @A4 */
-        call racfmsgs ERR19                                   /* @A4 */
-        ENQRC = ENQRC + 8                                     /* @A7 */
-        return                                                /* @A7 */
-     end                                                      /* @A6 */
-  END                                                         /* @A7 */
+  SELECT                                                      /* @AE */
+     WHEN (DDQLIB = "CLIST") THEN                             /* @AE */
+          CALL GET_CLIST_DSN                                  /* @A7 */
+     WHEN (DDQLIB = "RACFDB") THEN                            /* @AE */
+          CALL GET_RACF_DBNAME                                /* @AE */
+     OTHERWISE                                                /* @AE */
+          "QLIBDEF "DDQLIB" TYPE(DATASET) ID(DSNAME)"         /* @A7 */
+  END                                                         /* @AE */
+  if (RC > 0) then do                                         /* @A4 */
+     call racfmsgs ERR19                                      /* @A4 */
+     ENQRC = ENQRC + 8                                        /* @A7 */
+     return                                                   /* @A7 */
+  end                                                         /* @A6 */
 
+  ROWS  = 0
   RNAME = STRIP(DSNAME,,"'")
   "QUERYENQ TABLE(ENQTBL) QNAME(QNAME) RNAME(RNAME) XSYS"
-  "TBTOP   "ENQTBL
-  "TBQUERY "ENQTBL" ROWNUM(ENUM)"
+  QUERYRC = RC
+  IF (QUERYRC <> 8) THEN DO                                   /* @AE */
+     "TBTOP   "ENQTBL
+     "TBQUERY "ENQTBL" ROWNUM(ROWS)"
+  END                                                         /* @AE */
 
-  IF (ENUM = 0) THEN DO                                       /* @A7 */
-     "TBCLOSE "ENQTBL                                         /* @A7 */
+  IF (ROWS = 0) THEN DO                                       /* @A7 */
+     IF (QUERYRC <> 8) THEN                                   /* @AE */
+        "TBCLOSE "ENQTBL                                      /* @A7 */
+     QUEUE " "                                                /* @AE */
+     QUEUE "  DSN = "Rname"  ",                               /* @AE */
+           "Enqueues = "0                                     /* @AE */
+     QUEUE " "                                                /* @AE */
      call racfmsgs ERR19                                      /* @A7 */
      ENQRC = ENQRC + 8                                        /* @A7 */
      RETURN                                                   /* @A7 */
@@ -109,14 +117,14 @@ GET_ENQS:                                                     /* @A7 */
   ELSE DO                                                     /* @A7 */
      QUEUE " "
      QUEUE "  DSN = "Rname"  ",                               /* @A7 */
-           "Enqueues = "strip(enum,'L',0)                     /* @A7 */
+           "Enqueues = "strip(ROWS,'L',0)                     /* @A7 */
      QUEUE " "
      QUEUE "         Lpar     Disp    Jobname ",              /* @A7 */
            Copies(" ",12)"Name"
      QUEUE "       --------   -----   --------",              /* @A7 */
            "  "Copies("-",25)
 
-     DO J = 1 TO ENUM
+     DO J = 1 TO ROWS
         "TBSKIP "ENQTBL
         "TBGET  "ENQTBL
         cmd = "LU "ZENJOB
@@ -163,9 +171,9 @@ ADDRESS TSO                                                   /* @A7 */
   ELSE                                                        /* @AD */
      PARSE VAR REC.2 W1 W2 "DDNAME="DDALTLIB                  /* @A7 */
   DROP REC.                                                   /* @A7 */
-  CLISTRC = 0                                                 /* @AA */
+  RC = 0                                                      /* @AA */
   IF (W1 <> "Application-level") THEN DO                      /* @AC */
-     CLISTRC = 8                                              /* @AA */
+     RC = 8                                                   /* @AA */
      return                                                   /* @A7 */
   END                                                         /* @AA */
                                                               /* @A7 */
@@ -200,3 +208,15 @@ SHOWCMD:
      'log msg(isrz003)'
   END
 RETURN
+/*--------------------------------------------------------------------*/
+/*  Get RACF database name                                       @AE  */
+/*--------------------------------------------------------------------*/
+GET_RACF_DBNAME:                                              /* @AE */
+  cvt      = c2x(storage(10,4))                               /* @AE */
+  cvtrac$  = d2x((x2d(cvt))+992)                              /* @AE */
+  cvtrac   = c2x(storage(cvtrac$,4))                          /* @AE */
+  rcvtsta$ = d2x((x2d(cvtrac))+56)                            /* @AE */
+  DSNAME   = STRIP(storage(rcvtsta$,44))                      /* @AE */
+  IF (DSNAME = "") THEN                                       /* @AE */
+     RC = 8                                                   /* @AE */
+RETURN                                                        /* @AE */

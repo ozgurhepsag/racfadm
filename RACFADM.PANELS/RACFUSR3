@@ -57,13 +57,19 @@ _Z+ Z         Z
 /*                             Comments                               */
 /*--------------------------------------------------------------------*/
 /*                                                                    */
-/*  1) In the )PROC section there is code (&SROW) to determine if     */
+/*  1) The 'SELECT' field is a dynamic field, allowing the REXX       */
+/*     program to display only the commands accessable/useable        */
+/*     depending on the below users Settings (menu option 0):         */
+/*       Administrator ..... Y or N                                   */
+/*       Admin RACF API .... Y or N                                   */
+/*                                                                    */
+/*  2) In the )PROC section there is code (&SROW) to determine if     */
 /*     the user tabbed down to a row and pressed ENTER to select      */
 /*     an entry                                                       */
 /*                                                                    */
-/*  2) The column headers are point-n-shoot fields to sort the data   */
+/*  3) The column headers are point-n-shoot fields to sort the data   */
 /*     in ascending or descending order                               */
 /*                                                                    */
-/*  3) The 'ATTR' field is a scrollable field                         */
+/*  4) The 'ATTR' field is a scrollable field                         */
 /*                                                                    */
 /*--------------------------------------------------------------------*/

@@ -2,6 +2,13 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  16 Apr 2020 - V16R0
+     - Enqueues (Option E)
+       -- Display enqueues on RACF database
+     - Other Items
+       -- Added more comments to the bottom of several panels
+       -- Updated $CONTRIB member in CNTL file
+
   16 Apr 2020 - V15R9
      - Other Items
        -- Added comments to the bottom of several panels, in hopes

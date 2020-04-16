@@ -65,7 +65,7 @@
  RACFPRMJ  Parameter      RACF parameters, menu option 6
  RACFPRMU  Parameter      Settings, customize options, menu option 0
  RACFPSWD  Password       Reset userid password, opt 5 and line cmd PW
- RACFUSR#  User           Chnage user, when 'RACF Admin API = 'Y'
+ RACFUSR#  User           Change user, when 'RACF Admin API = 'Y'
  RACFUSR@  User           Add user, when 'RACF Admin API = 'Y'
  RACFUSRT  User           Add, change and delete a TSO userid
  RACFUSR1  User           Set filter, menu option 1

@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V15R9+)\-\
++\-\(%RACFADM - RACF Administration - V16R0+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options        %C ~Changes  +Version/updates
@@ -64,7 +64,7 @@
     x         = storage(rcvtstat$,4)
     RACFVER   = 'V'substr(x,1,1)'R'substr(x,2,2)'M'substr(x,4,1)
     rcvtsta$  = d2x((x2d(cvtrac))+56)
-    RACFDSN   = storage(rcvtsta$,44)
+    RACFDSN   = strip(storage(rcvtsta$,44))
     parse var zosver . "z/OS" ZOSVER .
     ascb   = c2x(storage(224,4))       /* PSAAOLD  (My ASCB)          */
     asxb$  = d2x((x2d(ascb))+108)      /* ASCB + 108                  */
@@ -122,13 +122,13 @@
 /*     capability to type =1, =2, =n to skip around from one          */
 /*     panel to another                                               */
 /*                                                                    */
-/*  2) The default Settings (option 0) are defined in the )INIT       */
-/*     section of this panel                                          */
+/*  2) The default Settings, menu option 0, are defined in the        */
+/*     )INIT section of this panel                                    */
 /*                                                                    */
 /*  3) The variables contain the full word, no abbreviations, in      */
 /*     hopes of making it easier to understand/maintain code          */
 /*                                                                    */
-/*  4) Below options are hidden, not displayed on the menu:           */
+/*  4) Below menu options are hidden, not displayed:                  */
 /*       8  RACFAuth  Analyze ACL for general resources               */
 /*       B  BookMgr   RACF manuals                                    */
 /*                                                                    */
