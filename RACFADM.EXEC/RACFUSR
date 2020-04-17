@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @DO  200417  RACFA    Changed date to 'U'SA, was 'O'rdered         */
+/* @DN  200417  TRIDJK   Added 'Created' date                         */
 /* @DM  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
 /* @DL  200412  RACFA    If line cmds Add/Change fail, display err msg*/
 /* @DK  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
@@ -141,7 +143,7 @@ PANEL07  = "RACFUSR7"    /* Change connection              */ /* @BL */
 PANEL08  = "RACFUSR8"    /* Alter TSO segment              */ /* @BL */
 PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */ /* @BL */
 PANELM3  = "RACFMSG3"    /* Display RACF command (Radmin)  */ /* @D4 */
-EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @D1 */
+EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @CZ */
 
 ADDRESS ISPEXEC                                               /* @BC */
   Arg Rfilter
@@ -1011,6 +1013,10 @@ GETD:
 
   parse var details.1 ,
   'USER=' x 'NAME=' name 'OWNER=' owner 'CREATED=' datecre
+  if datecre <> '' then do                                    /* @DN */
+     datecre = SUBSTR(datecre,1,2)SUBSTR(datecre,4,3)         /* @DN */
+     datecre = DATE('U',datecre,'J')                          /* @DO */
+  end                                                         /* @DN */
 
   parse var details.2 ,
         'DEFAULT-GROUP=' defgrp 'PASSDATE=',
@@ -1218,7 +1224,7 @@ CREATE_TABLE:                                                 /* @BE */
   seconds = TIME('S')
   tbla    = 'TA'ZSCREEN||SECONDS  /* table name unique */
   "TBCREATE" tbla ,
-       "KEYS(USER) NAMES(ACTION NAME OWNER DEFGRP DATELGN",
+       "KEYS(USER) NAMES(ACTION NAME OWNER DEFGRP DATELGN DATECRE",
                         "REVOKED ATTR TSOUSER DATA ATTR2)",
                         "REPLACE NOWRITE"
   cmd = "SEARCH FILTER("RFILTER") CLASS("rclass")"            /* @BB */

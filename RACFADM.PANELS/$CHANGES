@@ -2,6 +2,13 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  17 Apr 2020 - V16R4
+     - User and Group (Options 1/2)
+       -- Line command 'S'how, added 'CREATED: mm/dd/yy'
+     - GrpTree (Options 6)
+       -- Added code to remove blank rows/lines, reducing the need
+          to page down/up
+
   17 Apr 2020 - V16R3
      - Main Menu
        -- Added 3 more spaces between columns of data in the

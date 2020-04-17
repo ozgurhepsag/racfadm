@@ -15,7 +15,7 @@
 +\-\(%RACFADM - User Profiles+)\-\
 %Command ===>_ZCMD                                              +Scroll==>_SAMT+
 %
-+PROFILE:$USER
++PROFILE:$USER    +                        CREATED:$DATECRE  {(MM/DD/YY)
 +NAME:   $NAME
 +OWNER:  $OWNER   { (Owner of profile)
 +ATTRIB: $ATTR                                                               @Z

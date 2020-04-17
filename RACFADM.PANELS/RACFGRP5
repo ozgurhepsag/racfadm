@@ -15,7 +15,7 @@
 +\-\(%RACFADM - Group Profiles+)\-\
 %Command ===>_ZCMD                                              +Scroll==>_SAMT+
 %
-+PROFILE:$GROUP
++PROFILE:$GROUP   +                        CREATED:$DATECRE  {(MM/DD/YY)
 +SUPGRP: $SUPGRP  { (Superior group)
 +OWNER:  $OWNER   { (Owner of profile)
 +DATA:   $DATA                                                               @Z

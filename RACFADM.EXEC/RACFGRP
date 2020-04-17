@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @C3  200417  RACFA    Changed date to 'U'SA, was 'O'rdered         */
+/* @C2  200417  TRIDJK   Added 'Created' date                         */
 /* @C1  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
 /* @BZ  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @BY  200410  RACFA    Do not display 'Segment' or 'Command'        */
@@ -85,7 +87,7 @@ PANEL07  = "RACFGRP7"    /* Add connection                 */ /* @AW */
 PANEL08  = "RACFGRP8"    /* List groups and descriptions   */ /* @AW */
 PANELM1  = "RACFMSG1"    /* Confirm Request (pop-up)       */ /* @AW */
 PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */ /* @AW */
-EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @BP */
+EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @BO */
 
 ADDRESS ISPEXEC                                               /* @AO */
   Rclass = 'GROUP'
@@ -518,10 +520,13 @@ CREATE_TABLEB:                                                /* @BM */
      l = LENGTH(temp)
      if (uacc = ' ') then
         if (substr(temp,6,14) = 'SUPERIOR GROUP') then do
-           temp   = var.i
-           uacc   = substr(temp,20,8)
-           supgrp = substr(temp,20,8)
-           owner  = substr(temp,39,8)
+           temp    = var.i
+           uacc    = substr(temp,20,8)
+           supgrp  = substr(temp,20,8)
+           owner   = substr(temp,39,8)
+           datecre = substr(temp,59,6)                        /* @C2 */
+           datecre = SUBSTR(datecre,1,2)SUBSTR(datecre,4,3)   /* @C2 */
+           datecre = DATE('U',datecre,'J')                    /* @C3 */
         end
      if (data = ' ') then
         if (substr(temp,6,17) = 'INSTALLATION DATA') then do
