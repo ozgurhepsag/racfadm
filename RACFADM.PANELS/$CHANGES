@@ -2,6 +2,17 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  17 Apr 2020 - V16R3
+     - Main Menu
+       -- Added 3 more spaces between columns of data in the
+          informational box at the bottom of screen
+     - Issues (Option I)
+       -- Closed issue 200417-A
+          * Renamed REXX program RACFAUTH to RACFCLSA
+          * Renamed panels RACFAUT1/2 to RACFCLSE/F
+     - Other items
+       -- Updated $DIR member in panel/REXX datasets
+
   17 Apr 2020 - V16R2
      - Main Menu
        -- Unhide GrpTree, now option 6 on menu

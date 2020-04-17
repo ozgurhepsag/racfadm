@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @B5  200417  RACFA    Chg REXX pgm name RACFAUTH to RACFCLSA       */
 /* @B4  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
 /* @B3  200412  RACFA    Deleted subroutine 'ERROR', not needed       */
 /* @B2  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
@@ -157,7 +158,8 @@ DISPLAY_TABLE_PERMIT:
      End
      Select
         when (opta = 'L') then call lisd                      /* @AS */
-        when (opta = 'S') then x = RACFAUTH(class profile user)
+        when (opta = 'S') then
+             x = RACFCLSA(class profile user)
         otherwise nop
      End
      Do while (reta = 4)   /* process multi selection */
@@ -167,7 +169,7 @@ DISPLAY_TABLE_PERMIT:
         "CONTROL DISPLAY SAVE"
         Select
            when (opta = 'S') then
-                x = RACFAUTH(class profile user)
+                x = RACFCLSA(class profile user)              /* @B5 */
            otherwise nop
         End
      end

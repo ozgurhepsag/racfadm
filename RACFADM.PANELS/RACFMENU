@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V16R2+)\-\
++\-\(%RACFADM - RACF Administration - V16R3+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options        %C ~Changes  +Version/updates
@@ -22,10 +22,10 @@
 +
 +
 + ---------------------------------------------------------------------------
-+   RACF:!RACFVER     +Dbase:!RACFDSN
-+   z/OS:!ZOSVER      +Plex: !ZSYSPLEX    +Lpar:!ZSYSID
-+   Date:!ZDATE       +Jdate:!ZJDATE      +Time:!ZTIME
-+   User:!ZUSER       +Group:!RACFGRP     +Name:!RACFNAM
++   RACF:!RACFVER        +Dbase:!RACFDSN
++   z/OS:!ZOSVER         +Plex: !ZSYSPLEX       +Lpar:!ZSYSID
++   Date:!ZDATE          +Jdate:!ZJDATE         +Time:!ZTIME
++   User:!ZUSER          +Group:!RACFGRP        +Name:!RACFNAM
 + ---------------------------------------------------------------------------
 )INIT
   .CURSOR = ZCMD
@@ -89,7 +89,7 @@
       6,'CMD(%RACFTREE)'
       7,'CMD(%RACFPRMS)'
       8,'CMD(%RACFDB)'
-      9,'CMD(%RACFAUTH)'                                    /* Hidden */
+      9,'CMD(%RACFCLSA)'                                    /* Hidden */
       B,'CMD(%BOOKMGR SHELF(''EOYBOOK.ICHZBKC0.BKSHELF''))' /* Hidden */
       C,'CMD(%RACFLOG $CHANGES)'
       E,'CMD(%RACFENQ)'

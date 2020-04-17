@@ -29,11 +29,11 @@
  #RACPUBL  Tutorial       RACF publications and downloads
  #RACPUBS  Tutorial       RACF eductional websites
  #RACUSR2  Tutorial       User profile
- RACFAUT1  Authorization  Enter profile/class/user, menu opt 9 (hidden)
- RACFAUT2  Authorization  List group/ids and access
  RACFCLSB  Class          List members
  RACFCLSC  Class          Add class
  RACFCLSD  Class          List class profiles
+ RACFCLSE  Class          Enter profile/class/user, menu opt 9 (hidden)
+ RACFCLSF  Class          List group/ids and access
  RACFCLSR  Class          List classes (show, refresh), menu option 4
  RACFCLSS  Class          List classes (show)
  RACFCLS1  Class          Set filter
