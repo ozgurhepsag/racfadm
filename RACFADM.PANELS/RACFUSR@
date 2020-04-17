@@ -19,7 +19,7 @@
 + PROFILE%===>_USER    {^USERTXT           ^+ ^PASSFLD              ^+
 + OWNER  %===>_BOWNER  { (Owner of profile)
 + DFLTGRP%===>_DEFGRP  { (Default group)
-+ NAME   %===>_NAME                                      { (Last, first name)
++ NAME   %===>_NAME                { (Last, first name)
 + ATTRIB %===>_ATTR                                                          @Z
 +
 %TSO Segment:             %OMVS Segment:

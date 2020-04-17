@@ -6,11 +6,11 @@
  --------  -------------  --------------------------------------------
  $$DIR     Directory      Document members
  RACFADM   Software       Dynamically allocate and invoke software
- RACFAUTH  Authorization  Display authorization on profile, menu opt 7
+ RACFAUTH  Authorization  Display authorization on profile, menu opt 9
  RACFCLSG  Class          Extract generic class profiles
  RACFCLSR  Class          Display class profiles, menu option 4
  RACFCLSS  Class          Search and display classes
- RACFDB    Database       Display RACF database info, menu option 6
+ RACFDB    Database       Display RACF database info, menu option 8
  RACFDSN   Dataset        Display dataset profiles
  RACFEMAC  Edit macro     View/edit, turn off highlighting
  RACFENQ   Enqueues       Display LIBDEF panels enqueues, menu option E
@@ -19,10 +19,11 @@
  RACFLOG   Documentation  Display changes/issues, menu option C/I
  RACFMSGC  Message        Display 'Confirm Request' panel
  RACFMSGS  Message        Display error message
- RACFPRMJ  Parameter      Display RACF parameters, menu option 5
- RACFPRMU  Parameter      Customize settings, menu option 0
+ RACFPRMS  Parameter      Display RACF parameters, menu option 7
  RACFPROF  Profile        Execute line cmd 'P', extract/display profile
- RACFPSWD  Password       Reset userid password (opt P and line cmd PW)
+ RACFPSWD  Password       Reset userid password (menu opt 5/linecmd PW)
+ RACFSETG  Settings       Customize settings, menu option 0
+ RACFTREE  Group tree     Execute/display DSMON group tree report
  RACFUSR   User           Display userid profiles, menu option 1
  RACFUSRT  User           Add, delete and change TSO userid
  RACFUSRX  User           Userid cross reference report (line cmd XR)

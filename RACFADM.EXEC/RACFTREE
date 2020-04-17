@@ -1,0 +1,79 @@
+/*%NOCOMMENT====================* REXX *==============================*/
+/*  PURPOSE:  RACFADM - GrpTree - Group tree report (Menu option 6)   */
+/*--------------------------------------------------------------------*/
+/* FLG  YYMMDD  USERID   DESCRIPTION                                  */
+/* ---  ------  -------  -------------------------------------------- */
+/* @A3  200417  RACFA    Removed 'enq(exclu)', not needed             */
+/* @A2  200416  RACFA    Honor users setting on displaying of file    */
+/* @A1  200416  RACFA    Increased size of SYSPRINT                   */
+/* @A0  200416  TRIDJK   Created REXX program                         */
+/*====================================================================*/
+EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @A2 */
+
+ADDRESS ISPEXEC
+  "VGET (ERATRACE ERADISP) ASIS"                              /* @A2 */
+  If (eratrace <> 'NO') then do
+     parse source . . REXXPGM .
+     Say "*"COPIES("-",70)"*"
+     Say "*"Center("Begin Program = "REXXPGM,70)"*"
+     Say "*"COPIES("-",70)"*"
+     if (eratrace <> 'PROGRAMS') THEN
+        interpret "Trace "SUBSTR(ERATRACE,1,1)
+  end
+
+Address TSO
+  /*--------------------------------------------*/
+  /*  Call ICHDSM00 for group tree report       */
+  /*--------------------------------------------*/
+  'alloc f(sysprint) new reuse unit(sysallda)',
+         'space(1,1) tracks'
+  'alloc f(sysut2)   new reuse unit(sysallda)',
+         'space(20,50) cylinders',                            /* @A1 */
+         'recfm(F B A) lrecl(133) blksize(0)'                 /* @A1 */
+  'alloc f(sysin)    new reuse unit(sysallda)',
+         'lrecl(80) blksize(0) recfm(f b)',
+         'space(1,1) tracks'
+  'newstack'
+  queue 'LINECOUNT 0'
+  queue 'FUNCTION RACGRP'
+  queue
+  'Execio * diskw sysin (finis'
+
+  "call *(ichdsm00)"
+
+Address ISPExec
+  /*---------------------*/
+  /*  Browse the report  */
+  /*---------------------*/
+  'lminit dataid(id) ddname(sysut2)'                          /* @A3 */
+  if (rc ^= 0) then do
+     racfsmsg = 'Allocation error'
+     racflmsg = 'LMINIT failed for SYSUT2'
+     'setmsg msg(racf001)'
+     call Goodbye
+  end
+  SELECT                                                      /* @A2 */
+     WHEN (ERADISP = "VIEW") THEN                             /* @A2 */
+          "VIEW DATAID("ID") MACRO("EDITMACR")"               /* @A2 */
+     WHEN (ERADISP = "EDIT") THEN                             /* @A2 */
+          "EDIT DATAID("ID") MACRO("EDITMACR")"               /* @A2 */
+     OTHERWISE                                                /* @A2 */
+          "BROWSE DATAID("ID")"                               /* @A2 */
+  END                                                         /* @A2 */
+  'lmfree dataid('id')'
+
+Address TSO
+  'delstack'
+  'free  f(sysut2 sysprint sysin)'
+  call Goodbye
+EXIT
+/*--------------------------------------------------------------------*/
+/*  If tracing is on, display flower box                              */
+/*--------------------------------------------------------------------*/
+GOODBYE:
+  If (eratrace <> 'NO') then do
+     Say "*"COPIES("-",70)"*"
+     Say "*"Center("End Program = "REXXPGM,70)"*"
+     Say "*"COPIES("-",70)"*"
+  end
+EXIT

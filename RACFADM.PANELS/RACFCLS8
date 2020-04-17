@@ -8,8 +8,8 @@
 +\-\(%RACFADM - RACF Administration+)\-\
 %Command ===>_ZCMD                                              +Scroll==>_SAMT+
 %
-+USER:   $USER    + CLASS: $DISPCLS
-+SELECT: %S+Show,%L+List
++USER:  $USER    + CLASS: $DISPCLS
++SELECT:%S+Show,%L+List
 %
 %S  ~Profile
 %-------------------------------------------------------------------------------

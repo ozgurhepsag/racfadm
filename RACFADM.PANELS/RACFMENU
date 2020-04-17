@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V16R0+)\-\
++\-\(%RACFADM - RACF Administration - V16R2+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options        %C ~Changes  +Version/updates
@@ -13,13 +13,13 @@
 %   3 ~Dataset  +Dataset profiles         %I ~Issues   +Known issues
 %   4 ~General  +General resources        %T ~Tutorial +Help
 %   5 ~Password +Password reset           %X ~Exit     +Terminate
-%   6 ~RACFprms +RACF parameters
-%   7 ~RACFdb   +RACF databases
-%
-%
-%
-%
-%
+%   6 ~GrpTree  +Group tree report
+%   7 ~RACFprms +RACF parameters
+%   8 ~RACFdb   +RACF databases
++
++
++
++
 +
 + ---------------------------------------------------------------------------
 +   RACF:!RACFVER     +Dbase:!RACFDSN
@@ -80,15 +80,16 @@
   *ENDREXX
 )PROC
   &ZSEL=TRANS(TRUNC(&ZCMD,'.')
-      0,'CMD(%RACFPRMU)'
+      0,'CMD(%RACFSETG)'
       1,'CMD(%RACFUSR)'
       2,'CMD(%RACFGRP)'
       3,'CMD(%RACFDSN)'
       4,'CMD(%RACFCLSR)'
       5,'CMD(%RACFPSWD)'
-      6,'CMD(%RACFPRMJ)'
-      7,'CMD(%RACFDB)'
-      8,'CMD(%RACFAUTH)'                                    /* Hidden */
+      6,'CMD(%RACFTREE)'
+      7,'CMD(%RACFPRMS)'
+      8,'CMD(%RACFDB)'
+      9,'CMD(%RACFAUTH)'                                    /* Hidden */
       B,'CMD(%BOOKMGR SHELF(''EOYBOOK.ICHZBKC0.BKSHELF''))' /* Hidden */
       C,'CMD(%RACFLOG $CHANGES)'
       E,'CMD(%RACFENQ)'
@@ -113,6 +114,7 @@
   FIELD(ZPS00012) VAR(ZCMD) VAL('X')
   FIELD(ZPS00013) VAR(ZCMD) VAL('6')
   FIELD(ZPS00014) VAR(ZCMD) VAL('7')
+  FIELD(ZPS00015) VAR(ZCMD) VAL('8')
 )END
 /*--------------------------------------------------------------------*/
 /*                             Comments                               */
@@ -129,7 +131,7 @@
 /*     hopes of making it easier to understand/maintain code          */
 /*                                                                    */
 /*  4) Below menu options are hidden, not displayed:                  */
-/*       8  RACFAuth  Analyze ACL for general resources               */
+/*       9  RACFAuth  Analyze ACL for general resources               */
 /*       B  BookMgr   RACF manuals                                    */
 /*                                                                    */
 /*  5) The )INIT section executes a REXX code to obtain the           */

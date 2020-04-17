@@ -12,6 +12,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AU  200417  RACFA    Removed 'enq(exclu)', not needed             */
 /* @AT  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
 /* @AS  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @AR  200410  RACFA    Chk for 'None', display message              */
@@ -230,7 +231,7 @@ Address TSO
   'execio * diskw' dd '(finis stem' stem'.'
 
 Address ISPExec
-  'lminit dataid(id) ddname('dd') enq(exclu)'
+  'lminit dataid(id) ddname('dd')'                            /* @AU */
   if (rc ^= 0) then do
      zedsmsg = 'Error'
      zedlmsg = 'Error.  LMINIT failed for VIO output file'

@@ -26,8 +26,8 @@
 +  %3 ~Dataset profiles    %8 ~DSN access authority
 +  %4 ~General resources   %9 ~Res access authority
 )PROC
-&ZSEL = TRANS(&ZCMD 0,#RACPRM1  1,#RACUSR2   2,#RACGRP8   3,#RACDSN2
-                    4,#RACCLSR  5,#RACPRMJ   6,#RACDB     7,#RACENQ
+&ZSEL = TRANS(&ZCMD 0,#RACSET1  1,#RACUSR2   2,#RACGRP8   3,#RACDSN2
+                    4,#RACCLSR  5,#RACPRMS   6,#RACDB     7,#RACENQ
                     8,#RACDSNA  9,#RACCLSA  10,#RACPUBL  11,#RACNOTE
                     12,#RACACKN *,'?')
 &ZUP  = #RACMENU

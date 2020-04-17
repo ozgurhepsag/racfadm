@@ -10,7 +10,7 @@
 /* @A1  200220  RACFA    Added ERATRACE=YES, then TRACE R             */
 /* @A0  200123  RACFA    Created REXX                                 */
 /*====================================================================*/
-PANEL30 = "RACFPRMU"    /* Settings, menu option 0         */ /* @A3 */
+PANEL30 = "RACFSETG"    /* Settings, menu option 0         */ /* @A3 */
 
 ADDRESS ISPEXEC                                               /* @A2 */
   "VGET (ERATRACE) ASIS"                                      /* @A1 */

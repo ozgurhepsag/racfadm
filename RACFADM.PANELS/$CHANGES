@@ -2,6 +2,30 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  17 Apr 2020 - V16R2
+     - Main Menu
+       -- Unhide GrpTree, now option 6 on menu
+     - Issues (Option I)
+       -- Logged issue 200417-A, concerning User (opt 1), line cmd SE,
+          then selecting a class, abends in certain situations
+     - Other Items
+       -- Rename panels
+           #RACPRM1/2/3 --> #RACSET1/2/3
+           RACFPRMU     --> RACFSETG
+           RACFPRMJ     --> RACFPRMS
+       -- Rename REXX programs
+           RACFPRMU     --> RACFSETG
+           RACFPRMJ     --> RACFPRMS
+       -- Updated $DIR member in panel and REXX datasets
+       -- A little code cleanup in some REXX programs
+
+  16 Apr 2020 - V16R1
+     - Main Menu
+       -- Added hidden option 9, GrpTree, Group Trees
+     - User (Option 1)
+       -- Updated panels (RACFUSR@ and RACFUSR5/6) to make the 'Name'
+          field 20 characters
+
   16 Apr 2020 - V16R0
      - Enqueues (Option E)
        -- Display enqueues on RACF database

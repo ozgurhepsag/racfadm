@@ -14,7 +14,7 @@
 +
 +OWNER  %===>_OWNER   { (Owner of profile)
 +DFLTGRP%===>_DEFGRP  { (Default group)
-+NAME   %===>_NAME                                      { (Last, first name)
++NAME   %===>_NAME                { (Last, first name)
 +TSO    %===>_Z{        (Y=Yes, N=No)
 +
 +ATTRIB %===>+SPECIAL   _Z{ (Y=Yes, N=No)

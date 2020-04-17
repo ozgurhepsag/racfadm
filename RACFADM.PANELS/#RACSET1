@@ -1,0 +1,32 @@
+)ATTR DEFAULT(%+_)
+   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON) JUST(LEFT) HILITE(USCORE)
+   !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
+   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
+)BODY EXPAND(\\)
+%Tutorial+\-\(%RACFADM - Settings - 1 of 3+)\-\%Tutorial
+%Command ===>_ZCMD                                                             +
+%
++General:
+!  Administrator   +Specify full administrator authority,+providing more line
++                  +commands: Add, Change, etc.%(Y=Yes, N=No is default)
++
+!  Admin RACF API  %Yes+to use RACF API module (IRRXUTIL) to obtain information
++                   when adding/changing a userid and allow access to use the
++                   line command 'P'rofile,%No+is the default
++
+!  Default filter  +Specify a default search string, when selecting menu
++                  +option 1 (Userid), 2 (Group) and 3 (Dataset)
++
+!  Status interval +The number of entries processed before displaying the
++                  +progress status message%(0-9999, 0=Do not display,
+%                   100=Default)
++
+!  Display files   +Display reports/files in%Browse, Edit or View+mode when
++                  +using line commands: List, Profile, etc.%(View=Default)
++
++
++ \ \ (press%ENTER+to continue) \ \
+)PROC
+  &ZUP     = #RACSET1
+  &ZCONT   = #RACSET2
+)END
