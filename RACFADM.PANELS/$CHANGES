@@ -2,12 +2,22 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  18 Apr 2020 - V16R6
+     - Menu Menu
+       -- Updated version number on main menu (RACFMENU)
+     - Tutorial (Option T)
+       -- Reworked 'RACF Parameters' tutorial panel (#RACPRMS)
+          and updated RACFPRMS to invoke this help panel, instead
+          of #RACMENU
+     - Other Items
+       -- Fixed text in #RACACKN, #RACNOTE and $CHANGE members
+
   18 Apr 2020 - V16R5
      - Tutorial (Options T)
        -- Added help panels 'Password' and 'Group tree report'
        -- Updated 'Notes' tutorial, to include below text:
           * Installing a new version/release of RACFADM, suggest
-            backuping current datasets, deleting the members and
+            backing up current datasets, deleting the members and
             then copying in the new version/release
             o Past releases, modules have been renamed or deleted
             o Prevents from having dead modules in datasets

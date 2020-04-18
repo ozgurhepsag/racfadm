@@ -6,25 +6,20 @@
 %Tutorial+\-\(%RACFADM - RACF Parameters+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
-+System parameters:  Access Control CVT (CVTRAC)
++ %RACFprms+reads the!Access Control Communication Vector Table (CVTRAC)
++  in memory and displays RACF information, such as the version, database
++  name and other security parameters.
 +
-+Current status of RACF parameters
-+                                                                   More:
-+-------------------------------------------------------------------------------
-+ RACF version ..................... V7R79M1
-+ RACF data base ................... SYS1.RACFPRM1
-+------------------------------------------------------------------------------
-+ JES early verify ................. NO
-+ JES batch all .................... NO
-+ JES Xbm all ...................... NO
-+ JES NJE userid ................... ????????
-+ JES undefined userid .............
-+ Password interval ................ 60
-+ Password history ................. 0
-+ Password attempts ................ 0
-+ Password warning ................. 0
-+ Password rules ...................
-+ Password minimum length .......... 8
++  Some of the RACF parameters displayed are:
+!    JES2 parameters
+!    Password options
+!    Setropt options
+!    DASD options
+!    Tape options
+!    Model options
+!    Terminal options
+!    Statistics
+!    Audit options
 )PROC
-  &ZUP     = #RACPRMJ
+  &ZUP     = #RACPRMS
 )END

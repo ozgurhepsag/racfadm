@@ -12,7 +12,7 @@
 /* @A1  200119  RACFA    Standardized/reduced lines of code           */
 /* @A0  011229  NICORIZ  Created REXX, V2.1, www.rizzuto.it           */
 /*====================================================================*/
-PANEL19 = "RACFPRMS"    /* RACF parameters, menu option 8  */ /* @A5 */
+PANEL19 = "RACFPRMS"    /* RACF parameters, menu option 7  */ /* @A5 */
 
 ADDRESS ISPEXEC                                               /* @A4 */
   "VGET (ERATRACE) ASIS"                                      /* @A3 */

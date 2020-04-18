@@ -11,7 +11,7 @@
 +     dialog. It allocates the neccessary files using!ISPF LIBDEF+and
 +    !TSO ALTLIB+commands
 +
-!  2)+Installing a new version/release of%RACFADM,+suggest!backuping+
+!  2)+Installing a new version/release of%RACFADM,+suggest!backing up+
 +     current datasets,!deleting+the members and!copying+in the new
 +     version/release
 !     -+Past releases, modules have been renamed or deleted

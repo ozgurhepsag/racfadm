@@ -80,5 +80,5 @@
 + UADS volume{......................$RCVTUVOL+
 + When program{.....................$RCVTSWHE+
 )INIT
-  .HELP   = #RACMENU
+  .HELP   = #RACPRMS
 )END
