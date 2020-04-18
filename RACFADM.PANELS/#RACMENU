@@ -20,16 +20,16 @@
 +
 +The following topics are presented in sequence, or may be selected by number:
 +
-+  %0 ~Settings            %5 ~RACF parameters        %10~Publications
-+  %1 ~User profiles       %6 ~RACF databases         %11~Notes
-+  %2 ~Group profiles      %7 ~Enqueues               %12~Acknowlegements
-+  %3 ~Dataset profiles    %8 ~DSN access authority
-+  %4 ~General resources   %9 ~Res access authority
++  %0 ~Settings            %5 ~Password            %10~DSN access authority
++  %1 ~User profiles       %6 ~Group tree report   %11~Res access authority
++  %2 ~Group profiles      %7 ~RACF parameters     %12~Publications
++  %3 ~Dataset profiles    %8 ~RACF databases      %13~Notes
++  %4 ~General resources   %9 ~Enqueues            %14~Acknowlegements
 )PROC
-&ZSEL = TRANS(&ZCMD 0,#RACSET1  1,#RACUSR2   2,#RACGRP8   3,#RACDSN2
-                    4,#RACCLSR  5,#RACPRMS   6,#RACDB     7,#RACENQ
-                    8,#RACDSNA  9,#RACCLSA  10,#RACPUBL  11,#RACNOTE
-                    12,#RACACKN *,'?')
+&ZSEL = TRANS(&ZCMD 0,#RACSET1  1,#RACUSR2  2,#RACGRP8  3,#RACDSN2
+                    4,#RACCLSR  5,#RACPSWD  6,#RACGTRE  7,#RACPRMS
+                    8,#RACDB    9,#RACENQ  10,#RACDSNA 11,#RACCLSA
+                   12,#RACPUBL 13,#RACNOTE 14,#RACACKN   *,'?')
 &ZUP  = #RACMENU
 )PNTS
   FIELD(ZPS00001) VAR(ZCMD) VAL('0')
@@ -43,8 +43,10 @@
   FIELD(ZPS00009) VAR(ZCMD) VAL('12')
   FIELD(ZPS00010) VAR(ZCMD) VAL('3')
   FIELD(ZPS00011) VAR(ZCMD) VAL('8')
-  FIELD(ZPS00012) VAR(ZCMD) VAL('4')
-  FIELD(ZPS00013) VAR(ZCMD) VAL('9')
+  FIELD(ZPS00012) VAR(ZCMD) VAL('13')
+  FIELD(ZPS00013) VAR(ZCMD) VAL('4')
+  FIELD(ZPS00014) VAR(ZCMD) VAL('9')
+  FIELD(ZPS00015) VAR(ZCMD) VAL('14')
 )END
 /*--------------------------------------------------------------------*/
 /*                             Comments                               */

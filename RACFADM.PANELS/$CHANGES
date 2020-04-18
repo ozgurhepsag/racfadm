@@ -2,6 +2,22 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  18 Apr 2020 - V16R5
+     - Tutorial (Options T)
+       -- Added help panels 'Password' and 'Group tree report'
+       -- Updated 'Notes' tutorial, to include below text:
+          * Installing a new version/release of RACFADM, suggest
+            backuping current datasets, deleting the members and
+            then copying in the new version/release
+            o Past releases, modules have been renamed or deleted
+            o Prevents from having dead modules in datasets
+     - Other Items
+       -- Renamed REXX program RACFTREE to RACFGTRE
+       -- Tweaked RACFCLS8, RACFGRP5 and RACFUSR2/3
+       -- Standardized DDNAMEs in REXX programs to be 'RACFA###',
+          easier to verify all files are freed after use
+       -- Updated $DIR members in panel and REXX datasets
+
   17 Apr 2020 - V16R4
      - User and Group (Options 1/2)
        -- Line command 'S'how, added 'CREATED: mm/dd/yy'

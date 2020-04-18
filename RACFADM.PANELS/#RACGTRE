@@ -1,0 +1,25 @@
+)ATTR DEFAULT(%+_)
+   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON) JUST(LEFT) HILITE(USCORE)
+   !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
+   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
+)BODY EXPAND(\\)
+%Tutorial+\-\(%RACFADM - Group Trees Report+)\-\%Tutorial
+%Command ===>_ZCMD                                                             +
+%
++  The%Data Security Monitor (DSMON)+produces a set of reports that
++  provide information about the current status of the data security
++  environment at your installation.
++
++  The%Group Tree Report+
++    This report lists, for each requested group, all of its
++    subgroups, all of the subgroups' subgroups, and so on, as well
++    as the owner of each group listed in the report, if the owner is
++    not the superior group.
++
++    You can use the group tree report to examine the overall RACF
++    groups tructure for your system.  You can also determine the
++    scope of the group for group-related user attributes
++    (group-SPECIAL, group-OPERATIONS, and group-AUDITOR).
+)PROC
+  &ZUP     = #RACGTRE
+)END

@@ -809,7 +809,7 @@ RETURN
 /*  List dataset                                                      */
 /*--------------------------------------------------------------------*/
 LISD:                                                         /* @A1 */
-  DDNAME  = "ERA"RANDOM(0,99999)                              /* @A1 */
+  DDNAME  = "RACFA"RANDOM(0,999)                              /* @A1 */
   CMDPRM  = "ALL"                                             /* @A1 */
   CMD     = "LISTDSD DATASET('"DATASET"')" CMDPRM             /* @B2 */
   X = OUTTRAP("CMDREC.")                                      /* @A1 */
@@ -859,7 +859,7 @@ LISP:                                                         /* @A5 */
      call RACFMSGS ERR17                                      /* @BI */
      return                                                   /* @BI */
   end                                                         /* @BI */
-  DDNAME  = "ERA"RANDOM(0,99999)                              /* @A5 */
+  DDNAME  = "RACFA"RANDOM(0,999)                              /* @A5 */
   CMDPRM  = "CSDATA DFP OMVS OVM TME"                         /* @A5 */
   CMD     = "LG "ID CMDPRM                                    /* @AI */
   X = OUTTRAP("CMDREC.")                                      /* @A5 */

@@ -624,7 +624,7 @@ RETURN
 /*  List group                                                        */
 /*--------------------------------------------------------------------*/
 LISD:
-  DDNAME   = "ERA"RANDOM(0,99999)                             /* @A2 */
+  DDNAME   = "RACFA"RANDOM(0,999)                             /* @A2 */
   CMDPRM   = "CSDATA DFP OMVS OVM TME"                        /* @A2 */
   cmd      = "LG "GROUP" "CMDPRM                              /* @AN */
   X = OUTTRAP("CMDREC.")                                      /* @A2 */
@@ -670,7 +670,7 @@ RETURN                                                        /* @BQ */
 /*  List userid                                                       */
 /*--------------------------------------------------------------------*/
 LISP:
-  DDNAME  = "ERA"RANDOM(0,99999)                              /* @A5 */
+  DDNAME  = "RACFA"RANDOM(0,999)                              /* @A5 */
   CMDPRM  = "CICS CSDATA DCE DFP EIM KERB LANGUAGE",          /* @A5 */
             "LNOTES MFA NDS NETVIEW OMVS OPERPARM",           /* @A5 */
             "OVM PROXY TSO WORKATTR"                          /* @A5 */

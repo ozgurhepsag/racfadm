@@ -23,7 +23,7 @@
  RACFPROF  Profile        Execute line cmd 'P', extract/display profile
  RACFPSWD  Password       Reset userid password (menu opt 5/linecmd PW)
  RACFSETG  Settings       Customize settings, menu option 0
- RACFTREE  Group tree     Execute/display DSMON group tree report
+ RACFGTRE  Group tree     Execute/display DSMON group tree report
  RACFUSR   User           Display userid profiles, menu option 1
  RACFUSRT  User           Add, delete and change TSO userid
  RACFUSRX  User           Userid cross reference report (line cmd XR)

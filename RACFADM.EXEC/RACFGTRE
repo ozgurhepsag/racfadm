@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A7  200417  RACFA    Free file when done using                    */
 /* @A5  200417  RACFA    Chg edit macro, add code to del blank rows   */
 /* @A4  200417  TRIDJK   When EDIT/VIEW, remove blank rows/lines      */
 /* @A3  200417  RACFA    Removed 'enq(exclu)', not needed             */
@@ -11,7 +12,7 @@
 /* @A0  200416  TRIDJK   Created REXX program                         */
 /*====================================================================*/
 EDITMACR = "RACFEMAC"    /* Edit Macro, delete space lines */ /* @A5 */
-Parse source . . REXXPGM .                                    /* @A5 */
+DDNAME   = "RACFA"RANDOM(0,999)                               /* @A5 */
 
 ADDRESS ISPEXEC
   "VGET (ERATRACE ERADISP) ASIS"                              /* @A2 */
@@ -44,8 +45,11 @@ Address TSO
 
   "call *(ichdsm00)"
 
+  /*--------------------------------------------*/
+  /*  Remove empty rows/lines and format report */
+  /*--------------------------------------------*/
   'execio * diskr sysut2 (stem sysut2. finis'                 /* @A5 */
-  'free  f(sysut2 sysprint sysin)'
+  'free  f(sysprint sysut2 sysin)'
   'delstack'
 
   K = 0                                                       /* @A5 */
@@ -67,20 +71,20 @@ Address TSO
   rec.0 = K                                                   /* @A5 */
   drop sysut2.                                                /* @A5 */
                                                               /* @A5 */
-  'alloc f('rexxpgm')  new reuse unit(sysallda)',             /* @A5 */
+  'alloc f('DDNAME')  new reuse unit(sysallda)',              /* @A5 */
          'space(20,50) cylinders',                            /* @A5 */
          'recfm(F B A) lrecl(133) blksize(0)'                 /* @A5 */
-  'execio * diskw 'rexxpgm' (stem rec. finis'                 /* @A5 */
+  'execio * diskw 'DDNAME' (stem rec. finis'                  /* @A5 */
   drop rec.                                                   /* @A5 */
 
 Address ISPExec
   /*---------------------*/
   /*  Browse the report  */
   /*---------------------*/
-  'lminit dataid(id) ddname('rexxpgm')'                       /* @A5 */
+  'lminit dataid(id) ddname('DDNAME')'                        /* @A5 */
   if (rc ^= 0) then do
      racfsmsg = 'Allocation error'
-     racflmsg = 'LMINIT failed for 'rexxpgm                   /* @A5 */
+     racflmsg = 'LMINIT failed for 'DDNAME                    /* @A5 */
      'setmsg msg(racf001)'
      call Goodbye
   end
@@ -93,6 +97,7 @@ Address ISPExec
           "BROWSE DATAID("ID")"                               /* @A2 */
   END                                                         /* @A2 */
   'lmfree dataid('id')'
+  Address TSO 'Free fi('DDNAME')'                             /* @A7 */
   call Goodbye
 EXIT
 /*--------------------------------------------------------------------*/

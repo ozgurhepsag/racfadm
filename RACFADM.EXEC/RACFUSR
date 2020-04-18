@@ -550,7 +550,7 @@ RETURN
 /*--------------------------------------------------------------------*/
 LISD:
   action  = '*Listed'                                         /* @A4 */
-  DDNAME  = "ERA"RANDOM(0,99999)                              /* @A2 */
+  DDNAME  = "RACFA"RANDOM(0,999)                              /* @A2 */
   CMDPRM  = "CICS CSDATA DCE DFP EIM KERB LANGUAGE",          /* @A2 */
             "LNOTES MFA NDS NETVIEW OMVS OPERPARM",           /* @A2 */
             "OVM PROXY TSO WORKATTR"                          /* @A2 */

@@ -921,7 +921,7 @@ RETURN
 /*  List class's profile                                              */
 /*--------------------------------------------------------------------*/
 LISD:                                                         /* @A1 */
-  DDNAME  = "ERA"RANDOM(0,99999)                              /* @A1 */
+  DDNAME  = "RACFA"RANDOM(0,999)                              /* @A1 */
   cmd = "RLIST "RCLASS PROFILE" AUTH"                         /* @AF */
   X = OUTTRAP("CMDREC.")                                      /* @A1 */
   ADDRESS TSO cmd                                             /* @AF */
@@ -961,7 +961,7 @@ RETURN 0                                                      /* @A6 */
 /*  List group                                                        */
 /*--------------------------------------------------------------------*/
 LISP:                                                         /* @A2 */
-  DDNAME  = "ERA"RANDOM(0,99999)                              /* @A2 */
+  DDNAME  = "RACFA"RANDOM(0,999)                              /* @A2 */
   CMDPRM  = "CSDATA DFP OMVS OVM TME"                         /* @A2 */
   cmd     = "LG "ID CMDPRM                                    /* @AF */
   X = OUTTRAP("CMDREC.")                                      /* @A2 */

@@ -225,13 +225,13 @@ DO_VIEW_STEM:
   parse arg stem
 
 Address TSO
-  dd = '$'right(time("s"),7,"0")   /* create unique ddname */
-  'alloc f('dd') unit(vio) new reuse space(1,1) tracks',
+  ddname = 'RACFA'RANDOM(0,999)   /* create unique ddname */
+  'alloc f('ddname') unit(vio) new reuse space(1,1) tracks',
         'lrecl(80) recfm(f b) blksize(0) dsorg(ps)'
-  'execio * diskw' dd '(finis stem' stem'.'
+  'execio * diskw' ddname '(finis stem' stem'.'
 
 Address ISPExec
-  'lminit dataid(id) ddname('dd')'                            /* @AU */
+  'lminit dataid(id) ddname('ddname')'                        /* @AU */
   if (rc ^= 0) then do
      zedsmsg = 'Error'
      zedlmsg = 'Error.  LMINIT failed for VIO output file'
@@ -247,7 +247,7 @@ Address ISPExec
           'browse dataid('id')'                               /* @A4 */
   end                                                         /* @A4 */
   'lmfree dataid('id')'
-  Address TSO 'free f('dd')'
+  Address TSO 'free f('ddname')'
 RETURN
 /*--------------------------------------------------------------------*/
 /*  Execute IRRUXTIL command                                     @A9  */

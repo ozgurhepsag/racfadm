@@ -40,9 +40,9 @@
 /* @A0  011229  NICORIZ  Created REXX, V2.1, www.rizzuto.it           */
 /*====================================================================*/
 PANEL29 = "RACFUSRT"    /* Add, chg and del a TSO userid   */ /* @A9 */
-PANELM2 = "RACFMSG2"    /* Display RACF command and RC     */ /* @AW*/
+PANELM2 = "RACFMSG2"    /* Display RACF command and RC     */ /* @AW */
 X       = MSG("OFF")    /* No informational messages       */ /* @AD */
-parse source . . DDNAME .                                     /* @AW*/
+DDNAME  = "RACFA"RANDOM(0,999)                                /* @AW */
 
 ADDRESS ISPEXEC                                               /* @AF */
   "VGET (ERASHOW ERATRACE ERAISPP ERACTLG ERAULIB) ASIS"      /* @A4 */
@@ -104,23 +104,23 @@ ADDD:                                                         /* @AJ */
   end                                                         /* @AO */
 
   /*- Allocate ISPF profile          -*/
-  cmd = "ALLOC FILE("DDNAME") DATASET('"user"."eraispp"')",   /* @AW*/
+  cmd = "ALLOC FILE("DDNAME") DATASET('"user"."eraispp"')",   /* @AW */
               "NEW SPACE(5,5) CYLINDERS",                     /* @AG */
               "BLKSIZE(0) LRECL(80) RECFM(F B)",              /* @AG */
               "CATALOG DIR(250)"                              /* @AG */
   call exccmd                                                 /* @AG */
-  cmd = "FREE FILE("DDNAME")"                                 /* @AW*/
+  cmd = "FREE FILE("DDNAME")"                                 /* @AW */
   call exccmd                                                 /* @AG */
 
   /*- Allocate joblib library        -*/
   if joblib='Y' then do                                       /* @AP */
-     cmd = "ALLOC FILE("DDNAME")",                            /* @AW*/
+     cmd = "ALLOC FILE("DDNAME")",                            /* @AW */
                   "DATASET('"user"."eraulib"')",              /* @AG */
                   "NEW SPACE(5,5) CYLINDERS",                 /* @AG */
                   "BLKSIZE(0) LRECL(80) RECFM(F B)",          /* @AG */
                   "CATALOG DIR(250)"                          /* @AG */
      call exccmd                                              /* @AG */
-     cmd = "FREE FILE("DDNAME")"                              /* @AW*/
+     cmd = "FREE FILE("DDNAME")"                              /* @AW */
      call exccmd                                              /* @AG */
   end
 

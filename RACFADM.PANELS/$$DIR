@@ -20,9 +20,11 @@
  #RACENQ   Tutorial       Enqueue information
  #RACGRP5  Tutorial       Group's userids profiles
  #RACGRP8  Tutorial       Group profile
+ #RACGTRE  Tutorial       Group tree report
  #RACMENU  Tutorial       Main menu, menu option T
  #RACNOTE  Tutorial       RACF notes (setup/use info)
  #RACPRMS  Tutorial       RACF parameters
+ #RACPSWD  Tutorial       Password reset
  #RACSET1  Tutorial       Settings - Customize options (1 of 3)
  #RACSET2  Tutorial       Settings - Customize options (2 of 3)
  #RACSET3  Tutorial       Settings - Customize options (3 of 3)

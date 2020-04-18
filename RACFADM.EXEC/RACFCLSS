@@ -367,7 +367,7 @@ RETURN 0
 /*  List class                                                   @AR  */
 /*--------------------------------------------------------------------*/
 LISP:                                                         /* @AR */
-  DDNAME  = "ERA"RANDOM(0,99999)                              /* @AR */
+  DDNAME  = "RACFA"RANDOM(0,999)                              /* @AR */
   cmd     = "RL "CLASS" * ALL"                                /* @AT */
   X = OUTTRAP("CMDREC.")                                      /* @AR */
   ADDRESS TSO cmd                                             /* @AR */

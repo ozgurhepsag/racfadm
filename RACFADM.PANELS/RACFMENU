@@ -86,7 +86,7 @@
       3,'CMD(%RACFDSN)'
       4,'CMD(%RACFCLSR)'
       5,'CMD(%RACFPSWD)'
-      6,'CMD(%RACFTREE)'
+      6,'CMD(%RACFGTRE)'
       7,'CMD(%RACFPRMS)'
       8,'CMD(%RACFDB)'
       9,'CMD(%RACFCLSA)'                                    /* Hidden */
