@@ -3,8 +3,6 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @BM  200418  RACFA    Del "PANEL12  = 'RACFCLSB'", not used        */
-/* @BL  200418  RACFA    Del line cmd 'M', subroutine DISM, no work   */
 /* @BK  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
 /* @BJ  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @BI  200407  RACFA    EXCMD removed 'else msg_var = 1 to msg.0'    */
@@ -67,6 +65,7 @@ PANEL04  = "RACFCLS4"    /* Change class                   */ /* @AM */
 PANEL05  = "RACFCLS5"    /* List group/ids and access      */ /* @AM */
 PANEL06  = "RACFCLS6"    /* Change access                  */ /* @AM */
 PANEL07  = "RACFCLS7"    /* Add access                     */ /* @AM */
+PANEL12  = "RACFCLSB"    /* List members                   */ /* @AM */
 PANEL13  = "RACFCLSC"    /* Add class                      */ /* @AM */
 PANELM1  = "RACFMSG1"    /* Confirm Request (pop-up)       */ /* @AM */
 PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */ /* @AM */
@@ -194,6 +193,7 @@ PROFL:
         when (opta = 'A') then call Addd
         when (opta = 'C') then call Chgd
         when (opta = 'L') then call Lisd                      /* @A1 */
+        when (opta = 'M') then call Dism
         when (opta = 'P') then                                /* @BA */
              call RACFPROF rclass profile                     /* @BA */
         when (opta = 'R') then call Deld
@@ -209,6 +209,7 @@ PROFL:
            when (opta = 'A') then call Addd
            when (opta = 'C') then call Chgd
            when (opta = 'L') then call Lisd                   /* @A1 */
+           when (opta = 'M') then call Dism
            when (opta = 'P') then                             /* @BA */
                 call RACFPROF rclass profile                  /* @BA */
            when (opta = 'R') then call Deld
@@ -384,6 +385,65 @@ DELD:
      else
         CALL racfmsgs "ERR02" /* RDELETE failed */            /* @AU */
   end
+RETURN
+/*--------------------------------------------------------------------*/
+/*  Display member list                                               */
+/*--------------------------------------------------------------------*/
+DISM:
+  if (profile = 'NONE') then
+     return
+  tblb = 'TB'ZSCREEN||SECONDS  /* table name unique */
+  "TBCREATE" TBLB "KEYS(ID) NAMES(ACC) REPLACE NOWRITE"
+  id = 'NONE'
+  /* Populate table */
+  call GETM
+  /* Permit table display section */
+  rb   = 'NO'
+  optb = ' '
+  /* Ability to perform actions on different profile */
+  Real_profile = profile||rclass
+  Profchg      = 'NO'
+  If (profile||rclass <> Real_profile) then Profchg = 'YES'
+  "TBSORT " tblb "FIELDS(ID)"
+  "TBTOP  " tblb
+  "TBDISPL" tblb "PANEL("PANEL12")"                           /* @AM */
+  retb = rc
+  Do while (retb < 8)       /* tableb panel */
+     "CONTROL DISPLAY SAVE"
+     IF (SROW <> "") & (SROW <> 0) THEN                       /* @AI */
+        IF (SROW > 0) THEN DO                                 /* @AI */
+           "TBTOP " TBLB                                      /* @AI */
+           "TBSKIP" TBLB "NUMBER("SROW")"                     /* @AI */
+        END                                                   /* @AI */
+     Select
+        when (optb = 'A') then call Addm
+        when (optb = 'R') then call Delm
+        otherwise nop
+     End
+     Do while (retb = 4)   /* process multi-section */
+        "CONTROL DISPLAY RESTORE"
+        "TBDISPL" tblb
+        retb = rc
+        "CONTROL DISPLAY SAVE"
+        Select
+           when (optb = 'A') then call Addm
+           when (optb = 'R') then call Delm
+           otherwise nop
+        End
+     end
+     optb = ' '
+     "CONTROL DISPLAY RESTORE"
+     "TBSORT" tblb "FIELDS(ID)"
+     "TBTOP " tblb
+     "TBSKIP" tblb "NUMBER("ZTDTOP")"
+     if (rb = "YES") then
+        retb = 12         /* rebuild table required */
+     else do
+        "TBDISPL" tblb "PANEL("PANEL12")"                     /* @AM */
+        retb = rc
+     end
+  end  /* While retb< 8 */
+  "TBEND" tblb
 RETURN
 /*--------------------------------------------------------------------*/
 /*  Add member                                                        */

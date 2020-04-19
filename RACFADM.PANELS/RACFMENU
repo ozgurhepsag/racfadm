@@ -4,16 +4,16 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V16R7+)\-\
++\-\(%RACFADM - RACF Administration - V17R0+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options        %C ~Changes  +Version/updates
-%   1 ~User     +User profiles            %E ~Enqueues +Dataset enqueues
-%   2 ~Group    +Group profiles           %H ~Help     +RACF commands
-%   3 ~Dataset  +Dataset profiles         %I ~Issues   +Known issues
-%   4 ~General  +General resources        %T ~Tutorial +Help
-%   5 ~Password +Password reset           %X ~Exit     +Terminate
-%   6 ~GrpTree  +Group tree report
+%   1 ~User     +User profiles            %D ~Dslist   +Dataset list
+%   2 ~Group    +Group profiles           %E ~Enqueues +Dataset enqueues
+%   3 ~Dataset  +Dataset profiles         %H ~Help     +RACF commands
+%   4 ~General  +General resources        %I ~Issues   +Known issues
+%   5 ~Password +Password reset           %T ~Tutorial +Help
+%   6 ~GrpTree  +Group tree report        %X ~Exit     +Terminate
 %   7 ~RACFprms +RACF parameters
 %   8 ~RACFdb   +RACF databases
 +
@@ -91,6 +91,7 @@
       8,'CMD(%RACFDB)'
       9,'CMD(%RACFCLSA)'                                    /* Hidden */
       B,'CMD(%BOOKMGR SHELF(''EOYBOOK.ICHZBKC0.BKSHELF''))' /* Hidden */
+      D,'CMD(%RACFDSL)'
       C,'CMD(%RACFLOG $CHANGES)'
       E,'CMD(%RACFENQ)'
       H,'CMD(%RACFHELP)'
@@ -103,18 +104,19 @@
   FIELD(ZPS00001) VAR(ZCMD) VAL('0')
   FIELD(ZPS00002) VAR(ZCMD) VAL('C')
   FIELD(ZPS00003) VAR(ZCMD) VAL('1')
-  FIELD(ZPS00004) VAR(ZCMD) VAL('E')
+  FIELD(ZPS00004) VAR(ZCMD) VAL('D')
   FIELD(ZPS00005) VAR(ZCMD) VAL('2')
-  FIELD(ZPS00006) VAR(ZCMD) VAL('H')
+  FIELD(ZPS00006) VAR(ZCMD) VAL('E')
   FIELD(ZPS00007) VAR(ZCMD) VAL('3')
-  FIELD(ZPS00008) VAR(ZCMD) VAL('I')
+  FIELD(ZPS00008) VAR(ZCMD) VAL('H')
   FIELD(ZPS00009) VAR(ZCMD) VAL('4')
-  FIELD(ZPS00010) VAR(ZCMD) VAL('T')
+  FIELD(ZPS00010) VAR(ZCMD) VAL('I')
   FIELD(ZPS00011) VAR(ZCMD) VAL('5')
-  FIELD(ZPS00012) VAR(ZCMD) VAL('X')
+  FIELD(ZPS00012) VAR(ZCMD) VAL('T')
   FIELD(ZPS00013) VAR(ZCMD) VAL('6')
-  FIELD(ZPS00014) VAR(ZCMD) VAL('7')
-  FIELD(ZPS00015) VAR(ZCMD) VAL('8')
+  FIELD(ZPS00014) VAR(ZCMD) VAL('X')
+  FIELD(ZPS00015) VAR(ZCMD) VAL('7')
+  FIELD(ZPS00016) VAR(ZCMD) VAL('8')
 )END
 /*--------------------------------------------------------------------*/
 /*                             Comments                               */

@@ -13,6 +13,7 @@
  #RACCLS8  Tutorial       List classes and profiles
  #RACCLS9  Tutorial       List profiles and descriptions
  #RACDB    Tutorial       RACF database information
+ #RACDSL   Tutorial       Dataset list
  #RACDSNA  Tutorial       Add/change dataset profile
  #RACDSN2  Tutorial       Dataset profile
  #RACDSN5  Tutorial       Dataset's group/id profile
@@ -30,6 +31,7 @@
  #RACPUBL  Tutorial       RACF publications and downloads
  #RACPUBS  Tutorial       RACF eductional websites
  #RACUSR2  Tutorial       User profile
+ RACFCLSB  Class          List members
  RACFCLSC  Class          Add class
  RACFCLSD  Class          List class profiles
  RACFCLSE  Class          Enter profile/class/user, menu opt 9 (hidden)

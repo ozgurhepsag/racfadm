@@ -11,6 +11,7 @@
  RACFCLSR  Class          Display class profiles, menu option 4
  RACFCLSS  Class          Search and display classes
  RACFDB    Database       Display RACF database info, menu option 8
+ RACFDSL   Dslist         Get LIBDEF/ALTLIB dsnames and invoke ISPF 3.4
  RACFDSN   Dataset        Display dataset profiles
  RACFEMAC  Edit macro     View/edit, turn off highlighting
  RACFENQ   Enqueues       Display LIBDEF panels enqueues, menu option E

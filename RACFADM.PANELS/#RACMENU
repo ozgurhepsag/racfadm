@@ -20,33 +20,36 @@
 +
 +The following topics are presented in sequence, or may be selected by number:
 +
-+  %0 ~Settings            %5 ~Password            %10~DSN access authority
-+  %1 ~User profiles       %6 ~Group tree report   %11~Res access authority
-+  %2 ~Group profiles      %7 ~RACF parameters     %12~Publications
-+  %3 ~Dataset profiles    %8 ~RACF databases      %13~Notes
-+  %4 ~General resources   %9 ~Enqueues            %14~Acknowlegements
++  %0 ~Settings           %6 ~Group tree report     %12~Res access authority
++  %1 ~User profiles      %7 ~RACF parameters       %13~Publications
++  %2 ~Group profiles     %8 ~RACF databases        %14~Notes
++  %3 ~Dataset profiles   %9 ~Dataset list          %15~Acknowlegements
++  %4 ~General resources  %10~Enqueues
++  %5 ~Password           %11~DSN access authority
 )PROC
 &ZSEL = TRANS(&ZCMD 0,#RACSET1  1,#RACUSR2  2,#RACGRP8  3,#RACDSN2
                     4,#RACCLSR  5,#RACPSWD  6,#RACGTRE  7,#RACPRMS
-                    8,#RACDB    9,#RACENQ  10,#RACDSNA 11,#RACCLSA
-                   12,#RACPUBL 13,#RACNOTE 14,#RACACKN   *,'?')
+                    8,#RACDB    9,#RACDSL  10,#RACENQ  11,#RACDSNA
+                   12,#RACCLSA 13,#RACPUBL 14,#RACNOTE 15,#RACACKN
+                    *,'?')
 &ZUP  = #RACMENU
 )PNTS
   FIELD(ZPS00001) VAR(ZCMD) VAL('0')
-  FIELD(ZPS00002) VAR(ZCMD) VAL('5')
-  FIELD(ZPS00003) VAR(ZCMD) VAL('10')
+  FIELD(ZPS00002) VAR(ZCMD) VAL('6')
+  FIELD(ZPS00003) VAR(ZCMD) VAL('12')
   FIELD(ZPS00004) VAR(ZCMD) VAL('1')
-  FIELD(ZPS00005) VAR(ZCMD) VAL('6')
-  FIELD(ZPS00006) VAR(ZCMD) VAL('11')
+  FIELD(ZPS00005) VAR(ZCMD) VAL('7')
+  FIELD(ZPS00006) VAR(ZCMD) VAL('13')
   FIELD(ZPS00007) VAR(ZCMD) VAL('2')
-  FIELD(ZPS00008) VAR(ZCMD) VAL('7')
-  FIELD(ZPS00009) VAR(ZCMD) VAL('12')
+  FIELD(ZPS00008) VAR(ZCMD) VAL('8')
+  FIELD(ZPS00009) VAR(ZCMD) VAL('14')
   FIELD(ZPS00010) VAR(ZCMD) VAL('3')
-  FIELD(ZPS00011) VAR(ZCMD) VAL('8')
-  FIELD(ZPS00012) VAR(ZCMD) VAL('13')
+  FIELD(ZPS00011) VAR(ZCMD) VAL('9')
+  FIELD(ZPS00012) VAR(ZCMD) VAL('15')
   FIELD(ZPS00013) VAR(ZCMD) VAL('4')
-  FIELD(ZPS00014) VAR(ZCMD) VAL('9')
-  FIELD(ZPS00015) VAR(ZCMD) VAL('14')
+  FIELD(ZPS00014) VAR(ZCMD) VAL('10')
+  FIELD(ZPS00015) VAR(ZCMD) VAL('5')
+  FIELD(ZPS00016) VAR(ZCMD) VAL('11')
 )END
 /*--------------------------------------------------------------------*/
 /*                             Comments                               */

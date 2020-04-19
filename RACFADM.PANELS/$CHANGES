@@ -2,14 +2,32 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  18 Apr 2020 - V17R0
+     - Tutorials (Option T)
+       -- Added help panel for Dslist, Dataset list
+
+  18 Apr 2020 - V16R9
+     - Main Menu
+       -- Added option 'D', Dslist, Dataset list
+          * Obtains LIBDEF/ALTLIB dataset names and invokes ISPF 3.4
+            DSLIST, allowing one to browse/edit/view the datasets
+            o This is assuming the high level qualifier of the
+              datasets are the same/identical
+
+  18 Apr 2020 - V16R8
+     - Other Items
+       -- Restored te code for line cmd 'M'ember subroutine DISM in
+          REXX program RACFCLSG
+       -- Restored the deleted panel RACFCLSB
+       -- Restored the line cmd 'M' in VER statement in panel RACFCLS2
+
   18 Apr 2020 - V16R7
      - Tutorial (Option T)
        -- Minor updates to #RACENQ and #RACNOTE panels
      - Other Items
-       -- Deleted panels RACFCLSS and #RACCLSS, not used
-       -- Deleted panel RACFCLSB, not used
-       -- Removed code for line cmd 'M'ember, subroutine DISM, in REXX
-          program RACFCLSG and and panel RACFCLS2, did nothing
+       -- Deleted panels RACFCLSS, #RACCLSS and RACFCLSB not used
+       -- Removed code for line cmd 'M'ember, subroutine DISM, in
+          REXX program RACFCLSG and and panel RACFCLS2, did nothing
        -- Updated $DIR panels member
 
   18 Apr 2020 - V16R6
