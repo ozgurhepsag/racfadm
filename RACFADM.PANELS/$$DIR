@@ -10,7 +10,6 @@
  #RACACKN  Tutorial       Acknowledgements
  #RACCLSA  Tutorial       Add/Change class profile
  #RACCLSR  Tutorial       List classes (show, refresh)
- #RACCLSS  Tutorial       List classes (show)
  #RACCLS8  Tutorial       List classes and profiles
  #RACCLS9  Tutorial       List profiles and descriptions
  #RACDB    Tutorial       RACF database information
@@ -31,13 +30,11 @@
  #RACPUBL  Tutorial       RACF publications and downloads
  #RACPUBS  Tutorial       RACF eductional websites
  #RACUSR2  Tutorial       User profile
- RACFCLSB  Class          List members
  RACFCLSC  Class          Add class
  RACFCLSD  Class          List class profiles
  RACFCLSE  Class          Enter profile/class/user, menu opt 9 (hidden)
  RACFCLSF  Class          List group/ids and access
  RACFCLSR  Class          List classes (show, refresh), menu option 4
- RACFCLSS  Class          List classes (show)
  RACFCLS1  Class          Set filter
  RACFCLS2  Class          List profiles and descriptions
  RACFCLS3  Class          Add class

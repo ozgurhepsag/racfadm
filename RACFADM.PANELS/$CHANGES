@@ -2,6 +2,16 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  18 Apr 2020 - V16R7
+     - Tutorial (Option T)
+       -- Minor updates to #RACENQ and #RACNOTE panels
+     - Other Items
+       -- Deleted panels RACFCLSS and #RACCLSS, not used
+       -- Deleted panel RACFCLSB, not used
+       -- Removed code for line cmd 'M'ember, subroutine DISM, in REXX
+          program RACFCLSG and and panel RACFCLS2, did nothing
+       -- Updated $DIR panels member
+
   18 Apr 2020 - V16R6
      - Menu Menu
        -- Updated version number on main menu (RACFMENU)
