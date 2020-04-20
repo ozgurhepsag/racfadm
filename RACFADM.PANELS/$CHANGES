@@ -2,11 +2,17 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
-  18 Apr 2020 - V17R0
+  20 Apr 2020 - V17R1
+     - Dslist (Option D)
+       -- Fixed displaying RACFADM's ALTLIB/LIBDEF datasets
+          o Added code to verify if parsed/saved qualifiers are
+            blank/null
+
+  19 Apr 2020 - V17R0
      - Tutorials (Option T)
        -- Added help panel for Dslist, Dataset list
 
-  18 Apr 2020 - V16R9
+  19 Apr 2020 - V16R9
      - Main Menu
        -- Added option 'D', Dslist, Dataset list
           * Obtains LIBDEF/ALTLIB dataset names and invokes ISPF 3.4
@@ -14,7 +20,7 @@
             o This is assuming the high level qualifier of the
               datasets are the same/identical
 
-  18 Apr 2020 - V16R8
+  19 Apr 2020 - V16R8
      - Other Items
        -- Restored te code for line cmd 'M'ember subroutine DISM in
           REXX program RACFCLSG

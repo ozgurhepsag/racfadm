@@ -9,6 +9,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A2  200420  RACFA    Verify last level qualifier is not blank/null*/
+/* @A1  200420  RACFA    Removed single quote of REXX/CLIST dsname    */
 /* @A0  200419  RACFA    Created REXX                                 */
 /*====================================================================*/
 ADDRESS ISPEXEC
@@ -26,20 +28,23 @@ ADDRESS ISPEXEC
   "QLIBDEF ISPPLIB TYPE(DATASET) ID(DSNPAN)"
   "QLIBDEF ISPMLIB TYPE(DATASET) ID(DSNMSG)"
 
+  DSNREX = STRIP(DSNREX,,"'")                                 /* @A1 */
   DSNPAN = STRIP(DSNPAN,,"'")
   DSNMSG = STRIP(DSNMSG,,"'")
-  PARSE VAR DSNREX R1 "." R2 "." R3 "." R4 "." .
-  PARSE VAR DSNPAN P1 "." P2 "." P3 "." P4 "." .
-  PARSE VAR DSNMSG M1 "." M2 "." M3 "." M4 "." .
+  PARSE VAR DSNREX R1 "." R2 "." R3 "." R4 "." R5 "." .
+  PARSE VAR DSNPAN P1 "." P2 "." P3 "." P4 "." P5 "." .
+  PARSE VAR DSNMSG M1 "." M2 "." M3 "." M4 "." M4 "." .
 
   SELECT
-     WHEN (R4 = P4) & (R4 = M4) THEN
+     WHEN (R5 <> '') & (R5 = P5) & (R5 = M5) THEN             /* @A2 */
+          DSNAME = R1"."R2"."R3"."R4"."R5
+     WHEN (R4 <> '') & (R4 = P4) & (R4 = M4) THEN             /* @A2 */
           DSNAME = R1"."R2"."R3"."R4
-     WHEN (R3 = P3) & (R3 = M3) THEN
+     WHEN (R3 <> '') & (R3 = P3) & (R3 = M3) THEN             /* @A2 */
           DSNAME = R1"."R2"."R3
-     WHEN (R2 = P2) & (R2 = M2) THEN
+     WHEN (R2 <> '') & (R2 = P2) & (R2 = M2) THEN             /* @A2 */
           DSNAME = R1"."R2
-     WHEN (R1 = P1) & (R1 = M1) THEN
+     WHEN (R1 <> '') & (R1 = P1) & (R1 = M1) THEN             /* @A2 */
           DSNAME = R1
      OTHERWISE
           DSNAME = ""
