@@ -3,7 +3,7 @@
    !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
-%Tutorial+\-\(%RACFADM - Password+)\-\%Tutorial
+%Tutorial+\-\(%RACFADM - Password Reset+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
 + %Password+will display a pop-up panel, allowing to quickly change

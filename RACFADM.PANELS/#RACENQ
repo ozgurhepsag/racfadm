@@ -3,7 +3,7 @@
    !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
-%Tutorial+\-\(%RACFADM - Enqueues+)\-\%Tutorial
+%Tutorial+\-\(%RACFADM - Dataset Enqueues+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
 + %Enqueues+displays datasets allocated via!LIBDEF/ALTLIB+used to

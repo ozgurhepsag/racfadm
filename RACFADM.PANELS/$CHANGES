@@ -2,10 +2,15 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  20 Apr 2020 - V17R2
+     - Tutorial (Option T)
+       -- Added '11 RACF Commands'
+       -- Standardized a few help panels/menu
+
   20 Apr 2020 - V17R1
      - Dslist (Option D)
        -- Fixed displaying RACFADM's ALTLIB/LIBDEF datasets
-          o Added code to verify if parsed/saved qualifiers are
+          * Added code to verify if parsed/saved qualifiers are
             blank/null
 
   19 Apr 2020 - V17R0
