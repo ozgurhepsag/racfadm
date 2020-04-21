@@ -2,6 +2,11 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  21 Apr 2020 - V17R5
+     - User (Option 1)
+       -- Fixed 'C'haning a userid, was forcing user to re-enter the
+          user nam, panel RACFUSR@
+
   21 Apr 2020 - V17R4
      - User (Option 1)
        -- Line command 'A'dd, use panel RACFUSR@ when Settings

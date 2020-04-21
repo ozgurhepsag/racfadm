@@ -107,13 +107,11 @@
        copclass copident copprty ctimeout,
        ddatacls dstorcls dmgmtcls
 
+     parse var lu.1 'NAME='name
+     parse var lu.1 'OWNER='bowner
      do i = 1 to lu.0
-       if substr(lu.i,41,6) = 'OWNER=' then
-         bowner = substr(lu.i,41+6,8)
        if substr(lu.i,2,14) = 'DEFAULT-GROUP=' then
          defgrp = substr(lu.i,2+14,8)
-       if substr(lu.i,15,5) = 'NAME=' then
-         name = substr(lu.i,15+5,20)
        if substr(lu.i,2,11) = 'ATTRIBUTES=' then do
          if pos('PROTECTED',lu.i,2+11) > 0 then
            lu.i = delstr(lu.i,pos('PROTECTED',lu.i,2+11),9)
