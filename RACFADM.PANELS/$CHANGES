@@ -2,6 +2,16 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  21 Apr 2020 - V17R4
+     - User (Option 1)
+       -- Line command 'A'dd, use panel RACFUSR@ when Settings
+          (option 0) 'Admin RACF API = Y or N'
+          * If Yes, uses IRRXUTIL and if No, uses LISTUSER to obtain
+            the data
+          * Deleted subroutines ADDD and CHGD in REXX program RACFUSR
+          * Deleted panels RACFUSR5 (Chg) and RACFUSR6 (Add)
+          * Updated $DIR panels member
+
   21 Apr 2020 - V17R3
      - Tutorial (Option T)
        -- Several small/cosmetic updates to the help panels

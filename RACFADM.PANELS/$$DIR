@@ -73,8 +73,6 @@
  RACFUSR2  User           List userids (admin/user)
  RACFUSR3  User           Show groups and access
  RACFUSR4  User           Connect profile
- RACFUSR5  User           Change user
- RACFUSR6  User           Add user
  RACFUSR7  User           Change connection
  RACFUSR8  User           Alter TSO segment
 

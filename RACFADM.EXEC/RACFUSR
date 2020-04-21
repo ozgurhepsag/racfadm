@@ -3,6 +3,9 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @DR  200421  RACFA    Del panels RACFUSR6/7 (addd/chgd)            */
+/* @DQ  200421  RACFA    Del subroutine ADDD/CHGD, and some code      */
+/* @DP  200420  TRIDJK   Use panel RACFUSR@ for ERARAPI='YES/NO'      */
 /* @DO  200417  RACFA    Changed date to 'U'SA, was 'O'rdered         */
 /* @DN  200417  TRIDJK   Added 'Created' date                         */
 /* @DM  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
@@ -137,8 +140,6 @@ PANEL02@ = "RACFUSR@"    /* Insert/Modify userids (Radmin) */ /* @D4 */
 PANEL02# = "RACFUSR#"    /* Zap userids (admin)            */ /* @D4 */
 PANEL03  = "RACFUSR3"    /* Show groups and access         */ /* @BL */
 PANEL04  = "RACFUSR4"    /* Connect profile                */ /* @BL */
-PANEL05  = "RACFUSR5"    /* Change user                    */ /* @BL */
-PANEL06  = "RACFUSR6"    /* Add user                       */ /* @BL */
 PANEL07  = "RACFUSR7"    /* Change connection              */ /* @BL */
 PANEL08  = "RACFUSR8"    /* Alter TSO segment              */ /* @BL */
 PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */ /* @BL */
@@ -297,18 +298,8 @@ PROFL:
      End /* Select */
      ZCMD = ""; PARM = ""                                     /* @A5 */
      Select
-        when (opta = 'A')  then do                            /* @D4 */
-          if (erarapi = 'YES') then                           /* @D4 */
-             call @Addd                                       /* @D4 */
-          else                                                /* @D4 */
-             call Addd                                        /* @D4 */
-        end                                                   /* @D4 */
-        when (opta = 'C')  then do                            /* @D4 */
-          if (erarapi = 'YES') then                           /* @D4 */
-             call @Chgd                                       /* @D4 */
-          else                                                /* @D4 */
-             call Chgd                                        /* @D4 */
-        end                                                   /* @D4 */
+        when (opta = 'A')  then call @Addd                    /* @DQ */
+        when (opta = 'C')  then call @Chgd                    /* @DQ */
         when (opta = 'D')  then do                            /* @BW */
              "CONTROL DISPLAY SAVE"                           /* @BW */
              "SELECT PGM(ISRDSLST)",                          /* @BW */
@@ -356,18 +347,8 @@ PROFL:
               "TBSKIP" TBLA "NUMBER("SROW")"                  /* @BG */
            END                                                /* @BG */
         Select
-           when (opta = 'A')  then do                         /* @D4 */
-             if (erarapi = 'YES') then                        /* @D4 */
-                call @Addd                                    /* @D4 */
-             else                                             /* @D4 */
-                call Addd                                     /* @D4 */
-           end                                                /* @D4 */
-           when (opta = 'C')  then do                         /* @D4 */
-             if (erarapi = 'YES') then                        /* @D4 */
-                call @Chgd                                    /* @D4 */
-             else                                             /* @D4 */
-                call Chgd                                     /* @D4 */
-           end                                                /* @D4 */
+           when (opta = 'A')  then call @Addd                 /* @DQ */
+           when (opta = 'C')  then call @Chgd                 /* @DQ */
            when (opta = 'D')  then do                         /* @BW */
                 "CONTROL DISPLAY SAVE"                        /* @BW */
                 "SELECT PGM(ISRDSLST)",                       /* @BW */
@@ -458,59 +439,6 @@ SORTSEQ:                                                      /* @CX */
   end                                                         /* @CX */
   INTERPRET "SORT"SUBSTR(SORTCOL,1,4)" = TMPSEQ"              /* @CX */
 RETURN                                                        /* @CX */
-/*--------------------------------------------------------------------*/
-/*  Add new profile                                                   */
-/*--------------------------------------------------------------------*/
-ADDD:
-  action = '*Added'                                           /* @A4 */
-  new    = 'NO'
-  if (USER = 'NONE') then
-     new = 'YES'
-  else
-     CALL Getd
-  "DISPLAY PANEL("PANEL06")"                                  /* @BL */
-  if (RC = 0) & (tsouser = 'YES') then                        /* @AD */
-     "DISPLAY PANEL("PANEL08")"                               /* @BL */
-  if (rc > 0) then
-     return
-  xtr = ' '
-  if (data <> ' ') then
-     xtr = xtr "DATA('"data"')"
-  datelgn = 'UNKNOWN'
-  if (pswd = '') then                                         /* @DE */
-     pswd = user                                              /* @DE */
-  call EXCMD "ADDUSER ("user")",
-             "OWN("owner") DFLTGRP("defgrp")",
-             "NAME('"name"') PASSWORD("pswd")" XTR ATTR       /* @DE */
-  if (tsouser = 'YES') & (cmd_rc = 0) then DO                 /* @CB */
-     cmd_rc = RACFUSRT('ADDD' user tsoproc,                   /* @DL */
-              tsoacct defgrp owner tsolib)                    /* @C4 */
-     if (cmd_rc = 0) then DO                                  /* @DL */
-         call EXCMD "ALTUSER ("USER")",
-             "OWN("owner") DFLTGRP("defgrp")",
-             "NAME('"name"')" XTR ATTR,                       /* @CD */
-             "TSO (ACCTNUM("tsoacct") PROC("tsoproc")",
-             "SIZE("tsosize") UNIT("tsounit")"
-     END
-  END
-  IF (cmd_rc > 0) then DO                                     /* @CA */
-     CALL racfmsgs 'ERR01' /* Add failed */
-     return
-  END
-
-  if (attr <> "") THEN                                        /* @CE */
-     ATTR2 = "YES"                                            /* @CE */
-  ELSE                                                        /* @CE */
-     ATTR2 = "NO"                                             /* @CE */
-  "TBMOD" TBLA                                                /* @C7 */
-  call resd /* Reset Password */                              /* @C7 */
-  call disd /* Connect basic group */                         /* @C7 */
-
-  IF (new = 'YES') THEN DO
-     USER = 'NONE'
-     "TBDELETE"  TBLA
-  END
-RETURN
 /*--------------------------------------------------------------------*/
 /*  Resume/reset userid                                               */
 /*--------------------------------------------------------------------*/
@@ -675,85 +603,6 @@ LISP:
   else                                                        /* @AC */
      CALL racfmsgs "ERR10" /* Generic failure */              /* @AC */
 RETURN                                                        /* @AC */
-/*--------------------------------------------------------------------*/
-/*  Change profile                                                    */
-/*--------------------------------------------------------------------*/
-CHGD:
-  action      = "*Change"                                     /* @A4 */
-  ret_code    = 0
-  cmd_rc      = 0                                             /* @CA */
-  New_tsouser = 'NO'
-  if (USER= 'NONE') then
-     return
-  CALL Getd
-  if (tsouser = 'YES') then DO
-     "DISPLAY PANEL("PANEL05")"                               /* @BL */
-     IF (RC = 0) THEN                                         /* @AD */
-        "DISPLAY PANEL("PANEL08")"                            /* @BL */
-  end
-  else DO
-     "DISPLAY PANEL("PANEL05")"                               /* @BL */
-     if (rc = 0) & (tsouser = 'YES') then DO                  /* @AD */
-        New_tsouser = 'YES'
-        "DISPLAY PANEL("PANEL08")"                            /* @BL */
-     end
-  end
-  if (rc > 0) then return
-  Alt_own    = ' '
-  Alt_defgrp = ' '
-  Alt_name   = ' '
-  xtr        = ' '
-  if (owner <> ' ') then
-     Alt_own = 'OWNER('owner')'
-  if (defgrp <> ' ') then
-     Alt_defgrp = 'DFLTGRP('defgrp')'
-  if (name <> ' ') then
-     Alt_name  = "NAME('"name"')"
-  if (data <> ' ') then DO
-     if (data = 'NONE') then
-        data = ' '
-     xtr = xtr "DATA('"DATA"')"
-  end
-
-  if (attrspec = "Y") then                                    /* @CH */
-     attr = 'SPECIAL'                                         /* @CG */
-  else                                                        /* @CG */
-     attr = 'NOSPECIAL'                                       /* @CG */
-  if (attroper = "Y") then                                    /* @CH */
-     attr = attr' OPERATIONS'                                 /* @CG */
-  else                                                        /* @CG */
-     attr = attr' NOOPERATIONS'                               /* @CG */
-  if (attraudi = "Y") then                                    /* @CH */
-     attr = attr' AUDITOR'                                    /* @CG */
-  else                                                        /* @CG */
-     attr = attr' NOAUDITOR'                                  /* @CG */
-
-  if (tsouser = 'YES') then do
-      if (new_tsouser = 'YES') then
-         ret_code = RACFUSRT('CHGD' user tsoproc,             /* @C4 */
-                    tsoacct defgrp owner tsolib)              /* @C4 */
-      if (ret_code = 0) then
-         call EXCMD "ALTUSER ("USER")" alt_own,
-                     alt_defgrp alt_name xtr attr,
-             "TSO (ACCTNUM("tsoacct") PROC("tsoproc")",
-             "SIZE("tsosize") UNIT("tsounit") "
-  end
-  else do                                                     /* @CR */
-     xtr = xtr' NOTSO'                                        /* @CR2*/
-     call EXCMD "ALTUSER ("USER")" alt_own,
-                alt_defgrp alt_name xtr
-  end                                                         /* @CR */
-  Select
-     when (cmd_rc > 0) then                                   /* @CA */
-          call racfmsgs 'ERR07' /* Altdsd failed */
-     when (ret_code <> 0) then
-          call racfmsgs 'ERR11' /* Defalias failed */
-     otherwise                                                /* @CI */
-          NOP
-     END                                                      /* @CI */
-  call updattr                                                /* @CS */
-  "TBMOD" tbla                                                /* @CS */
-RETURN
 /*--------------------------------------------------------------------*/
 /*  Obtain userid attributes                                     @CI  */
 /*--------------------------------------------------------------------*/
@@ -1469,6 +1318,10 @@ RETURN                                                        /* @D4 */
 /*  Chk TSO segment/REVOKED/ATTRIB, when 'Admin RACF API = Y'    @D4  */
 /*--------------------------------------------------------------------*/
 @CHKATTR:                                                     /* @D4 */
+  if (erarapi = 'NO') then do                                 /* @DP */
+    call GETD                                                 /* @DP */
+    RETURN                                                    /* @DP */
+    end                                                       /* @DP */
   cmd = "IRRXUTIL('EXTRACT','USER','"user"','RACF',)"         /* @DC */
   interpret 'cmd_rc = 'cmd                                    /* @D5 */
   if (erashow <> 'NO') then                                   /* @D5 */

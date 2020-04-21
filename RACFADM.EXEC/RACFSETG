@@ -10,7 +10,7 @@
 /* @A1  200220  RACFA    Added ERATRACE=YES, then TRACE R             */
 /* @A0  200123  RACFA    Created REXX                                 */
 /*====================================================================*/
-PANEL30 = "RACFSETG"    /* Settings, menu option 0         */ /* @A3 */
+PANEL16 = "RACFSETG"    /* Settings, menu option 0         */ /* @A3 */
 
 ADDRESS ISPEXEC                                               /* @A2 */
   "VGET (ERATRACE) ASIS"                                      /* @A1 */
@@ -23,7 +23,7 @@ ADDRESS ISPEXEC                                               /* @A2 */
         interpret "Trace "SUBSTR(ERATRACE,1,1)                /* @A4 */
   end                                                         /* @A4 */
 
-  "Display Panel("PANEL30")"                                  /* @A3 */
+  "Display Panel("PANEL16")"                                  /* @A3 */
 
   If (eratrace <> 'NO') then do                               /* @A4 */
      Say "*"COPIES("-",70)"*"                                 /* @A4 */

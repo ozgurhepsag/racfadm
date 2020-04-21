@@ -37,6 +37,7 @@
   .ZVARS  = '(SCIND COPCLASS COPIDENT COPPRTY CTIMEOUT)'
   .CURSOR = USER
   .HELP   = #RACMENU
+  VGET (ERARAPI)
   &OLDUSR = &USER
   &FROM   = &USER
   &PSWD   = &Z
@@ -51,7 +52,12 @@
      &USERTXT = '~(Enter userid)'
      &PASSFLD = ''
 
-  *Rexx(*)
+  *Rexx(* erarapi)
+     if erarapi = 'NO' then do
+       call listuser
+       return
+       end
+
      rxrc=IRRXUTIL("EXTRACT","USER",user,"RACF","")
      if (word(rxrc,1) <> 0) then do
         say 'IRRXUTIL return code:'rxrc
@@ -87,7 +93,77 @@
      ddatacls = racf.dfp.dataclas.1
      dstorcls = racf.dfp.storclas.1
      dmgmtcls = racf.dfp.mgmtclas.1
+
+     return
+
+     listuser:
+     attr = ''
+     cmd = 'LISTUSER 'user' TSO CICS OMVS DFP'
+     x = outtrap('lu.')
+     Address TSO cmd
+     x = outtrap('off')
+     parse var value '' with bowner defgrp name attr ohome,
+       tsoproc tsoacct tsosize tsounit oprogram,
+       copclass copident copprty ctimeout,
+       ddatacls dstorcls dmgmtcls
+
+     do i = 1 to lu.0
+       if substr(lu.i,41,6) = 'OWNER=' then
+         bowner = substr(lu.i,41+6,8)
+       if substr(lu.i,2,14) = 'DEFAULT-GROUP=' then
+         defgrp = substr(lu.i,2+14,8)
+       if substr(lu.i,15,5) = 'NAME=' then
+         name = substr(lu.i,15+5,20)
+       if substr(lu.i,2,11) = 'ATTRIBUTES=' then do
+         if pos('PROTECTED',lu.i,2+11) > 0 then
+           lu.i = delstr(lu.i,pos('PROTECTED',lu.i,2+11),9)
+         if pos('REVOKED',lu.i,2+11) > 0 then
+           lu.i = delstr(lu.i,pos('REVOKED',lu.i,2+11),7)
+         if pos('NONE',lu.i,2+11) > 0 then
+           lu.i = delstr(lu.i,pos('NONE',lu.i,2+11),4)
+         attr = strip(substr(lu.i,2+11,60))' 'attr
+         end
+
+       if substr(lu.i,1,6) = 'PROC= ' then
+         tsoproc = substr(lu.i,1+6,8)
+       if substr(lu.i,1,9) = 'ACCTNUM= ' then
+         tsoacct = substr(lu.i,1+9,8)
+       if substr(lu.i,1,6) = 'SIZE= ' then
+         tsosize = substr(lu.i,1+6,8)
+       if substr(lu.i,1,6) = 'UNIT= ' then
+         tsounit = substr(lu.i,1+6,8)
+
+       if substr(lu.i,2,9) = 'OPCLASS= ' then
+         copclass = substr(lu.i,1+2+9,2)
+       if substr(lu.i,2,9) = 'OPIDENT= ' then
+         copident = substr(lu.i,2+9,3)
+       if substr(lu.i,2,8) = 'OPPRTY= ' then
+         copprty = substr(lu.i,2+2+8,3)
+       if substr(lu.i,2,9) = 'TIMEOUT= ' then do
+         ctimeout = c2d(substr(lu.i,2+9,2),4)
+         ctimeout = right(ctimeout,4,'0')
+         end
+       if substr(lu.i,1,6) = 'HOME= ' then
+         ohome = substr(lu.i,1+6,50)
+       if substr(lu.i,1,9) = 'PROGRAM= ' then
+         oprogram = substr(lu.i,1+9,50)
+
+       if substr(lu.i,1,10) = 'DATACLAS= ' then
+         ddatacls = substr(lu.i,1+10,8)
+       if substr(lu.i,1,10) = 'STORCLAS= ' then
+         dstorcls = substr(lu.i,1+10,8)
+       if substr(lu.i,1,10) = 'MGMTCLAS= ' then
+         dmgmtcls = substr(lu.i,1+10,8)
+       end
+
+     return
+
   *EndRexx
+  IF (&ERARAPI = 'NO')
+    &RACFSMSG = 'LISTUSER...'
+  ELSE
+    &RACFSMSG = 'RACF API...'
+  .MSG = RACF011
 )PROC
   *REXX (PASSFLD, PSWD)           /* Get password */
      PSWD = SUBSTR(PASSFLD,16)
@@ -119,7 +195,7 @@
   VER (&COPPRTY,NUM)
   VER (&CTIMEOUT,NUM)
 )FIELD
-  FIELD(ATTR) IND(SCIND,'<>') LEN(255)
+  FIELD(ATTR) IND(SCIND,'-+') LEN(255)
 )END
 /*--------------------------------------------------------------------*/
 /*                             Comments                               */
@@ -129,10 +205,15 @@
 /*     (menu option 0) turned on                                      */
 /*                                                                    */
 /*       Administrator ..... Y                                        */
-/*       Admin RACF API .... Y                                        */
+/*       Admin RACF API .... Y or N                                   */
 /*                                                                    */
 /*  2) The )INIT section executes REXX code to obtain userid          */
 /*     information (ATTR, TSOPROC, etc.) by invoking IRRXUTIL         */
+/*     if RACF API = Y.                                               */
+/*                                                                    */
+/*     If RACF API = N, it executes REXX code to obtain               */
+/*     user profile information by parsing the output from            */
+/*     the LISTUSER command.                                          */
 /*                                                                    */
 /*  3) The 'ATTR' field is a scrollable field                         */
 /*                                                                    */
