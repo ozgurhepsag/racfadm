@@ -9,9 +9,9 @@
 + %RACFdb+displays infomation on RACF and the databases.
 +
 +  This utility will display RACF's
-+    - Release level and FMID/RMID
-+    - Status of the sysplex communications and data sharing
-+    - Primary/backup database names, volumes, buffers and space used
+!    Release level and FMID/RMID
+!    Status of the sysplex communications and data sharing
+!    Primary/backup database names, volumes, buffers and space used
 )PROC
   &ZUP     = #RACDB
 )END
