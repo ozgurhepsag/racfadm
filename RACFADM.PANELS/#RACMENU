@@ -23,14 +23,14 @@
 +  %0 ~Settings            %6 ~Group tree report   %12~DSN access authority
 +  %1 ~User profiles       %7 ~RACF parameters     %13~Res access authority
 +  %2 ~Group profiles      %8 ~RACF databases      %14~Publications
-+  %3 ~Dataset profiles    %9 ~Dataset list        %15~Notes
++  %3 ~Dataset profiles    %9 ~Dataset list        %15~Installation notes
 +  %4 ~General resources   %10~Dataset enqueues    %16~Acknowlegements
 +  %5 ~Password reset      %11~RACF commmands
 )PROC
 &ZSEL = TRANS(&ZCMD 0,#RACSET1  1,#RACUSR2  2,#RACGRP8  3,#RACDSN2
                     4,#RACCLSR  5,#RACPSWD  6,#RACGTRE  7,#RACPRMS
                     8,#RACDB    9,#RACDSL  10,#RACENQ  11,#RACHEL1
-                   12,#RACDSNA 13,#RACCLSA 14,#RACPUBL 15,#RACNOTE
+                   12,#RACDSNA 13,#RACCLSA 14,#RACPUB1 15,#RACNOTE
                    16,#RACACKN  *,'?')
 &ZUP  = #RACMENU
 )PNTS

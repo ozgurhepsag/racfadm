@@ -21,6 +21,8 @@
  #RACGRP5  Tutorial       Group's userids profiles
  #RACGRP8  Tutorial       Group profile
  #RACGTRE  Tutorial       Group tree report
+ #RACHEL1  Tutorial       Help for RACF commands (1 of 2)
+ #RACHEL2  Tutorial       Help for RACF commands (2 of 2)
  #RACMENU  Tutorial       Main menu, menu option T
  #RACNOTE  Tutorial       RACF notes (setup/use info)
  #RACPRMS  Tutorial       RACF parameters
@@ -28,8 +30,8 @@
  #RACSET1  Tutorial       Settings - Customize options (1 of 3)
  #RACSET2  Tutorial       Settings - Customize options (2 of 3)
  #RACSET3  Tutorial       Settings - Customize options (3 of 3)
- #RACPUBL  Tutorial       RACF publications and downloads
- #RACPUBS  Tutorial       RACF eductional websites
+ #RACPUB1  Tutorial       RACF publications and downloads (1 of 2)
+ #RACPUB2  Tutorial       RACF eductional websites (2 of 2)
  #RACUSR2  Tutorial       User profile
  RACFCLSB  Class          List members
  RACFCLSC  Class          Add class
@@ -65,14 +67,14 @@
  RACFMSG3  Message        'RACF Command = Y', 7 lines (pop-up panel)
  RACFPRMS  Parameter      RACF parameters, menu option 6
  RACFPSWD  Password       Reset userid password, opt 5 and line cmd PW
- RACFSETG  Parameter      Settings, customize options, menu option 0
- RACFUSR#  User           Change user, when 'RACF Admin API = 'Y'
- RACFUSR@  User           Add user, when 'RACF Admin API = 'Y'
+ RACFSETG  Settings       Settings, customize options, menu option 0
  RACFUSRT  User           Add, change and delete a TSO userid
  RACFUSR1  User           Set filter, menu option 1
  RACFUSR2  User           List userids (admin/user)
  RACFUSR3  User           Show groups and access
  RACFUSR4  User           Connect profile
+ RACFUSR5  User           Change user
+ RACFUSR6  User           Add user
  RACFUSR7  User           Change connection
  RACFUSR8  User           Alter TSO segment
 

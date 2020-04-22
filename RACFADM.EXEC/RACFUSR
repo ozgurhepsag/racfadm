@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @DT  200422  RACFA    Updated comments above @ADDD/@CHGD           */
+/* @DS  200421  RACFA    Renamed RACFUSR#/@ to RACFUSR5/6             */
 /* @DR  200421  RACFA    Del panels RACFUSR6/7 (addd/chgd)            */
 /* @DQ  200421  RACFA    Del subroutine ADDD/CHGD, and some code      */
 /* @DP  200420  TRIDJK   Use panel RACFUSR@ for ERARAPI='YES/NO'      */
@@ -136,10 +138,10 @@
 /*====================================================================*/
 PANEL01  = "RACFUSR1"    /* Set filter, menu option 1      */ /* @BL */
 PANEL02  = "RACFUSR2"    /* List userids (admin/user)      */ /* @D4 */
-PANEL02@ = "RACFUSR@"    /* Insert/Modify userids (Radmin) */ /* @D4 */
-PANEL02# = "RACFUSR#"    /* Zap userids (admin)            */ /* @D4 */
 PANEL03  = "RACFUSR3"    /* Show groups and access         */ /* @BL */
 PANEL04  = "RACFUSR4"    /* Connect profile                */ /* @BL */
+PANEL05  = "RACFUSR5"    /* Zap userids (admin)            */ /* @DS */
+PANEL06  = "RACFUSR6"    /* Add/change userid              */ /* @DT */
 PANEL07  = "RACFUSR7"    /* Change connection              */ /* @BL */
 PANEL08  = "RACFUSR8"    /* Alter TSO segment              */ /* @BL */
 PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */ /* @BL */
@@ -1146,11 +1148,11 @@ CREATE_TABLE:                                                 /* @BE */
   end  /* Do i=1 to var.0 */
 RETURN                                                        /* @BE */
 /*--------------------------------------------------------------------*/
-/*  Add new profile, when 'Admin RACF API = Y'                   @D9  */
+/*  Add new profile                                              @DT  */
 /*--------------------------------------------------------------------*/
 @ADDD:                                                        /* @D4 */
   action = '*Insert'                                          /* @D4 */
-  "DISPLAY PANEL("PANEL02@")"                                 /* @D4 */
+  "DISPLAY PANEL("PANEL06")"                                  /* @DS */
   if (rc = 8) then                                            /* @D4 */
      return                                                   /* @D4 */
   if (pswd = '') then                                         /* @DE */
@@ -1222,11 +1224,11 @@ RETURN                                                        /* @BE */
   call disd /* Connect basic group */                         /* @D4 */
 RETURN                                                        /* @D4 */
 /*--------------------------------------------------------------------*/
-/*  Change profile, when 'Admin RACF API = Y'                    @D9  */
+/*  Change profile                                               @DT  */
 /*--------------------------------------------------------------------*/
 @CHGD:                                                        /* @D4 */
   action = "*Modify"                                          /* @D4 */
-  "DISPLAY PANEL("PANEL02@")"                                 /* @D4 */
+  "DISPLAY PANEL("PANEL06")"                                  /* @D4 */
   if (rc = 8) then                                            /* @D4 */
      return                                                   /* @D4 */
   cmd = 'ALTUSER 'user' OWNER('bowner')'||,                   /* @D4 */
@@ -1306,7 +1308,7 @@ RETURN                                                        /* @D4 */
 /*--------------------------------------------------------------------*/
 @NOATTR:                                                      /* @D4 */
   action = "*Zap"                                             /* @D4 */
-  "DISPLAY PANEL("PANEL02#")"                                 /* @D4 */
+  "DISPLAY PANEL("PANEL05")"                                  /* @DS */
   if (rc = 8) then                                            /* @D4 */
      return                                                   /* @D4 */
   cmd = 'ALTUSER 'user nos                                    /* @D4 */

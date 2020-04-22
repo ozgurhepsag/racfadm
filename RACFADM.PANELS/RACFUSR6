@@ -1,56 +1,213 @@
 )ATTR DEFAULT(%+_)
    @  TYPE(OUTPUT)  INTENS(HIGH) SKIP(ON)
-   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON) JUST(LEFT)   HILITE(USCORE)
-   {  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(BLUE)
-   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
+   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON)   JUST(LEFT)   HILITE(USCORE)
+   }  TYPE(INPUT)   INTENS(HIGH) CAPS(OFF)  JUST(LEFT)   HILITE(USCORE)
+   {  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)   COLOR(BLUE)
+   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)   COLOR(GREEN)
+   Ý  TYPE(DATAOUT) INTENS(LOW)  COLOR(GREEN)
+   ~  TYPE(DATAOUT) INTENS(LOW)  COLOR(BLUE)
+   ¨  TYPE(DATAOUT) INTENS(HIGH)
+   !  TYPE(DATAIN)  INTENS(HIGH) CAPS(ON)   JUST(LEFT)   HILITE(USCORE)
+   ^  AREA(DYNAMIC) EXTEND(OFF)
 )BODY EXPAND(\\)
 +\-\(%RACFADM - User Profiles+)\-\
-%Command ===>_ZCMD                                              +Scroll==>_SAMT+
+%Command ===>_ZCMD
 %
-+Add RACF%USER+profile: %ADDUSER+command
+^USRTITL                                           ^
 +
-+PROFILE %===>_USER    { (Enter%NEW{userid)   +PASSWORD%===>_PSWD    +
+%Base Segment:
++ PROFILE%===>_USER    {^USERTXT           ^+ ^PASSFLD              ^+
++ OWNER  %===>_BOWNER  { (Owner of profile)
++ DFLTGRP%===>_DEFGRP  { (Default group)
++ NAME   %===>_NAME                { (Last, first name)
++ ATTRIB %===>_ATTR                                                          @Z
 +
-+OWNER   %===>_OWNER   { (Owner of profile)
-+SUPGROUP%===>_DEFGRP  { (Default group)
-+NAME    %===>_NAME                { (Last, first name)
-+ATTRIB  %===>_ATTR                                                          @Z
+%TSO Segment:             %OMVS Segment:
++ PROC   %===>_TSOPROC {   +HOME    %===>}OHOME
++ ACCT   %===>_TSOACCT {   +PROGRAM %===>}OPROGRAM
++ SIZE   %===>_TSOSIZE{
++ UNIT   %===>_TSOUNIT {
 +
-+
-%              Installation Data (no quotes)
-%              --------------------------------------------------------------
-+DATA    %===>_DATA                                                          @Z
-+
-+
-+
-+
-+
-+
-+\ \Press%ENTER+to process or%END+to exit\ \
+%CICS Segment:            %DFP Segment:
++ OPCLASS%===>_Z +         +DATACLAS%===>_DDATACLS{
++ OPIDENT%===>_Z  +        +STORCLAS%===>_DSTORCLS{
++ OPPRTY %===>_Z  +        +MGMTCLAS%===>_DMGMTCLS{
++ TIMEOUT%===>_Z   +
 )INIT
-  .ZVARS  = '(SCIND1 SCIND2)'
+  .ZVARS  = '(SCIND COPCLASS COPIDENT COPPRTY CTIMEOUT)'
   .CURSOR = USER
   .HELP   = #RACMENU
+  VGET (ERARAPI)
   &OLDUSR = &USER
   &FROM   = &USER
   &PSWD   = &Z
   IF (&USER = NONE)
-      &USER = &RFILTER
+     &USER = &RFILTER
+  IF (&ACTION = '*Insert')
+     &USRTITL = 'ÝAdd RACF¨USERÝprofile: ¨ADDUSERÝcommand'
+     &USERTXT = '~(Enter¨NEW~userid)'
+     &PASSFLD = 'ÝPASSWORD¨===>!        ¨'
+  IF (&ACTION = '*Modify')
+     &USRTITL = 'ÝAlt RACF¨USERÝprofile: ¨ALTUSERÝcommand'
+     &USERTXT = '~(Enter userid)'
+     &PASSFLD = ''
+
+  *Rexx(* erarapi)
+     if erarapi = 'NO' then do
+        call listuser
+        return
+     end
+
+     rxrc=IRRXUTIL("EXTRACT","USER",user,"RACF","")
+     if (word(rxrc,1) <> 0) then do
+        say 'IRRXUTIL return code:'rxrc
+        exit
+     end
+
+     attr = ''
+     if racf.base.special.1 = 'TRUE' then attr = attr || 'SPECIAL '
+     if racf.base.oper.1    = 'TRUE' then attr = attr || 'OPERATIONS '
+     if racf.base.grpacc.1  = 'TRUE' then attr = attr || 'GRPACC '
+     if racf.base.auditor.1 = 'TRUE' then attr = attr || 'AUDITOR '
+     if racf.base.roaudit.1 = 'TRUE' then attr = attr || 'ROAUDIT '
+     if racf.base.rest.1    = 'TRUE' then attr = attr || 'RESTRICTED '
+     if racf.base.adsp.1    = 'TRUE' then attr = attr || 'ADSP '
+
+     bowner  = racf.base.owner.1
+     defgrp  = racf.base.dfltgrp.1
+     name    = racf.base.name.1
+
+     tsoproc = racf.tso.proc.1
+     tsoacct = racf.tso.acctnum.1
+     tsosize = racf.tso.size.1
+     tsounit = racf.tso.unit.1
+
+     ohome    = racf.omvs.home.1
+     oprogram = racf.omvs.program.1
+
+     copclass = racf.cics.opclass.1
+     copident = racf.cics.opident.1
+     copprty  = racf.cics.opprty.1
+     ctimeout = racf.cics.timeout.1
+
+     ddatacls = racf.dfp.dataclas.1
+     dstorcls = racf.dfp.storclas.1
+     dmgmtcls = racf.dfp.mgmtclas.1
+
+     return
+
+     listuser:
+       attr = ''
+       cmd = 'LISTUSER 'user' TSO CICS OMVS DFP'
+       x = outtrap('lu.')
+       Address TSO cmd
+       x = outtrap('off')
+       parse var value '' with bowner defgrp name attr ohome,
+         tsoproc tsoacct tsosize tsounit oprogram,
+         copclass copident copprty ctimeout,
+         ddatacls dstorcls dmgmtcls
+
+       parse var lu.1 'NAME='name
+       parse var lu.1 'OWNER='bowner
+       do i = 1 to lu.0
+          if substr(lu.i,2,14) = 'DEFAULT-GROUP=' then
+             defgrp = substr(lu.i,2+14,8)
+          if substr(lu.i,2,11) = 'ATTRIBUTES=' then do
+             if pos('PROTECTED',lu.i,2+11) > 0 then
+                lu.i = delstr(lu.i,pos('PROTECTED',lu.i,2+11),9)
+             if pos('REVOKED',lu.i,2+11) > 0 then
+                lu.i = delstr(lu.i,pos('REVOKED',lu.i,2+11),7)
+             if pos('NONE',lu.i,2+11) > 0 then
+                lu.i = delstr(lu.i,pos('NONE',lu.i,2+11),4)
+             attr = strip(substr(lu.i,2+11,60))' 'attr
+          end
+
+          if substr(lu.i,1,6) = 'PROC= ' then
+             tsoproc = substr(lu.i,1+6,8)
+          if substr(lu.i,1,9) = 'ACCTNUM= ' then
+             tsoacct = substr(lu.i,1+9,8)
+          if substr(lu.i,1,6) = 'SIZE= ' then
+             tsosize = substr(lu.i,1+6,8)
+          if substr(lu.i,1,6) = 'UNIT= ' then
+             tsounit = substr(lu.i,1+6,8)
+
+          if substr(lu.i,2,9) = 'OPCLASS= ' then
+             copclass = substr(lu.i,1+2+9,2)
+          if substr(lu.i,2,9) = 'OPIDENT= ' then
+             copident = substr(lu.i,2+9,3)
+          if substr(lu.i,2,8) = 'OPPRTY= ' then
+             copprty = substr(lu.i,2+2+8,3)
+          if substr(lu.i,2,9) = 'TIMEOUT= ' then do
+             ctimeout = c2d(substr(lu.i,2+9,2),4)
+             ctimeout = right(ctimeout,4,'0')
+          end
+          if substr(lu.i,1,6) = 'HOME= ' then
+             ohome = substr(lu.i,1+6,50)
+          if substr(lu.i,1,9) = 'PROGRAM= ' then
+             oprogram = substr(lu.i,1+9,50)
+
+          if substr(lu.i,1,10) = 'DATACLAS= ' then
+             ddatacls = substr(lu.i,1+10,8)
+          if substr(lu.i,1,10) = 'STORCLAS= ' then
+             dstorcls = substr(lu.i,1+10,8)
+          if substr(lu.i,1,10) = 'MGMTCLAS= ' then
+             dmgmtcls = substr(lu.i,1+10,8)
+       end
+     return
+  *EndRexx
+
+  IF (&ERARAPI = 'NO')
+    &RACFSMSG = 'LISTUSER...'
+  ELSE
+    &RACFSMSG = 'RACF API...'
+  .MSG = RACF011
 )PROC
-  IF (&OLDUSR = &USER)
-      &USER = ' '
+  *REXX (PASSFLD, PSWD)           /* Get password */
+     PSWD = SUBSTR(PASSFLD,16)
+  *ENDREXX
+  IF (&ACTION = '*Insert')
+     IF (&OLDUSR = &USER)
+        &USER = ' '
   VER (&USER,NB)
-  VER (&OWNER,NB,NAME)
+  VER (&BOWNER,NB,NAME)
   VER (&DEFGRP,NB,NAME)
   VER (&NAME,NB)
+  IF (&TSOPROC NE &Z)
+     VER (&TSOACCT,NB)
+     VER (&TSOSIZE,NB,NUM)
+     VER (&TSOUNIT,NB)
+  IF (&TSOACCT NE &Z)
+     VER (&TSOPROC,NB,NAME)
+     VER (&TSOSIZE,NB,NUM)
+     VER (&TSOUNIT,NB)
+  IF (&TSOSIZE NE &Z)
+     VER (&TSOPROC,NB,NAME)
+     VER (&TSOACCT,NB)
+     VER (&TSOUNIT,NB)
+  IF (&TSOUNIT NE &Z)
+     VER (&TSOPROC,NB,NAME)
+     VER (&TSOACCT,NB)
+     VER (&TSOSIZE,NB,NUM)
+  VER (&COPCLASS,NUM)
+  VER (&COPPRTY,NUM)
+  VER (&CTIMEOUT,NUM)
 )FIELD
-  FIELD(ATTR) IND(SCIND1,'<>') LEN(255)
-  FIELD(DATA) IND(SCIND2,'<>') LEN(255)
+  FIELD(ATTR) IND(SCIND,'<>') LEN(255)
 )END
 /*--------------------------------------------------------------------*/
 /*                             Comments                               */
 /*--------------------------------------------------------------------*/
 /*                                                                    */
-/*  1) The 'ATTR' and 'DATA' are scrollable fields                    */
+/*  1) To display/use this panel, the user must have the Settings     */
+/*     (menu option 0) turned on                                      */
+/*       Administrator ..... Y                                        */
+/*                                                                    */
+/*  2) The )INIT section executes REXX code to obtain userid          */
+/*     information (ATTR, TSOPROC, etc.) by invoking IRRXUTIL of      */
+/*     executing LISTUSER command and parses through the output       */
+/*     - If settings, menu option 0, 'Admin RACF API = Y' then        */
+/*       execute IRRXUTIL, else LISTUSER command                      */
+/*                                                                    */
+/*  3) The 'ATTR' field is a scrollable field                         */
 /*                                                                    */
 /*--------------------------------------------------------------------*/

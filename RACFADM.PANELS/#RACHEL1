@@ -22,8 +22,8 @@
 +                      Column headers are point and shoot to sort
 +                      1st use sort Ascending, 2nd use sort Descending
 +
-@  *!Point and shoot+commands. %SET+value is saved in the ISPF profile dataset.
-+
+@  *!Point and shoot+commands
++   %SET+value is saved in the ISPF profile dataset
 +
 +
 +

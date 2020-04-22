@@ -11,10 +11,10 @@
  RACFCLSR  Class          Display class profiles, menu option 4
  RACFCLSS  Class          Search and display classes
  RACFDB    Database       Display RACF database info, menu option 8
- RACFDSL   Dslist         Get LIBDEF/ALTLIB dsnames and invoke ISPF 3.4
+ RACFDSL   Dslist         Invoke DSLIST on ALTLIB/LIBDEF DSNs, opt D
  RACFDSN   Dataset        Display dataset profiles
  RACFEMAC  Edit macro     View/edit, turn off highlighting
- RACFENQ   Enqueues       Display LIBDEF panels enqueues, menu option E
+ RACFENQ   Enqueues       Display enqueues on ALTLIB/LIBDEF dsns, opt E
  RACFGRP   Group          Display group profiles, menu option 2
  RACFHELP  Help           Display TSO HELP on RACF commands
  RACFLOG   Documentation  Display changes/issues, menu option C/I
@@ -24,7 +24,7 @@
  RACFPROF  Profile        Execute line cmd 'P', extract/display profile
  RACFPSWD  Password       Reset userid password (menu opt 5/linecmd PW)
  RACFSETG  Settings       Customize settings, menu option 0
- RACFGTRE  Group tree     Execute/display DSMON group tree report
+ RACFGTRE  Group tree     Execute/display DSMON group tree rpt, opt 6
  RACFUSR   User           Display userid profiles, menu option 1
  RACFUSRT  User           Add, delete and change TSO userid
  RACFUSRX  User           Userid cross reference report (line cmd XR)

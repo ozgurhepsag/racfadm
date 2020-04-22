@@ -2,15 +2,51 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  22 Apr 2020 - V18R1
+     - Enqueues (Option E)
+       -- Removed trailing spaces from RACF database name, so,
+          'Enqueues = ##' is displayed immediately after the name
+
+  22 Apr 2020 - V18R0
+     - Other Items
+       -- Updated $DIR member in panels dataset
+
+  22 Apr 2020 - V17R9
+     - Enqueues (Option E)
+       -- Display enqueues on RACF backup database, prior was just
+          primary database
+
+  22 Apr 2020 - V17R8
+     - Other Items
+       -- Corrected comments in $CHANGES
+       -- Updated tutorial panels #RACACKN, #RACDB, #RACHEL1 and
+          #RACNOTE, making them easier to read
+
+  22 Apr 2020 - V17R7
+     - Other Items
+       -- Updated $README in CNTL file
+       -- Renamed #RACPUBL/S to #RACPUB1/2
+       -- Updated $DIR member in panel and REXX datasets
+       -- Updated panels RACFCLSD/8, standardized field alignment
+       -- Updated comments at bottom of panels and above subroutines
+          in REXX programs to be more accurate
+
+  21 Apr 2020 - V17R6
+     - Tutorials (Option T)
+       -- Changed 'Notes' to 'Installation notes'
+     - User (Option 1)
+       -- Renamed panel RACFUSR#/@ to RACFUSR5/6
+       -- Updated $DIR member in panels dataset
+
   21 Apr 2020 - V17R5
      - User (Option 1)
-       -- Fixed 'C'haning a userid, was forcing user to re-enter the
-          user nam, panel RACFUSR@
+       -- Fixed 'C'hanging a userid, was forcing user to re-enter the
+          user name (panel RACFUSR@)
 
   21 Apr 2020 - V17R4
      - User (Option 1)
-       -- Line command 'A'dd, use panel RACFUSR@ when Settings
-          (option 0) 'Admin RACF API = Y or N'
+       -- Line command 'A'dd, use panel RACFUSR@ when Settings, Menu
+          Option 0, 'Admin RACF API = Y or N'
           * If Yes, uses IRRXUTIL and if No, uses LISTUSER to obtain
             the data
           * Deleted subroutines ADDD and CHGD in REXX program RACFUSR

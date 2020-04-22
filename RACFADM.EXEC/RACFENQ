@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AG  200422  RACFA    Remove spaces from RACF database names       */
+/* @AF  200422  RACFA    Display enqueues on RACF backup database     */
 /* @AE  200416  RACFA    Display enqueues on RACF database            */
 /* @AD  200413  RACFA    Take into account, PROFILE MSGID(ON)         */
 /* @AC  200413  RACFA    Del ver word 2 is CLIST, some may be EXEC    */
@@ -42,8 +44,10 @@ ADDRESS ISPEXEC
   call Get_enqs "CLIST"                                       /* @A7 */
   call Get_enqs "ISPPLIB"                                     /* @A7 */
   call Get_enqs "ISPMLIB"                                     /* @A7 */
-  call Get_enqs "RACFDB"                                      /* @AE */
-  IF (ENQRC = 32) THEN DO                                     /* @AE */
+  call GET_RACF_DBNAMES                                       /* @AF */
+  call Get_enqs "RACFPRM"                                     /* @AF */
+  call Get_enqs "RACFBKP"                                     /* @AF */
+  IF (ENQRC = 40) THEN DO                                     /* @AF */
      ADDRESS TSO "DELSTACK"                                   /* @A7 */
      RETURN                                                   /* @A7 */
   END                                                         /* @A7 */
@@ -83,8 +87,18 @@ GET_ENQS:                                                     /* @A7 */
   SELECT                                                      /* @AE */
      WHEN (DDQLIB = "CLIST") THEN                             /* @AE */
           CALL GET_CLIST_DSN                                  /* @A7 */
-     WHEN (DDQLIB = "RACFDB") THEN                            /* @AE */
-          CALL GET_RACF_DBNAME                                /* @AE */
+     WHEN (DDQLIB = "RACFPRM") THEN DO                        /* @AF */
+          DSNAME = PRMDBASE                                   /* @AF */
+          RC = 0                                              /* @AF */
+          if (dsname = "") THEN                               /* @AF */
+             RC = 8                                           /* @AF */
+     END                                                      /* @AF */
+     WHEN (DDQLIB = "RACFBKP") THEN DO                        /* @AF */
+          DSNAME = BKPDBASE                                   /* @AF */
+          RC = 0                                              /* @AF */
+          if (dsname = "") THEN                               /* @AF */
+             RC = 8                                           /* @AF */
+     END                                                      /* @AF */
      OTHERWISE                                                /* @AE */
           "QLIBDEF "DDQLIB" TYPE(DATASET) ID(DSNAME)"         /* @A7 */
   END                                                         /* @AE */
@@ -209,14 +223,20 @@ SHOWCMD:
   END
 RETURN
 /*--------------------------------------------------------------------*/
-/*  Get RACF database name                                       @AE  */
+/*  Get RACF primary and backup database names                   @AF  */
 /*--------------------------------------------------------------------*/
-GET_RACF_DBNAME:                                              /* @AE */
-  cvt      = c2x(storage(10,4))                               /* @AE */
-  cvtrac$  = d2x((x2d(cvt))+992)                              /* @AE */
-  cvtrac   = c2x(storage(cvtrac$,4))                          /* @AE */
-  rcvtsta$ = d2x((x2d(cvtrac))+56)                            /* @AE */
-  DSNAME   = STRIP(storage(rcvtsta$,44))                      /* @AE */
-  IF (DSNAME = "") THEN                                       /* @AE */
-     RC = 8                                                   /* @AE */
+GET_RACF_DBNAMES:                                             /* @AE */
+  CVT      = C2X(STORAGE(10,4))           /* Pointer to CVT          */
+  RCVT     = D2X(X2D(CVT) +X2D(3E0))      /* Pointer to RCVT pointer */
+  RCVT     = C2X(STORAGE(RCVT,4))         /* Pointer to RCVT         */
+  DSDT     = D2X(X2D(RCVT) + X2D(E0))     /* Pointer to DSDT pointer */
+  DSDT     = C2X(STORAGE(DSDT,4))         /* Pointer to DSDT         */
+  DSDTNUM  = D2X(X2D(DSDT) + X2D(4))      /* Address of DSDTNUM      */
+  DSDTNUM  = C2D(STORAGE(DSDTNUM,4))      /* DSDTNUM                 */
+  DSDTPRIM = D2X(X2D(DSDT) + X2D(90))     /* Address of 1st Prim DSN */
+  DSDTBACK = D2X(X2D(DSDT) + X2D(140))    /* Address of 1st Bkup DSN */
+  PNAME    = D2X(X2D(DSDTPRIM) + X2D(21)) /* Addr of primary name    */
+  PRMDBASE = STRIP(STORAGE(PNAME,44))     /* Primary name        @AG */
+  BNAME    = D2X(X2D(DSDTBACK) + X2D(21)) /* Addr of backup name     */
+  BKPDBASE = STRIP(STORAGE(BNAME,44))     /* Backup name         @AG */
 RETURN                                                        /* @AE */

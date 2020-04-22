@@ -4,7 +4,7 @@
    @  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(RED)
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
-%Tutorial+\-\(%RACFADM - Notes+)\-\%Tutorial
+%Tutorial+\-\(%RACFADM - Installation Notes+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
 !  1)+The REXX program%RACFADM+is used to invoke the RACF Administration
@@ -13,13 +13,13 @@
 +
 !  2)+Installing a new version/release of%RACFADM,+suggest!backing up+
 +     current datasets,!deleting+the members and!copying+in the new
-+     version/release
-!     -+Past releases, modules have been renamed or deleted
-!     -+Prevents from having dead modules in datasets
++     version/release, due to:
+!     -+Members may be renamed or deleted
+!     -+Prevents from having dead/unused members
 +
 !  3)+To use the line command%'P'rofile,+which executes!IRRXUTIL+(RACF
 +     Administration API), the following authorization will need to be
-+     granted using!RACF RDEFINE+and!PERMIT+commands
++     granted using!RACF RDEFINE+and!PERMIT+commands:
 +
 +      @RDEFINE FACILITY (IRR.RADMIN.*) OWNER(SYS1) UACC(READ)
 +      @        AUDIT(FAILURES(READ)) DATA('RACF ADMINISTRATION API')

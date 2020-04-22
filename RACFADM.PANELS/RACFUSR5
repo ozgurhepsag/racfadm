@@ -1,56 +1,45 @@
 )ATTR DEFAULT(%+_)
-   $  TYPE(OUTPUT)  INTENS(LOW)  JUST(LEFT) COLOR(TURQ)
-   @  TYPE(OUTPUT)  INTENS(HIGH) SKIP(ON)
-   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON)   JUST(LEFT)   HILITE(USCORE)
-   {  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)   COLOR(BLUE)
-   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)   COLOR(GREEN)
+   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON)  JUST(LEFT)   HILITE(USCORE)
+   }  TYPE(INPUT)   INTENS(HIGH) CAPS(OFF) JUST(LEFT)   HILITE(USCORE)
+   {  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(BLUE)
+   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(GREEN)
 )BODY EXPAND(\\)
 +\-\(%RACFADM - User Profiles+)\-\
-%Command ===>_ZCMD                                              +Scroll==>_SAMT+
+%Command ===>_ZCMD
 %
 +Alt RACF%USER+profile: %ALTUSER+command
 +
-+PROFILE%===>$USER    { (Userid)
++PROFILE %===>_USER    {
 +
-+OWNER  %===>_OWNER   { (Owner of profile)
-+DFLTGRP%===>_DEFGRP  { (Default group)
-+NAME   %===>_NAME                { (Last, first name)
-+TSO    %===>_Z{        (Y=Yes, N=No)
+{Enter%ALTUSER{operands to%ZAP{(delete) fields/segments from the user profile:
 +
-+ATTRIB %===>+SPECIAL   _Z{ (Y=Yes, N=No)
-+             OPERATIONS_Z{ (Y=Yes, N=No)
-+             AUDITOR   _Z{ (Y=Yes, N=No)
++OPERANDS%===>_NOS
+
+
+                                  +
 +
-+
-%             Installation Data (no quotes)
-%             ---------------------------------------------------------------
-+DATA   %===>_DATA                                                           @Z
-+
-+
-+
-+\ \Press%ENTER+to process or%END+to exit\ \
+{NOTSO          NOCICS             NODFP              NOOMVS
+{  TSO(NOPROC)    CICS(NOOPCLASS)    DFP(NODATACLAS)    OMVS(NOHOME)
+{  TSO(NOACCT)    CICS(NOOPIDENT)    DFP(NOSTORCLAS)    OMVS(NOPROGRAM)
+{  TSO(NOSIZE)    CICS(NOOPPRTY)     DFP(NOMGMTCLAS)
+{  TSO(NOUNIT)    CICS(NOTIMEOUT)
+{
+{NOSPECIAL   NOOPERATIONS   NOGRPACC   NOAUDITOR   NOADSP                     {
+{NOROAUDIT   NORESTRICTED   NO.......
 )INIT
-  &TSOUSER  = TRANS (&TSOUSER YES,Y NO,N *,'?')
-  .ZVARS  = '(TSOUSER ATTRSPEC ATTROPER ATTRAUDI SCIND)'
-  .CURSOR = OWNER
+  .CURSOR = NOS
   .HELP   = #RACMENU
+  &NOS    = ''
 )PROC
   VER (&USER,NB)
-  VER (&OWNER,NB,NAME)
-  VER (&DEFGRP,NB,NAME)
-  VER (&NAME,NB)
-  VER (&TSOUSER,NB,LIST,Y,N)
-  VER (&ATTRSPEC,NB,LIST,Y,N)
-  VER (&ATTROPER,NB,LIST,Y,N)
-  VER (&ATTRAUDI,NB,LIST,Y,N)
-  &TSOUSER = TRANS (&TSOUSER Y,YES N,NO *,'?')
-)FIELD
-  FIELD(DATA) IND(SCIND,'<>') LEN(255)
 )END
 /*--------------------------------------------------------------------*/
 /*                             Comments                               */
 /*--------------------------------------------------------------------*/
 /*                                                                    */
-/*  1) The 'DATA' field is a scrollable field                         */
+/*  1) To display/use this panel, the user must have the Settings     */
+/*     (menu option 0) turned on:                                     */
+/*       Administrator ..... Y                                        */
+/*       Admin RACF API .... Y                                        */
 /*                                                                    */
 /*--------------------------------------------------------------------*/
