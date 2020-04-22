@@ -25,7 +25,7 @@
 %  R  !Remove      +Remove user from RACF (admin)
 %  RS !Resume      +Resume user and initialize the password (admin)
 %  RV !Revoke      +Revoke the user (admin)
-%  Z  !Zap         +Zap user profile segments (admin)
+%  Z  !Zap         +Alter user profile segments (admin)
 )PROC
   &ZUP     = #RACUSR2
 )END

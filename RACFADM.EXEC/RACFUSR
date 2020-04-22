@@ -3,7 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @DW  200422  TRIDJK   Set cmd_rc after executing IRRXUTIL          */
+/* @DW  200422  TRIDJK   Fixed IRRXUTIL RC when displaying RACF cmds  */
 /* @DV  200422  RACFA    Ensure the REXX program name is 8 chars      */
 /* @DU  200422  RACFA    Use variable REXXPGM in log msg              */
 /* @DT  200422  RACFA    Updated comments above @ADDD/@CHGD           */

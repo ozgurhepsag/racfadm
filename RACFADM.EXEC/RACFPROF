@@ -12,6 +12,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AX  200422  RACFA    Fixed IRRXUTIL RC when displaying RACF cmds  */
 /* @AW  200422  RACFA    Ensure the REXX program name is 8 chars      */
 /* @AV  200422  RACFA    Use variable REXXPGM in log msg              */
 /* @AU  200417  RACFA    Removed 'enq(exclu)', not needed             */
@@ -260,6 +261,7 @@ EXCCMD:                                                       /* @A9 */
   profile = STRIP(profile)                                    /* @AQ */
   cmd = "IRRXUTIL('EXTRACT','"class"','"profile"','RACF',)"   /* @AP */
   interpret 'cmd_rc = 'cmd                                    /* @A9 */
+  cmd_rc = WORD(cmd_rc,1)                                     /* @AX */
   if (erashow <> 'NO') then                                   /* @AG */
      call SHOWCMD                                             /* @A9 */
   if (WORD(cmd_rc,1) = 12) then                               /* @AN */
