@@ -2,6 +2,11 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  22 Apr 2020 - V18R4
+     - Other Items
+       -- Fixed grammar in panels: #RACMENU, #RACDB, #RACNOTE and
+          #RACACKN
+
   22 Apr 2020 - V18R3
      - User (Option 1)
        -- Updated panels #RACUSR2 and RACFUSR5, changed text for

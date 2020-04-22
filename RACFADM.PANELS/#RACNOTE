@@ -8,7 +8,7 @@
 %Command ===>_ZCMD                                                             +
 %
 !  1)+The REXX program%RACFADM+is used to invoke the RACF Administration
-+     dialog. It allocates the neccessary files using!ISPF LIBDEF+and
++     dialog. It allocates the necessary files using!ISPF LIBDEF+and
 +    !TSO ALTLIB+commands
 +
 !  2)+Installing a new version/release of%RACFADM,+suggest!backing up+
