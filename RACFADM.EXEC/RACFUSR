@@ -3,6 +3,9 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @DW  200422  TRIDJK   Set cmd_rc after executing IRRXUTIL          */
+/* @DV  200422  RACFA    Ensure the REXX program name is 8 chars      */
+/* @DU  200422  RACFA    Use variable REXXPGM in log msg              */
 /* @DT  200422  RACFA    Updated comments above @ADDD/@CHGD           */
 /* @DS  200421  RACFA    Renamed RACFUSR#/@ to RACFUSR5/6             */
 /* @DR  200421  RACFA    Del panels RACFUSR6/7 (addd/chgd)            */
@@ -162,6 +165,7 @@ ADDRESS ISPEXEC                                               /* @BC */
         "ERAULIB ERAADMN ERASINT ERADISP) ASIS"               /* @B7 */
   If (eratrace <> 'NO') then do                               /* @DK */
      parse source . . REXXPGM .                               /* @DK */
+     REXXPGM = LEFT(REXXPGM,8)                                /* @DV */
      Say "*"COPIES("-",70)"*"                                 /* @DK */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @DK */
      Say "*"COPIES("-",70)"*"                                 /* @DK */
@@ -1062,7 +1066,7 @@ SHOWCMD:                                                      /* @BB */
      "REMPOP"                                                 /* @BB */
   END                                                         /* @CU */
   IF (ERASHOW = "BOTH") | (ERASHOW = "LOG") THEN DO           /* @CV */
-     zerrsm = "RACFADM RACFUSR  RC="cmd_rc                    /* @CU */
+     zerrsm = "RACFADM "REXXPGM" RC="cmd_rc                   /* @DU */
      zerrlm = cmd                                             /* @CU */
      'log msg(isrz003)'                                       /* @CU */
   END                                                         /* @CU */
@@ -1326,6 +1330,7 @@ RETURN                                                        /* @D4 */
     end                                                       /* @DP */
   cmd = "IRRXUTIL('EXTRACT','USER','"user"','RACF',)"         /* @DC */
   interpret 'cmd_rc = 'cmd                                    /* @D5 */
+  cmd_rc = WORD(cmd_rc,1)                                     /* @DW */
   if (erashow <> 'NO') then                                   /* @D5 */
      call SHOWCMD                                             /* @D5 */
   if (WORD(cmd_rc,1) <> 0) then do                            /* @D5 */

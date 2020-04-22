@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A8  200422  RACFA    Remove leading space in front of ')'         */
 /* @A7  200417  RACFA    Free file when done using                    */
 /* @A5  200417  RACFA    Chg edit macro, add code to del blank rows   */
 /* @A4  200417  TRIDJK   When EDIT/VIEW, remove blank rows/lines      */
@@ -65,8 +66,9 @@ Address TSO
         otherwise                                             /* @A5 */
              nop                                              /* @A5 */
      end                                                      /* @A5 */
+     PARSE VAR SYSUT2.J W1 " )" W2                            /* @A8 */
      K = K + 1                                                /* @A5 */
-     REC.K = sysut2.J                                         /* @A5 */
+     REC.K = W1")"W2                                          /* @A8 */
   end                                                         /* @A5 */
   rec.0 = K                                                   /* @A5 */
   drop sysut2.                                                /* @A5 */

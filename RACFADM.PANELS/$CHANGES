@@ -2,6 +2,28 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  22 Apr 2020 - V18R2
+     - User (Option 1)
+       -- Fixed 'A'dd and 'C'hange line commands, the 'Size' displayed
+          was off by one character
+       -- Fixed allocating JOBLIB dataset, when Settings (option 0)
+          'JOBLIB dataset' field was blank, it was still allocating
+          a dataset
+       -- Fixed displaying return code, when Settings (option 0)
+          'REXX commands = Y'
+       -- Updated 'XR' hidden line command, to honor Settings (option 0)
+          'Display files = B/E/V'
+     - Changes and Issues (Option C/I)
+       -- Fixed displaying error message when unable to obtain
+          LIBDEFed panel dataset name
+     - Group Tree (Option 6)
+       -- Remove space in front of parathesis, ' )'
+     - Other Items
+       -- Updated $README member in CNTL dataset
+       -- Update all REXX programs to obtain the REXX program name
+          from the REXXPGM variable when logging message to ISPF log
+          log file when Settings (option 0) 'RACF commands = L'
+
   22 Apr 2020 - V18R1
      - Enqueues (Option E)
        -- Removed trailing spaces from RACF database name, so,

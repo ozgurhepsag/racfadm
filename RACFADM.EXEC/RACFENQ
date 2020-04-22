@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AI  200422  RACFA    Ensure the REXX program name is 8 chars      */
+/* @AH  200422  RACFA    Use variable REXXPGM in log msg              */
 /* @AG  200422  RACFA    Remove spaces from RACF database names       */
 /* @AF  200422  RACFA    Display enqueues on RACF backup database     */
 /* @AE  200416  RACFA    Display enqueues on RACF database            */
@@ -31,6 +33,7 @@ ADDRESS ISPEXEC
   "VGET (ERADISP ERASHOW ERATRACE) ASIS"
   If (eratrace <> 'NO') then do                               /* @A6 */
      parse source . . REXXPGM .                               /* @A6 */
+     REXXPGM = LEFT(REXXPGM,8)                                /* @AI */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A6 */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */
@@ -217,7 +220,7 @@ SHOWCMD:
      "REMPOP"
   END
   IF (ERASHOW = "BOTH") | (ERASHOW = "LOG") THEN DO
-     zerrsm = "RACFADM RACFUSR  RC="cmd_rc
+     zerrsm = "RACFADM "REXXPGM" RC="cmd_rc                   /* @AH */
      zerrlm = cmd
      'log msg(isrz003)'
   END

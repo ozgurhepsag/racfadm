@@ -127,7 +127,7 @@
           if substr(lu.i,1,9) = 'ACCTNUM= ' then
              tsoacct = substr(lu.i,1+9,8)
           if substr(lu.i,1,6) = 'SIZE= ' then
-             tsosize = substr(lu.i,1+6,8)
+             tsosize = substr(lu.i,2+6,8)
           if substr(lu.i,1,6) = 'UNIT= ' then
              tsounit = substr(lu.i,1+6,8)
 

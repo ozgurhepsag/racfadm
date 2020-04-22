@@ -3,6 +3,9 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @B1  200422  RACFA    Ensure the REXX program name is 8 chars      */
+/* @AZ  200422  RACFA    Use variable REXXPGM in log msg              */
+/* @AY  200422  TRIDJK   Fixed allocating JOBLIB                      */
 /* @AX  200413  RACFA    Fixed returning the return codes             */
 /* @AW  200413  RACFA    Get REXX pgm name and use as DD name         */
 /* @AV  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
@@ -48,6 +51,7 @@ ADDRESS ISPEXEC                                               /* @AF */
   "VGET (ERASHOW ERATRACE ERAISPP ERACTLG ERAULIB) ASIS"      /* @A4 */
   If (eratrace <> 'NO') then do                               /* @AT */
      parse source . . REXXPGM .                               /* @AT */
+     REXXPGM = LEFT(REXXPGM,8)                                /* @B1 */
      Say "*"COPIES("-",70)"*"                                 /* @AT */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AT */
      Say "*"COPIES("-",70)"*"                                 /* @AT */
@@ -113,7 +117,7 @@ ADDD:                                                         /* @AJ */
   call exccmd                                                 /* @AG */
 
   /*- Allocate joblib library        -*/
-  if joblib='Y' then do                                       /* @AP */
+  if (eraulib <> '') then do                                  /* @AY */
      cmd = "ALLOC FILE("DDNAME")",                            /* @AW */
                   "DATASET('"user"."eraulib"')",              /* @AG */
                   "NEW SPACE(5,5) CYLINDERS",                 /* @AG */
@@ -225,7 +229,7 @@ ADDRESS ISPEXEC                                               /* @AG */
      "REMPOP"                                                 /* @BB */
   END                                                         /* @AR */
   IF (ERASHOW = "BOTH") | (ERASHOW = "LOG") THEN DO           /* @AS */
-     zerrsm = "RACFADM RACFUSRT RC="cmd_rc                    /* @AR */
+     zerrsm = "RACFADM "REXXPGM" RC="cmd_rc                   /* @AZ */
      zerrlm = cmd                                             /* @AR */
      'log msg(isrz003)'                                       /* @AR */
   END                                                         /* @AR */

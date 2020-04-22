@@ -3,7 +3,9 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @AK  200417  RACFA    Chged panel names RACFAUT1/2 to RACFCLSE/F   */
+/* @AN  200422  RACFA    Ensure the REXX program name is 8 chars      */
+/* @AM  200422  RACFA    Use variable REXXPGM in log msg              */
+/* @AL  200417  RACFA    Chged panel names RACFAUT1/2 to RACFCLSE/F   */
 /* @AK  200417  RACFA    Renamed this REXX pgm, was RACFAUTH          */
 /* @AJ  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
 /* @AI  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
@@ -26,8 +28,8 @@
 /* @A1  200119  RACFA    Standardized/reduced lines of code           */
 /* @A0  011229  NICORIZ  Created REXX, V2.1, www.rizzuto.it           */
 /*====================================================================*/
-PANEL14 = "RACFCLSE"    /* Enter profile/class/user        */ /* @AK */
-PANEL15 = "RACFCLSF"    /* List group/ids and access       */ /* @AK */
+PANEL14 = "RACFCLSE"    /* Enter profile/class/user        */ /* @AL */
+PANEL15 = "RACFCLSF"    /* List group/ids and access       */ /* @AL */
 PANELM2 = "RACFMSG2"    /* Display RACF command and RC     */ /* @A8 */
 
 ADDRESS ISPEXEC                                               /* @A6 */
@@ -36,6 +38,7 @@ ADDRESS ISPEXEC                                               /* @A6 */
   "VGET (ZSCREEN ERASHOW ERATRACE) ASIS"                      /* @A3 */
   If (eratrace <> 'NO') then do                               /* @AI */
      parse source . . REXXPGM .                               /* @AI */
+     REXXPGM = LEFT(REXXPGM,8)                                /* @AN */
      Say "*"COPIES("-",70)"*"                                 /* @AI */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AI */
      Say "*"COPIES("-",70)"*"                                 /* @AI */
@@ -198,7 +201,7 @@ SHOWCMD:                                                      /* @A5 */
      "REMPOP"                                                 /* @A9 */
   END                                                         /* @AG */
   IF (ERASHOW = "BOTH") | (ERASHOW = "LOG") THEN DO           /* @AH */
-     zerrsm = "RACFADM RACFCLSA RC="cmd_rc                    /* @AK */
+     zerrsm = "RACFADM "REXXPGM" RC="cmd_rc                   /* @AM */
      zerrlm = cmd                                             /* @AG */
      'log msg(isrz003)'                                       /* @AG */
   END                                                         /* @AG */

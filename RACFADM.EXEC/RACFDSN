@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BY  200422  RACFA    Ensure the REXX program name is 8 chars      */
+/* @BX  200422  RACFA    Use variable REXXPGM in log msg              */
 /* @BW  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
 /* @BV  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @BU  200410  RACFA    Fixed sorting entries prior to displaying    */
@@ -90,6 +92,7 @@ ADDRESS ISPEXEC                                               /* @AJ */
         "ERAADMN ERASINT ERADISP  ERARAPI) ASIS"              /* @BH */
   If (eratrace <> 'NO') then do                               /* @BV */
      parse source . . REXXPGM .                               /* @BV */
+     REXXPGM = LEFT(REXXPGM,8)                                /* @BY */
      Say "*"COPIES("-",70)"*"                                 /* @BV */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @BV */
      Say "*"COPIES("-",70)"*"                                 /* @BV */
@@ -893,7 +896,7 @@ SHOWCMD:                                                      /* @AI */
      "REMPOP"                                                 /* @AV */
   END                                                         /* @BJ */
   IF (ERASHOW = "BOTH") | (ERASHOW = "LOG") THEN DO           /* @BK */
-     zerrsm = "RACFADM RACFDSN  RC="cmd_rc                    /* @BJ */
+     zerrsm = "RACFADM "REXXPGM" RC="cmd_rc                   /* @BX */
      zerrlm = cmd                                             /* @BJ */
      'log msg(isrz003)'                                       /* @BJ */
   END                                                         /* @BJ */
