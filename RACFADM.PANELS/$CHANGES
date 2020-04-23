@@ -2,6 +2,15 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  23 Apr 2020 - V18R5
+     - RACFprms (Option 7)
+       -- Added RACF backup database name
+     - Tutorials (Option T)
+       -- Fixed spelling issues in panels (#RACMENU and #RACPSWD)
+     - Issues (Option I)
+       -- Updated two PMR statuses, some said 'Testing' or 'Open',
+          when infact they were 'Closed'
+
   22 Apr 2020 - V18R4
      - Other Items
        -- Fixed grammar in panels: #RACMENU, #RACDB, #RACNOTE and
@@ -133,7 +142,7 @@
        -- Updated $DIR panels member
 
   18 Apr 2020 - V16R6
-     - Menu Menu
+     - Main Menu
        -- Updated version number on main menu (RACFMENU)
      - Tutorial (Option T)
        -- Reworked 'RACF Parameters' tutorial panel (#RACPRMS)
@@ -561,7 +570,7 @@
 
   26 Mar 2020 - V12R0
      - Group and General Resources (Option 2/4)
-       -- Fixed description scoll area, so it displays the <> to the
+       -- Fixed description scroll area, so it displays the <> to the
           right of the field
      - RACFdb (Option 6)
        -- Changed temporary file's LRECL=80, was 132

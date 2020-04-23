@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A9  200423  RACFA    Chg variable name RCVTGDSN to RCVTPDSN       */
+/* @A8  200423  RACFA    Get RACF Bkp database name                   */
 /* @A7  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
 /* @A6  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @A5  200224  RACFA    Place panels at top of REXX in variables     */
@@ -30,6 +32,7 @@ ADDRESS ISPEXEC                                               /* @A4 */
   cvtrac  = c2x(storage(cvtrac$,4))         /* cvtrac = access cntl   */
   rcvt$   = cvtrac                          /* store for panel output */
 
+  call Get_bkp_database_name                /* Get bkp dsname         */
   call Get_initial_rcvt_values              /* Get initial values     */
   call Racf_audit_options                   /* Get audit options      */
   call Racf_jes2_options
@@ -54,7 +57,7 @@ RETURN 0000                                 /* exit                   */
 /*  Get initial RCVT values                                           */
 /*--------------------------------------------------------------------*/
 GET_INITIAL_RCVT_VALUES:
-  rc        = Setchar(rcvtgdsn,56,44)       /* racf dsn               */
+  rc        = Setchar(rcvtpdsn,56,44)       /* racf dsn           @A9 */
   rcvtuvol  = 'None';rcvtuads='None'
   rc        = Setchar(rcvtuads,100,44)      /* uads dsn               */
   rc        = Setchar(rcvtuvol,144,6)       /* uads vol               */
@@ -243,3 +246,15 @@ RACF_AUDIT_OPTIONS:
   if (x = '08'x) then                       /* audit DASDVOL class?   */
      rcvtadas='Yes'                         /* yes                    */
 RETURN
+/*--------------------------------------------------------------------*/
+/*  Get RACF backup database name                                @A9  */
+/*--------------------------------------------------------------------*/
+GET_BKP_DATABASE_NAME:                                        /* @A9 */
+  DSDT     = D2X(X2D(CVTRAC) + X2D(E0))   /* Pointer to DSDT pointer */
+  DSDT     = C2X(STORAGE(DSDT,4))         /* Pointer to DSDT         */
+  DSDTNUM  = D2X(X2D(DSDT) + X2D(4))      /* Address of DSDTNUM      */
+  DSDTNUM  = C2D(STORAGE(DSDTNUM,4))      /* DSDTNUM                 */
+  DSDTBACK = D2X(X2D(DSDT) + X2D(140))    /* Address of 1st Bkup DSN */
+  BNAME    = D2X(X2D(DSDTBACK) + X2D(21)) /* Addr of backup name     */
+  RCVTBDSN = STRIP(STORAGE(BNAME,44))     /* Backup name             */
+RETURN                                                        /* @A9 */

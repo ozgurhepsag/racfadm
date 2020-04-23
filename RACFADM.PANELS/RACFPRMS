@@ -31,7 +31,8 @@
 )AREA AREA1
 {\-\
 + RACF version{.....................$RCVTGRNM+
-+ RACF data base{...................$RCVTGDSN
++ RACF primary data base{...........$RCVTPDSN
++ RACF backup  data base{...........$RCVTBDSN
 {\-\
 + Audit appl{.......................$RCVTSAPL+
 + Audit operations{.................$RCVTSAUO+

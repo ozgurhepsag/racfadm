@@ -7,7 +7,7 @@
 %Command ===>_ZCMD                                                             +
 %
 + %Password+will display a pop-up panel, allowing to quickly change
-+  an individuals password and/or!RESUME+their userid.
++  an individual's password and/or!RESUME+their userid.
 +
 +  This utility will generate a!random+password for each userid.
 )PROC
