@@ -2,11 +2,16 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
-  24 Apr 2020 - V18R7
+  23 Apr 2020 - V18R8
+     - User (Option 1)
+       -- Changed ATT column to NO, when userid is REVOKED, since
+          the column REV (YES/NO) contains this information
+
+  23 Apr 2020 - V18R7
      - Enqueues (Option E)
        -- Display dataset name and number of enqueues in comment box
 
-  24 Apr 2020 - V18R6
+  23 Apr 2020 - V18R6
      - GrpTree (Option 6)
        -- Removed ')' at end of report title
        -- Do not check for titles when looping thru report, in hopes

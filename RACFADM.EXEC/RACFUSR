@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @DX  200423  RACFA    Don't make ATT=YES, when userid is 'REVOKED' */
 /* @DW  200422  TRIDJK   Fixed IRRXUTIL RC when displaying RACF cmds  */
 /* @DV  200422  RACFA    Ensure the REXX program name is 8 chars      */
 /* @DU  200422  RACFA    Use variable REXXPGM in log msg              */
@@ -625,7 +626,10 @@ UPDATTR:                                                      /* @CJ */
   attr = STRIP(attribute1) STRIP(attribute2)                  /* @CI */
   none  = POS('NONE',attr)                                    /* @CI */
   if (none <> 0) then                                         /* @CI */
-     attr = delstr(attr,none,4)  /* Del 'NONE'    */          /* @CI */
+     attr = delstr(attr,none,4)      /* Delete 'NONE'    */   /* @CI */
+  none  = POS('REVOKED',attr)                                 /* @DX */
+  if (none <> 0) then                                         /* @DX */
+     attr = delstr(attr,revoked,7)   /* Delete 'REVOKED' */   /* @DX */
   attr2 = 'NO'                                                /* @CI */
   if (none = 0) then do                                       /* @CI */
      attr2 = 'YES'                                            /* @CI */
