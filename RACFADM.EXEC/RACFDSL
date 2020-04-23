@@ -9,6 +9,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A3  200423  RACFA    Ensure REXX program name is 8 chars long     */
 /* @A2  200420  RACFA    Verify last level qualifier is not blank/null*/
 /* @A1  200420  RACFA    Removed single quote of REXX/CLIST dsname    */
 /* @A0  200419  RACFA    Created REXX                                 */
@@ -17,6 +18,7 @@ ADDRESS ISPEXEC
   "VGET (ERATRACE) ASIS"
   If (eratrace <> 'NO') then do
      parse source . . REXXPGM .
+     REXXPGM = LEFT(REXXPGM,8)                                /* @A3 */
      Say "*"COPIES("-",70)"*"
      Say "*"Center("Begin Program = "REXXPGM,70)"*"
      Say "*"COPIES("-",70)"*"

@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AA  200423  RACFA    Ensure REXX program name is 8 chars long     */
 /* @A9  200423  RACFA    Chg variable name RCVTGDSN to RCVTPDSN       */
 /* @A8  200423  RACFA    Get RACF Bkp database name                   */
 /* @A7  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
@@ -20,6 +21,7 @@ ADDRESS ISPEXEC                                               /* @A4 */
   "VGET (ERATRACE) ASIS"                                      /* @A3 */
   If (eratrace <> 'NO') then do                               /* @A6 */
      parse source . . REXXPGM .                               /* @A6 */
+     REXXPGM = LEFT(REXXPGM,8)                                /* @AA */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A6 */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */

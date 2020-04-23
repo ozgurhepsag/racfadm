@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AJ  200423  RACFA    Del 'call racfmsgs ERR19' when rows = 0      */
 /* @AI  200422  RACFA    Ensure the REXX program name is 8 chars      */
 /* @AH  200422  RACFA    Use variable REXXPGM in log msg              */
 /* @AG  200422  RACFA    Remove spaces from RACF database names       */
@@ -127,7 +128,6 @@ GET_ENQS:                                                     /* @A7 */
      QUEUE "  DSN = "Rname"  ",                               /* @AE */
            "Enqueues = "0                                     /* @AE */
      QUEUE " "                                                /* @AE */
-     call racfmsgs ERR19                                      /* @A7 */
      ENQRC = ENQRC + 8                                        /* @A7 */
      RETURN                                                   /* @A7 */
   END                                                         /* @A7 */

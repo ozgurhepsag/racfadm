@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A6  200423  RACFA    Ensure REXX program name is 8 chars long     */
 /* @A5  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
 /* @A4  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @A3  200224  RACFA    Place panels at top of REXX in variables     */
@@ -16,6 +17,7 @@ ADDRESS ISPEXEC                                               /* @A2 */
   "VGET (ERATRACE) ASIS"                                      /* @A1 */
   If (eratrace <> 'NO') then do                               /* @A4 */
      parse source . . REXXPGM .                               /* @A4 */
+     REXXPGM = LEFT(REXXPGM,8)                                /* @A6 */
      Say "*"COPIES("-",70)"*"                                 /* @A4 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A4 */
      Say "*"COPIES("-",70)"*"                                 /* @A4 */
