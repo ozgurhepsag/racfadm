@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AA  200423  RACFA    Chg dash line to 72, was 62 columns in length*/
 /* @A9  200423  RACFA    Ensure REXX program name is 8 chars long     */
 /* @A8  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
 /* @A7  200412  RACFA    Chg SAY to ISPF message                      */
@@ -212,7 +213,7 @@ DO II = 1 TO DSDTNUM                 /* LOOP THROUGH ENTRIES         */
     BSTAT = STORAGE(BSTAT,1)             /* BACKUP  STATUS BYTE      */
     IF BITAND(BSTAT,'80'X) = '80'X THEN BSTAT = "ACTIVE"
        ELSE  BSTAT = "INACTIVE"
-    QUEUE COPIES("-",62)                                      /* @A1 */
+    QUEUE COPIES("-",72)                                      /* @AA */
     QSNAME = "'"STRIP(PNAME)"'"          /*PUT QUOTES AROUND RDB NAME*/
     CALL FINDSIZE QSNAME                 /* GET THE SPACE USED VALUE */
     QUEUE "PRIMARY #"II":"                                    /* @A1 */
@@ -239,7 +240,7 @@ DO II = 1 TO DSDTNUM                 /* LOOP THROUGH ENTRIES         */
     DSDTBACK = D2X(X2D(DSDTBACK) + 352)  /* BUMP TO NEXT SLOT        */
    END                                   /* END OF II DO LOOP        */
 
-QUEUE COPIES('-',65)                                          /* @A1 */
+QUEUE COPIES('-',72)                                          /* @AA */
 QUEUE "IRRMIN00 version/release/modification ... "RACFVRMN    /* @A1 */
 QUEUE "RACF database template RMID level ....... "RACFTEMP    /* @A1 */
                                                               /* @A1 */

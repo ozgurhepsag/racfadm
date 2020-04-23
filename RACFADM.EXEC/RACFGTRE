@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AC  200423  RACFA    Removed blank in column 1 of report          */
 /* @AB  200423  RACFA    Do not chk for titles when looping thru rpt  */
 /* @AA  200423  RACFA    Ensure REXX program name is 8 chars long     */
 /* @A9  200423  RACFA    Fix placing ')' at end of rpt title          */
@@ -57,10 +58,11 @@ Address TSO
   'free  f(sysprint sysut2 sysin)'
   'delstack'
 
-  rec.1 = ' 'substr(sysut2.1,2)                               /* @AB */
-  rec.2 = ' 'strip(substr(sysut2.2,2))                        /* @AB */
+  rec.1 = substr(sysut2.1,2)                                  /* @AC */
+  rec.2 = strip(substr(sysut2.2,2))                           /* @AC */
   K = 2                                                       /* @A5 */
   do J = 3 To sysut2.0                                        /* @A5 */
+     sysut2.J = Substr(sysut2.J,2)                            /* @AC */
      parse var sysut2.j W1 W2 .                               /* @A5 */
      Select                                                   /* @A5 */
         when (W1 = '|') then iterate                          /* @A5 */

@@ -2,6 +2,10 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  24 Apr 2020 - V18R7
+     - Enqueues (Option E)
+       -- Display dataset name and number of enqueues in comment box
+
   24 Apr 2020 - V18R6
      - GrpTree (Option 6)
        -- Removed ')' at end of report title
