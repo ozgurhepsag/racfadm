@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A8  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
 /* @A7  200422  RACFA    Ensure the REXX program name is 8 chars      */
 /* @A6  200422  TRIDJK   Use variable REXXPGM in log msg              */
 /* @A5  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
@@ -14,13 +15,13 @@
 /*====================================================================*/
 PANELPW  = "RACFPSWD"    /* Password reset                 */
 PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */
+parse source . . REXXPGM .                                    /* @A8 */
+REXXPGM  = LEFT(REXXPGM,8)                                    /* @A8 */
 
 parse arg userid
 Address ISPExec
   "VGET (ERASHOW ERATRACE ERAADMN) ASIS"                      /* @A1 */
   If (eratrace <> 'NO') then do                               /* @A4 */
-     parse source . . REXXPGM .                               /* @A4 */
-     REXXPGM = LEFT(REXXPGM,8)                                /* @A7 */
      Say "*"COPIES("-",70)"*"                                 /* @A4 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A4 */
      Say "*"COPIES("-",70)"*"                                 /* @A4 */

@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMhDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @B2  200424  RACFA    Move DDNAME at top, standardize/del dups     */
+/* @B1  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
 /* @AZ  200422  RACFA    Ensure the REXX program name is 8 chars      */
 /* @AY  200422  RACFA    Use variable REXXPGM in log msg              */
 /* @AX  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
@@ -43,14 +45,15 @@
 PANEL27  = "RACFCLSR"    /* List classes (show, refresh)   */ /* @AF */
 PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */ /* @AF */
 EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @AT */
+DDNAME   = "RACFA"RANDOM(0,999)                               /* @B2 */
+parse source . . REXXPGM .                                    /* @B1 */
+REXXPGM  = LEFT(REXXPGM,8)                                    /* @B1 */
 
 ADDRESS ISPEXEC                                               /* @A7 */
   Arg class
   "CONTROL ERRORS RETURN"                                     /* @AJ */
   "VGET (ZSCREEN ERAADMN ERASHOW ERATRACE ERADISP) ASIS"      /* @AL */
   If (eratrace <> 'NO') then do                               /* @AW */
-     parse source . . REXXPGM .                               /* @AW */
-     REXXPGM = LEFT(REXXPGM,8)                                /* @AZ */
      Say "*"COPIES("-",70)"*"                                 /* @AW */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AW */
      Say "*"COPIES("-",70)"*"                                 /* @AW */
@@ -281,7 +284,6 @@ RETURN
 /*  List class                                                   @AL  */
 /*--------------------------------------------------------------------*/
 LISP:
-  DDNAME  = "RACFA"RANDOM(0,999)
   cmd     = "RL "CLASS" * ALL"                                /* @AN */
   X = OUTTRAP("CMDREC.")
   ADDRESS TSO cmd
@@ -312,7 +314,7 @@ LISP:
           "BROWSE DATAID("CMDDATID")"
   END
   ADDRESS TSO "FREE FI("DDNAME")"
-  DROP CMDREC. DDNAME
+  DROP CMDREC.
   if (cmd_rc > 0) then                                        /* @AC */
      CALL racfmsgs "ERR10" /* Generic failure */              /* @AC */
 RETURN

@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A9  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
 /* @A8  200423  RACFA    Ensure REXX program name is 8 chars long     */
 /* @A7  200422  TRIDJK   Added capability to browse/edit/view file    */
 /* @A6  200417  RACFA    Removed 'enq(exclu)', not needed             */
@@ -14,12 +15,12 @@
 /* @A0  200123  TRIDJK   Created REXX program                         */
 /*====================================================================*/
 EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @A7 */
+parse source . . REXXPGM .                                    /* @A9 */
+REXXPGM  = LEFT(REXXPGM,8)                                    /* @A9 */
 
 ADDRESS ISPEXEC                                               /* @A2 */
   "VGET (ERATRACE ERADISP) ASIS"                              /* @A7 */
   If (eratrace <> 'NO') then do                               /* @A4 */
-     parse source . . REXXPGM .                               /* @A4 */
-     REXXPGM = LEFT(REXXPGM,8)                                /* @A8 */
      Say "*"COPIES("-",70)"*"                                 /* @A4 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A4 */
      Say "*"COPIES("-",70)"*"                                 /* @A4 */

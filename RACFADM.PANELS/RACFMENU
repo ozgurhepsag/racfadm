@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V18R8+)\-\
++\-\(%RACFADM - RACF Administration - V19R5+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options        %C ~Changes  +Version/updates
@@ -38,8 +38,11 @@
       &ERAADMN  = 'NO'       /* Administrator       = NO   */
   IF (&ERARAPI  NE YES, NO)
       &ERARAPI  = 'NO'       /* RACF API (IRRXUTIL) = NO   */
-  IF (&ERASINT  = &Z)
-      &ERASINT  = '100'      /* Status interval     = 100  */
+  IF (&ERAADMN  = 'NO')      /* Must have Admin authority  */
+      &ERARAPI  = 'NO'       /* RACF API (IRRXUTIL) = NO   */
+  IF (&ERASINT  = &Z & &ERASINTP = &Z)
+      &ERASINT  = '100'      /* Status interval (#) = 100  */
+      &ERASINTP = &Z         /* Status interval (%) =      */
   IF (&ERADISP  NE BROWSE, EDIT, VIEW)
       &ERADISP  = 'VIEW'     /* Display files       = VIEW */
   IF (&ERACONF  NE YES, NO)
@@ -48,16 +51,28 @@
       &ERASHOW  = 'NO'       /* RACF commands       = NO   */
   IF (&ERATRACE NE LABELS, PROGRAMS, RESULTS, NO)
       &ERATRACE = 'NO'       /* REXX trace          = NO   */
-  VPUT (ERAADMN ERARAPI ERASINT ERADISP ERACONF ERASHOW +
-        ERATRACE) PROFILE
+  VPUT (ERAADMN ERARAPI ERASINT ERASINTP ERADISP ERACONF +
+        ERASHOW ERATRACE) PROFILE
 
-  &RACFVER = &Z              /*--- Obtain RACF/Sys Info ---*/
-  &RACFDSN = &Z
-  &RACFGRP = &Z
-  &RACFNAM = &Z
-  &ZOSVER  = &ZOS390RL
-  *REXX (RACFVER RACFDSN ZOSVER RACFGRP RACFNAM)
+  &RACFVER  = &Z              /*--- Obtain RACF/Sys Info ---*/
+  &RACFDSN  = &Z
+  &RACFGRP  = &Z
+  &RACFNAM  = &Z
+  &ZOSVER   = &ZOS390RL
+  &RACFLMSG = &Z
+  *REXX (RACFVER RACFDSN ZOSVER RACFGRP RACFNAM RACFLMSG)
     cvt       = c2x(storage(10,4))
+    cvtrac = C2x(storage((d2x(x2d(cvt)+992)),4))
+    ESM = storage(d2x(x2d(cvtrac)),4)
+    Select
+      When ESM = "RTSS" Then SECSOFT = "TSS"
+      When ESM = "RCVT" Then SECSOFT = "RACF"
+      When ESM = "ACF2" Then SECSOFT = "ACF2"
+      Otherwise              SECSOFT = "????"
+    End
+    IF (SECSOFT <> "RACF") THEN
+       RACFLMSG = "RACF is 'NOT' installed on this lpar,",
+                  "it is running "SECSOFT
     cvtrac$   = d2x((x2d(cvt))+992)
     cvtrac    = c2x(storage(cvtrac$,4))
     rcvtstat$ = d2x((x2d(cvtrac))+616)
@@ -78,6 +93,8 @@
     RACFGRP  = storage(group$,8)       /* ACEEGRPN (RACF group name)  */
     RACFNAM  = storage(name$,20)       /* ACEEUNAM (RACF user name)   */
   *ENDREXX
+  IF (&SECSOFT NE RACF)
+     .MSG  = RACF011
 )PROC
   &ZSEL=TRANS(TRUNC(&ZCMD,'.')
       0,'CMD(%RACFSETG)'
@@ -136,9 +153,10 @@
 /*       9  RACFAuth  Analyze ACL for general resources               */
 /*       B  BookMgr   RACF manuals                                    */
 /*                                                                    */
-/*  5) The )INIT section executes a REXX code to obtain the           */
-/*     information displayed at the bottom of the panel (RACF,        */
-/*     Dbase, z/OS, etc)                                              */
+/*  5) The )INIT section executes a REXX code to:                     */
+/*     - Verify RACF is executing, if not issue message               */
+/*     - Obtain RACF information displayed at the bottom of panel     */
+/*       (RACF, Dbase, z/OS, etc)                                     */
 /*                                                                    */
 /*  6) The menu entries (Settings, User, etc.) are point-n-shoot      */
 /*     fields                                                         */

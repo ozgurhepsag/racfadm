@@ -3,6 +3,11 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @E3  200424  RACFA    Chg msg RACF013 to RACF012                   */
+/* @E2  200424  RACFA    Move DDNAME at top, standardize/del dups     */
+/* @E1  200424  RACFA    Add linc cmd, create/display random password */
+/* @DZ  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
+/* @DY  200423  RACFA    'Status Interval' by percentage (ERASINTP)   */
 /* @DX  200423  RACFA    Don't make ATT=YES, when userid is 'REVOKED' */
 /* @DW  200422  TRIDJK   Fixed IRRXUTIL RC when displaying RACF cmds  */
 /* @DV  200422  RACFA    Ensure the REXX program name is 8 chars      */
@@ -151,6 +156,9 @@ PANEL08  = "RACFUSR8"    /* Alter TSO segment              */ /* @BL */
 PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */ /* @BL */
 PANELM3  = "RACFMSG3"    /* Display RACF command (Radmin)  */ /* @D4 */
 EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @CZ */
+DDNAME   = "RACFA"RANDOM(0,999)                               /* @E2 */
+parse source . . REXXPGM .                                    /* @DZ */
+REXXPGM  = LEFT(REXXPGM,8)                                    /* @DZ */
 
 ADDRESS ISPEXEC                                               /* @BC */
   Arg Rfilter
@@ -163,10 +171,8 @@ ADDRESS ISPEXEC                                               /* @BC */
   lparm  =''                              /* Locate parm */   /* @A5 */
   "CONTROL ERRORS RETURN"                                     /* @B1 */
   "VGET (ZSCREEN ERASHOW ERARAPI ERATRACE ERAISPP",           /* @D4 */
-        "ERAULIB ERAADMN ERASINT ERADISP) ASIS"               /* @B7 */
+        "ERAULIB ERAADMN ERASINT ERASINTP ERADISP) ASIS"      /* @DY */
   If (eratrace <> 'NO') then do                               /* @DK */
-     parse source . . REXXPGM .                               /* @DK */
-     REXXPGM = LEFT(REXXPGM,8)                                /* @DV */
      Say "*"COPIES("-",70)"*"                                 /* @DK */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @DK */
      Say "*"COPIES("-",70)"*"                                 /* @DK */
@@ -485,7 +491,6 @@ RETURN
 /*--------------------------------------------------------------------*/
 LISD:
   action  = '*Listed'                                         /* @A4 */
-  DDNAME  = "RACFA"RANDOM(0,999)                              /* @A2 */
   CMDPRM  = "CICS CSDATA DCE DFP EIM KERB LANGUAGE",          /* @A2 */
             "LNOTES MFA NDS NETVIEW OMVS OPERPARM",           /* @A2 */
             "OVM PROXY TSO WORKATTR"                          /* @A2 */
@@ -555,7 +560,7 @@ DISPLAY_INFO:                                                 /* @D2 */
           "BROWSE DATAID("CMDDATID")"                         /* @B7 */
   END                                                         /* @B7 */
   ADDRESS TSO "FREE FI("DDNAME")"                             /* @A2 */
-  DROP CMDREC. DDNAME CMDPRM                                  /* @A2 */
+  DROP CMDREC.                                                /* @A2 */
 RETURN                                                        /* @D2 */
 /*--------------------------------------------------------------------*/
 /*  Get Multi Factor Authentication (MFA) option from RCVT            */
@@ -586,7 +591,6 @@ RETURN 0                                                      /* @AJ */
 /*--------------------------------------------------------------------*/
 LISP:
   action  = '*Listed'                                         /* @AC */
-  DDNAME  = "ERA"RANDOM(0,99999)                              /* @AC */
   CMDPRM  = "CSDATA DFP OMVS OVM TME"                         /* @AC */
   cmd     = "LG "ID" "CMDPRM                                  /* @BB */
   X = OUTTRAP("CMDREC.")                                      /* @AC */
@@ -1093,6 +1097,8 @@ CREATE_TABLE:                                                 /* @BE */
   x = OUTTRAP('OFF')
   if (erashow <> 'NO') then                                   /* @CU */
      call SHOWCMD                                             /* @BB */
+  if (ERASINTP <> "") THEN                                    /* @DY */
+     INTERPRET "RECNUM = var.0*."ERASINTP"%1"                 /* @DY */
   Do i = 1 to var.0
      temp = var.i
      USER = SUBWORD(temp,1,1)
@@ -1141,13 +1147,24 @@ CREATE_TABLE:                                                 /* @BE */
      /*---------------------------------------------*/
      /* Display number of users retrieved          -*/
      /*---------------------------------------------*/
-     IF (ERASINT <> 0) THEN DO     /* Status interval */      /* @AZ */
-        IF (I//ERASINT = 0) THEN DO                           /* @AZ */
-           n1 = i; n2 = var.0
-           "control display lock"
-           "display msg(RACF013)"
-        END                                                   /* @AZ */
-     END                                                      /* @AZ */
+     IF (ERASINT = "") THEN DO                                /* @DY */
+        IF (RECNUM <> 0) THEN                                 /* @DY */
+           IF (I//RECNUM = 0) THEN DO                         /* @DY */
+              n1 = i; n2 = var.0                              /* @DY */
+              pct = ((n1/n2)*100)%1'%'                        /* @DY */
+              "control display lock"                          /* @DY */
+              "display msg(RACF012)"                          /* @E3 */
+           END                                                /* @DY */
+     END                                                      /* @DY */
+     ELSE DO
+        IF (ERASINT <> 0) THEN                                /* @DY */
+           IF (I//ERASINT = 0) THEN DO                        /* @AZ */
+              n1 = i; n2 = var.0
+              pct = ((n1/n2)*100)%1'%'                        /* @DY */
+              "control display lock"
+              "display msg(RACF012)"                          /* @E3 */
+           END                                                /* @AZ */
+     END
      /*---------------------------------------------*/
      /* Get further info                           -*/
      /*---------------------------------------------*/
@@ -1160,6 +1177,7 @@ RETURN                                                        /* @BE */
 /*--------------------------------------------------------------------*/
 @ADDD:                                                        /* @D4 */
   action = '*Insert'                                          /* @D4 */
+  pswd = newpswd()                                            /* @E1 */
   "DISPLAY PANEL("PANEL06")"                                  /* @DS */
   if (rc = 8) then                                            /* @D4 */
      return                                                   /* @D4 */
@@ -1231,6 +1249,34 @@ RETURN                                                        /* @BE */
   "TBMOD" TBLA                                                /* @D4 */
   call disd /* Connect basic group */                         /* @D4 */
 RETURN                                                        /* @D4 */
+/*--------------------------------------------------------------------*/
+/*  Generate password                                            @E1  */
+/*--------------------------------------------------------------------*/
+NEWPSWD:                                                      /* @E1 */
+  /* No vowels, or "V" or "Z" */                              /* @E1 */
+  choices  = 'BCDFGHJKLMNPQRSTWXY'                            /* @E1 */
+  chars.   = ''                                               /* @E1 */
+  password = ''                                               /* @E1 */
+  /* Initialize stem variables */                             /* @E1 */
+  do n = 1 to length(choices)                                 /* @E1 */
+     chars.n = substr(choices,n,1)                            /* @E1 */
+  end                                                         /* @E1 */
+  /* Six character password */                                /* @E1 */
+  do forever                                                  /* @E1 */
+     pick = random(1,length(choices))                         /* @E1 */
+     /* No repeating characters */                            /* @E1 */
+     if (pos(chars.pick,password) > 0) then                   /* @E1 */
+        nop                                                   /* @E1 */
+     else                                                     /* @E1 */
+        password = password||chars.pick                       /* @E1 */
+     if (length(password) > 5) then                           /* @E1 */
+        leave                                                 /* @E1 */
+  end                                                         /* @E1 */
+  /* Plug in 1 numeric character */                           /* @E1 */
+  number   = random(1,9)                                      /* @E1 */
+  place    = random(2,6)                                      /* @E1 */
+  password = overlay(number,password,place,1)                 /* @E1 */
+RETURN password                                               /* @E1 */
 /*--------------------------------------------------------------------*/
 /*  Change profile                                               @DT  */
 /*--------------------------------------------------------------------*/

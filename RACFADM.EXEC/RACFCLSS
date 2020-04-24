@@ -3,6 +3,12 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BD  200424  RACFA    Chg msg RACF013 to RACF012                   */
+/* @BC  200424  RACFA    Fix msg RACF013, was RACF012                 */
+/* @BB  200424  RACFA    Move DDNAME at top, standardize/del dups     */
+/* @BA  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
+/* @B9  200423  RACFA    Deleted the paranthesis, syntax error        */
+/* @B8  200423  RACFA    'Status Interval' by percentage (ERASINTP)   */
 /* @B7  200422  RACFA    Ensure the REXX program name is 8 chars      */
 /* @B6  200422  RACFA    Use variable REXXPGM in log msg              */
 /* @B5  200417  RACFA    Chg REXX pgm name RACFAUTH to RACFCLSA       */
@@ -51,15 +57,17 @@ PANEL08  = "RACFCLS8"    /* List classes and profiles      */ /* @AI */
 PANEL13  = "RACFCLSD"    /* Add class                      */ /* @AG */
 PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */ /* @AG */
 EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @AZ */
+DDNAME   = "RACFA"RANDOM(0,999)                               /* @BB */
+parse source . . REXXPGM .                                    /* @BA */
+REXXPGM  = LEFT(REXXPGM,8)                                    /* @BA */
 
 ADDRESS ISPEXEC                                               /* @A6 */
   Arg user
   selection = 0  /* something selected */
   "CONTROL ERRORS RETURN"                                     /* @AL */
-  "VGET (ZSCREEN ERATRACE ERASHOW ERASINT ERADISP) ASIS"      /* @AR */
+  "VGET (ZSCREEN ERATRACE ERASHOW ERASINT ERASINTP",          /* @B9 */
+        "ERADISP) ASIS"                                       /* @AR */
   If (eratrace <> 'NO') then do                               /* @B2 */
-     parse source . . REXXPGM .                               /* @B2 */
-     REXXPGM = LEFT(REXXPGM,8)                                /* @B7 */
      Say "*"COPIES("-",70)"*"                                 /* @B2 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @B2 */
      Say "*"COPIES("-",70)"*"                                 /* @B2 */
@@ -94,18 +102,31 @@ GET_PERMITS:
   x = OUTTRAP('OFF')
   if (erashow <> 'NO') then                                   /* @AU */
      call SHOWCMD                                             /* @A5 */
+  if (ERASINTP <> "") THEN                                    /* @B8 */
+     INTERPRET "RECNUM = var.0*."ERASINTP"%1"                 /* @B8 */
   Do i = 1 to var.0   /* Scan output */
      profile = subword(var.i,1,1)
      If (profile = "NO") then                                 /* @AN */
         LEAVE         /* NO ENTRIES MEET SEARCH CRITERIA */
      if (profile <> 'ICH31005I') then do
-        IF (ERASINT <> 0) THEN DO     /* Status interval */   /* @AP */
-           IF (I//ERASINT = 0) THEN DO                        /* @AP */
-              n1 = i; n2 = var.0
-              "control display lock"
-              "display msg(RACF012)"
-           end                                                /* @AP */
-        end                                                   /* @AP */
+        IF (ERASINT = "") THEN DO                             /* @B8 */
+           IF (RECNUM <> 0) THEN                              /* @B8 */
+              IF (I//RECNUM = 0) THEN DO                      /* @B8 */
+                 n1 = i; n2 = var.0                           /* @B8 */
+                 pct = ((n1/n2)*100)%1'%'                     /* @B8 */
+                 "control display lock"                       /* @B8 */
+                 "display msg(RACF012)"                       /* @BD */
+              END                                             /* @B8 */
+        END                                                   /* @B8 */
+        ELSE DO                                               /* @B8 */
+           IF (ERASINT <> 0) THEN                             /* @B8 */
+              IF (I//ERASINT = 0) THEN DO                     /* @AP */
+                 n1 = i; n2 = var.0
+                 pct = ((n1/n2)*100)%1'%'                     /* @B8 */
+                 "control display lock"
+                 "display msg(RACF012)"                       /* @BD */
+              end                                             /* @AP */
+        END                                                   /* @B8 */
         "TBMOD" tblb
      end
   end /* end_do i=1     */
@@ -370,7 +391,6 @@ RETURN 0
 /*  List class                                                   @AR  */
 /*--------------------------------------------------------------------*/
 LISP:                                                         /* @AR */
-  DDNAME  = "RACFA"RANDOM(0,999)                              /* @AR */
   cmd     = "RL "CLASS" * ALL"                                /* @AT */
   X = OUTTRAP("CMDREC.")                                      /* @AR */
   ADDRESS TSO cmd                                             /* @AR */
@@ -409,13 +429,12 @@ DISPLAY_INFO:                                                 /* @AY */
           "BROWSE DATAID("CMDDATID")"                         /* @AR */
   END                                                         /* @AR */
   ADDRESS TSO "FREE FI("DDNAME")"                             /* @AR */
-  DROP CMDREC. DDNAME CMDPRM                                  /* @AY */
+  DROP CMDREC.                                                /* @AY */
 RETURN                                                        /* @AY */
 /*--------------------------------------------------------------------*/
 /*  List class's profile                                         @AS  */
 /*--------------------------------------------------------------------*/
 LISD:                                                         /* @AS */
-  DDNAME = "ERA"RANDOM(0,99999)                               /* @AS */
   cmd  = "RLIST "CLASS PROFILE" AUTH"                         /* @AS */
   X    = OUTTRAP("CMDREC.")                                   /* @AS */
   ADDRESS TSO cmd                                             /* @AS */

@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AE  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
 /* @AD  200423  RACFA    Ensure REXX program name is 8 chars long     */
 /* @AC  200422  RACFA    Fixed displaying error message               */
 /* @AB  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
@@ -19,13 +20,13 @@
 /* @A0  200218  RACFA    Created REXX                                 */
 /*====================================================================*/
 EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @A8 */
+parse source . . REXXPGM .                                    /* @AE */
+REXXPGM  = LEFT(REXXPGM,8)                                    /* @AE */
 
 ADDRESS ISPEXEC                                               /* @A3 */
   PARSE ARG MEMBER                                            /* @A5 */
   "VGET (ERADISP ERATRACE) ASIS"                              /* @A2 */
   If (eratrace <> 'NO') then do                               /* @AA */
-     parse source . . REXXPGM .                               /* @AA */
-     REXXPGM = LEFT(REXXPGM,8)                                /* @AD */
      Say "*"COPIES("-",70)"*"                                 /* @AA */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AA */
      Say "*"COPIES("-",70)"*"                                 /* @AA */

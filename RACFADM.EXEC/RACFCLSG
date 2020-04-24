@@ -3,6 +3,10 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BQ  200424  RACFA    Chg msg RACF013 to RACF012                   */
+/* @BP  200424  RACFA    Move DDNAME at top, standardize/del dups     */
+/* @BO  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
+/* @BN  200423  RACFA    'Status Interval' by percentage (ERASINTP)   */
 /* @BM  200422  RACFA    Ensure the REXX program name is 8 chars      */
 /* @BL  200422  RACFA    Use variable REXXPGM in log msg              */
 /* @BK  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
@@ -72,6 +76,9 @@ PANEL13  = "RACFCLSC"    /* Add class                      */ /* @AM */
 PANELM1  = "RACFMSG1"    /* Confirm Request (pop-up)       */ /* @AM */
 PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */ /* @AM */
 EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @BD */
+DDNAME   = "RACFA"RANDOM(0,999)                               /* @BP */
+parse source . . REXXPGM .                                    /* @BO */
+REXXPGM  = LEFT(REXXPGM,8)                                    /* @BO */
 
 ADDRESS ISPEXEC                                               /* @AG */
   Arg Rclass Rfilter Rdisp
@@ -83,11 +90,9 @@ ADDRESS ISPEXEC                                               /* @AG */
   Pnl_list_prof = PANEL02                                     /* @AP */
   Rclass        = strip(rclass)
   "CONTROL ERRORS RETURN"                                     /* @AS */
-  "VGET (ZSCREEN ERASHOW ERATRACE ERACONF",                   /* @AA */
-        "ERASINT ERAADMN ERADISP  ERARAPI) ASIS"              /* @AC */
+  "VGET (ZSCREEN ERASHOW  ERATRACE ERACONF ERASINT",          /* @AA */
+        "ERASINTP ERAADMN ERADISP  ERARAPI) ASIS"             /* @BN */
   If (eratrace <> 'NO') then do                               /* @BJ */
-     parse source . . REXXPGM .                               /* @BJ */
-     REXXPGM = LEFT(REXXPGM,8)                                /* @BM */
      Say "*"COPIES("-",70)"*"                                 /* @BJ */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @BJ */
      Say "*"COPIES("-",70)"*"                                 /* @BJ */
@@ -924,7 +929,6 @@ RETURN
 /*  List class's profile                                              */
 /*--------------------------------------------------------------------*/
 LISD:                                                         /* @A1 */
-  DDNAME  = "RACFA"RANDOM(0,999)                              /* @A1 */
   cmd = "RLIST "RCLASS PROFILE" AUTH"                         /* @AF */
   X = OUTTRAP("CMDREC.")                                      /* @A1 */
   ADDRESS TSO cmd                                             /* @AF */
@@ -964,7 +968,6 @@ RETURN 0                                                      /* @A6 */
 /*  List group                                                        */
 /*--------------------------------------------------------------------*/
 LISP:                                                         /* @A2 */
-  DDNAME  = "RACFA"RANDOM(0,999)                              /* @A2 */
   CMDPRM  = "CSDATA DFP OMVS OVM TME"                         /* @A2 */
   cmd     = "LG "ID CMDPRM                                    /* @AF */
   X = OUTTRAP("CMDREC.")                                      /* @A2 */
@@ -1004,7 +1007,7 @@ DISPLAY_INFO:                                                 /* @BE */
           "BROWSE DATAID("CMDDATID")"                         /* @AC */
   END                                                         /* @AC */
   ADDRESS TSO "FREE FI("DDNAME")"                             /* @A2 */
-  DROP CMDREC. DDNAME CMDPRM                                  /* @A2 */
+  DROP CMDREC.                                                /* @A2 */
 RETURN                                                        /* @BE */
 /*--------------------------------------------------------------------*/
 /*  Display RACF command and return code                         @AF  */
@@ -1038,6 +1041,8 @@ CREATE_TABLE:
   x = OUTTRAP('OFF')
   if (erashow <> 'NO') then                                   /* @B6 */
      call SHOWCMD                                             /* @AF */
+  if (ERASINTP <> "") THEN                                    /* @BN */
+     INTERPRET "RECNUM = var.0*."ERASINTP"%1"                 /* @BN */
   Do i = 1 to var.0
      temp    = var.i
      profile = SUBWORD(temp,1,1)
@@ -1090,13 +1095,24 @@ CREATE_TABLE:
      /*---------------------------------------------*/
      /* Display number of records retrieved        -*/
      /*---------------------------------------------*/
-     IF (ERASINT <> 0) THEN DO     /* Status interval */      /* @AA */
-        IF (I//ERASINT = 0) THEN DO                           /* @AA */
-           n1 = i; n2 = var.0
-           "control display lock"
-           "display msg(RACF013)"
-        END                                                   /* @AA */
-     END                                                      /* @AA */
+     IF (ERASINT = "") THEN DO                                /* @BN */
+        IF (RECNUM <> 0) THEN                                 /* @BN */
+           IF (I//RECNUM = 0) THEN DO                         /* @BN */
+              n1 = i; n2 = var.0                              /* @BN */
+              pct = ((n1/n2)*100)%1'%'                        /* @BN */
+              "control display lock"                          /* @BN */
+              "display msg(RACF012)"                          /* @BQ */
+           END                                                /* @BN */
+     END                                                      /* @BN */
+     ELSE DO                                                  /* @BN */
+        IF (ERASINT <> 0) THEN                                /* @BN */
+           IF (I//ERASINT = 0) THEN DO                        /* @AA */
+              n1 = i; n2 = var.0
+              pct = ((n1/n2)*100)%1'%'                        /* @BN */
+              "control display lock"
+              "display msg(RACF012)"                          /* @BQ */
+           END                                                /* @AA */
+     END                                                      /* @BN */
      /* Get Further information */
      call GETD
      "TBMOD" tbla

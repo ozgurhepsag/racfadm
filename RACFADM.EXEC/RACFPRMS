@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AB  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
 /* @AA  200423  RACFA    Ensure REXX program name is 8 chars long     */
 /* @A9  200423  RACFA    Chg variable name RCVTGDSN to RCVTPDSN       */
 /* @A8  200423  RACFA    Get RACF Bkp database name                   */
@@ -15,13 +16,13 @@
 /* @A1  200119  RACFA    Standardized/reduced lines of code           */
 /* @A0  011229  NICORIZ  Created REXX, V2.1, www.rizzuto.it           */
 /*====================================================================*/
-PANEL19 = "RACFPRMS"    /* RACF parameters, menu option 7  */ /* @A5 */
+PANEL19  = "RACFPRMS"   /* RACF parameters, menu option 7  */ /* @A5 */
+parse source . . REXXPGM .                                    /* @AB */
+REXXPGM  = LEFT(REXXPGM,8)                                    /* @AB */
 
 ADDRESS ISPEXEC                                               /* @A4 */
   "VGET (ERATRACE) ASIS"                                      /* @A3 */
   If (eratrace <> 'NO') then do                               /* @A6 */
-     parse source . . REXXPGM .                               /* @A6 */
-     REXXPGM = LEFT(REXXPGM,8)                                /* @AA */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A6 */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */

@@ -2,6 +2,53 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  24 Apr 2020 - V19R5
+     - Main Menu and Settings (Option 0)
+       -- If 'Administrator = N', then make 'Admin RACF API = N'
+     - Other Items
+       -- Updated comments at bottom of panel RACFMENU
+
+  24 Apr 2020 - V19R4
+     - User and Group (Options 1/2)
+       -- Fixed display status/progress message (REXX pgm = RACFCLSS)
+       -- Deleted RACF012 message and renamed RACF013 to RACF012
+          * Messages where redundant, one of them was not needed
+          * Only two messages now (RACF011 and RACF012), easier to
+            maintain
+
+  24 Apr 2020 - V19R3
+     - User (Option 1)
+       -- Line command 'A'dd, automatically generate and place in a
+          random password in the 'PASSWORD' field, prior was blank
+     - Other Items
+       -- Updated all REXX programs, relocated defining the variable
+          DDNAME to the top of the REXX, making it easier to maintain,
+          standardize and remove duplication of code
+
+  23 Apr 2020 - V19R2
+     - Settings
+       -- Fixed 'RACF commands = B or L'
+          * Was not displaying the REXX program name in the ISPF
+            log file
+          * When executing 'SE'arch line command was displaying
+            messages/errors
+
+  23 Apr 2020 - V19R1
+     - Other Items
+       -- Updated messages member and version on main menu
+
+  23 Apr 2020 - V19R0
+     - Main Menu
+       -- Verify lpar is executing RACF, if not, display message
+
+  23 Apr 2020 - V18R9
+     - Settings (Option 0)
+       -- Allow typing in a percentage for 'Status interval', instead
+          of a number, and updated message to display percentage
+     - Group (Option 2)
+       -- When 'S'howing group, if userid displayed is 'NONE',
+          initialize 'Access' field to blanks
+
   23 Apr 2020 - V18R8
      - User (Option 1)
        -- Changed ATT column to NO, when userid is REVOKED, since

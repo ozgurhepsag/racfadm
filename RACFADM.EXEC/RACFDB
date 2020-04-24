@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AC  200424  RACFA    Move DDNAME at top, standardize/del dups     */
+/* @AB  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
 /* @AA  200423  RACFA    Chg dash line to 72, was 62 columns in length*/
 /* @A9  200423  RACFA    Ensure REXX program name is 8 chars long     */
 /* @A8  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
@@ -145,11 +147,12 @@
 /*                                                                   */
 /*********************************************************************/
 EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @A4 */
+DDNAME   = "RACFA"RANDOM(0,999)                               /* @AC */
+parse source . . REXXPGM .                                    /* @AB */
+REXXPGM  = LEFT(REXXPGM,8)                                    /* @AB */
 
 ADDRESS ISPEXEC "VGET (ERADISP ERATRACE)"                     /* @A5 */
 If (eratrace <> 'NO') then do                                 /* @A6 */
-   parse source . . REXXPGM .                                 /* @A6 */
-   REXXPGM = LEFT(REXXPGM,8)                                  /* @A9 */
    Say "*"COPIES("-",70)"*"                                   /* @A6 */
    Say "*"Center("Begin Program = "REXXPGM,70)"*"             /* @A6 */
    Say "*"COPIES("-",70)"*"                                   /* @A6 */
@@ -251,7 +254,6 @@ QUEUE "RACF database template RMID level ....... "RACFTEMP    /* @A1 */
 QUEUE SYSCOM SYSDS                                            /* @A1 */
 QUEUE                                                         /* @A1 */
                                                               /* @A1 */
-DDNAME = "RACFA"RANDOM(0,999)                                 /* @A1 */
 "ALLOC F("DDNAME") NEW REUSE",                                /* @A1 */
       "LRECL(80) BLKSIZE(0) RECFM(F B)",                      /* @A2 */
       "UNIT(VIO) SPACE(1 5) CYLINDERS"                        /* @A1 */

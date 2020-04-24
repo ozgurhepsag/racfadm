@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AL  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
 /* @AK  200423  RACFA    Place DSN/Enques in flower/comment box       */
 /* @AJ  200423  RACFA    Del 'call racfmsgs ERR19' when rows = 0      */
 /* @AI  200422  RACFA    Ensure the REXX program name is 8 chars      */
@@ -30,12 +31,12 @@ EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @A2 */
 QNAME    = "SYSDSN"      /* MAJOR resource name for DSNs   */
 ENQRC    = 0             /* Verify ALTLIB/LIBDEFs exist    */
 DDNAME   = "RACFA"RANDOM(0,999)                               /* @A9 */
+parse source . . REXXPGM .                                    /* @AL */
+REXXPGM  = LEFT(REXXPGM,8)                                    /* @AL */
 
 ADDRESS ISPEXEC
   "VGET (ERADISP ERASHOW ERATRACE) ASIS"
   If (eratrace <> 'NO') then do                               /* @A6 */
-     parse source . . REXXPGM .                               /* @A6 */
-     REXXPGM = LEFT(REXXPGM,8)                                /* @AI */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A6 */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */

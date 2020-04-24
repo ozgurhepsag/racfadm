@@ -19,7 +19,7 @@
 +
 !  Status interval +The number of entries processed before displaying the
 +                  +progress status message%(0-9999, 0=Do not display,
-%                   100=Default)
+%                   100=Default)+or the percentage%(0-99)
 +
 !  Display files   +Display reports/files in%Browse, Edit or View+mode when
 +                  +using line commands: List, Profile, etc.%(View=Default)

@@ -16,7 +16,7 @@
 ^USRTITL                                           ^
 +
 %Base Segment:
-+ PROFILE%===>_USER    {^USERTXT           ^+ ^PASSFLD              ^+
++ PROFILE%===>_USER    {^USERTXT           ^+ ^PSWDFLD              ^+
 + OWNER  %===>_BOWNER  { (Owner of profile)
 + DFLTGRP%===>_DEFGRP  { (Default group)
 + NAME   %===>_NAME                { (Last, first name)
@@ -40,17 +40,16 @@
   VGET (ERARAPI)
   &OLDUSR = &USER
   &FROM   = &USER
-  &PSWD   = &Z
   IF (&USER = NONE)
      &USER = &RFILTER
   IF (&ACTION = '*Insert')
      &USRTITL = 'ÝAdd RACF¨USERÝprofile: ¨ADDUSERÝcommand'
      &USERTXT = '~(Enter¨NEW~userid)'
-     &PASSFLD = 'ÝPASSWORD¨===>!        ¨'
+     &PSWDFLD = 'ÝPASSWORD¨===>!&PSWD   ¨'
   IF (&ACTION = '*Modify')
      &USRTITL = 'ÝAlt RACF¨USERÝprofile: ¨ALTUSERÝcommand'
      &USERTXT = '~(Enter userid)'
-     &PASSFLD = ''
+     &PSWDFLD = ''
 
   *Rexx(* erarapi)
      if erarapi = 'NO' then do
@@ -162,8 +161,8 @@
     &RACFSMSG = 'RACF API...'
   .MSG = RACF011
 )PROC
-  *REXX (PASSFLD, PSWD)           /* Get password */
-     PSWD = SUBSTR(PASSFLD,16)
+  *REXX (PSWDFLD, PSWD)           /* Get password */
+     PSWD = SUBSTR(PSWDFLD,16)
   *ENDREXX
   IF (&ACTION = '*Insert')
      IF (&OLDUSR = &USER)
@@ -202,12 +201,17 @@
 /*     (menu option 0) turned on                                      */
 /*       Administrator ..... Y                                        */
 /*                                                                    */
-/*  2) The )INIT section executes REXX code to obtain userid          */
+/*  2) This panel is used for Adding and Changing a userid            */
+/*     - Line commands 'A' and 'C' respectively                       */
+/*     - This is done by using dynamic areas for the user title       */
+/*       and password fields (USRTITL and PSWDFLD)                    */
+/*                                                                    */
+/*  3) The )INIT section executes REXX code to obtain userid          */
 /*     information (ATTR, TSOPROC, etc.) by invoking IRRXUTIL of      */
 /*     executing LISTUSER command and parses through the output       */
 /*     - If settings, menu option 0, 'Admin RACF API = Y' then        */
 /*       execute IRRXUTIL, else LISTUSER command                      */
 /*                                                                    */
-/*  3) The 'ATTR' field is a scrollable field                         */
+/*  4) The 'ATTR' field is a scrollable field                         */
 /*                                                                    */
 /*--------------------------------------------------------------------*/

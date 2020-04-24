@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @B2  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
 /* @B1  200422  RACFA    Ensure the REXX program name is 8 chars      */
 /* @AZ  200422  RACFA    Use variable REXXPGM in log msg              */
 /* @AY  200422  TRIDJK   Fixed allocating JOBLIB                      */
@@ -42,16 +43,16 @@
 /* @A1  200118  RACFA    Fixed NOPREF issue with users TSO PROFILE    */
 /* @A0  011229  NICORIZ  Created REXX, V2.1, www.rizzuto.it           */
 /*====================================================================*/
-PANEL29 = "RACFUSRT"    /* Add, chg and del a TSO userid   */ /* @A9 */
-PANELM2 = "RACFMSG2"    /* Display RACF command and RC     */ /* @AW */
-X       = MSG("OFF")    /* No informational messages       */ /* @AD */
-DDNAME  = "RACFA"RANDOM(0,999)                                /* @AW */
+PANEL29  = "RACFUSRT"   /* Add, chg and del a TSO userid   */ /* @A9 */
+PANELM2  = "RACFMSG2"   /* Display RACF command and RC     */ /* @AW */
+X        = MSG("OFF")   /* No informational messages       */ /* @AD */
+DDNAME   = "RACFA"RANDOM(0,999)                               /* @AW */
+parse source . . REXXPGM .                                    /* @B2 */
+REXXPGM  = LEFT(REXXPGM,8)                                    /* @B2 */
 
 ADDRESS ISPEXEC                                               /* @AF */
   "VGET (ERASHOW ERATRACE ERAISPP ERACTLG ERAULIB) ASIS"      /* @A4 */
   If (eratrace <> 'NO') then do                               /* @AT */
-     parse source . . REXXPGM .                               /* @AT */
-     REXXPGM = LEFT(REXXPGM,8)                                /* @B1 */
      Say "*"COPIES("-",70)"*"                                 /* @AT */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AT */
      Say "*"COPIES("-",70)"*"                                 /* @AT */

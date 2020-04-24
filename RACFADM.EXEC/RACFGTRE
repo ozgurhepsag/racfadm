@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AD  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
 /* @AC  200423  RACFA    Removed blank in column 1 of report          */
 /* @AB  200423  RACFA    Do not chk for titles when looping thru rpt  */
 /* @AA  200423  RACFA    Ensure REXX program name is 8 chars long     */
@@ -18,12 +19,12 @@
 /*====================================================================*/
 EDITMACR = "RACFEMAC"    /* Edit Macro, delete space lines */ /* @A5 */
 DDNAME   = "RACFA"RANDOM(0,999)                               /* @A5 */
+parse source . . REXXPGM .                                    /* @AD */
+REXXPGM  = LEFT(REXXPGM,8)                                    /* @AD */
 
 ADDRESS ISPEXEC
   "VGET (ERATRACE ERADISP) ASIS"                              /* @A2 */
   If (eratrace <> 'NO') then do
-     parse source . . REXXPGM .
-     REXXPGM = LEFT(REXXPGM,8)                                /* @AA */
      Say "*"COPIES("-",70)"*"
      Say "*"Center("Begin Program = "REXXPGM,70)"*"
      Say "*"COPIES("-",70)"*"
