@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @E5  200424  RACFA    Added lower case to random password          */
 /* @E4  200424  RACFA    Updated RESET, pass filter, ex: R filter     */
 /* @E3  200424  RACFA    Chg msg RACF013 to RACF012                   */
 /* @E2  200424  RACFA    Move DDNAME at top, standardize/del dups     */
@@ -1257,7 +1258,7 @@ RETURN                                                        /* @D4 */
 /*--------------------------------------------------------------------*/
 NEWPSWD:                                                      /* @E1 */
   /* No vowels, or "V" or "Z" */                              /* @E1 */
-  choices  = 'BCDFGHJKLMNPQRSTWXY'                            /* @E1 */
+  choices  = 'BCDFGHJKLMNPQRSTWXYbcdfghjklmnpqrstwxy'         /* @E5 */
   chars.   = ''                                               /* @E1 */
   password = ''                                               /* @E1 */
   /* Initialize stem variables */                             /* @E1 */

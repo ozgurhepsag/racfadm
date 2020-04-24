@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V19R7+)\-\
++\-\(%RACFADM - RACF Administration - V19R9+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options        %C ~Changes  +Version/updates
@@ -22,7 +22,7 @@
 +
 + ---------------------------------------------------------------------------
 +   RACF:!RACFVER        +Prm Dbase:!PRMDBASE
-+                        +Bkp Dbase:!BKPDBASE
++   FMID:!RACFFMID       +Bkp Dbase:!BKPDBASE
 +   z/OS:!ZOSVER         +Plex: !ZSYSPLEX       +Lpar:!ZSYSID
 +   Date:!ZDATE          +Jdate:!ZJDATE         +Time:!ZTIME
 +   User:!ZUSER          +Group:!RACFGRP        +Name:!RACFNAM
@@ -61,10 +61,16 @@
   &RACFNAM  = &Z
   &ZOSVER   = &ZOS390RL
   &RACFLMSG = &Z
-  *REXX (RACFVER PRMDBASE BKPDBASE ZOSVER RACFGRP RACFNAM RACFLMSG)
-    cvt       = c2x(storage(10,4))
-    cvtrac = C2x(storage((d2x(x2d(cvt)+992)),4))
-    ESM = storage(d2x(x2d(cvtrac)),4)
+  &SECSOFT  = &Z
+  &RACFFMID = &Z
+  *REXX (RACFVER PRMDBASE BKPDBASE ZOSVER RACFGRP RACFNAM RACFLMSG
+         SECSOFT RACFFMID)
+    CVT      = C2D(STORAGE(10,4))
+    CVTRAC   = C2D(STORAGE(D2X(CVT + 992),4))
+    RACFFMID = "HRF"STORAGE(D2X(CVTRAC + 616),4)
+    cvt      = c2x(storage(10,4))
+    cvtrac   = C2x(storage((d2x(x2d(cvt)+992)),4))
+    ESM      = storage(d2x(x2d(cvtrac)),4)
     Select
       When ESM = "RTSS" Then SECSOFT = "TSS"
       When ESM = "RCVT" Then SECSOFT = "RACF"
@@ -81,27 +87,27 @@
     RACFVER   = 'V'substr(x,1,1)'R'substr(x,2,2)'M'substr(x,4,1)
     rcvtsta$  = d2x((x2d(cvtrac))+56)
     PRMDBASE  = strip(storage(rcvtsta$,44))
-    RCVT     = D2X(X2D(CVT) +X2D(3E0))
-    RCVT     = C2X(STORAGE(RCVT,4))
-    DSDT     = D2X(X2D(RCVT) + X2D(E0))
-    DSDT     = C2X(STORAGE(DSDT,4))
-    DSDTBACK = D2X(X2D(DSDT) + X2D(140))
-    BNAME    = D2X(X2D(DSDTBACK) + X2D(21))
-    BKPDBASE = STRIP(STORAGE(BNAME,44))
+    RCVT      = D2X(X2D(CVT) +X2D(3E0))
+    RCVT      = C2X(STORAGE(RCVT,4))
+    DSDT      = D2X(X2D(RCVT) + X2D(E0))
+    DSDT      = C2X(STORAGE(DSDT,4))
+    DSDTBACK  = D2X(X2D(DSDT) + X2D(140))
+    BNAME     = D2X(X2D(DSDTBACK) + X2D(21))
+    BKPDBASE  = STRIP(STORAGE(BNAME,44))
     if (BKPDBASE = "") THEN
-       BKPDBASE = "N/A"
+        BKPDBASE = "N/A"
     parse var zosver . "z/OS" ZOSVER .
-    ascb   = c2x(storage(224,4))       /* PSAAOLD  (My ASCB)          */
-    asxb$  = d2x((x2d(ascb))+108)      /* ASCB + 108                  */
-    asxb   = c2x(storage(asxb$,4))     /* ASCBASXB (My ASXB)          */
-    acee$  = d2x((x2d(asxb))+200)      /* ASXB + 200                  */
-    acee   = c2x(storage(acee$,4))     /* ASXBSENV (My ACEE)          */
-    group$ = d2x((x2d(acee))+30)       /* ACEE + 30                   */
-    name$  = d2x((x2d(acee))+100)      /* ACEE + 100                  */
-    name$  = c2x(storage(name$,4))     /* ACEEUNAM Ptr                */
-    name$  = d2x((x2d(name$))+1)       /* ACEEUNAM Ptr +1             */
-    RACFGRP  = storage(group$,8)       /* ACEEGRPN (RACF group name)  */
-    RACFNAM  = storage(name$,20)       /* ACEEUNAM (RACF user name)   */
+    ascb     = c2x(storage(224,4))      /* PSAAOLD  (My ASCB)        */
+    asxb$    = d2x((x2d(ascb))+108)     /* ASCB + 108                */
+    asxb     = c2x(storage(asxb$,4))    /* ASCBASXB (My ASXB)        */
+    acee$    = d2x((x2d(asxb))+200)     /* ASXB + 200                */
+    acee     = c2x(storage(acee$,4))    /* ASXBSENV (My ACEE)        */
+    group$   = d2x((x2d(acee))+30)      /* ACEE + 30                 */
+    name$    = d2x((x2d(acee))+100)     /* ACEE + 100                */
+    name$    = c2x(storage(name$,4))    /* ACEEUNAM Ptr              */
+    name$    = d2x((x2d(name$))+1)      /* ACEEUNAM Ptr +1           */
+    RACFGRP  = storage(group$,8)        /* ACEEGRPN (RACF group name)*/
+    RACFNAM  = storage(name$,20)        /* ACEEUNAM (RACF user name) */
   *ENDREXX
   IF (&SECSOFT NE RACF)
      .MSG  = RACF011

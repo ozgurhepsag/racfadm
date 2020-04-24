@@ -2,6 +2,18 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  24 Apr 2020 - V19R9
+     - Main Menu
+       -- Added RACF FMID to bottom of panel
+
+  24 Apr 2020 - V19R8
+     - Main Menu
+       -- Fixed display message when lpar is not executing RACF, needed
+          to make the REXX variable SECSOFT accessible to the panel
+     - User and Password (Option 1/5)
+       -- When creating random password, use both upper and lower case
+          letters, prior was only upper case
+
   24 Apr 2020 - V19R7
      - Main Menu
        -- Added RACF backup database name to bottom of panel

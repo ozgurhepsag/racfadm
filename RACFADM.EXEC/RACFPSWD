@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A9  200424  RACFA    Added lower case to random password          */
 /* @A8  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
 /* @A7  200422  RACFA    Ensure the REXX program name is 8 chars      */
 /* @A6  200422  TRIDJK   Use variable REXXPGM in log msg              */
@@ -68,7 +69,7 @@ EXIT cmd_rc                                                   /* @A4 */
 /*--------------------------------------------------------------------*/
 NEWPSWD:
   /* No vowels, or "V" or "Z" */
-  choices  = 'BCDFGHJKLMNPQRSTWXY'
+  choices  = 'BCDFGHJKLMNPQRSTWXYbcdfghjklmnpqrstwxy'         /* @A9 */
   chars.   = ''
   password = ''
   /* Initialize stem variables */
