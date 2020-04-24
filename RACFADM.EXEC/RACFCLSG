@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BR  200424  RACFA    Updated RESET, pass filter, ex: R filter     */
 /* @BQ  200424  RACFA    Chg msg RACF013 to RACF012                   */
 /* @BP  200424  RACFA    Move DDNAME at top, standardize/del dups     */
 /* @BO  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
@@ -115,7 +116,7 @@ ADDRESS ISPEXEC                                               /* @AG */
      "CONTROL NONDISPL ENTER"
   "DISPLAY PANEL("PANEL01")"                                  /* @AM */
   Do while (rc = 0)
-     Call create_table
+     Call CREATE_TABLEA
      call Profl
      if (called <> 'YES') | (rdisp = 'YES') then do
         "DISPLAY PANEL("PANEL01")"                            /* @AM */
@@ -189,11 +190,13 @@ PROFL:
              end                                              /* @AK */
         END                                                   /* @AK */
         WHEN (ABBREV("RESET",ZCMD,1) = 1) THEN DO             /* @AK */
+             if (parm <> '') then                             /* @BR */
+                rfilter = parm                                /* @BR */
              sort     = 'PROFILE,C,A'                         /* @AK */
              sortprof = 'D'; sortdata = 'A'                   /* @B8 */
              xtdtop   = 1                                     /* @AK */
              "TBEND" tbla                                     /* @B8 */
-             call create_table                                /* @AK */
+             call CREATE_TABLEA                               /* @AK */
         END                                                   /* @AK */
         otherwise NOP                                         /* @AK */
      END /* Select */                                         /* @AK */
@@ -579,6 +582,8 @@ DISD:
                 end                                           /* @B9 */
            END                                                /* @B9 */
            WHEN (ABBREV("RESET",ZCMD,1) = 1) THEN DO          /* @B9 */
+                if (parm <> '') then                          /* @BR */
+                   rfilter = parm                             /* @BR */
                 SORT   = 'ID,C,A'                             /* @B9 */
                 sortid = 'D'; sortacc = 'A'                   /* @B9 */
                 xtdtop   = 1                                  /* @B9 */
@@ -1029,7 +1034,7 @@ RETURN                                                        /* @AF */
 /*--------------------------------------------------------------------*/
 /*  Create table 'A'                                             @AK  */
 /*--------------------------------------------------------------------*/
-CREATE_TABLE:
+CREATE_TABLEA:
   seconds = TIME('S')
   tbla    = 'TA'ZSCREEN||SECONDS  /* table unique */
   "TBCREATE" tbla "KEYS(PROFILE TYPE)",

@@ -2,6 +2,23 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  24 Apr 2020 - V19R7
+     - Main Menu
+       -- Added RACF backup database name to bottom of panel
+     - RACFprms (Option 7)
+       -- Fixed a displaying a few entries
+
+  24 Apr 2020 - V19R6
+     - User, Group, Dataset and General Resources (Opt 1/2/3/4)
+       -- Enhanced RESET primary command, to allow passing a new
+          search filter, for example: RESET R288*
+          * Updated tutorials
+     - RACFprms (Option 7)
+       -- Added below fields:
+            Password lower case allowed ...... Yes or No
+            Password special chars allowed ... Yes or No
+            Password extended support ........ Yes or No
+
   24 Apr 2020 - V19R5
      - Main Menu and Settings (Option 0)
        -- If 'Administrator = N', then make 'Admin RACF API = N'
@@ -12,7 +29,7 @@
      - User and Group (Options 1/2)
        -- Fixed display status/progress message (REXX pgm = RACFCLSS)
        -- Deleted RACF012 message and renamed RACF013 to RACF012
-          * Messages where redundant, one of them was not needed
+          * Messages where redudant, one of them was not needed
           * Only two messages now (RACF011 and RACF012), easier to
             maintain
 
@@ -23,7 +40,7 @@
      - Other Items
        -- Updated all REXX programs, relocated defining the variable
           DDNAME to the top of the REXX, making it easier to maintain,
-          standardize and remove duplication of code
+          standardize and remove duplicatation of code
 
   23 Apr 2020 - V19R2
      - Settings

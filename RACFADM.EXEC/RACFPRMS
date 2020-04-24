@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AC  200424  TRIDJK   Add password lowercase/spc char/ext support  */
 /* @AB  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
 /* @AA  200423  RACFA    Ensure REXX program name is 8 chars long     */
 /* @A9  200423  RACFA    Chg variable name RCVTGDSN to RCVTPDSN       */
@@ -61,7 +62,6 @@ RETURN 0000                                 /* exit                   */
 /*--------------------------------------------------------------------*/
 GET_INITIAL_RCVT_VALUES:
   rc        = Setchar(rcvtpdsn,56,44)       /* racf dsn           @A9 */
-  rcvtuvol  = 'None';rcvtuads='None'
   rc        = Setchar(rcvtuads,100,44)      /* uads dsn               */
   rc        = Setchar(rcvtuvol,144,6)       /* uads vol               */
 
@@ -118,7 +118,10 @@ RETURN
 /*--------------------------------------------------------------------*/
 RACF_SETROPT_OPTIONS:
   rc= Setbool(rcvtsegn,53,'01','NO','YES')  /* egn                    */
-  rc= Setbool(rcvtsmfa,633,'02','NO','YES') /* mfa               @A2  */
+  rc= Setbool(rcvtplc,633,'40','NO','YES')  /* lower case pswd    @AC */
+  rc= Setbool(rcvtpsc,633,'08','NO','YES')  /* special char pswd  @AC */
+  rc= Setbool(rcvtxpwd,633,'04','NO','YES') /* extended pswd spt  @AC */
+  rc= Setbool(rcvtmfa,633,'02','NO','YES')  /* mfa                @A2 */
   rc= Setbool(rcvtsads,53,'02','YES','NO')  /* adsp                   */
   rc= Setbool(rcvtscat,628,'40','NO','YES') /* catdsns                */
   rc= Setbool(rcvtseos,393,'20','NO','YES') /* erase on scratch       */

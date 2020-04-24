@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @E4  200424  RACFA    Updated RESET, pass filter, ex: R filter     */
 /* @E3  200424  RACFA    Chg msg RACF013 to RACF012                   */
 /* @E2  200424  RACFA    Move DDNAME at top, standardize/del dups     */
 /* @E1  200424  RACFA    Add linc cmd, create/display random password */
@@ -227,7 +228,7 @@ EXIT
 /*  Show all profiles for a filter                                    */
 /*--------------------------------------------------------------------*/
 PROFL:
-  call create_table                                           /* @BE */
+  call CREATE_TABLEA                                          /* @BE */
   if (USER = 'INVALID') | (USER = 'NO') THEN DO               /* @C5 */
      "TBEND" tbla
      call racfmsgs 'ERR16'                                    /* @C5 */
@@ -298,6 +299,8 @@ PROFL:
              end                                              /* @BE */
          END                                                  /* @LB */
          WHEN (ABBREV("RESET",ZCMD,1) = 1) THEN DO            /* @AS */
+              if (parm <> '') then                            /* @E4 */
+                 rfilter = parm                               /* @E4 */
               sort     = 'USER,C,A'                           /* @BJ */
               sortuser = 'D'; sortname = 'A'                  /* @CX */
               sortdefg = 'A'; sortdate = 'D'                  /* @CX */
@@ -305,7 +308,7 @@ PROFL:
               sortattr = 'D'; sorttsou = 'D'                  /* @CX */
               xtdtop   = 1                                    /* @AS */
               "TBEND" tbla                                    /* @BE */
-              call create_table                               /* @BE */
+              call CREATE_TABLEA                              /* @BE */
          END                                                  /* @AS */
          otherwise lparm = ''
      End /* Select */
@@ -685,7 +688,7 @@ DISD:
      return
   tmpsort = sort                                              /* @CY */
   Do until (RB='NO')   /* allow rebuild option to loop */
-     call create_tableb                                       /* @CY */
+     call CREATE_TABLEB                                       /* @CY */
      /* Permit table display section */
      rb     = 'NO'
      optb   = ' '
@@ -738,7 +741,7 @@ DISD:
                  sortid = 'D'; sortacc = 'A'                  /* @CY */
                  xtdtop = 1                                   /* @CY */
                  "TBEND" tblb                                 /* @CY */
-                 call create_tableb                           /* @CY */
+                 call CREATE_TABLEB                           /* @CY */
             END                                               /* @CY */
             otherwise lparm = ''                              /* @CY */
         End /* Select */                                      /* @CY */
@@ -1082,7 +1085,7 @@ RETURN                                                        /* @BB */
 /*--------------------------------------------------------------------*/
 /*  Create table 'A'                                             @BE  */
 /*--------------------------------------------------------------------*/
-CREATE_TABLE:                                                 /* @BE */
+CREATE_TABLEA:                                                /* @BE */
   action  = ''
   seconds = TIME('S')
   tbla    = 'TA'ZSCREEN||SECONDS  /* table name unique */

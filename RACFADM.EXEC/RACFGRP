@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CD  200424  RACFA    Updated RESET, pass filter, ex: R filter     */
 /* @CA  200424  RACFA    Chg msg RACF013 to RACF012                   */
 /* @C9  200424  RACFA    Move DDNAME at top, standardize/del dups     */
 /* @C8  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
@@ -149,7 +150,7 @@ EXIT
 /*  Show all profiles for a filter                                    */
 /*--------------------------------------------------------------------*/
 PROFL:
-  call create_table                                           /* @AP */
+  call CREATE_TABLEA                                          /* @AP */
   if (group = 'INVALID') | (group = 'NO') then do             /* @B3 */
      "TBEND" tbla
      if (cmd_rc > 0) then DO                                  /* @C5 */
@@ -211,12 +212,14 @@ PROFL:
              end                                              /* @AP */
         END                                                   /* @AP */
         WHEN (ABBREV("RESET",ZCMD,1) = 1) THEN DO             /* @AE */
+             if (parm <> '') then                             /* @CD */
+                rfilter = parm                                /* @CD */
              sort     = 'GROUP,C,A'                           /* @AU */
              sortgrou = 'D'; sortsupg = 'A'                   /* @BL */
              sortowne = 'A'; sortdata = 'A'                   /* @BL */
              xtdtop   = 1                                     /* @AE */
              "TBEND" tbla                                     /* @BL */
-             call create_table                                /* @AP */
+             call CREATE_TABLEA                               /* @AP */
         END                                                   /* @AE */
         otherwise lparm = ''
      End  /* Select */
@@ -834,7 +837,7 @@ RETURN                                                        /* @AN */
 /*--------------------------------------------------------------------*/
 /*  Create table 'A'                                             @AP  */
 /*--------------------------------------------------------------------*/
-CREATE_TABLE:                                                 /* @AP */
+CREATE_TABLEA:                                                /* @AP */
   seconds = TIME('S')
   tbla    = 'TA'ZSCREEN||SECONDS  /* table name unique */
   "TBCREATE" tbla "KEYS(GROUP) NAMES(DATA SUPGRP OWNER)",     /* @BC */

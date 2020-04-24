@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @C4  200424  RACFA    Updated RESET, pass filter, ex: R filter     */
 /* @C3  200424  RACFA    Chg msg RACF013 to RACF012                   */
 /* @C2  200424  RACFA    Move DDNAME at top, standardize/del dups     */
 /* @C1  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
@@ -143,7 +144,7 @@ EXIT
 /*  Show all profiles for a filter                                    */
 /*--------------------------------------------------------------------*/
 PROFL:
-  call create_table
+  call CREATE_TABLEA
   if (dataset = 'INVALID') | (dataset = 'NO') THEN DO         /* @B5 */
      "TBEND" tbla
      if (cmd_rc > 0) then DO                                  /* @B5 */
@@ -199,11 +200,13 @@ PROFL:
              end                                              /* @AL */
         END                                                   /* @AL */
         WHEN (ABBREV("RESET",ZCMD,1) = 1) THEN DO             /* @AL */
+             if (parm <> '') then                             /* @C4 */
+                rfilter = parm                                /* @C4 */
              sort     = 'DATASET,C,A'                         /* @AR */
              sortdata = 'D'; sorttype = 'A'                   /* @BL */
              xtdtop   = 1                                     /* @AL */
              "TBEND" tbla                                     /* @BL */
-             call create_table                                /* @AL */
+             call CREATE_TABLEA                               /* @AL */
         END                                                   /* @AL */
         otherwise NOP                                         /* @AM */
      END /* Select */                                         /* @AL */
@@ -907,7 +910,7 @@ RETURN                                                        /* @AI */
 /*--------------------------------------------------------------------*/
 /*  Create table 'A'                                             @AL  */
 /*--------------------------------------------------------------------*/
-CREATE_TABLE:
+CREATE_TABLEA:
   tbla = 'RCFDA'ZSCREEN
   "TBCREATE" tbla "KEYS(DATASET TYPE) REPLACE NOWRITE"
   cmd = "SEARCH FILTER("RFILTER") CLASS(DATASET)"             /* @AI */

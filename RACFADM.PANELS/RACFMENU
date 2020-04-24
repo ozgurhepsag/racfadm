@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V19R5+)\-\
++\-\(%RACFADM - RACF Administration - V19R7+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options        %C ~Changes  +Version/updates
@@ -20,9 +20,9 @@
 +
 +
 +
-+
 + ---------------------------------------------------------------------------
-+   RACF:!RACFVER        +Dbase:!RACFDSN
++   RACF:!RACFVER        +Prm Dbase:!PRMDBASE
++                        +Bkp Dbase:!BKPDBASE
 +   z/OS:!ZOSVER         +Plex: !ZSYSPLEX       +Lpar:!ZSYSID
 +   Date:!ZDATE          +Jdate:!ZJDATE         +Time:!ZTIME
 +   User:!ZUSER          +Group:!RACFGRP        +Name:!RACFNAM
@@ -55,12 +55,13 @@
         ERASHOW ERATRACE) PROFILE
 
   &RACFVER  = &Z              /*--- Obtain RACF/Sys Info ---*/
-  &RACFDSN  = &Z
+  &PRMDBASE = &Z
+  &BKPDBASE = &Z
   &RACFGRP  = &Z
   &RACFNAM  = &Z
   &ZOSVER   = &ZOS390RL
   &RACFLMSG = &Z
-  *REXX (RACFVER RACFDSN ZOSVER RACFGRP RACFNAM RACFLMSG)
+  *REXX (RACFVER PRMDBASE BKPDBASE ZOSVER RACFGRP RACFNAM RACFLMSG)
     cvt       = c2x(storage(10,4))
     cvtrac = C2x(storage((d2x(x2d(cvt)+992)),4))
     ESM = storage(d2x(x2d(cvtrac)),4)
@@ -79,7 +80,16 @@
     x         = storage(rcvtstat$,4)
     RACFVER   = 'V'substr(x,1,1)'R'substr(x,2,2)'M'substr(x,4,1)
     rcvtsta$  = d2x((x2d(cvtrac))+56)
-    RACFDSN   = strip(storage(rcvtsta$,44))
+    PRMDBASE  = strip(storage(rcvtsta$,44))
+    RCVT     = D2X(X2D(CVT) +X2D(3E0))
+    RCVT     = C2X(STORAGE(RCVT,4))
+    DSDT     = D2X(X2D(RCVT) + X2D(E0))
+    DSDT     = C2X(STORAGE(DSDT,4))
+    DSDTBACK = D2X(X2D(DSDT) + X2D(140))
+    BNAME    = D2X(X2D(DSDTBACK) + X2D(21))
+    BKPDBASE = STRIP(STORAGE(BNAME,44))
+    if (BKPDBASE = "") THEN
+       BKPDBASE = "N/A"
     parse var zosver . "z/OS" ZOSVER .
     ascb   = c2x(storage(224,4))       /* PSAAOLD  (My ASCB)          */
     asxb$  = d2x((x2d(ascb))+108)      /* ASCB + 108                  */
@@ -100,7 +110,7 @@
       0,'CMD(%RACFSETG)'
       1,'CMD(%RACFUSR)'
       2,'CMD(%RACFGRP)'
-      3,'CMD(%RACFDSN)'
+      3,'CMD(%PRMDBASE)'
       4,'CMD(%RACFCLSR)'
       5,'CMD(%RACFPSWD)'
       6,'CMD(%RACFGTRE)'

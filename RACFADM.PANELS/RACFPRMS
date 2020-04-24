@@ -55,7 +55,7 @@
 + Model groups{.....................$RCVTMGRP+
 + Model users{......................$RCVTMUSR+
 + Model GDG{........................$RCVTMGDG+
-+ Multi factor authentication{......$RCVTSMFA+
++ Multi factor authentication{......$RCVTMFA +
 + Multi level quiet{................$RCVTSMLQ+
 + Multi level secure{...............$RCVTSMLT+
 + Multi level stable{...............$RCVTSMLS+
@@ -67,6 +67,9 @@
 + Password minimum length{..........$RCVTELEN+
 + Password rules{...................$RCVTRULS+
 + Password warning{.................$RCVTPWRN+
++ Password lower case allowed{......$RCVTPLC +
++ Password special chars allowed{...$RCVTPSC +
++ Password extended support{........$RCVTXPWD+
 + Protect all{......................$RCVTSPRA+
 + Retention period{.................$RCVTSRPE+
 + Security label audit{.............$RCVTSSLA+
