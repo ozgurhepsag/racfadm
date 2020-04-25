@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AD  200424  TRIDJK   Swapped rcvtelen & rcvtslen (end/start leng) */
 /* @AC  200424  TRIDJK   Add password lowercase/spc char/ext support  */
 /* @AB  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
 /* @AA  200423  RACFA    Ensure REXX program name is 8 chars long     */
@@ -99,8 +100,8 @@ RACF_RVARY_PASSWORDS:
   rcvtrwpw  = c2x(storage(rcvtrwpw$,8))     /* rcvtrwpw               */
   rcvtrnpw$ = d2x((x2d(cvtrac))+448)        /* rcvtrwpw     $         */
   rcvtrnpw  = c2x(storage(rcvtrnpw$,8))     /* rcvtrnpw               */
-  rc        = Setvalue(rcvtelen,244,1)      /* pe length begin        */
-  rc        = Setvalue(rcvtslen,245,1)      /* pe length end          */
+  rc        = Setvalue(rcvtslen,244,1)      /* pe length begin    @AD */
+  rc        = Setvalue(rcvtelen,245,1)      /* pe length end      @AD */
   rc        = Setchar(rcvtruls,246,8)       /* password syntax        */
 RETURN
 /*--------------------------------------------------------------------*/

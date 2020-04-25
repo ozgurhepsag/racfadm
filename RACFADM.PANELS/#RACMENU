@@ -8,7 +8,7 @@
 %Command ===>_ZCMD
 %
 %RACF Administration+makes many security tasks simple.  It lists user,
-+group, data set, and general resource profiles by means of a user-friendly,
++group, data set and general resource profiles by means of a user-friendly,
 +menu-driven interface; it provides interactive modification of most fields.
 +
 %Among its features are:+connecting groups to a user, adding permissions,

@@ -2,6 +2,13 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  25 Apr 2020 - V20R9
+     - RACFdb (Option 8)
+       -- Added 'Dynamic parse version'
+     - RACFprms (Option 7)
+       -- Swapped the variables for 'Password maximum length' and
+          'Password minimum length', variables (RCVTELEN and RCVTSLEN)
+
   25 Apr 2020 - V20R8
      - Changes (Option C)
        -- Fixed grammar issues in bullets

@@ -243,7 +243,13 @@ DO II = 1 TO DSDTNUM                 /* LOOP THROUGH ENTRIES         */
     DSDTBACK = D2X(X2D(DSDTBACK) + 352)  /* BUMP TO NEXT SLOT        */
    END                                   /* END OF II DO LOOP        */
 
+CVDX = D2X(X2D(RCVT) + X2D(258) )      /* ADDR OF RCDX POINTER       */
+CVDX = C2X(STORAGE(CVDX,4))            /* POINTER TO CVDX            */
+PVERA = D2X(X2D(CVDX) + X2D(1DC))      /* ADDRESS OF TMPLATE VERSION */
+DPVER = STORAGE(PVERA,7)               /* DYNAMIC PARSE VERSION      */
+
 QUEUE COPIES('-',72)                                          /* @AA */
+QUEUE "Dynamic parse version ..................." DPVER
 QUEUE "IRRMIN00 version/release/modification ... "RACFVRMN    /* @A1 */
 QUEUE "RACF database template RMID level ....... "RACFTEMP    /* @A1 */
                                                               /* @A1 */
