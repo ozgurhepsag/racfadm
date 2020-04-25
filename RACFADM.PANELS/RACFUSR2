@@ -42,7 +42,7 @@ _Z ^Z      Z       Z                   Z       œZ       	Z       †Z  Z  —Z
            &OPTA = S
   /* Line command: XR is not displayed (hidden) */
   IF (&ERAADMN = YES)
-     VER (&OPTA,LIST,S,SE,L,P,D,C,A,R,RS,RV,PW,XR,Z)
+     VER (&OPTA,LIST,S,SE,L,P,D,C,A,R,RS,RV,PW,XR,AL)
   ELSE
      VER (&OPTA,LIST,S,SE,L,D)
 )PNTS

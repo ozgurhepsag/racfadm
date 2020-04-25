@@ -42,11 +42,11 @@
   &FROM   = &USER
   IF (&USER = NONE)
      &USER = &RFILTER
-  IF (&ACTION = '*Insert')
+  IF (&ACTION = '*Add')
      &USRTITL = 'ÝAdd RACF¨USERÝprofile: ¨ADDUSERÝcommand'
      &USERTXT = '~(Enter¨NEW~userid)'
      &PSWDFLD = 'ÝPASSWORD¨===>!&PSWD   ¨'
-  IF (&ACTION = '*Modify')
+  IF (&ACTION = '*Change')
      &USRTITL = 'ÝAlt RACF¨USERÝprofile: ¨ALTUSERÝcommand'
      &USERTXT = '~(Enter userid)'
      &PSWDFLD = ''

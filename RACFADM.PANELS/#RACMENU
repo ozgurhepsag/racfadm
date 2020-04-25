@@ -30,7 +30,7 @@
 &ZSEL = TRANS(&ZCMD 0,#RACSET1  1,#RACUSR2  2,#RACGRP8  3,#RACDSN2
                     4,#RACCLSR  5,#RACPSWD  6,#RACGTRE  7,#RACPRMS
                     8,#RACDB    9,#RACDSL  10,#RACENQ  11,#RACHEL1
-                   12,#RACDSNA 13,#RACCLSA 14,#RACPUB1 15,#RACNOTE
+                   12,#RACDSNA 13,#RACCLSA 14,#RACPUB1 15,#RACNOT1
                    16,#RACACKN  *,'?')
 &ZUP  = #RACMENU
 )PNTS

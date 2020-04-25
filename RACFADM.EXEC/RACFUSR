@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @E7  200424  RACFA    Chged 'A'dd, 'C'hange and 'P'roile act msg   */
+/* @E6  200424  RACFA    Changed ZAP to ALTUSR (line cmd AL)          */
 /* @E5  200424  RACFA    Added lower case to random password          */
 /* @E4  200424  RACFA    Updated RESET, pass filter, ex: R filter     */
 /* @E3  200424  RACFA    Chg msg RACF013 to RACF012                   */
@@ -151,7 +153,7 @@ PANEL01  = "RACFUSR1"    /* Set filter, menu option 1      */ /* @BL */
 PANEL02  = "RACFUSR2"    /* List userids (admin/user)      */ /* @D4 */
 PANEL03  = "RACFUSR3"    /* Show groups and access         */ /* @BL */
 PANEL04  = "RACFUSR4"    /* Connect profile                */ /* @BL */
-PANEL05  = "RACFUSR5"    /* Zap userids (admin)            */ /* @DS */
+PANEL05  = "RACFUSR5"    /* Alter userids (admin)          */ /* @E6 */
 PANEL06  = "RACFUSR6"    /* Add/change userid              */ /* @DT */
 PANEL07  = "RACFUSR7"    /* Change connection              */ /* @BL */
 PANEL08  = "RACFUSR8"    /* Alter TSO segment              */ /* @BL */
@@ -190,7 +192,7 @@ ADDRESS ISPEXEC                                               /* @BC */
         SELCMD2A = "›S®Show›SE®Srch›L®List›P®Prof"||,         /* @DI */
                    "›D®Dsn›PW®Pswd›C®Chg›A®Add›R®Rem"||,      /* @DI */
                    "›RS®Res"                                  /* @DI */
-        SELCMD2B = " ›RV®Rev›Z®Zap"                           /* @DI */
+        SELCMD2B = " ›RV®Rev›AL®Alt"                          /* @E6 */
         SELCMDS3 = "›S®Show,›L®List,›P®Profile,"||,           /* @CO */
                    "›C®Change,›A®Add,›R®Remove"               /* @CO */
      end                                                      /* @D7 */
@@ -198,7 +200,7 @@ ADDRESS ISPEXEC                                               /* @BC */
         SELCMD2A = "›S®Show›SE®Srch›L®List"||,                /* @DI */
                    "›D®Dsn›PW®Pswd›C®Chg›A®Add›R®Rem"||,      /* @DI */
                    "›RS®Res›RV®Rev"                           /* @DJ */
-        SELCMD2B = "       ›Z®Zap"                            /* @DJ */
+        SELCMD2B = "       ›AL®Alt"                           /* @E6 */
         SELCMDS3 = "›S®Show,›L®List,"||,                      /* @D7 */
                    "›C®Change,›A®Add,›R®Remove"               /* @D7 */
      end                                                      /* @D7 */
@@ -350,7 +352,7 @@ PROFL:
              "TBMOD" TBLA                                     /* @BD */
         end
         when (opta = 'XR') then call Xrefd                    /* @AL */
-        when (opta = 'Z')  then call @Noattr                  /* @D4 */
+        when (opta = 'AL') then call Altd                     /* @E6 */
         otherwise nop
      End
      Do while (reta = 4)   /* process multi selection */
@@ -399,7 +401,7 @@ PROFL:
                 "TBMOD" TBLA                                  /* @BD */
            end
            when (opta = 'XR') then call Xrefd                 /* @AL */
-           when (opta = 'Z')  then call @Noattr               /* @D4 */
+           when (opta = 'AL') then call Altd                  /* @E6 */
            otherwise nop
         End
      end  /* Do while (reta < 4) */
@@ -594,7 +596,7 @@ RETURN 0                                                      /* @AJ */
 /*  List group                                                        */
 /*--------------------------------------------------------------------*/
 LISP:
-  action  = '*Listed'                                         /* @AC */
+  action  = '*Prof'                                           /* @E7 */
   CMDPRM  = "CSDATA DFP OMVS OVM TME"                         /* @AC */
   cmd     = "LG "ID" "CMDPRM                                  /* @BB */
   X = OUTTRAP("CMDREC.")                                      /* @AC */
@@ -1180,7 +1182,7 @@ RETURN                                                        /* @BE */
 /*  Add new profile                                              @DT  */
 /*--------------------------------------------------------------------*/
 @ADDD:                                                        /* @D4 */
-  action = '*Insert'                                          /* @D4 */
+  action = '*Add'                                             /* @E7 */
   pswd = newpswd()                                            /* @E1 */
   "DISPLAY PANEL("PANEL06")"                                  /* @DS */
   if (rc = 8) then                                            /* @D4 */
@@ -1285,7 +1287,7 @@ RETURN password                                               /* @E1 */
 /*  Change profile                                               @DT  */
 /*--------------------------------------------------------------------*/
 @CHGD:                                                        /* @D4 */
-  action = "*Modify"                                          /* @D4 */
+  action = "*Change"                                          /* @E7 */
   "DISPLAY PANEL("PANEL06")"                                  /* @D4 */
   if (rc = 8) then                                            /* @D4 */
      return                                                   /* @D4 */
@@ -1364,8 +1366,8 @@ RETURN                                                        /* @D4 */
 /*--------------------------------------------------------------------*/
 /*  Delete profile attributes, when 'Admin RACF API = Y'         @D4  */
 /*--------------------------------------------------------------------*/
-@NOATTR:                                                      /* @D4 */
-  action = "*Zap"                                             /* @D4 */
+ALTD:                                                         /* @E6 */
+  action = "*Alter"                                           /* @E6 */
   "DISPLAY PANEL("PANEL05")"                                  /* @DS */
   if (rc = 8) then                                            /* @D4 */
      return                                                   /* @D4 */

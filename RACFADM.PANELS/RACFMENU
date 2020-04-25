@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V19R9+)\-\
++\-\(%RACFADM - RACF Administration - V20R8+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options        %C ~Changes  +Version/updates
@@ -21,8 +21,8 @@
 +
 +
 + ---------------------------------------------------------------------------
-+   RACF:!RACFVER        +Prm Dbase:!PRMDBASE
-+   FMID:!RACFFMID       +Bkp Dbase:!BKPDBASE
++   RACF:!RACFVER        +Prmdb:!PRMDBASE
++   FMID:!RACFFMID       +Bkpdb:!BKPDBASE
 +   z/OS:!ZOSVER         +Plex: !ZSYSPLEX       +Lpar:!ZSYSID
 +   Date:!ZDATE          +Jdate:!ZJDATE         +Time:!ZTIME
 +   User:!ZUSER          +Group:!RACFGRP        +Name:!RACFNAM
@@ -65,10 +65,10 @@
   &RACFFMID = &Z
   *REXX (RACFVER PRMDBASE BKPDBASE ZOSVER RACFGRP RACFNAM RACFLMSG
          SECSOFT RACFFMID)
-    CVT      = C2D(STORAGE(10,4))
+    CVT      = C2D(STORAGE(10,4))               /* Get RACF FMID     */
     CVTRAC   = C2D(STORAGE(D2X(CVT + 992),4))
     RACFFMID = "HRF"STORAGE(D2X(CVTRAC + 616),4)
-    cvt      = c2x(storage(10,4))
+    cvt      = c2x(storage(10,4))               /* Get Sec. Software */
     cvtrac   = C2x(storage((d2x(x2d(cvt)+992)),4))
     ESM      = storage(d2x(x2d(cvtrac)),4)
     Select
@@ -80,14 +80,14 @@
     IF (SECSOFT <> "RACF") THEN
        RACFLMSG = "RACF is 'NOT' installed on this lpar,",
                   "it is running "SECSOFT
-    cvtrac$   = d2x((x2d(cvt))+992)
+    cvtrac$   = d2x((x2d(cvt))+992)             /* Get RACF version  */
     cvtrac    = c2x(storage(cvtrac$,4))
     rcvtstat$ = d2x((x2d(cvtrac))+616)
     x         = storage(rcvtstat$,4)
     RACFVER   = 'V'substr(x,1,1)'R'substr(x,2,2)'M'substr(x,4,1)
-    rcvtsta$  = d2x((x2d(cvtrac))+56)
+    rcvtsta$  = d2x((x2d(cvtrac))+56)           /* Get Primary Dbase */
     PRMDBASE  = strip(storage(rcvtsta$,44))
-    RCVT      = D2X(X2D(CVT) +X2D(3E0))
+    RCVT      = D2X(X2D(CVT) +X2D(3E0))         /* Get Backup  Dbase */
     RCVT      = C2X(STORAGE(RCVT,4))
     DSDT      = D2X(X2D(RCVT) + X2D(E0))
     DSDT      = C2X(STORAGE(DSDT,4))
@@ -96,7 +96,7 @@
     BKPDBASE  = STRIP(STORAGE(BNAME,44))
     if (BKPDBASE = "") THEN
         BKPDBASE = "N/A"
-    parse var zosver . "z/OS" ZOSVER .
+    parse var zosver . "z/OS" ZOSVER .          /* Get z/OS version  */
     ascb     = c2x(storage(224,4))      /* PSAAOLD  (My ASCB)        */
     asxb$    = d2x((x2d(ascb))+108)     /* ASCB + 108                */
     asxb     = c2x(storage(asxb$,4))    /* ASCBASXB (My ASXB)        */
@@ -116,13 +116,13 @@
       0,'CMD(%RACFSETG)'
       1,'CMD(%RACFUSR)'
       2,'CMD(%RACFGRP)'
-      3,'CMD(%PRMDBASE)'
+      3,'CMD(%RACFDSN)'
       4,'CMD(%RACFCLSR)'
       5,'CMD(%RACFPSWD)'
       6,'CMD(%RACFGTRE)'
       7,'CMD(%RACFPRMS)'
       8,'CMD(%RACFDB)'
-      9,'CMD(%RACFCLSA)'                                    /* Hidden */
+      9,'CMD(%RACFCLSA)'        /* Anaylze - Verify ACL */  /* Hidden */
       B,'CMD(%BOOKMGR SHELF(''EOYBOOK.ICHZBKC0.BKSHELF''))' /* Hidden */
       D,'CMD(%RACFDSL)'
       C,'CMD(%RACFLOG $CHANGES)'

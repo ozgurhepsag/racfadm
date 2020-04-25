@@ -1,0 +1,33 @@
+)ATTR DEFAULT(%+_)
+   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON) JUST(LEFT) HILITE(USCORE)
+   !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
+   @  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(RED)
+   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
+)BODY EXPAND(\\)
+%Tutorial+\-\(%RACFADM - Installation Notes+)\-\%Tutorial
+%Command ===>_ZCMD                                                             +
+%
+!  1)+The REXX program%RACFADM+is used to invoke the RACF Administration
++     dialog. It allocates the necessary files using!ISPF LIBDEF+and
++    !TSO ALTLIB+commands
++
+!  2)+Installing a new version/release of%RACFADM,+suggest!backing up+
++     current datasets,!deleting+the members and!copying+in the new
++     version/release, due to:
+!     -+Members may be renamed or deleted
+!     -+Prevents from having dead/unused members
++
+!  3)+May want to add/display the two hidden menu entries in panel%RACFMENU
+!       9  Anaylze   Verify ACL
+!       B  Bookmgr   RACF Manuals
++
++
++
++
++
++
++ \ \ (press%ENTER+to continue) \ \
+)PROC
+  &ZUP     = #RACNOT1
+  &ZCONT   = #RACNOT2
+)END

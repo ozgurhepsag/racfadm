@@ -2,6 +2,60 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  25 Apr 2020 - V20R8
+     - Changes (Option C)
+       -- Fixed grammar issues in bullets
+     - Tutorials (Option T)
+       -- Updated panels #RACCLS2/8, #RACDSN2 and #RACGRP8
+          * Reduced text for RESET primary command, keep it bullet
+            format, short-n-sweet
+
+  25 Apr 2020 - V20R7
+     - RACFprms (Option 7)
+       -- Removed text 'RACF' from fields for version, primary and
+          database, not needed, redundant
+
+  25 Apr 2020 - V20R6
+     - Main Menu
+       * Updated version
+
+  25 Apr 2020 - V20R5
+     - User (Option 1)
+       -- Changed the line commands 'A'dd, 'C'hange and 'P'rofile
+          action messages to '*Add', '*Change' and '*Prof'
+
+  25 Apr 2020 - V20R4
+     - Tutorial (Option T)
+       -- Updated '15 Installation Notes'
+          * Added bullet/comments on un-hidding menu options 9 (Anaylze)
+            and B (Bookmgr)
+
+  25 Apr 2020 - V20R3
+     - RACFprms (Option 7)
+       -- Placed displayed fields in alphabetical order, a few were not
+          * Also, updated tutorial, so entries where in alphabetical
+            order (#RACPRMS)
+
+  25 Apr 2020 - V20R2
+     - Main Menu
+       -- Changed the column headers for primary/backup databases
+          displayed at the bottom of the panel
+     - User (Option 1)
+       -- Updated help panel, #RACUSR2, reduced text for RESET primary
+          command, so, if someone had SWAPBAR ON, they would be able
+          to see all the line commands
+     - Group (Option 2)
+       -- Updated help panel, #RACDSN8, added text to RESET command,
+          informing user they can optionally pass a new search filter
+
+  25 Apr 2020 - V20R1
+     - User (Option 1)
+       -- Renamed line command 'Z - Zap' to 'AL - Alter'
+
+  24 Apr 2020 - V20R0
+     - Dataset (Option 3)
+       -- Fixed displaying error message when executing PERMIT command
+
   24 Apr 2020 - V19R9
      - Main Menu
        -- Added RACF FMID to bottom of panel
@@ -41,7 +95,7 @@
      - User and Group (Options 1/2)
        -- Fixed display status/progress message (REXX pgm = RACFCLSS)
        -- Deleted RACF012 message and renamed RACF013 to RACF012
-          * Messages where redudant, one of them was not needed
+          * Messages where redundant, one of them was not needed
           * Only two messages now (RACF011 and RACF012), easier to
             maintain
 
@@ -52,7 +106,7 @@
      - Other Items
        -- Updated all REXX programs, relocated defining the variable
           DDNAME to the top of the REXX, making it easier to maintain,
-          standardize and remove duplicatation of code
+          standardize and remove duplication of code
 
   23 Apr 2020 - V19R2
      - Settings

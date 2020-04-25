@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @C5  200424  RACFA    Fixed displaying error msg for PERMIT cmd    */
 /* @C4  200424  RACFA    Updated RESET, pass filter, ex: R filter     */
 /* @C3  200424  RACFA    Chg msg RACF013 to RACF012                   */
 /* @C2  200424  RACFA    Move DDNAME at top, standardize/del dups     */
@@ -697,7 +698,7 @@ CHGP:
   if (type = 'DISCRETE') then
      type = ' '
   call EXCMD "PERMIT '"DATASET"' ID("ID") ACC("ACC")" TYPE
-  if (cmd_rc > 0) then do                                     /* @BE */
+  if (cmd_rc = 0) then do                                     /* @C5 */
      if (type = ' ') then
         type = 'DISCRETE'
      "TBMOD" tblb
@@ -727,7 +728,7 @@ ADDP:
      rb   = 'YES'             /* Cause table rebuild */
   end
   call EXCMD "PERMIT '"DATASET"'" idopt type fopt
-  if (cmd_rc > 0) then do                                     /* @BE */
+  if (cmd_rc = 0) then do                                     /* @C5 */
      "TBMOD" tblb
      if (new = 'YES') then do
         id = 'NONE'
@@ -753,7 +754,7 @@ DELP:
   Sure_? = Confirm_request(msg)
   if (sure_? = 'YES') then do
      call EXCMD "PERMIT '"DATASET"' ID("ID") DELETE" TYPE
-     if (cmd_rc > 0) then                                     /* @BE */
+     if (cmd_rc = 0) then                                     /* @C5 */
         "TBDELETE" tblb
      else
         call racfmsgs 'ERR06' /* Permit Failed */             /* @B6 */

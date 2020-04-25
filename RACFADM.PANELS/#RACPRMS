@@ -11,15 +11,15 @@
 +  name and other security parameters.
 +
 +  Some of the RACF parameters displayed are:
+!    Audit options
+!    DASD options
 !    JES2 parameters
+!    Model options
 !    Password options
 !    Setropt options
-!    DASD options
-!    Tape options
-!    Model options
-!    Terminal options
 !    Statistics
-!    Audit options
+!    Tape options
+!    Terminal options
 )PROC
   &ZUP     = #RACPRMS
 )END

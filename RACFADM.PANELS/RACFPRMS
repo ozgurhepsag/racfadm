@@ -30,17 +30,17 @@
 @                                                                              @
 )AREA AREA1
 {\-\
-+ RACF version{.....................$RCVTGRNM+
-+ RACF primary data base{...........$RCVTPDSN
-+ RACF backup  data base{...........$RCVTBDSN
++ Version{..........................$RCVTGRNM+
++ Primary data base{................$RCVTPDSN
++ Backup  data base{................$RCVTBDSN
 {\-\
 + Audit appl{.......................$RCVTSAPL+
 + Audit operations{.................$RCVTSAUO+
 + Audit special{....................$RCVTSAUS+
 + Catalogued datasets only{.........$RCVTSCAT+
-+ DASD volume protection{...........$RCVTDVPR+
 + Dataset protection{...............$RCVTSADS+
 + Duplicate datasets{...............$RCVTNDUP+
++ DASD volume protection{...........$RCVTDVPR+
 + Enhanced generic naming{..........$RCVTSEGN+
 + Erase on scratch{.................$RCVTSEOS+
 + Generic owner{....................$RCVTSGNO+
@@ -61,15 +61,15 @@
 + Multi level stable{...............$RCVTSMLS+
 + Multi level{......................$RCVTSMLA+
 + Password attempts{................$RCVTPRVK+
++ Password extended support{........$RCVTXPWD+
 + Password history{.................$RCVTPHIS+
 + Password interval{................$RCVTPINV+
++ Password lower case allowed{......$RCVTPLC +
 + Password maximum length{..........$RCVTSLEN+
 + Password minimum length{..........$RCVTELEN+
 + Password rules{...................$RCVTRULS+
-+ Password warning{.................$RCVTPWRN+
-+ Password lower case allowed{......$RCVTPLC +
 + Password special chars allowed{...$RCVTPSC +
-+ Password extended support{........$RCVTXPWD+
++ Password warning{.................$RCVTPWRN+
 + Protect all{......................$RCVTSPRA+
 + Retention period{.................$RCVTSRPE+
 + Security label audit{.............$RCVTSSLA+
@@ -86,3 +86,11 @@
 )INIT
   .HELP   = #RACPRMS
 )END
+/*--------------------------------------------------------------------*/
+/*                             Comments                               */
+/*--------------------------------------------------------------------*/
+/*                                                                    */
+/*  1) The above RACF parameters in the scrollable area are in        */
+/*     aphabetical order                                              */
+/*                                                                    */
+/*--------------------------------------------------------------------*/

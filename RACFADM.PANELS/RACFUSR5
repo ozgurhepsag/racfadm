@@ -11,7 +11,7 @@
 +
 +PROFILE %===>_USER    {
 +
-{Enter%ALTUSER{operands to%ZAP{(alter) fields/segments from the user profile:
+{Enter%ALTUSER{operands to%alter{fields/segments from the user profile:
 +
 +OPERANDS%===>_NOS
 

@@ -1,0 +1,32 @@
+)ATTR DEFAULT(%+_)
+   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON) JUST(LEFT) HILITE(USCORE)
+   !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
+   @  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(RED)
+   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
+)BODY EXPAND(\\)
+%Tutorial+\-\(%RACFADM - Installation Notes+)\-\%Tutorial
+%Command ===>_ZCMD                                                             +
+%
+!  4)+To use the line command%'P'rofile,+which executes!IRRXUTIL+(RACF
++     Administration API), the following authorization will need to be
++     granted using!RACF RDEFINE+and!PERMIT+commands:
++
++      @RDEFINE FACILITY (IRR.RADMIN.*) OWNER(SYS1) UACC(READ)
++      @        AUDIT(FAILURES(READ)) DATA('RACF ADMINISTRATION API')
++      @        WARNING
++      @PERMIT IRR.RADMIN.* CLASS(FACILITY) ID(group) GEN
++
++
++
++
++
++
++
++
++
++
++
++ \ \ (press%ENTER+to continue) \ \
+)PROC
+  &ZUP     = #RACNOT1
+)END
