@@ -15,7 +15,7 @@
 )Init
   .cursor  = userid
   .zvars   = '(resume)'
-  .HELP    = #RACMENU
+  .HELP    = #RACPSWD
   &ZWINTTL = 'RACFADM - Password Reset'
   if (&resume = '')
      &resume = 'N'

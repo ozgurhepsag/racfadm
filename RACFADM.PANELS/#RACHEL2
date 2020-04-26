@@ -7,9 +7,9 @@
 %Tutorial+\-\(%RACFADM - RACF Commands - 2 of 2+)\-\%Tutorial
 %Command ===>_ZCMD
 +
-+Line Commands:       !(Point and shoot fields)+
-%    S+               +Select a command to be browsed under View or FSHelp
-%    X+               +Exclude a command from the list
++Line Commands:        !(Point and shoot fields)+
+%    S+                +Select a command to be browsed under View or FSHelp
+%    X+                +Exclude a command from the list
 +
 +Notes:
 +    To use the tab key to access!point and shoot+fields the

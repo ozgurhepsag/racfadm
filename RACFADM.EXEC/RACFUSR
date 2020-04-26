@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @E8  200425  RACFA    Chk Settings (Opt 0) 'Initial Password' field*/
 /* @E7  200424  RACFA    Chged 'A'dd, 'C'hange and 'P'roile act msg   */
 /* @E6  200424  RACFA    Changed ZAP to ALTUSR (line cmd AL)          */
 /* @E5  200424  RACFA    Added lower case to random password          */
@@ -175,7 +176,8 @@ ADDRESS ISPEXEC                                               /* @BC */
   lparm  =''                              /* Locate parm */   /* @A5 */
   "CONTROL ERRORS RETURN"                                     /* @B1 */
   "VGET (ZSCREEN ERASHOW ERARAPI ERATRACE ERAISPP",           /* @D4 */
-        "ERAULIB ERAADMN ERASINT ERASINTP ERADISP) ASIS"      /* @DY */
+        "ERAULIB ERAADMN ERASINT ERASINTP ERADISP",           /* @E8 */
+        "ERAIPSWD) ASIS"                                      /* @E8 */
   If (eratrace <> 'NO') then do                               /* @DK */
      Say "*"COPIES("-",70)"*"                                 /* @DK */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @DK */
@@ -1183,7 +1185,10 @@ RETURN                                                        /* @BE */
 /*--------------------------------------------------------------------*/
 @ADDD:                                                        /* @D4 */
   action = '*Add'                                             /* @E7 */
-  pswd = newpswd()                                            /* @E1 */
+  if (ERAIPSWD = "") then                                     /* @E8 */
+     pswd = newpswd()                                         /* @E1 */
+  else                                                        /* @E8 */
+     pswd = ERAIPSWD                                          /* @E8 */
   "DISPLAY PANEL("PANEL06")"                                  /* @DS */
   if (rc = 8) then                                            /* @D4 */
      return                                                   /* @D4 */

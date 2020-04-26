@@ -100,8 +100,10 @@ RACF_RVARY_PASSWORDS:
   rcvtrwpw  = c2x(storage(rcvtrwpw$,8))     /* rcvtrwpw               */
   rcvtrnpw$ = d2x((x2d(cvtrac))+448)        /* rcvtrwpw     $         */
   rcvtrnpw  = c2x(storage(rcvtrnpw$,8))     /* rcvtrnpw               */
-  rc        = Setvalue(rcvtslen,244,1)      /* pe length begin    @AD */
-  rc        = Setvalue(rcvtelen,245,1)      /* pe length end      @AD */
+  rc        = Setvalue(rcvtslen,244,1)      /* pe length begin   @AD  */
+  rc        = Setvalue(rcvtelen,245,1)      /* pe length end     @AD  */
+  if (rcvtslen = 0) then rcvtslen = 1                         /* @AD */
+  if (rcvtelen = 0) then rcvtelen = 8                         /* @AD */
   rc        = Setchar(rcvtruls,246,8)       /* password syntax        */
 RETURN
 /*--------------------------------------------------------------------*/

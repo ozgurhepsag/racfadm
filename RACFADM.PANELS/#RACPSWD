@@ -9,7 +9,9 @@
 + %Password+will display a pop-up panel, allowing to quickly change
 +  an individual's password and/or!RESUME+their userid.
 +
-+  This utility will generate a!random+password for each userid.
++  This utility will use the!'Initial Password'+defined in%Settings
++ %(option 0)+and if the field is!blank,+it will generate a!random+
++  password in upper and lower case characters.
 )PROC
   &ZUP     = #RACPSWD
 )END

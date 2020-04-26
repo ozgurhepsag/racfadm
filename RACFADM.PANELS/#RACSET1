@@ -7,22 +7,22 @@
 %Command ===>_ZCMD                                                             +
 %
 +General:
-!  Administrator   +Specify full administrator authority,+providing more line
-+                  +commands: Add, Change, etc.%(Y=Yes, N=No is default)
+!  Administrator    +Specify full administrator authority,+providing more line
++                   +commands: Add, Change, etc.%(Y=Yes, N=No is default)
 +
-!  Admin RACF API  %Yes+to use RACF API module (IRRXUTIL) to obtain information
-+                   when adding/changing a userid and allow access to use the
-+                   line command 'P'rofile,%No+is the default
+!  Admin RACF API   %Yes+to use RACF API module (IRRXUTIL) to obtain
++                    information when adding/changing a userid and allow access
++                    to use the line command 'P'rofile,%No+is the default
 +
-!  Default filter  +Specify a default search string, when selecting menu
-+                  +option 1 (Userid), 2 (Group) and 3 (Dataset)
+!  Default filter   +Specify a default search string, when selecting menu
++                   +option 1 (Userid), 2 (Group) and 3 (Dataset)
 +
-!  Status interval +The number of entries processed before displaying the
-+                  +progress status message%(0-9999, 0=Do not display,
-%                   100=Default)+or the percentage%(0-99)
+!  Status interval  +The number of entries processed before displaying the
++                   +progress status message%(0-9999, 0=Do not display,
+%                    100=Default)+or the percentage%(0-99)
 +
-!  Display files   +Display reports/files in%Browse, Edit or View+mode when
-+                  +using line commands: List, Profile, etc.%(View=Default)
+!  Display files    +Display reports/files in%Browse, Edit or View+mode when
++                   +using line commands: List, Profile, etc.%(View=Default)
 +
 +
 + \ \ (press%ENTER+to continue) \ \

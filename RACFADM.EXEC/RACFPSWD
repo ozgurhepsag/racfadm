@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AA  200425  RACFA    Chk Settings (Opt 0) 'Initial Password' field*/
 /* @A9  200424  RACFA    Added lower case to random password          */
 /* @A8  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
 /* @A7  200422  RACFA    Ensure the REXX program name is 8 chars      */
@@ -21,7 +22,7 @@ REXXPGM  = LEFT(REXXPGM,8)                                    /* @A8 */
 
 parse arg userid
 Address ISPExec
-  "VGET (ERASHOW ERATRACE ERAADMN) ASIS"                      /* @A1 */
+  "VGET (ERASHOW ERATRACE ERAADMN ERAIPSWD) ASIS"             /* @AA */
   If (eratrace <> 'NO') then do                               /* @A4 */
      Say "*"COPIES("-",70)"*"                                 /* @A4 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A4 */
@@ -29,7 +30,10 @@ Address ISPExec
      if (eratrace <> 'PROGRAMS') THEN                         /* @A5 */
         interpret "Trace "SUBSTR(ERATRACE,1,1)                /* @A4 */
   end                                                         /* @A4 */
-  pswd = newpswd()
+  If (ERAIPSWD = "") THEN                                     /* @AA */
+     pswd = newpswd()                                         /* @AA */
+  else                                                        /* @AA */
+     pswd = ERAIPSWD                                          /* @AA */
   'ADDPOP'
   'DISPLAY PANEL('panelpw')'                                  /* @A2 */
   disprc = RC                                                 /* @A3 */

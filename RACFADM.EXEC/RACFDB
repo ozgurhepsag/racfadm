@@ -249,9 +249,9 @@ PVERA = D2X(X2D(CVDX) + X2D(1DC))      /* ADDRESS OF TMPLATE VERSION */
 DPVER = STORAGE(PVERA,7)               /* DYNAMIC PARSE VERSION      */
 
 QUEUE COPIES('-',72)                                          /* @AA */
-QUEUE "Dynamic parse version ..................." DPVER
 QUEUE "IRRMIN00 version/release/modification ... "RACFVRMN    /* @A1 */
 QUEUE "RACF database template RMID level ....... "RACFTEMP    /* @A1 */
+QUEUE "Dynamic parse version ................... "DPVER
                                                               /* @A1 */
 /* IF ICBTMPRL /= '0000000000000000'X THEN DO             */  /* @A1 */
 /*     QUEUE "Template release/APAR level .............", */  /* @A1 */

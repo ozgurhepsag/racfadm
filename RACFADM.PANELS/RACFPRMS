@@ -65,8 +65,8 @@
 + Password history{.................$RCVTPHIS+
 + Password interval{................$RCVTPINV+
 + Password lower case allowed{......$RCVTPLC +
-+ Password maximum length{..........$RCVTSLEN+
-+ Password minimum length{..........$RCVTELEN+
++ Password maximum length{..........$RCVTELEN+
++ Password minimum length{..........$RCVTSLEN+
 + Password rules{...................$RCVTRULS+
 + Password special chars allowed{...$RCVTPSC +
 + Password warning{.................$RCVTPWRN+

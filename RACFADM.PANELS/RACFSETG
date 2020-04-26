@@ -1,30 +1,32 @@
 )ATTR DEFAULT(^+_)
-   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON) JUST(LEFT)   HILITE(USCORE)
-   {  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(BLUE)
-   }  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(RED)
-   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
-   ~  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
+   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON)  JUST(LEFT)   HILITE(USCORE)
+   @  TYPE(INPUT)   INTENS(HIGH) CAPS(OFF) JUST(LEFT)   HILITE(USCORE)
+   {  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(BLUE)
+   }  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(RED)
+   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(GREEN)
+   ~  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(TURQ)
 )BODY EXPAND(\\)
 +\-\(^RACFADM - Settings+)\-\
 ^Command ===>_ZCMD                                                             +
 ^
 ^General:
-+  Administrator{....._Z~   (Y=Yes, N=No)              {Administrator authority
-+  Admin RACF API{...._Z~   (Y=Yes, N=No)              {IRRXUTIL to add/chg/prof
++  Administrator{....._Z~ (Y=Yes, N=No)                {Administrator authority
++  Admin RACF API{...._Z~ (Y=Yes, N=No)                {IRRXUTIL to add/chg/prof
 +  Default filter{...._Z                              { Default search string
-+  Status interval{..._Z   ~(0-9999){or_Z ~% (0-99)    {Progress message number
-+  Display files{....._Z~   (B=Browse, E=Edit, V=View) {Display reports/files
-+  Confirm panel{....._Z~   (Y=Yes, N=No)              {Confirm command request
-+  RACF commands{....._Z~   (D=Display, L=Log, B=Both, N=No)    {View  RACF cmds
-+  REXX trace{........_Z~   (L=Labels, P=Pgms, R=Results, N=No) {Trace REXX pgms
++  Status interval{..._Z ~(0-9999){or_Z ~% (0-99)      {Progress message number
++  Display files{....._Z~ (B=Browse, E=Edit, V=View)   {Display reports/files
++  Confirm panel{....._Z~ (Y=Yes, N=No)                {Confirm command request
++  RACF commands{....._Z~ (D=Display, L=Log, B=Both, N=No)    {View  RACF cmds
++  REXX trace{........_Z~ (L=Labels, P=Pgms, R=Results, N=No) {Trace REXX pgms
 +
 ^Adding TSO userids:
++  Initial password{..@Z       ~ (Blank=Random pswd)  { New users password
 +  User catalog{......_Z                              { z/OS alias catalog
 +  ISPPROF dataset{..._Z                              { TSO ISPF profile
 +  JOBLIB dataset{...._Z                              { TSO programmer library
 )INIT
   VGET (ERAADMN  ERARAPI ERAFLTR ERASINT ERASINTP ERADISP ERACONF +
-        ERASHOW ERATRACE ERACTLG ERAISPP ERAULIB) PROFILE
+        ERASHOW ERATRACE ERAIPSWD ERACTLG ERAISPP ERAULIB) PROFILE
   IF (&ERASINT NE &Z)
      &ERASINTP = ''
   &ERAADMN  = TRANS (&ERAADMN  YES,Y NO,N *,*)
@@ -33,8 +35,9 @@
   &ERASHOW  = TRANS (&ERASHOW  DISPLAY,D LOG,L BOTH,B NO,N *,*)
   &ERADISP  = TRANS (&ERADISP  BROWSE,B EDIT,E VIEW,V *,*)
   &ERATRACE = TRANS (&ERATRACE LABELS,L PROGRAMS,P RESULTS,R NO,N *,*)
-  .ZVARS = '(ERAADMN ERARAPI ERAFLTR  ERASINT ERASINTP ERADISP +
-             ERACONF ERASHOW ERATRACE ERACTLG ERAISPP  ERAULIB)'
+  .ZVARS = '(ERAADMN ERARAPI ERAFLTR  ERASINT  ERASINTP ERADISP +
+             ERACONF ERASHOW ERATRACE ERAIPSWD ERACTLG ERAISPP +
+             ERAULIB)'
   .HELP   = #RACSET1
   .CURSOR = ERAADMN
 )PROC
@@ -62,8 +65,8 @@
   VER (&ERATRACE,NB,LIST,LABELS,PROGRAMS,RESULTS,NO)
   IF (&ERACTLG NE ' ')
      VER (&ERAISPP,NB)
-  VPUT (ERAADMN  ERARAPI ERAFLTR ERASINT ERASINTP ERADISP ERACONF +
-        ERASHOW ERATRACE ERACTLG ERAISPP ERAULIB) PROFILE
+  VPUT (ERAADMN  ERARAPI ERAFLTR  ERASINT ERASINTP ERADISP ERACONF +
+        ERASHOW ERATRACE ERAIPSWD ERACTLG ERAISPP ERAULIB) PROFILE
 )END
 /*--------------------------------------------------------------------*/
 /*                             Comments                               */

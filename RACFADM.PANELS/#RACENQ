@@ -14,10 +14,8 @@
 +  enqueues.
 +
 +  This will provide insight to who and when people are using the
-+  utility.
-+
-+  Assisting in planning when to rollout/implement changes to this
-+  utility, without impacting anyone.
++  utility.  Assisting in planning when to rollout/implement changes
++  to this utility, without impacting anyone.
 )PROC
   &ZUP     = #RACENQ
 )END

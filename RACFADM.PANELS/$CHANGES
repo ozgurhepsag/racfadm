@@ -2,6 +2,28 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  26 Apr 2020 - V21R2
+     - User (Option 1)
+       -- Line command 'AL', updated panel to allow selecting operands
+
+  26 Apr 2020 - V21R1
+     - Settings (Option 0)
+       -- Added 'Initial password' field, allowing the capability to
+          define a default eight character password (upper/lower case)
+          used when adding new users or resetting an  individual's
+          password, if blank, will create a random password (default)
+     - RACFprms (Option 7)
+       -- Chk to see if 'Password maximum/minimum length' is equal to
+          zero, and if so, set to 8 and 1, respectively
+     - Tutorial (Option T)
+       -- Updated/standardized several panels
+
+  25 Apr 2020 - V21R0
+     - RACFprms (Option 7)
+       -- Changed the variable names used in obtaining/presenting
+          'Password maximum/minimum length' to match what is documented
+          in IBM manuals
+
   25 Apr 2020 - V20R9
      - RACFdb (Option 8)
        -- Added 'Dynamic parse version'

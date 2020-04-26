@@ -18,20 +18,62 @@
 
                                   +
 +
-{NOTSO          NOCICS             NODFP              NOOMVS
-{  TSO(NOPROC)    CICS(NOOPCLASS)    DFP(NODATACLAS)    OMVS(NOHOME)
-{  TSO(NOACCT)    CICS(NOOPIDENT)    DFP(NOSTORCLAS)    OMVS(NOPROGRAM)
-{  TSO(NOSIZE)    CICS(NOOPPRTY)     DFP(NOMGMTCLAS)
-{  TSO(NOUNIT)    CICS(NOTIMEOUT)
+{Or select:
+%   NOTSO           NOCICS              NODFP               NOOMVS
+{  _z+TSO(NOPROC)  _z+CICS(NOOPCLASS)  _z+DFP(NODATACLAS)  _z+OMVS(NOHOME)
+{  _z+TSO(NOACCT)  _z+CICS(NOOPIDENT)  _z+DFP(NOSTORCLAS)  _z+OMVS(NOPROGRAM)
+{  _z+TSO(NOSIZE)  _z+CICS(NOOPPRTY)   _z+DFP(NOMGMTCLAS)
+{  _z+TSO(NOUNIT)  _z+CICS(NOTIMEOUT)
 {
-{NOSPECIAL   NOOPERATIONS   NOGRPACC   NOAUDITOR   NOADSP                     {
-{NOROAUDIT   NORESTRICTED   NO.......
+{  _z+NOSPECIAL    _z+NOOPERATIONS     _z+NOGRPACC         _z+NOAUDITOR
+{  _z+NOADSP       _z+NOROAUDIT        _z+NORESTRICTED
 )INIT
   .CURSOR = NOS
   .HELP   = #RACMENU
-  &NOS    = ''
+  *Rexx(*)
+  parse value '' with NOS ntso1 ntso2 ntso3 ntso4 ncics1 ncics2 ncics3 ,
+                      ncics4 ndfp1 ndfp2 ndfp3 nomvs1 nomvs2 nospec ,
+                      noop nogrp noaud noadsp noraud norest
+*Endrexx
+  .zvars  = '(ntso1 ncics1 ndfp1 nomvs1  +
+              ntso2 ncics2 ndfp2 nomvs2  +
+              ntso3 ncics3 ndfp3  +
+              ntso4 ncics4  +
+              nospec noop nogrp noaud noadsp noraud norest)'
+)Reinit
+ Refresh(*)
 )PROC
   VER (&USER,NB)
+  *rexx(*)
+      if (ntso1  /= '') then call addnos 'TSO(NOPROC)'
+      if (ntso2  /= '') then call addnos 'TSO(NOACCT)'
+      if (ntso3  /= '') then call addnos 'TSO(NOSIZE)'
+      if (ntso4  /= '') then call addnos 'TSO(NOUNIT)'
+      if (ncics1 /= '') then call addnos 'CICS(NOOPCLASS)'
+      if (ncics2 /= '') then call addnos 'CICS(NOOPIDENT)'
+      if (ncics3 /= '') then call addnos 'CICS(NOOPPRTY)'
+      if (ncics4 /= '') then call addnos 'CICS(NOTIMEOUT)'
+      if (ndfp1  /= '') then call addnos 'DFP(NODATACLAS)'
+      if (ndfp2  /= '') then call addnos 'DFP(NOSTORCLAS)'
+      if (ndfp3  /= '') then call addnos 'DFP(NOMGMTCLAS)'
+      if (nomvs1 /= '') then call addnos 'OMVS(NOHOME)'
+      if (nomvs2 /= '') then call addnos 'OMVS(NOPROGRAM)'
+      if (nospec /= '') then call addnos 'NOSPECIAL'
+      if (noop   /= '') then call addnos 'NOOPERATIONS'
+      if (nogrp  /= '') then call addnos 'NOGRPACC'
+      if (noraud /= '') then call addnos 'NOAUDITOR'
+      if (noadsp /= '') then call addnos 'NOADSP'
+      if (noaud  /= '') then call addnos 'NOROAUDIT'
+      if (norest /= '') then call addnos 'NORESTRICTED'
+      signal done
+    Addnos:
+      arg opt
+      if (pos(opt,nos) > 0) then return
+      nos = nos opt
+      return
+    done:
+  *endrexx
+  ver (&nos,nb)
 )END
 /*--------------------------------------------------------------------*/
 /*                             Comments                               */
