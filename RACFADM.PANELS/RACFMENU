@@ -4,17 +4,17 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V21R4+)\-\
++\-\(%RACFADM - RACF Administration - V21R5+)\-\
 %Option ===>_ZCMD                                                              +
 %
-%   0 ~Settings +Customize options        %C ~Changes  +Version/updates
-%   1 ~User     +User profiles            %D ~Dslist   +Dataset list
-%   2 ~Group    +Group profiles           %E ~Enqueues +Dataset enqueues
-%   3 ~Dataset  +Dataset profiles         %H ~Help     +RACF commands
-%   4 ~General  +General resources        %I ~Issues   +Known issues
-%   5 ~Password +Password reset           %S ~Standards+Coding/design
-%   6 ~GrpTree  +Group tree report        %T ~Tutorial +Help
-%   7 ~RACFprms +RACF parameters          %X ~Exit     +Terminate
+%   0 ~Settings +Customize options       %C ~Changes   +Version/updates
+%   1 ~User     +User profiles           %D ~Dslist    +Dataset list
+%   2 ~Group    +Group profiles          %E ~Enqueues  +Dataset enqueues
+%   3 ~Dataset  +Dataset profiles        %H ~Help      +RACF commands
+%   4 ~General  +General resources       %I ~Issues    +Known issues
+%   5 ~Password +Password reset          %S ~Standards +Coding/design
+%   6 ~GrpTree  +Group tree report       %T ~Tutorial  +Help
+%   7 ~RACFprms +RACF parameters         %X ~Exit      +Terminate
 %   8 ~RACFdb   +RACF databases
 +
 +

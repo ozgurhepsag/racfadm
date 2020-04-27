@@ -23,8 +23,8 @@
 +                       1st use sort Ascending, 2nd use sort Descending
 +
 @  *!Point and shoot+commands
-+   %SET+value is saved in the ISPF profile dataset
 +
++   %SET+value is saved in the ISPF profile dataset
 +
 +
 + \ \ (press%ENTER+to continue) \ \

@@ -2,6 +2,14 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  27 Apr 2020 - V21R5
+     - Main Menu
+       -- Adjusted spacing on menu entries
+     - RACFprms (Option 7)
+       -- Adjusted field names of databases
+     - Tutorials (Option T)
+       -- Adjusted spacing in #RACHEL1 and #RACNOT1
+
   27 Apr 2020 - V21R4
      - Main Menu
        -- Added 'S', Standards, Coding/design

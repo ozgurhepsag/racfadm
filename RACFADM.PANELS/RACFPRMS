@@ -31,8 +31,8 @@
 )AREA AREA1
 {\-\
 + Version{..........................$RCVTGRNM+
-+ Primary data base{................$RCVTPDSN
-+ Backup  data base{................$RCVTBDSN
++ Database (Primary){...............$RCVTPDSN
++ Database (Backup){................$RCVTBDSN
 {\-\
 + Audit appl{.......................$RCVTSAPL+
 + Audit operations{.................$RCVTSAUO+

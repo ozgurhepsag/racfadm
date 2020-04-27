@@ -23,7 +23,7 @@
      - Code
        -- Document line changes by commenting/using a flag character
           /* @?? */ in columns 62-71, where ??, 1st character is
-          A-Z, and 2nd character is 1-9 then A-Z
+          A-Z, and 2nd character is 1-9, then A-Z
        -- Place a flower box above the subroutine documenting what
           the routine accomplishes/does
 

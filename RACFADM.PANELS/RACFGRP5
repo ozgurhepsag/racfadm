@@ -40,7 +40,7 @@ _Z+ Z         Z
         &SROW = .CSRROW
         IF (&SROW ^= 0)
            &OPTB = S
-  IF (&ERAADMN = YES)
+  IF (&SETMADMN = YES)
      VER (&OPTB,LIST,S,L,P,C,A,R)
   ELSE
      VER (&OPTB,LIST,S,L)

@@ -37,7 +37,7 @@
   .ZVARS  = '(SCIND COPCLASS COPIDENT COPPRTY CTIMEOUT)'
   .CURSOR = USER
   .HELP   = #RACMENU
-  VGET (ERARAPI)
+  VGET (SETMIRRX)
   &OLDUSR = &USER
   &FROM   = &USER
   IF (&USER = NONE)
@@ -51,8 +51,8 @@
      &USERTXT = '~(Enter userid)'
      &PSWDFLD = ''
 
-  *Rexx(* erarapi)
-     if erarapi = 'NO' then do
+  *Rexx(* SETMIRRX)
+     if SETMIRRX = 'NO' then do
         call listuser
         return
      end
@@ -155,7 +155,7 @@
      return
   *EndRexx
 
-  IF (&ERARAPI = 'NO')
+  IF (&SETMIRRX = 'NO')
     &RACFSMSG = 'LISTUSER...'
   ELSE
     &RACFSMSG = 'RACF API...'

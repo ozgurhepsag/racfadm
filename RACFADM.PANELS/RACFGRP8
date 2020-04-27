@@ -35,7 +35,7 @@ _Z+ Z        Z        œZ        Z                                         @z
         &SROW = .CSRROW
         IF (&SROW ^= 0)
            &OPTA = S
-  IF (&ERAADMN = YES)
+  IF (&SETMADMN = YES)
      VER (&OPTA,LIST,S,L,C,A,R,P)
   ELSE
      VER (&OPTA,LIST,S,L)

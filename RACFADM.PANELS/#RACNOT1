@@ -14,8 +14,8 @@
 !  2)+Installing a new version/release of%RACFADM,+suggest!backing up+
 +     current datasets,!deleting+the members and!copying+in the new
 +     version/release, due to:
-!     -+Members may be renamed or deleted
-!     -+Prevents from having dead/unused members
+!       -+Members may be renamed or deleted
+!       -+Prevents from having dead/unused members
 +
 !  3)+May want to add/display the two hidden menu entries in panel%RACFMENU
 !       9  Analyze   Verify ACL
