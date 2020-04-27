@@ -31,54 +31,78 @@
   .CURSOR = NOS
   .HELP   = #RACMENU
   &NOS    = ''
-  &ntso1  = ''
-  &ntso2  = ''
-  &ntso3  = ''
-  &ntso4  = ''
-  &ncics1 = ''
-  &ncics2 = ''
-  &ncics3 = ''
-  &ncics4 = ''
-  &ndfp1  = ''
-  &ndfp2  = ''
-  &ndfp3  = ''
-  &nomvs1 = ''
-  &nomvs2 = ''
-  &nospec = ''
-  &noop   = ''
-  &nogrp  = ''
-  &noaud  = ''
-  &noadsp = ''
-  &noraud = ''
-  &norest = ''
-  .zvars  = '(ntso1 ncics1 ndfp1 nomvs1  +
-              ntso2 ncics2 ndfp2 nomvs2  +
-              ntso3 ncics3 ndfp3  +
-              ntso4 ncics4  +
-              nospec noop nogrp noaud noadsp noraud norest)'
+  &notso1  = ''
+  &notso2  = ''
+  &notso3  = ''
+  &notso4  = ''
+  &nocics1 = ''
+  &nocics2 = ''
+  &nocics3 = ''
+  &nocics4 = ''
+  &nodfp1  = ''
+  &nodfp2  = ''
+  &nodfp3  = ''
+  &nomvs1  = ''
+  &nomvs2  = ''
+  &nospec  = ''
+  &noop    = ''
+  &nogrp   = ''
+  &noaud   = ''
+  &noadsp  = ''
+  &noraud  = ''
+  &norest  = ''
+  .zvars   = '(notso1 nocics1 nodfp1 nomvs1  +
+               notso2 nocics2 nodfp2 nomvs2  +
+               notso3 nocics3 nodfp3  +
+               notso4 nocics4  +
+               nospec noop nogrp noaud noadsp noraud norest)'
 )PROC
   VER (&USER,NB)
   *rexx(*)
-      if (ntso1  /= '') then call addnos 'TSO(NOPROC)'
-      if (ntso2  /= '') then call addnos 'TSO(NOACCT)'
-      if (ntso3  /= '') then call addnos 'TSO(NOSIZE)'
-      if (ntso4  /= '') then call addnos 'TSO(NOUNIT)'
-      if (ncics1 /= '') then call addnos 'CICS(NOOPCLASS)'
-      if (ncics2 /= '') then call addnos 'CICS(NOOPIDENT)'
-      if (ncics3 /= '') then call addnos 'CICS(NOOPPRTY)'
-      if (ncics4 /= '') then call addnos 'CICS(NOTIMEOUT)'
-      if (ndfp1  /= '') then call addnos 'DFP(NODATACLAS)'
-      if (ndfp2  /= '') then call addnos 'DFP(NOSTORCLAS)'
-      if (ndfp3  /= '') then call addnos 'DFP(NOMGMTCLAS)'
-      if (nomvs1 /= '') then call addnos 'OMVS(NOHOME)'
-      if (nomvs2 /= '') then call addnos 'OMVS(NOPROGRAM)'
-      if (nospec /= '') then call addnos 'NOSPECIAL'
-      if (noop   /= '') then call addnos 'NOOPERATIONS'
-      if (nogrp  /= '') then call addnos 'NOGRPACC'
-      if (noraud /= '') then call addnos 'NOAUDITOR'
-      if (noadsp /= '') then call addnos 'NOADSP'
-      if (noaud  /= '') then call addnos 'NOROAUDIT'
-      if (norest /= '') then call addnos 'NORESTRICTED'
+      notso = ''
+      if (notso1  /= '') then notso  = 'NOPROC'
+      if (notso2  /= '') then notso  = notso 'NOACCT'
+      if (notso3  /= '') then notso  = notso 'NOSIZE'
+      if (notso4  /= '') then notso  = notso 'NOUNIT'
+      if (notso   /= '') then do
+         notso = 'TSO('strip(notso)')'
+         call addnos notso
+      end
+
+      nocics = ''
+      if (nocics1 /= '') then nocics = 'NOOPCLASS'
+      if (nocics2 /= '') then nocics = nocics 'NOOPIDENT'
+      if (nocics3 /= '') then nocics = nocics 'NOOPPRTY'
+      if (nocics4 /= '') then nocics = nocics 'NOTIMEOUT'
+      if (nocics  /= '') then do
+         nocics = 'CICS('strip(nocics)')'
+         call addnos nocics
+      end
+
+      nodfp = ''
+      if (nodfp1  /= '') then nodfp  = 'NODATACLAS'
+      if (nodfp2  /= '') then nodfp  = nodfp 'NOSTORCLAS'
+      if (nodfp3  /= '') then nodfp  = nodfp 'NOMGMTCLAS'
+      if (nodfp   /= '') then do
+         nodfp = 'DFP('strip(nodfp)')'
+         call addnos nodfp
+      end
+
+      noomvs = ''
+      if (nomvs1  /= '') then noomvs = 'NOHOME'
+      if (nomvs2  /= '') then noomvs = noomvs 'NOPROGRAM'
+      if (noomvs  /= '') then do
+         noomvs = 'OMVS('strip(noomvs)')'
+         call addnos noomvs
+      end
+
+      if (nospec  /= '') then call addnos 'NOSPECIAL'
+      if (noop    /= '') then call addnos 'NOOPERATIONS'
+      if (nogrp   /= '') then call addnos 'NOGRPACC'
+      if (noraud  /= '') then call addnos 'NOAUDITOR'
+      if (noadsp  /= '') then call addnos 'NOADSP'
+      if (noaud   /= '') then call addnos 'NOROAUDIT'
+      if (norest  /= '') then call addnos 'NORESTRICTED'
       signal done
     Addnos:
       arg opt
@@ -87,6 +111,7 @@
       return
     done:
   *endrexx
+
   ver (&nos,nb)
 )END
 /*--------------------------------------------------------------------*/

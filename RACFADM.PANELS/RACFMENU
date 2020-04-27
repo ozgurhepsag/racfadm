@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V21R3+)\-\
++\-\(%RACFADM - RACF Administration - V21R4+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options        %C ~Changes  +Version/updates
@@ -12,9 +12,9 @@
 %   2 ~Group    +Group profiles           %E ~Enqueues +Dataset enqueues
 %   3 ~Dataset  +Dataset profiles         %H ~Help     +RACF commands
 %   4 ~General  +General resources        %I ~Issues   +Known issues
-%   5 ~Password +Password reset           %T ~Tutorial +Help
-%   6 ~GrpTree  +Group tree report        %X ~Exit     +Terminate
-%   7 ~RACFprms +RACF parameters
+%   5 ~Password +Password reset           %S ~Standards+Coding/design
+%   6 ~GrpTree  +Group tree report        %T ~Tutorial +Help
+%   7 ~RACFprms +RACF parameters          %X ~Exit     +Terminate
 %   8 ~RACFdb   +RACF databases
 +
 +
@@ -140,6 +140,7 @@
       E,'CMD(%RACFENQ)'
       H,'CMD(%RACFHELP)'
       I,'CMD(%RACFLOG $ISSUES)'
+      S,'CMD(%RACFLOG $STNDARD)'
       T,'PGM(ISPTUTOR) PARM(#RACMENU)'
       X,'EXIT'
     ' ',' '
@@ -156,11 +157,12 @@
   FIELD(ZPS00009) VAR(ZCMD) VAL('4')
   FIELD(ZPS00010) VAR(ZCMD) VAL('I')
   FIELD(ZPS00011) VAR(ZCMD) VAL('5')
-  FIELD(ZPS00012) VAR(ZCMD) VAL('T')
+  FIELD(ZPS00012) VAR(ZCMD) VAL('S')
   FIELD(ZPS00013) VAR(ZCMD) VAL('6')
-  FIELD(ZPS00014) VAR(ZCMD) VAL('X')
-  FIELD(ZPS00015) VAR(ZCMD) VAL('7')
-  FIELD(ZPS00016) VAR(ZCMD) VAL('8')
+  FIELD(ZPS00014) VAR(ZCMD) VAL('T')
+  FIELD(ZPS00015) VAR(ZCMD) VAL('X')
+  FIELD(ZPS00016) VAR(ZCMD) VAL('7')
+  FIELD(ZPS00017) VAR(ZCMD) VAL('8')
 )END
 /*--------------------------------------------------------------------*/
 /*                             Comments                               */
@@ -171,7 +173,14 @@
 /*     panel to another                                               */
 /*                                                                    */
 /*  2) The default Settings, menu option 0, are defined in the        */
-/*     )INIT section of this panel                                    */
+/*     )INIT section of this panel and the naming standards for       */
+/*     the these variables are:                                       */
+/*     - Syntax                                                       */
+/*         SET#@@@@                                                   */
+/*     - Where                                                        */
+/*         SET  ... Settings (option 0)                               */
+/*         #    ... G=General, M=Management and T=Adding TSO Userid   */
+/*         @@@@ ... Field name                                        */
 /*                                                                    */
 /*  3) The variables contain the full word, no abbreviations, in      */
 /*     hopes of making it easier to understand/maintain code          */

@@ -7,6 +7,7 @@
  $$DIR     Directory      Document members
  $CHANGES  Updates        Document all changes and version
  $ISSUES   Problems       Document all reported issues
+ $STNDARD  Standards      Document coding and design
  #RACACKN  Tutorial       Acknowledgements
  #RACCLSA  Tutorial       Add/Change class profile
  #RACCLSR  Tutorial       List classes (show, refresh)

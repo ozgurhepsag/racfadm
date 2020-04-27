@@ -1,0 +1,38 @@
+*---------------------------------------------------------------------*
+*                        RACFADM - Standards                          *
+*---------------------------------------------------------------------*
+
+  The following standards have been put in place, in hopes of making
+  RACFADM easier to maintain and understand:
+
+  1) Panels
+     - Member names
+         $$DIR ...... Directory of all members and a description
+         $??????? ... Data/informational ($CHANGES, $ISSUES, etc.)
+         #??????? ... Tutorials
+         RACF???? ... Menu, data entry and table panels
+       Where ? can be anything
+     - Code
+       -- When possible, document items of interest at the bottom of
+          the member as comments
+
+  2) REXX
+     - Member names
+         $$DIR ...... Directory of all members and a description
+         RACF???? ... REXX programs, where ???? can be anything
+     - Code
+       -- Document line changes by commenting/using a flag character
+          /* @?? */ in columns 62-71, where ??, 1st character is
+          A-Z, and 2nd character is 1-9 then A-Z
+       -- Place a flower box above the subroutine documenting what
+          the routine accomplishes/does
+
+  3) Settings
+     - Below are the naming standard for variables used to save
+       the user's settings
+       -- Syntax
+            SET#????
+       -- Where
+            SET  ... Settings (option 0)
+            #    ... G=General, M=Management and T=Adding TSO Userid
+            ???? ... Field name

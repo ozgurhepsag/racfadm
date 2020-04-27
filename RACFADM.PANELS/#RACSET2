@@ -8,8 +8,8 @@
 %
 +Management:
 !  Admin RACF API   %Yes+to use RACF API module (IRRXUTIL) to obtain
-+                    information when adding/changing a userid and allow access
-+                    to use the line command 'P'rofile,%No+is the default
++                    information when Adding/Changing a userid and allow access
++                    to use the line command Profile,%No+is the default
 +
 !  RACF commands    +To view the RACF commands executed, type in the following:
 +                     %Display+in pop-up panel

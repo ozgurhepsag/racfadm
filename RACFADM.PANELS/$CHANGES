@@ -2,6 +2,20 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  27 Apr 2020 - V21R4
+     - Main Menu
+       -- Added 'S', Standards, Coding/design
+     - User (Option 1)
+       -- Fixed selecting multiple operands under NOTSO, NOCICS,
+          NODFP and NOOMVS, would only process one of the selected
+          entries, was not syntactically correct
+     - Tutorial (Option T)
+       -- Updated grammar in panel #RACSET2
+     - Other items
+       -- Updated comments at bottom of panel RACFMENU
+       -- Correct grammar in $CHANGES member
+       -- Updated $DIR panel member
+
   27 Apr 2020 - V21R3
      - Settings (Option 0)
        -- Separated/relocated the administration/programmer settings
