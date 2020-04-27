@@ -9,7 +9,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @A4  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
+/* @A4  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @A3  200423  RACFA    Ensure REXX program name is 8 chars long     */
 /* @A2  200420  RACFA    Verify last level qualifier is not blank/null*/
 /* @A1  200420  RACFA    Removed single quote of REXX/CLIST dsname    */
@@ -19,13 +19,13 @@ parse source . . REXXPGM .                                    /* @A4 */
 REXXPGM  = LEFT(REXXPGM,8)                                    /* @A4 */
 
 ADDRESS ISPEXEC
-  "VGET (ERATRACE) ASIS"
-  If (eratrace <> 'NO') then do
+  "VGET (SETMTRAC) ASIS"
+  If (SETMTRAC <> 'NO') then do
      Say "*"COPIES("-",70)"*"
      Say "*"Center("Begin Program = "REXXPGM,70)"*"
      Say "*"COPIES("-",70)"*"
-     if (eratrace <> 'PROGRAMS') THEN
-        interpret "Trace "SUBSTR(ERATRACE,1,1)
+     if (SETMTRAC <> 'PROGRAMS') THEN
+        interpret "Trace "SUBSTR(SETMTRAC,1,1)
   end
 
   call Get_clist_dsn
@@ -67,7 +67,7 @@ ADDRESS ISPEXEC
      "SELECT PGM(ISRDSLST) PARM(DSL '"DSNAME"')",
              "SUSPEND SCRNAME(RACFADM)"
 
-  If (eratrace <> 'NO') then do
+  If (SETMTRAC <> 'NO') then do
      Say "*"COPIES("-",70)"*"
      Say "*"Center("End Program = "REXXPGM,70)"*"
      Say "*"COPIES("-",70)"*"

@@ -2,6 +2,35 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  27 Apr 2020 - V21R3
+     - Settings (Option 0)
+       -- Separated/relocated the administration/programmer settings
+          to be under a new section called 'Management'
+       -- Changed field names:
+            'Initial password' to 'Default password'
+            'JOBLIB dataset'   to 'User dataset'
+       -- Updated comments to right of some fields
+       -- Fixed 'Status interval' field, now allows typing in a
+          four digit number, prior was two digits
+       -- Standardized variable names that are used to save the
+          settings:
+          o Syntax:
+              SET#@@@@
+          o Where:
+              SET  ... Settings (option 0)
+              #    ... G=General, M=Management and T=Adding TSO User
+              @@@@ ... Field name
+          o Prior the variable names where:
+              ERA?????
+          o Note:
+              In doing this, you will need to re-define/set these
+              setting, due to the variable names have changed and
+              are saved the ISPF profile member
+       -- Updated tutorials
+     - Tutorial (Option T)
+       -- Updated 'Installation Notes' on what is required to use the
+          'Profile' line command
+
   26 Apr 2020 - V21R2
      - User (Option 1)
        -- Line command 'AL', updated panel to allow selecting operands
@@ -101,7 +130,7 @@
      - Main Menu
        -- Added RACF backup database name to bottom of panel
      - RACFprms (Option 7)
-       -- Fixed a displaying a few entries
+       -- Fixed displaying a few entries
 
   24 Apr 2020 - V19R6
      - User, Group, Dataset and General Resources (Opt 1/2/3/4)

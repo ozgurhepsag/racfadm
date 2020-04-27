@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V21R2+)\-\
++\-\(%RACFADM - RACF Administration - V21R3+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options        %C ~Changes  +Version/updates
@@ -32,29 +32,37 @@
   .HELP   = #RACMENU
   &ZPRIM  = YES              /* Make a primary option menu */
 
-  VGET (ERAADMN ERARAPI ERASINT ERADISP ERACONF ERASHOW +
-        ERATRACE) PROFILE
-  IF (&ERAADMN  NE YES, NO)  /*--- Set default settings ---*/
-      &ERAADMN  = 'NO'       /* Administrator       = NO   */
-  IF (&ERARAPI  NE YES, NO)
-      &ERARAPI  = 'NO'       /* RACF API (IRRXUTIL) = NO   */
-  IF (&ERAADMN  = 'NO')      /* Must have Admin authority  */
-      &ERARAPI  = 'NO'       /* RACF API (IRRXUTIL) = NO   */
-  IF (&ERASINT  = &Z & &ERASINTP = &Z)
-      &ERASINT  = '100'      /* Status interval (#) = 100  */
-      &ERASINTP = &Z         /* Status interval (%) =      */
-  IF (&ERADISP  NE BROWSE, EDIT, VIEW)
-      &ERADISP  = 'VIEW'     /* Display files       = VIEW */
-  IF (&ERACONF  NE YES, NO)
-      &ERACONF  = 'YES'      /* Confirm panel       = YES  */
-  IF (&ERASHOW  NE DISPLAY, LOG, BOTH, NO)
-      &ERASHOW  = 'NO'       /* RACF commands       = NO   */
-  IF (&ERATRACE NE LABELS, PROGRAMS, RESULTS, NO)
-      &ERATRACE = 'NO'       /* REXX trace          = NO   */
-  VPUT (ERAADMN ERARAPI ERASINT ERASINTP ERADISP ERACONF +
-        ERASHOW ERATRACE) PROFILE
+  VPUT (SETGSTA  SETGSTAP SETGDISP SETGCONF +
+        SETMADMN SETMIRRX SETMSHOW SETMTRAC) PROFILE
 
-  &RACFVER  = &Z              /*--- Obtain RACF/Sys Info ---*/
+  /* General Settings */
+  IF (&SETGSTA  = &Z & &SETGSTAP = &Z)
+      &SETGSTA  = '100'      /* Status interval (#) = 100  */
+      &SETGSTAP = &Z         /* Status interval (%) =      */
+  IF (&SETGDISP NE BROWSE, EDIT, VIEW)
+      &SETGDISP = 'VIEW'     /* Display files       = VIEW */
+  IF (&SETGCONF NE YES, NO)
+      &SETGCONF = 'YES'      /* Confirm panel       = YES  */
+
+  /* Management Settings */
+  IF (&SETMADMN NE YES, NO)  /*--- Set default settings ---*/
+      &SETMADMN = 'NO'       /* Administrator       = NO   */
+  IF (&SETMIRRX NE YES, NO)
+      &SETMIRRX = 'NO'       /* RACF API (IRRXUTIL) = NO   */
+  IF (&SETMADMN = 'NO')      /* Must have Admin authority  */
+      &SETMIRRX = 'NO'       /* RACF API (IRRXUTIL) = NO   */
+  IF (&SETMSHOW NE DISPLAY, LOG, BOTH, NO)
+      &SETMSHOW = 'NO'       /* RACF commands       = NO   */
+
+  /* Adding TSO Userids Settings */
+  IF (&SETMTRAC NE LABELS, PROGRAMS, RESULTS, NO)
+      &SETMTRAC = 'NO'       /* REXX trace          = NO   */
+
+  VPUT (SETGSTA  SETGSTAP SETGDISP SETGCONF +
+        SETMADMN SETMIRRX SETMSHOW SETMTRAC) PROFILE
+
+  /* Obtain/display RACF/system information on bottom of panel */
+  &RACFVER  = &Z
   &PRMDBASE = &Z
   &BKPDBASE = &Z
   &RACFGRP  = &Z
@@ -63,6 +71,7 @@
   &RACFLMSG = &Z
   &SECSOFT  = &Z
   &RACFFMID = &Z
+
   *REXX (RACFVER PRMDBASE BKPDBASE ZOSVER RACFGRP RACFNAM RACFLMSG
          SECSOFT RACFFMID)
     CVT      = C2D(STORAGE(10,4))               /* Get RACF FMID     */
@@ -109,6 +118,8 @@
     RACFGRP  = storage(group$,8)        /* ACEEGRPN (RACF group name)*/
     RACFNAM  = storage(name$,20)        /* ACEEUNAM (RACF user name) */
   *ENDREXX
+
+  /* Is lpar running RACF? */
   IF (&SECSOFT NE RACF)
      .MSG  = RACF011
 )PROC
@@ -122,7 +133,7 @@
       6,'CMD(%RACFGTRE)'
       7,'CMD(%RACFPRMS)'
       8,'CMD(%RACFDB)'
-      9,'CMD(%RACFCLSA)'        /* Anaylze - Verify ACL */  /* Hidden */
+      9,'CMD(%RACFCLSA)'        /* Analyze - Verify ACL */  /* Hidden */
       B,'CMD(%BOOKMGR SHELF(''EOYBOOK.ICHZBKC0.BKSHELF''))' /* Hidden */
       D,'CMD(%RACFDSL)'
       C,'CMD(%RACFLOG $CHANGES)'
@@ -166,13 +177,13 @@
 /*     hopes of making it easier to understand/maintain code          */
 /*                                                                    */
 /*  4) Below menu options are hidden, not displayed:                  */
-/*       9  RACFAuth  Analyze ACL for general resources               */
+/*       9  Analyze   Verify ACL                                      */
 /*       B  BookMgr   RACF manuals                                    */
 /*                                                                    */
 /*  5) The )INIT section executes a REXX code to:                     */
-/*     - Verify RACF is executing, if not issue message               */
 /*     - Obtain RACF information displayed at the bottom of panel     */
 /*       (RACF, Dbase, z/OS, etc)                                     */
+/*     - Verify RACF is executing, if not issue message               */
 /*                                                                    */
 /*  6) The menu entries (Settings, User, etc.) are point-n-shoot      */
 /*     fields                                                         */

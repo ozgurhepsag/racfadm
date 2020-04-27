@@ -3,13 +3,13 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @A7  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
+/* @A7  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @A6  200423  RACFA    Ensure REXX program name is 8 chars long     */
 /* @A5  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
 /* @A4  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @A3  200224  RACFA    Place panels at top of REXX in variables     */
 /* @A2  200221  RACFA    Make 'ADDRESS ISPEXEC' defualt, reduce code  */
-/* @A1  200220  RACFA    Added ERATRACE=YES, then TRACE R             */
+/* @A1  200220  RACFA    Added SETMTRAC=YES, then TRACE R             */
 /* @A0  200123  RACFA    Created REXX                                 */
 /*====================================================================*/
 PANEL16  = "RACFSETG"   /* Settings, menu option 0         */ /* @A3 */
@@ -17,18 +17,18 @@ parse source . . REXXPGM .                                    /* @A7 */
 REXXPGM  = LEFT(REXXPGM,8)                                    /* @A7 */
 
 ADDRESS ISPEXEC                                               /* @A2 */
-  "VGET (ERATRACE) ASIS"                                      /* @A1 */
-  If (eratrace <> 'NO') then do                               /* @A4 */
+  "VGET (SETMTRAC) ASIS"                                      /* @A1 */
+  If (SETMTRAC <> 'NO') then do                               /* @A4 */
      Say "*"COPIES("-",70)"*"                                 /* @A4 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A4 */
      Say "*"COPIES("-",70)"*"                                 /* @A4 */
-     if (eratrace <> 'PROGRAMS') THEN                         /* @A5 */
-        interpret "Trace "SUBSTR(ERATRACE,1,1)                /* @A4 */
+     if (SETMTRAC <> 'PROGRAMS') THEN                         /* @A5 */
+        interpret "Trace "SUBSTR(SETMTRAC,1,1)                /* @A4 */
   end                                                         /* @A4 */
 
   "Display Panel("PANEL16")"                                  /* @A3 */
 
-  If (eratrace <> 'NO') then do                               /* @A4 */
+  If (SETMTRAC <> 'NO') then do                               /* @A4 */
      Say "*"COPIES("-",70)"*"                                 /* @A4 */
      Say "*"Center("End Program = "REXXPGM,70)"*"             /* @A4 */
      Say "*"COPIES("-",70)"*"                                 /* @A4 */

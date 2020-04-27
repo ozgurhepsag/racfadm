@@ -18,7 +18,7 @@
 !     -+Prevents from having dead/unused members
 +
 !  3)+May want to add/display the two hidden menu entries in panel%RACFMENU
-!       9  Anaylze   Verify ACL
+!       9  Analyze   Verify ACL
 !       B  Bookmgr   RACF Manuals
 +
 +

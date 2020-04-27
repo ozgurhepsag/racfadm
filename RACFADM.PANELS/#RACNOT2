@@ -7,17 +7,17 @@
 %Tutorial+\-\(%RACFADM - Installation Notes+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
-!  4)+To use the line command%'P'rofile,+which executes!IRRXUTIL+(RACF
-+     Administration API), the following authorization will need to be
-+     granted using!RACF RDEFINE+and!PERMIT+commands:
-+
-+      @RDEFINE FACILITY (IRR.RADMIN.*) OWNER(SYS1) UACC(READ)
-+      @        AUDIT(FAILURES(READ)) DATA('RACF ADMINISTRATION API')
-+      @        WARNING
-+      @PERMIT IRR.RADMIN.* CLASS(FACILITY) ID(group) GEN
-+
-+
-+
+!  4)+To use the line command%Profile,+the following will need to be
++     accomplished:
++      !-+Turn on the%Settings+(Option 0)
++          !Administrator ..... Y
++          !Admin RACF API .... Y
++      !-+Obtain authorization to following resources, by executing
++        !RACF RDEFINE+and!PERMIT+commands:
++          @RDEFINE FACILITY (IRR.RADMIN.*) OWNER(SYS1) UACC(READ)
++          @        AUDIT(FAILURES(READ)) DATA('RACF ADMINISTRATION API')
++          @        WARNING
++          @PERMIT IRR.RADMIN.* CLASS(FACILITY) ID(group) GEN
 +
 +
 +

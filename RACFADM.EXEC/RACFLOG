@@ -3,7 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @AE  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
+/* @AE  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @AD  200423  RACFA    Ensure REXX program name is 8 chars long     */
 /* @AC  200422  RACFA    Fixed displaying error message               */
 /* @AB  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
@@ -15,7 +15,7 @@
 /* @A5  200303  RACFA    Receive member as a parmater                 */
 /* @A4  200303  RACFA    Renamed mbr to RACFDSP, was RACFCHGS         */
 /* @A3  200221  RACFA    Make 'ADDRESS ISPEXEC' defualt, reduce code  */
-/* @A2  200220  RACFA    Added ERATRACE=YES, then TRACE R             */
+/* @A2  200220  RACFA    Added SETMTRAC=YES, then TRACE R             */
 /* @A1  200220  RACFA    Added capability to browse/edit/view file    */
 /* @A0  200218  RACFA    Created REXX                                 */
 /*====================================================================*/
@@ -25,13 +25,13 @@ REXXPGM  = LEFT(REXXPGM,8)                                    /* @AE */
 
 ADDRESS ISPEXEC                                               /* @A3 */
   PARSE ARG MEMBER                                            /* @A5 */
-  "VGET (ERADISP ERATRACE) ASIS"                              /* @A2 */
-  If (eratrace <> 'NO') then do                               /* @AA */
+  "VGET (SETGDISP SETMTRAC) ASIS"                             /* @A2 */
+  If (SETMTRAC <> 'NO') then do                               /* @AA */
      Say "*"COPIES("-",70)"*"                                 /* @AA */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AA */
      Say "*"COPIES("-",70)"*"                                 /* @AA */
-     if (eratrace <> 'PROGRAMS') THEN                         /* @AB */
-        interpret "Trace "SUBSTR(ERATRACE,1,1)                /* @AA */
+     if (SETMTRAC <> 'PROGRAMS') THEN                         /* @AB */
+        interpret "Trace "SUBSTR(SETMTRAC,1,1)                /* @AA */
   end                                                         /* @AA */
 
   "QLIBDEF ISPPLIB TYPE(DATASET) ID(DSNAME)"
@@ -42,9 +42,9 @@ ADDRESS ISPEXEC                                               /* @A3 */
   DSNAME = "'"STRIP(DSNAME,,"'")"("MEMBER")'"                 /* @A5 */
 
   SELECT                                                      /* @A1 */
-     WHEN (ERADISP = "VIEW") THEN                             /* @A1 */
+     WHEN (SETGDISP = "VIEW") THEN                            /* @A1 */
           "VIEW DATASET("DSNAME") MACRO("EDITMACR")"          /* @A7 */
-     WHEN (ERADISP = "EDIT") THEN                             /* @A1 */
+     WHEN (SETGDISP = "EDIT") THEN                            /* @A1 */
           "EDIT DATASET("DSNAME") MACRO("EDITMACR")"          /* @A7 */
      OTHERWISE                                                /* @A1 */
           "BROWSE DATASET("DSNAME")"                          /* @A1 */
@@ -55,7 +55,7 @@ EXIT                                                          /* @AA */
 /*  If tracing is on, display flower box                         @AA  */
 /*--------------------------------------------------------------------*/
 GOODBYE:                                                      /* @AA */
-  If (eratrace <> 'NO') then do                               /* @AA */
+  If (SETMTRAC <> 'NO') then do                               /* @AA */
      Say "*"COPIES("-",70)"*"                                 /* @AA */
      Say "*"Center("End Program = "REXXPGM,70)"*"             /* @AA */
      Say "*"COPIES("-",70)"*"                                 /* @AA */

@@ -6,8 +6,10 @@
 %Tutorial+\-\(%RACFADM - Settings - 2 of 3+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
-+General:
-!  Confirm panel    +Specify whether each modify operation must be confirmed
++Management:
+!  Admin RACF API   %Yes+to use RACF API module (IRRXUTIL) to obtain
++                    information when adding/changing a userid and allow access
++                    to use the line command 'P'rofile,%No+is the default
 +
 !  RACF commands    +To view the RACF commands executed, type in the following:
 +                     %Display+in pop-up panel
@@ -20,8 +22,6 @@
 +                     %Programs,+display REXX program names
 +                     %Results,+display commands and results
 +                     %No,+turn off tracing (default)
-+
-+
 +
 +
 +

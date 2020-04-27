@@ -5,7 +5,7 @@
 /* ---  ------  -------  -------------------------------------------- */
 /* @AD  200424  TRIDJK   Swapped rcvtelen & rcvtslen (end/start leng) */
 /* @AC  200424  TRIDJK   Add password lowercase/spc char/ext support  */
-/* @AB  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
+/* @AB  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @AA  200423  RACFA    Ensure REXX program name is 8 chars long     */
 /* @A9  200423  RACFA    Chg variable name RCVTGDSN to RCVTPDSN       */
 /* @A8  200423  RACFA    Get RACF Bkp database name                   */
@@ -13,7 +13,7 @@
 /* @A6  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @A5  200224  RACFA    Place panels at top of REXX in variables     */
 /* @A4  200221  RACFA    Make 'ADDRESS ISPEXEC' defualt, reduce code  */
-/* @A3  200220  RACFA    Added ERATRACE=YES, then TRACE R             */
+/* @A3  200220  RACFA    Added SETMTRAC=YES, then TRACE R             */
 /* @A2  200120  TRIDJK   Add multi factor authentication (rcvtsmfa)   */
 /* @A1  200119  RACFA    Standardized/reduced lines of code           */
 /* @A0  011229  NICORIZ  Created REXX, V2.1, www.rizzuto.it           */
@@ -23,13 +23,13 @@ parse source . . REXXPGM .                                    /* @AB */
 REXXPGM  = LEFT(REXXPGM,8)                                    /* @AB */
 
 ADDRESS ISPEXEC                                               /* @A4 */
-  "VGET (ERATRACE) ASIS"                                      /* @A3 */
-  If (eratrace <> 'NO') then do                               /* @A6 */
+  "VGET (SETMTRAC) ASIS"                                      /* @A3 */
+  If (SETMTRAC <> 'NO') then do                               /* @A6 */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A6 */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */
-     if (eratrace <> 'PROGRAMS') THEN                         /* @A7 */
-        interpret "Trace "SUBSTR(ERATRACE,1,1)                /* @A6 */
+     if (SETMTRAC <> 'PROGRAMS') THEN                         /* @A7 */
+        interpret "Trace "SUBSTR(SETMTRAC,1,1)                /* @A6 */
   end                                                         /* @A6 */
 
   cvt     = c2x(storage(10,4))              /* cvt address            */
@@ -51,7 +51,7 @@ ADDRESS ISPEXEC                                               /* @A4 */
   call Racf_statistics
   'display panel('PANEL19')'                                  /* @A5 */
 
-  If (eratrace <> 'NO') then do                               /* @A6 */
+  If (SETMTRAC <> 'NO') then do                               /* @A6 */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */
      Say "*"Center("End Program = "REXXPGM,70)"*"             /* @A6 */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */

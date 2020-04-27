@@ -3,7 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @AD  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
+/* @AD  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @AC  200423  RACFA    Removed blank in column 1 of report          */
 /* @AB  200423  RACFA    Do not chk for titles when looping thru rpt  */
 /* @AA  200423  RACFA    Ensure REXX program name is 8 chars long     */
@@ -23,13 +23,13 @@ parse source . . REXXPGM .                                    /* @AD */
 REXXPGM  = LEFT(REXXPGM,8)                                    /* @AD */
 
 ADDRESS ISPEXEC
-  "VGET (ERATRACE ERADISP) ASIS"                              /* @A2 */
-  If (eratrace <> 'NO') then do
+  "VGET (SETMTRAC SETGDISP) ASIS"                             /* @A2 */
+  If (SETMTRAC <> 'NO') then do
      Say "*"COPIES("-",70)"*"
      Say "*"Center("Begin Program = "REXXPGM,70)"*"
      Say "*"COPIES("-",70)"*"
-     if (eratrace <> 'PROGRAMS') THEN
-        interpret "Trace "SUBSTR(ERATRACE,1,1)
+     if (SETMTRAC <> 'PROGRAMS') THEN
+        interpret "Trace "SUBSTR(SETMTRAC,1,1)
   end
 
 Address TSO
@@ -96,9 +96,9 @@ Address ISPExec
      call Goodbye
   end
   SELECT                                                      /* @A2 */
-     WHEN (ERADISP = "VIEW") THEN                             /* @A2 */
+     WHEN (SETGDISP = "VIEW") THEN                            /* @A2 */
           "VIEW DATAID("ID") MACRO("EDITMACR")"               /* @A2 */
-     WHEN (ERADISP = "EDIT") THEN                             /* @A2 */
+     WHEN (SETGDISP = "EDIT") THEN                            /* @A2 */
           "EDIT DATAID("ID") MACRO("EDITMACR")"               /* @A2 */
      OTHERWISE                                                /* @A2 */
           "BROWSE DATAID("ID")"                               /* @A2 */
@@ -111,7 +111,7 @@ EXIT
 /*  If tracing is on, display flower box                              */
 /*--------------------------------------------------------------------*/
 GOODBYE:
-  If (eratrace <> 'NO') then do
+  If (SETMTRAC <> 'NO') then do
      Say "*"COPIES("-",70)"*"
      Say "*"Center("End Program = "REXXPGM,70)"*"
      Say "*"COPIES("-",70)"*"

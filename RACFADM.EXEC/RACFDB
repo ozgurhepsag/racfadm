@@ -4,7 +4,7 @@
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
 /* @AC  200424  RACFA    Move DDNAME at top, standardize/del dups     */
-/* @AB  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
+/* @AB  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @AA  200423  RACFA    Chg dash line to 72, was 62 columns in length*/
 /* @A9  200423  RACFA    Ensure REXX program name is 8 chars long     */
 /* @A8  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
@@ -151,13 +151,13 @@ DDNAME   = "RACFA"RANDOM(0,999)                               /* @AC */
 parse source . . REXXPGM .                                    /* @AB */
 REXXPGM  = LEFT(REXXPGM,8)                                    /* @AB */
 
-ADDRESS ISPEXEC "VGET (ERADISP ERATRACE)"                     /* @A5 */
-If (eratrace <> 'NO') then do                                 /* @A6 */
+ADDRESS ISPEXEC "VGET (SETGDISP SETMTRAC)"                    /* @A5 */
+If (SETMTRAC <> 'NO') then do                                 /* @A6 */
    Say "*"COPIES("-",70)"*"                                   /* @A6 */
    Say "*"Center("Begin Program = "REXXPGM,70)"*"             /* @A6 */
    Say "*"COPIES("-",70)"*"                                   /* @A6 */
-   if (eratrace <> 'PROGRAMS') THEN                           /* @A8 */
-      interpret "Trace "SUBSTR(ERATRACE,1,1)                  /* @A6 */
+   if (SETMTRAC <> 'PROGRAMS') THEN                           /* @A8 */
+      interpret "Trace "SUBSTR(SETMTRAC,1,1)                  /* @A6 */
 end                                                           /* @A6 */
 
 racflmsg = "Retrieving data - Please be patient"              /* @A1 */
@@ -266,10 +266,10 @@ QUEUE                                                         /* @A1 */
 "EXECIO * DISKW "DDNAME" (FINIS"                              /* @A1 */
 ADDRESS ISPEXEC "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"    /* @A1 */
 SELECT                                                        /* @A1 */
-   WHEN (ERADISP = "VIEW") THEN                               /* @A1 */
+   WHEN (SETGDISP = "VIEW") THEN                              /* @A1 */
         ADDRESS ISPEXEC "VIEW DATAID("CMDDATID")",            /* @A3 */
                         "MACRO("EDITMACR")"                   /* @A3 */
-   WHEN (ERADISP = "EDIT") THEN                               /* @A1 */
+   WHEN (SETGDISP = "EDIT") THEN                              /* @A1 */
         ADDRESS ISPEXEC "EDIT DATAID("CMDDATID")",            /* @A3 */
                         "MACRO("EDITMACR")"                   /* @A3 */
    OTHERWISE                                                  /* @A1 */
@@ -282,7 +282,7 @@ EXIT
 /*  If tracing is on, display flower box                         @A6  */
 /*--------------------------------------------------------------------*/
 GOODBYE:                                                      /* @A6 */
-  If (eratrace <> 'NO') then do                               /* @A6 */
+  If (SETMTRAC <> 'NO') then do                               /* @A6 */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */
      Say "*"Center("End Program = "REXXPGM,70)"*"             /* @A6 */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */

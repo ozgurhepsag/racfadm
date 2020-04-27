@@ -6,8 +6,8 @@
 /* @CD  200424  RACFA    Updated RESET, pass filter, ex: R filter     */
 /* @CA  200424  RACFA    Chg msg RACF013 to RACF012                   */
 /* @C9  200424  RACFA    Move DDNAME at top, standardize/del dups     */
-/* @C8  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
-/* @C7  200423  RACFA    'Status Interval' by percentage (ERASINTP)   */
+/* @C8  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
+/* @C7  200423  RACFA    'Status Interval' by percentage (SETGSTAP)   */
 /* @C6  200423  TRIDJK   Change ACC to '', when no rows               */
 /* @C5  200422  RACFA    Ensure the REXX program name is 8 chars      */
 /* @C4  200422  RACFA    Use variable REXXPGM in log msg              */
@@ -62,8 +62,8 @@
 /* @AP  200221  LBD      Add ONLY primary command                     */
 /* @AO  200221  RACFA    Make 'ADDRESS ISPEXEC' defualt, reduce code  */
 /* @AN  200220  RACFA    Fixed displaying all RACF commands           */
-/* @AM  200220  RACFA    Added ERATRACE=YES, then TRACE R             */
-/* @AL  200220  RACFA    Removed initializing ERASINT variable        */
+/* @AM  200220  RACFA    Added SETMTRAC=YES, then TRACE R             */
+/* @AL  200220  RACFA    Removed initializing SETGSTA variable        */
 /* @AK  200220  RACFA    Added capability to browse/edit/view file    */
 /* @AJ  200218  RACFA    Use dynamic area to display SELECT commands  */
 /* @AI  200218  RACFA    Added 'Status Interval' option               */
@@ -105,21 +105,21 @@ ADDRESS ISPEXEC                                               /* @AO */
   lparm  = ''                            /* Locate parm */    /* @A3 */
   Arg Rfilter
   If (Rfilter = '') Then Do                                   /* @AB */
-     "VGET (ERAFLTR) ASIS"                                    /* @AB */
-     Rfilter = ERAFLTR                                        /* @AB */
+     "VGET (SETGFLTR) ASIS"                                   /* @AB */
+     Rfilter = SETGFLTR                                       /* @AB */
   end                                                         /* @AB */
   "CONTROL ERRORS RETURN"                                     /* @B1 */
-  "VGET (ZSCREEN ERASHOW ERATRACE ERASINT ERASINTP",          /* @C7 */
-        "ERAADMN ERADISP ERARAPI) ASIS"                       /* @BS */
-  If (eratrace <> 'NO') then do                               /* @BZ */
+  "VGET (ZSCREEN SETMSHOW SETMTRAC SETGSTA SETGSTAP",         /* @C7 */
+        "SETMADMN SETGDISP SETMIRRX) ASIS"                    /* @BS */
+  If (SETMTRAC <> 'NO') then do                               /* @BZ */
      Say "*"COPIES("-",70)"*"                                 /* @BZ */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @BZ */
      Say "*"COPIES("-",70)"*"                                 /* @BZ */
-     if (eratrace <> 'PROGRAMS') THEN                         /* @C1 */
-        interpret "Trace "SUBSTR(ERATRACE,1,1)                /* @BZ */
+     if (SETMTRAC <> 'PROGRAMS') THEN                         /* @C1 */
+        interpret "Trace "SUBSTR(SETMTRAC,1,1)                /* @BZ */
   end
-  If (ERAADMN = "YES") then                                   /* @B2 */
-     If (ERARAPI = "YES") then                                /* @BS */
+  If (SETMADMN = "YES") then                                  /* @B2 */
+     If (SETMIRRX = "YES") then                               /* @BS */
         SELCMDS = "ÝS¨Show,ÝL¨List,ÝP¨Profile,"||,            /* @BH */
                   "ÝC¨Change,ÝA¨Add,"||,                      /* @BH */
                   "ÝR¨Remove"                                 /* @BH */
@@ -140,7 +140,7 @@ ADDRESS ISPEXEC                                               /* @AO */
      end
   end
 
-  If (eratrace <> 'NO') then do                               /* @BZ */
+  If (SETMTRAC <> 'NO') then do                               /* @BZ */
      Say "*"COPIES("-",70)"*"                                 /* @BZ */
      Say "*"Center("End Program = "REXXPGM,70)"*"             /* @BZ */
      Say "*"COPIES("-",70)"*"                                 /* @BZ */
@@ -524,7 +524,7 @@ CREATE_TABLEB:                                                /* @BM */
   address TSO cmd                                             /* @AN */
   cmd_rc = rc                                                 /* @AZ */
   x = OUTTRAP('OFF')
-  if (erashow <> 'NO') then                                   /* @BJ */
+  if (SETMSHOW <> 'NO') then                                  /* @BJ */
      call SHOWCMD                                             /* @AN */
   Do i = 1 to var.0          /* Scan output */
      temp = var.i
@@ -607,7 +607,7 @@ GETD:
   address TSO cmd                                             /* @AN */
   cmd_rc = rc                                                 /* @AZ */
   x = OUTTRAP('OFF')
-  if (erashow <> 'NO') then                                   /* @BJ */
+  if (SETMSHOW <> 'NO') then                                  /* @BJ */
      call SHOWCMD                                             /* @AN */
   parse var details.2 'SUPERIOR GROUP=' supgrp 'OWNER=' owner
   parse var details.3 'INSTALLATION DATA=' data_1st_line
@@ -643,7 +643,7 @@ LISD:
   ADDRESS TSO cmd                                             /* @AN */
   cmd_rc   = rc                                               /* @AZ */
   X = OUTTRAP("OFF")                                          /* @A2 */
-  if (erashow <> 'NO') then                                   /* @BJ */
+  if (SETMSHOW <> 'NO') then                                  /* @BJ */
      call SHOWCMD                                             /* @AN */
   if (cmd_rc > 0) then DO    /* Remove parms */               /* @B7 */
      cmd = "LG "GROUP                                         /* @B7 */
@@ -651,7 +651,7 @@ LISD:
      ADDRESS TSO cmd                                          /* @B7 */
      cmd_rc   = rc                                            /* @B7 */
      X = OUTTRAP("OFF")                                       /* @B7 */
-     if (erashow <> 'NO') then                                /* @BJ */
+     if (SETMSHOW <> 'NO') then                               /* @BJ */
         call SHOWCMD                                          /* @B7 */
   END                                                         /* @B7 */
   call display_info                                           /* @BQ */
@@ -668,9 +668,9 @@ DISPLAY_INFO:                                                 /* @BQ */
   ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM CMDREC. FINIS"   /* @A2 */
   "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"                  /* @A2 */
   SELECT                                                      /* @AK */
-     WHEN (ERADISP = "VIEW") THEN                             /* @AK */
+     WHEN (SETGDISP = "VIEW") THEN                            /* @AK */
           "VIEW DATAID("CMDDATID") MACRO("EDITMACR")"         /* @BO */
-     WHEN (ERADISP = "EDIT") THEN                             /* @AK */
+     WHEN (SETGDISP = "EDIT") THEN                            /* @AK */
           "EDIT DATAID("CMDDATID") MACRO("EDITMACR")"         /* @BO */
      OTHERWISE                                                /* @AK */
           "BROWSE DATAID("CMDDATID")"                         /* @AK */
@@ -695,7 +695,7 @@ LISP:
   ADDRESS TSO cmd                                             /* @AN */
   cmd_rc = rc                                                 /* @AZ */
   X = OUTTRAP("OFF")                                          /* @A5 */
-  if (erashow <> 'NO') then                                   /* @BJ */
+  if (SETMSHOW <> 'NO') then                                  /* @BJ */
      call SHOWCMD                                             /* @AN */
   if (cmd_rc > 0) then DO    /* Remove parms */               /* @B9 */
      cmd = "LU "ID                                            /* @B9 */
@@ -703,7 +703,7 @@ LISP:
      ADDRESS TSO cmd                                          /* @B9 */
      cmd_rc = rc                                              /* @B9 */
      X = OUTTRAP("OFF")                                       /* @B9 */
-     if (erashow <> 'NO') then                                /* @BJ */
+     if (SETMSHOW <> 'NO') then                               /* @BJ */
         call SHOWCMD                                          /* @B9 */
   END                                                         /* @B9 */
   call display_info                                           /* @BQ */
@@ -811,7 +811,7 @@ EXCMD:
   address TSO cmd                                             /* @AY */
   cmd_rc = rc
   x = OUTTRAP('OFF')
-  if (erashow <> 'NO') then                                   /* @BJ */
+  if (SETMSHOW <> 'NO') then                                  /* @BJ */
      call SHOWCMD                                             /* @AN */
   if (subword(msg.1,1,1)= 'ICH11009I') |,
      (subword(msg.1,1,1)= 'ICH10006I') |,
@@ -821,14 +821,14 @@ RETURN
 /*  Display RACF command and return code                         @AN  */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @AN */
-  IF (ERASHOW = "BOTH") | (ERASHOW = "DISPLAY") THEN DO       /* @BK */
+  IF (SETMSHOW = "BOTH") | (SETMSHOW = "DISPLAY") THEN DO     /* @BK */
      PARSE VAR CMD MSG1 60 MSG2 121 MSG3                      /* @AN */
      MSG4 = "Return code = "cmd_rc                            /* @AN */
      "ADDPOP ROW(6) COLUMN(4)"                                /* @AZ */
      "DISPLAY PANEL("PANELM2")"                               /* @AX */
      "REMPOP"                                                 /* @AW */
   END                                                         /* @BJ */
-  IF (ERASHOW = "BOTH") | (ERASHOW = "LOG") THEN DO           /* @BK */
+  IF (SETMSHOW = "BOTH") | (SETMSHOW = "LOG") THEN DO         /* @BK */
      zerrsm = "RACFADM "REXXPGM" RC="cmd_rc                   /* @C4 */
      zerrlm = cmd                                             /* @BJ */
      'log msg(isrz003)'                                       /* @BJ */
@@ -847,10 +847,10 @@ CREATE_TABLEA:                                                /* @AP */
   address TSO cmd                                             /* @AN */
   cmd_rc = rc                                                 /* @AZ */
   x = OUTTRAP('OFF')
-  if (erashow <> 'NO') then                                   /* @BJ */
+  if (SETMSHOW <> 'NO') then                                  /* @BJ */
      call SHOWCMD                                             /* @AN */
-  if (ERASINTP <> "") THEN                                    /* @C7 */
-     INTERPRET "RECNUM = var.0*."ERASINTP"%1"                 /* @C7 */
+  if (SETGSTAP <> "") THEN                                    /* @C7 */
+     INTERPRET "RECNUM = var.0*."SETGSTAP"%1"                 /* @C7 */
   Do i = 1 to var.0
      temp  = var.i
      group = SUBWORD(temp,1,1)
@@ -893,7 +893,7 @@ CREATE_TABLEA:                                                /* @AP */
      /*---------------------------------------------*/
      /* Display number of records retrieved        -*/
      /*---------------------------------------------*/
-     IF (ERASINT = "") THEN DO                                /* @C7 */
+     IF (SETGSTA = "") THEN DO                                /* @C7 */
         IF (RECNUM <> 0) THEN                                 /* @C7 */
            IF (I//RECNUM = 0) THEN DO                         /* @C7 */
               n1 = i; n2 = var.0                              /* @C7 */
@@ -903,8 +903,8 @@ CREATE_TABLEA:                                                /* @AP */
            END                                                /* @C7 */
      END                                                      /* @C7 */
      ELSE DO                                                  /* @C7 */
-        IF (ERASINT <> 0) THEN                                /* @C7 */
-           IF (I//ERASINT = 0) THEN DO                        /* @AI */
+        IF (SETGSTA <> 0) THEN                                /* @C7 */
+           IF (I//SETGSTA = 0) THEN DO                        /* @AI */
               n1 = i; n2 = var.0
               pct = ((n1/n2)*100)%1'%'                        /* @C7 */
               "control display lock"

@@ -3,7 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @B2  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
+/* @B2  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @B1  200422  RACFA    Ensure the REXX program name is 8 chars      */
 /* @AZ  200422  RACFA    Use variable REXXPGM in log msg              */
 /* @AY  200422  TRIDJK   Fixed allocating JOBLIB                      */
@@ -35,7 +35,7 @@
 /* @A9  200224  RACFA    Place panels at top of REXX in variables     */
 /* @A8  200223  RACFA    Del 'address TSO "PROFILE MSGID"', not needed*/
 /* @A7  200221  RACFA    Make 'ADDRESS ISPEXEC' defualt, reduce code  */
-/* @A6  200220  RACFA    Added ERATRACE=YES, then TRACE R             */
+/* @A6  200220  RACFA    Added SETMTRAC=YES, then TRACE R             */
 /* @A5  200220  RACFA    Renamed RACFTSO to RACFUSRT (Standardization)*/
 /* @A4  200218  RACFA    Condense VGETs into one line                 */
 /* @A3  200119  RACFA    Standardized/reduced lines of code           */
@@ -51,13 +51,13 @@ parse source . . REXXPGM .                                    /* @B2 */
 REXXPGM  = LEFT(REXXPGM,8)                                    /* @B2 */
 
 ADDRESS ISPEXEC                                               /* @AF */
-  "VGET (ERASHOW ERATRACE ERAISPP ERACTLG ERAULIB) ASIS"      /* @A4 */
-  If (eratrace <> 'NO') then do                               /* @AT */
+  "VGET (SETMSHOW SETMTRAC SETTPROF SETTCTLG SETTUDSN) ASIS"  /* @A4 */
+  If (SETMTRAC <> 'NO') then do                               /* @AT */
      Say "*"COPIES("-",70)"*"                                 /* @AT */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AT */
      Say "*"COPIES("-",70)"*"                                 /* @AT */
-     if (eratrace <> 'PROGRAMS') THEN                         /* @AV */
-        interpret "Trace "SUBSTR(ERATRACE,1,1)                /* @AT */
+     if (SETMTRAC <> 'PROGRAMS') THEN                         /* @AV */
+        interpret "Trace "SUBSTR(SETMTRAC,1,1)                /* @AT */
   end                                                         /* @AT */
 
   rc      = GETEGN(ERAEGN,53,'01','NO','YES')  /* egn=Y/N */  /* @AE */
@@ -100,8 +100,8 @@ ADDD:                                                         /* @AJ */
   cmd = "DEL '"user"' ALIAS PURGE"                            /* @AG */
   call exccmd                                                 /* @AG */
 
-  Eractlg = Strip(eractlg,b,"'")                              /* @AC */
-  cmd = "DEF ALIAS (NAME('"user"') RELATE('"eractlg"'))"      /* @AK */
+  SETTCTLG = Strip(SETTCTLG,b,"'")                            /* @AC */
+  cmd = "DEF ALIAS (NAME('"user"') RELATE('"SETTCTLG"'))"     /* @AK */
   call exccmd                                                 /* @AG */
   IF (cmd_rc > 0) then do                                     /* @AO */
      call racfmsgs ERR018  /* Invalid user catalog */         /* @AO */
@@ -109,7 +109,7 @@ ADDD:                                                         /* @AJ */
   end                                                         /* @AO */
 
   /*- Allocate ISPF profile          -*/
-  cmd = "ALLOC FILE("DDNAME") DATASET('"user"."eraispp"')",   /* @AW */
+  cmd = "ALLOC FILE("DDNAME") DATASET('"user"."SETTPROF"')",  /* @AW */
               "NEW SPACE(5,5) CYLINDERS",                     /* @AG */
               "BLKSIZE(0) LRECL(80) RECFM(F B)",              /* @AG */
               "CATALOG DIR(250)"                              /* @AG */
@@ -118,9 +118,9 @@ ADDD:                                                         /* @AJ */
   call exccmd                                                 /* @AG */
 
   /*- Allocate joblib library        -*/
-  if (eraulib <> '') then do                                  /* @AY */
+  if (SETTUDSN <> '') then do                                 /* @AY */
      cmd = "ALLOC FILE("DDNAME")",                            /* @AW */
-                  "DATASET('"user"."eraulib"')",              /* @AG */
+                  "DATASET('"user"."SETTUDSN"')",             /* @AG */
                   "NEW SPACE(5,5) CYLINDERS",                 /* @AG */
                   "BLKSIZE(0) LRECL(80) RECFM(F B)",          /* @AG */
                   "CATALOG DIR(250)"                          /* @AG */
@@ -214,7 +214,7 @@ EXCCMD:                                                       /* @AG */
 ADDRESS TSO                                                   /* @AG */
   cmd                                                         /* @AG */
   cmd_rc = rc                                                 /* @AG */
-  if (erashow <> 'NO') then                                   /* @AG */
+  if (SETMSHOW <> 'NO') then                                  /* @AG */
      call SHOWCMD                                             /* @AG */
 RETURN                                                        /* @AG */
 /*--------------------------------------------------------------------*/
@@ -222,14 +222,14 @@ RETURN                                                        /* @AG */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @BB */
 ADDRESS ISPEXEC                                               /* @AG */
-  IF (ERASHOW = "BOTH") | (ERASHOW = "DISPLAY") THEN DO       /* @AS */
+  IF (SETMSHOW = "BOTH") | (SETMSHOW = "DISPLAY") THEN DO     /* @AS */
      PARSE VAR CMD MSG1 60 MSG2 121 MSG3                      /* @BB */
      MSG4 = "Return code = "cmd_rc                            /* @BS */
      "ADDPOP ROW(6) COLUMN(4)"                                /* @BB */
      "DISPLAY PANEL("PANELM2")"                               /* @BL */
      "REMPOP"                                                 /* @BB */
   END                                                         /* @AR */
-  IF (ERASHOW = "BOTH") | (ERASHOW = "LOG") THEN DO           /* @AS */
+  IF (SETMSHOW = "BOTH") | (SETMSHOW = "LOG") THEN DO         /* @AS */
      zerrsm = "RACFADM "REXXPGM" RC="cmd_rc                   /* @AZ */
      zerrlm = cmd                                             /* @AR */
      'log msg(isrz003)'                                       /* @AR */
@@ -239,7 +239,7 @@ RETURN                                                        /* @BB */
 /*  If tracing is on, display flower box                         @AT  */
 /*--------------------------------------------------------------------*/
 GOODBYE:                                                      /* @AT */
-  If (eratrace <> 'NO') then do                               /* @AT */
+  If (SETMTRAC <> 'NO') then do                               /* @AT */
      Say "*"COPIES("-",70)"*"                                 /* @AT */
      Say "*"Center("End Program = "REXXPGM,70)"*"             /* @AT */
      Say "*"COPIES("-",70)"*"                                 /* @AT */

@@ -3,7 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @AL  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
+/* @AL  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @AK  200423  RACFA    Place DSN/Enques in flower/comment box       */
 /* @AJ  200423  RACFA    Del 'call racfmsgs ERR19' when rows = 0      */
 /* @AI  200422  RACFA    Ensure the REXX program name is 8 chars      */
@@ -35,13 +35,13 @@ parse source . . REXXPGM .                                    /* @AL */
 REXXPGM  = LEFT(REXXPGM,8)                                    /* @AL */
 
 ADDRESS ISPEXEC
-  "VGET (ERADISP ERASHOW ERATRACE) ASIS"
-  If (eratrace <> 'NO') then do                               /* @A6 */
+  "VGET (SETGDISP SETMSHOW SETMTRAC) ASIS"
+  If (SETMTRAC <> 'NO') then do                               /* @A6 */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A6 */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */
-     if (eratrace <> 'PROGRAMS') THEN                         /* @A8 */
-        interpret "Trace "SUBSTR(ERATRACE,1,1)                /* @A6 */
+     if (SETMTRAC <> 'PROGRAMS') THEN                         /* @A8 */
+        interpret "Trace "SUBSTR(SETMTRAC,1,1)                /* @A6 */
   end                                                         /* @A6 */
 
   call Get_enqs "CLIST"                                       /* @A7 */
@@ -62,9 +62,9 @@ ADDRESS ISPEXEC
   ADDRESS TSO "EXECIO * DISKW "DDNAME" (FINIS"
   "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"
   SELECT
-     WHEN (ERADISP = "VIEW") THEN
+     WHEN (SETGDISP = "VIEW") THEN
           "VIEW DATAID("CMDDATID") MACRO("EDITMACR")"         /* @A2 */
-     WHEN (ERADISP = "EDIT") THEN
+     WHEN (SETGDISP = "EDIT") THEN
           "EDIT DATAID("CMDDATID") MACRO("EDITMACR")"         /* @A2 */
      OTHERWISE
           "BROWSE DATAID("CMDDATID")"
@@ -76,7 +76,7 @@ EXIT
 /*  If tracing is on, display flower box                         @A6  */
 /*--------------------------------------------------------------------*/
 GOODBYE:                                                      /* @A6 */
-  If (eratrace <> 'NO') then do                               /* @A6 */
+  If (SETMTRAC <> 'NO') then do                               /* @A6 */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */
      Say "*"Center("End Program = "REXXPGM,70)"*"             /* @A6 */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */
@@ -147,7 +147,7 @@ GET_ENQS:                                                     /* @A7 */
         X = OUTTRAP("CMDREC.")
         ADDRESS TSO cmd
         cmd_rc = rc
-        if (erashow <> 'NO') then
+        if (SETMSHOW <> 'NO') then
            call SHOWCMD
         if (cmd_rc > 0) then
            Luname = ""
@@ -211,14 +211,14 @@ RETURN                                                        /* @A7 */
 /*  Display RACF command and return code                              */
 /*--------------------------------------------------------------------*/
 SHOWCMD:
-  IF (ERASHOW = "BOTH") | (ERASHOW = "DISPLAY") THEN DO
+  IF (SETMSHOW = "BOTH") | (SETMSHOW = "DISPLAY") THEN DO
      PARSE VAR CMD MSG1 60 MSG2 121 MSG3
      MSG4 = "Return code = "cmd_rc
      "ADDPOP ROW(6) COLUMN(4)"
      "DISPLAY PANEL("PANELM2")"
      "REMPOP"
   END
-  IF (ERASHOW = "BOTH") | (ERASHOW = "LOG") THEN DO
+  IF (SETMSHOW = "BOTH") | (SETMSHOW = "LOG") THEN DO
      zerrsm = "RACFADM "REXXPGM" RC="cmd_rc                   /* @AH */
      zerrlm = cmd
      'log msg(isrz003)'

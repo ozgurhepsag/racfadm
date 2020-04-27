@@ -4,7 +4,7 @@
 /* FLG  YYMhDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
 /* @B2  200424  RACFA    Move DDNAME at top, standardize/del dups     */
-/* @B1  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
+/* @B1  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @AZ  200422  RACFA    Ensure the REXX program name is 8 chars      */
 /* @AY  200422  RACFA    Use variable REXXPGM in log msg              */
 /* @AX  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
@@ -35,7 +35,7 @@
 /* @A8  200221  RACFA    Allow abbreviating the 'LOCATE' command      */
 /* @A7  200221  RACFA    Make 'ADDRESS ISPEXEC' defualt, reduce code  */
 /* @A6  200220  RACFA    Fixed displaying all RACF commands           */
-/* @A5  200220  RACFA    Added ERATRACE=YES, then TRACE R             */
+/* @A5  200220  RACFA    Added SETMTRAC=YES, then TRACE R             */
 /* @A4  200218  RACFA    Condense VGETs into one line                 */
 /* @A3  200120  RACFA    Removed 'say msg.msg_var' in EXCMD procedure */
 /* @A2  200119  RACFA    Standardized/reduced lines of code           */
@@ -52,15 +52,15 @@ REXXPGM  = LEFT(REXXPGM,8)                                    /* @B1 */
 ADDRESS ISPEXEC                                               /* @A7 */
   Arg class
   "CONTROL ERRORS RETURN"                                     /* @AJ */
-  "VGET (ZSCREEN ERAADMN ERASHOW ERATRACE ERADISP) ASIS"      /* @AL */
-  If (eratrace <> 'NO') then do                               /* @AW */
+  "VGET (ZSCREEN SETMADMN SETMSHOW SETMTRAC SETGDISP) ASIS"   /* @AL */
+  If (SETMTRAC <> 'NO') then do                               /* @AW */
      Say "*"COPIES("-",70)"*"                                 /* @AW */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AW */
      Say "*"COPIES("-",70)"*"                                 /* @AW */
-     if (eratrace <> 'PROGRAMS') THEN                         /* @AX */
-        interpret "Trace "SUBSTR(ERATRACE,1,1)                /* @AW */
+     if (SETMTRAC <> 'PROGRAMS') THEN                         /* @AX */
+        interpret "Trace "SUBSTR(SETMTRAC,1,1)                /* @AW */
   end                                                         /* @AW */
-  If (ERAADMN = "YES") then                                   /* @AC */
+  If (SETMADMN = "YES") then                                  /* @AC */
       SELCMDS = "ÝS¨Show,ÝL¨List,ÝR¨Refresh"                  /* @AL */
   else                                                        /* @AC */
       SELCMDS = "ÝS¨Show,ÝL¨List"                             /* @AL */
@@ -74,7 +74,7 @@ ADDRESS ISPEXEC                                               /* @A7 */
   else
      call RACFCLSG class '**' 'YES' /*generic prof routine*/
 
-  If (eratrace <> 'NO') then do                               /* @AW */
+  If (SETMTRAC <> 'NO') then do                               /* @AW */
      Say "*"COPIES("-",70)"*"                                 /* @AW */
      Say "*"Center("End Program = "REXXPGM,70)"*"             /* @AW */
      Say "*"COPIES("-",70)"*"                                 /* @AW */
@@ -100,7 +100,7 @@ GET_ACT_CLASS:
   address TSO cmd                                             /* @A6 */
   cmd_rc = rc                                                 /* @AI */
   x = OUTTRAP('OFF')
-  if (erashow <> 'NO') then                                   /* @AP */
+  if (SETMSHOW <> 'NO') then                                  /* @AP */
      call SHOWCMD                                             /* @A6 */
   Do i = 1 to var.0         /* Scan output */
      temp = var.i
@@ -273,7 +273,7 @@ EXCMD:
   address TSO cmd                                             /* @AH */
   cmd_rc = rc
   x = OUTTRAP('OFF')
-  if (erashow <> 'NO') then                                   /* @AP */
+  if (SETMSHOW <> 'NO') then                                  /* @AP */
      call SHOWCMD                                             /* @A6 */
   if (subword(msg.1,1,1)= 'ICH11009I') |,
      (subword(msg.1,1,1)= 'ICH10006I') |,
@@ -289,7 +289,7 @@ LISP:
   ADDRESS TSO cmd
   cmd_rc = rc
   X = OUTTRAP("OFF")
-  if (erashow <> 'NO') then                                   /* @AP */
+  if (SETMSHOW <> 'NO') then                                  /* @AP */
      call SHOWCMD
   if (cmd_rc > 0) then do    /* Remove parms */               /* @AM */
      cmd     = "RL "CLASS" *"                                 /* @AN */
@@ -297,7 +297,7 @@ LISP:
      ADDRESS TSO cmd                                          /* @AM */
      cmd_rc = rc                                              /* @AM */
      X = OUTTRAP("OFF")                                       /* @AM */
-     if (erashow <> 'NO') then                                /* @AP */
+     if (SETMSHOW <> 'NO') then                               /* @AP */
         call SHOWCMD                                          /* @AM */
   end                                                         /* @AM */
   ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",
@@ -306,9 +306,9 @@ LISP:
   ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM CMDREC. FINIS"
   "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"
   SELECT
-     WHEN (ERADISP = "VIEW") THEN
+     WHEN (SETGDISP = "VIEW") THEN
           "VIEW DATAID("CMDDATID") MACRO("EDITMACR")"         /* @AS */
-     WHEN (ERADISP = "EDIT") THEN
+     WHEN (SETGDISP = "EDIT") THEN
           "EDIT DATAID("CMDDATID") MACRO("EDITMACR")"         /* @AS */
      OTHERWISE
           "BROWSE DATAID("CMDDATID")"
@@ -322,14 +322,14 @@ RETURN
 /*  Display RACF command and return code                         @A6  */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @A6 */
-  IF (ERASHOW = "BOTH") | (ERASHOW = "DISPLAY") THEN DO       /* @AQ */
+  IF (SETMSHOW = "BOTH") | (SETMSHOW = "DISPLAY") THEN DO     /* @AQ */
      PARSE VAR CMD MSG1 60 MSG2 121 MSG3                      /* @A6 */
      MSG4 = "Return code = "cmd_rc                            /* @AI */
      "ADDPOP ROW(6) COLUMN(4)"                                /* @AG */
      "DISPLAY PANEL("PANELM2")"                               /* @AF */
      "REMPOP"                                                 /* @AG */
   END                                                         /* @AP */
-  IF (ERASHOW = "BOTH") | (ERASHOW = "LOG") THEN DO           /* @AQ */
+  IF (SETMSHOW = "BOTH") | (SETMSHOW = "LOG") THEN DO         /* @AQ */
      zerrsm = "RACFADM "REXXPGM" RC="cmd_rc                   /* @AY */
      zerrlm = cmd                                             /* @AP */
      'log msg(isrz003)'                                       /* @AP */

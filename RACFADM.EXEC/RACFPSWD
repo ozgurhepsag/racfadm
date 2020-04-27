@@ -3,9 +3,10 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AB  200426  RACFA    Chged var. ERAIPSWD to SETTPSWD (user pswd)  */
 /* @AA  200425  RACFA    Chk Settings (Opt 0) 'Initial Password' field*/
 /* @A9  200424  RACFA    Added lower case to random password          */
-/* @A8  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
+/* @A8  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @A7  200422  RACFA    Ensure the REXX program name is 8 chars      */
 /* @A6  200422  TRIDJK   Use variable REXXPGM in log msg              */
 /* @A5  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
@@ -22,18 +23,18 @@ REXXPGM  = LEFT(REXXPGM,8)                                    /* @A8 */
 
 parse arg userid
 Address ISPExec
-  "VGET (ERASHOW ERATRACE ERAADMN ERAIPSWD) ASIS"             /* @AA */
-  If (eratrace <> 'NO') then do                               /* @A4 */
+  "VGET (SETMSHOW SETMTRAC SETMADMN SETTPSWD) ASIS"           /* @AB */
+  If (SETMTRAC <> 'NO') then do                               /* @A4 */
      Say "*"COPIES("-",70)"*"                                 /* @A4 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A4 */
      Say "*"COPIES("-",70)"*"                                 /* @A4 */
-     if (eratrace <> 'PROGRAMS') THEN                         /* @A5 */
-        interpret "Trace "SUBSTR(ERATRACE,1,1)                /* @A4 */
+     if (SETMTRAC <> 'PROGRAMS') THEN                         /* @A5 */
+        interpret "Trace "SUBSTR(SETMTRAC,1,1)                /* @A4 */
   end                                                         /* @A4 */
-  If (ERAIPSWD = "") THEN                                     /* @AA */
+  If (SETTPSWD = "") THEN                                     /* @AB */
      pswd = newpswd()                                         /* @AA */
   else                                                        /* @AA */
-     pswd = ERAIPSWD                                          /* @AA */
+     pswd = SETTPSWD                                          /* @AB */
   'ADDPOP'
   'DISPLAY PANEL('panelpw')'                                  /* @A2 */
   disprc = RC                                                 /* @A3 */
@@ -62,7 +63,7 @@ EXIT cmd_rc                                                   /* @A3 */
 /*  If tracing is on, display flower box                         @A4  */
 /*--------------------------------------------------------------------*/
 GOODBYE:                                                      /* @A4 */
-  If (eratrace <> 'NO') then do                               /* @A4 */
+  If (SETMTRAC <> 'NO') then do                               /* @A4 */
      Say "*"COPIES("-",70)"*"                                 /* @A4 */
      Say "*"Center("End Program = "REXXPGM,70)"*"             /* @A4 */
      Say "*"COPIES("-",70)"*"                                 /* @A4 */
@@ -106,7 +107,7 @@ EXCMD:
   address TSO cmd
   cmd_rc = rc
   x = OUTTRAP('OFF')
-  if (erashow <> 'NO') then
+  if (SETMSHOW <> 'NO') then
      call SHOWCMD
   if (subword(msg.1,1,1)= 'ICH11009I') |,
      (subword(msg.1,1,1)= 'ICH10006I') |,
@@ -116,14 +117,14 @@ RETURN
 /*  Display RACF command and return code                              */
 /*--------------------------------------------------------------------*/
 SHOWCMD:
-  IF (ERASHOW = "BOTH") | (ERASHOW = "DISPLAY") THEN DO
+  IF (SETMSHOW = "BOTH") | (SETMSHOW = "DISPLAY") THEN DO
      PARSE VAR CMD MSG1 60 MSG2 121 MSG3
      MSG4 = "Return code = "cmd_rc
      "ADDPOP ROW(6) COLUMN(4)"
      "DISPLAY PANEL("PANELM2")"
      "REMPOP"
   END
-  IF (ERASHOW = "BOTH") | (ERASHOW = "LOG") THEN DO
+  IF (SETMSHOW = "BOTH") | (SETMSHOW = "LOG") THEN DO
      zerrsm = "RACFADM "REXXPGM" RC="WORD(cmd_rc,1)           /* @A6 */
      zerrlm = cmd
      'log msg(isrz003)'

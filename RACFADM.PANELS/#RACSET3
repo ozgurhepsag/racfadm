@@ -7,8 +7,8 @@
 %Command ===>_ZCMD                                                             +
 %
 +Adding TSO userid:
-!  Initial password +The initial password given to a new TSO user or when
-+                    resetting an individuals password%(Option 5 and line
+!  Default password +The initial password given to a new TSO user or when
++                    resetting an individual's password%(Option 5 and line
 +                   %command PW).+ The password can be in upper/lower case and
 +                    if left%blank,+will produce a%random+password (default)
 +
@@ -16,7 +16,7 @@
 +
 !  ISPPROF dataset  +The name of the TSO profile
 +
-!  JOBLIB dataset   +The PDS dataset to be allocated for a new TSO user
+!  User dataset     +The PDS dataset to be allocated for a new TSO user
 +                    (optional)
 +
 +

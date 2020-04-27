@@ -12,7 +12,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @AY  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
+/* @AY  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @AX  200422  RACFA    Fixed IRRXUTIL RC when displaying RACF cmds  */
 /* @AW  200422  RACFA    Ensure the REXX program name is 8 chars      */
 /* @AV  200422  RACFA    Use variable REXXPGM in log msg              */
@@ -36,7 +36,7 @@
 /* @AD  200316  RACFA    Added spacing after semi-colon               */
 /* @AC  200316  RACFA    Break up DATA field into multi-line msg      */
 /* @AB  200316  RACFA    Added a space after semi-colon               */
-/* @AA  200316  RACFA    Added ERATRACE=YES, then TRACE R             */
+/* @AA  200316  RACFA    Added SETMTRAC=YES, then TRACE R             */
 /* @A9  200316  RACFA    Display RACF cmd (IRXXUTIL) after execution  */
 /* @A8  200315  RACFA    If RC>0, then chg class variable (USER/GROUP)*/
 /* @A7  200315  RACFA    Del/add space in front of data               */
@@ -76,13 +76,13 @@ irrxout. = ''
 irrx     = 0
 
 ADDRESS ISPEXEC
-  "VGET (ERADISP ERASHOW ERATRACE) ASIS"                      /* @A9 */
-  If (eratrace <> 'NO') then do                               /* @AS */
+  "VGET (SETGDISP SETMSHOW SETMTRAC) ASIS"                    /* @A9 */
+  If (SETMTRAC <> 'NO') then do                               /* @AS */
      Say "*"COPIES("-",70)"*"                                 /* @AS */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AS */
      Say "*"COPIES("-",70)"*"                                 /* @AS */
-     if (eratrace <> 'PROGRAMS') THEN                         /* @AT */
-        interpret "Trace "SUBSTR(ERATRACE,1,1)                /* @AS */
+     if (SETMTRAC <> 'PROGRAMS') THEN                         /* @AT */
+        interpret "Trace "SUBSTR(SETMTRAC,1,1)                /* @AS */
   end                                                         /* @AS */
 
   /* Call IRRXUTIL to extract the desired profile        */
@@ -182,7 +182,7 @@ EXIT
 /*  If tracing is on, display flower box                         @AS  */
 /*--------------------------------------------------------------------*/
 GOODBYE:                                                      /* @AS */
-  If (eratrace <> 'NO') then do                               /* @AS */
+  If (SETMTRAC <> 'NO') then do                               /* @AS */
      Say "*"COPIES("-",70)"*"                                 /* @AS */
      Say "*"Center("End Program = "REXXPGM,70)"*"             /* @AS */
      Say "*"COPIES("-",70)"*"                                 /* @AS */
@@ -244,9 +244,9 @@ Address ISPExec
     call Goodbye                                              /* @AS */
   end
   Select                                                      /* @A4 */
-     When (ERADISP = "VIEW") THEN                             /* @A4 */
+     When (SETGDISP = "VIEW") THEN                            /* @A4 */
           "VIEW DATAID("id") MACRO("EDITMACR")"               /* @AK */
-     When (ERADISP = "EDIT") THEN                             /* @A4 */
+     When (SETGDISP = "EDIT") THEN                            /* @A4 */
           "EDIT DATAID("id") MACRO("EDITMACR")"               /* @AK */
      Otherwise                                                /* @A4 */
           'browse dataid('id')'                               /* @A4 */
@@ -263,7 +263,7 @@ EXCCMD:                                                       /* @A9 */
   cmd = "IRRXUTIL('EXTRACT','"class"','"profile"','RACF',)"   /* @AP */
   interpret 'cmd_rc = 'cmd                                    /* @A9 */
   cmd_rc = WORD(cmd_rc,1)                                     /* @AX */
-  if (erashow <> 'NO') then                                   /* @AG */
+  if (SETMSHOW <> 'NO') then                                  /* @AG */
      call SHOWCMD                                             /* @A9 */
   if (WORD(cmd_rc,1) = 12) then                               /* @AN */
      call racfmsgs ERR20                                      /* @AN */
@@ -272,14 +272,14 @@ RETURN                                                        /* @A9 */
 /*  Display RACF command and return code                         @A9  */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @A9 */
-  IF (ERASHOW = "BOTH") | (ERASHOW = "DISPLAY") THEN DO       /* @AH */
+  IF (SETMSHOW = "BOTH") | (SETMSHOW = "DISPLAY") THEN DO     /* @AH */
      PARSE VAR CMD MSG1 60 MSG2 121 MSG3                      /* @A9 */
      MSG4 = "Return code = "cmd_rc                            /* @A9 */
      "ADDPOP ROW(6) COLUMN(4)"                                /* @A9 */
      "DISPLAY PANEL("PANELM2")"                               /* @A9 */
      "REMPOP"                                                 /* @A9 */
   END                                                         /* @AG */
-  IF (ERASHOW = "BOTH") | (ERASHOW = "LOG") THEN DO           /* @AH */
+  IF (SETMSHOW = "BOTH") | (SETMSHOW = "LOG") THEN DO         /* @AH */
      zerrsm = "RACFADM "REXXPGM" RC="WORD(cmd_rc,1)           /* @AV */
      zerrlm = cmd                                             /* @AG */
      'log msg(isrz003)'                                       /* @AG */

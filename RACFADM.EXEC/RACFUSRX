@@ -3,7 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @A9  200423  RACFA    Move PARSE REXXPGM name up above IF ERATRACE */
+/* @A9  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @A8  200423  RACFA    Ensure REXX program name is 8 chars long     */
 /* @A7  200422  TRIDJK   Added capability to browse/edit/view file    */
 /* @A6  200417  RACFA    Removed 'enq(exclu)', not needed             */
@@ -11,7 +11,7 @@
 /* @A4  200412  RACFA    Chg TRACE to allow 'L'abels or 'R'esults     */
 /* @A3  200301  RACFA    Standardize messaging                        */
 /* @A2  200221  RACFA    Make 'ADDRESS ISPEXEC' defualt, reduce code  */
-/* @A1  200220  RACFA    Added ERATRACE=YES, then TRACE R             */
+/* @A1  200220  RACFA    Added SETMTRAC=YES, then TRACE R             */
 /* @A0  200123  TRIDJK   Created REXX program                         */
 /*====================================================================*/
 EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @A7 */
@@ -19,13 +19,13 @@ parse source . . REXXPGM .                                    /* @A9 */
 REXXPGM  = LEFT(REXXPGM,8)                                    /* @A9 */
 
 ADDRESS ISPEXEC                                               /* @A2 */
-  "VGET (ERATRACE ERADISP) ASIS"                              /* @A7 */
-  If (eratrace <> 'NO') then do                               /* @A4 */
+  "VGET (SETMTRAC SETGDISP) ASIS"                             /* @A7 */
+  If (SETMTRAC <> 'NO') then do                               /* @A4 */
      Say "*"COPIES("-",70)"*"                                 /* @A4 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A4 */
      Say "*"COPIES("-",70)"*"                                 /* @A4 */
-     if (eratrace <> 'PROGRAMS') THEN                         /* @A5 */
-        interpret "Trace "SUBSTR(ERATRACE,1,1)                /* @A4 */
+     if (SETMTRAC <> 'PROGRAMS') THEN                         /* @A5 */
+        interpret "Trace "SUBSTR(SETMTRAC,1,1)                /* @A4 */
   end                                                         /* @A4 */
   /*--------------------------------------------*/
   /*  Call IRRUT100 for cross reference report  */
@@ -62,9 +62,9 @@ Address ISPExec
      call Goodbye                                             /* @DK */
   end
   Select                                                      /* @A7 */
-     When (ERADISP = "VIEW") THEN                             /* @A7 */
+     When (SETGDISP = "VIEW") THEN                            /* @A7 */
           "VIEW DATAID("id") MACRO("EDITMACR")"               /* @A7 */
-     When (ERADISP = "EDIT") THEN                             /* @A7 */
+     When (SETGDISP = "EDIT") THEN                            /* @A7 */
           "EDIT DATAID("id") MACRO("EDITMACR")"               /* @A7 */
      Otherwise                                                /* @A7 */
           'browse dataid('id')'                               /* @A7 */
@@ -82,7 +82,7 @@ EXIT
 /*  If tracing is on, display flower box                         @DK  */
 /*--------------------------------------------------------------------*/
 GOODBYE:                                                      /* @DK */
-  If (eratrace <> 'NO') then do                               /* @DK */
+  If (SETMTRAC <> 'NO') then do                               /* @DK */
      Say "*"COPIES("-",70)"*"                                 /* @DK */
      Say "*"Center("End Program = "REXXPGM,70)"*"             /* @DK */
      Say "*"COPIES("-",70)"*"                                 /* @DK */

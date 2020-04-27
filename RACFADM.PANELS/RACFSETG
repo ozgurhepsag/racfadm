@@ -10,63 +10,83 @@
 ^Command ===>_ZCMD                                                             +
 ^
 ^General:
-+  Administrator{....._Z~ (Y=Yes, N=No)                {Administrator authority
-+  Admin RACF API{...._Z~ (Y=Yes, N=No)                {IRRXUTIL to add/chg/prof
 +  Default filter{...._Z                              { Default search string
-+  Status interval{..._Z ~(0-9999){or_Z ~% (0-99)      {Progress message number
++  Status interval{..._Z   ~(0-9999){or_Z ~% (0-99)    {Progress message number
 +  Display files{....._Z~ (B=Browse, E=Edit, V=View)   {Display reports/files
 +  Confirm panel{....._Z~ (Y=Yes, N=No)                {Confirm command request
++
+^Management:
++  Administrator{....._Z~ (Y=Yes, N=No)                {Line cmds add, chg, etc.
++  Admin RACF API{...._Z~ (Y=Yes, N=No)                {IRRXUTIL to add/chg/prof
 +  RACF commands{....._Z~ (D=Display, L=Log, B=Both, N=No)    {View  RACF cmds
 +  REXX trace{........_Z~ (L=Labels, P=Pgms, R=Results, N=No) {Trace REXX pgms
 +
 ^Adding TSO userids:
-+  Initial password{..@Z       ~ (Blank=Random pswd)  { New users password
++  Default password{..@Z       ~ (Blank=Random pswd)  { New/chg users password
 +  User catalog{......_Z                              { z/OS alias catalog
 +  ISPPROF dataset{..._Z                              { TSO ISPF profile
-+  JOBLIB dataset{...._Z                              { TSO programmer library
++  User dataset{......_Z                              { TSO programmer library
 )INIT
-  VGET (ERAADMN  ERARAPI ERAFLTR ERASINT ERASINTP ERADISP ERACONF +
-        ERASHOW ERATRACE ERAIPSWD ERACTLG ERAISPP ERAULIB) PROFILE
-  IF (&ERASINT NE &Z)
-     &ERASINTP = ''
-  &ERAADMN  = TRANS (&ERAADMN  YES,Y NO,N *,*)
-  &ERARAPI  = TRANS (&ERARAPI  YES,Y NO,N *,*)
-  &ERACONF  = TRANS (&ERACONF  YES,Y NO,N *,*)
-  &ERASHOW  = TRANS (&ERASHOW  DISPLAY,D LOG,L BOTH,B NO,N *,*)
-  &ERADISP  = TRANS (&ERADISP  BROWSE,B EDIT,E VIEW,V *,*)
-  &ERATRACE = TRANS (&ERATRACE LABELS,L PROGRAMS,P RESULTS,R NO,N *,*)
-  .ZVARS = '(ERAADMN ERARAPI ERAFLTR  ERASINT  ERASINTP ERADISP +
-             ERACONF ERASHOW ERATRACE ERAIPSWD ERACTLG ERAISPP +
-             ERAULIB)'
+  VGET (SETGFLTR SETGSTA SETGSTAP SETGDISP SETGCONF +
+        SETMADMN SETMIRRX SETMSHOW SETMTRAC +
+        SETTPSWD SETTCTLG SETTPROF SETTUDSN) PROFILE
+
+  /* General Settings */
+  IF (&SETGSTA NE &Z)
+     &SETGSTAP = ''
+  &SETGDISP = TRANS (&SETGDISP BROWSE,B EDIT,E VIEW,V *,*)
+  &SETGCONF = TRANS (&SETGCONF YES,Y NO,N *,*)
+
+  /* Management Settings */
+  &SETMADMN = TRANS (&SETMADMN YES,Y NO,N *,*)
+  &SETMIRRX = TRANS (&SETMIRRX YES,Y NO,N *,*)
+  &SETMSHOW = TRANS (&SETMSHOW DISPLAY,D LOG,L BOTH,B NO,N *,*)
+  &SETMTRAC = TRANS (&SETMTRAC LABELS,L PROGRAMS,P RESULTS,R NO,N *,*)
+
+  .ZVARS = '(SETGFLTR SETGSTA  SETGSTAP SETGDISP SETGCONF +
+             SETMADMN SETMIRRX SETMSHOW SETMTRAC +
+             SETTPSWD SETTCTLG SETTPROF SETTUDSN)'
+
   .HELP   = #RACSET1
-  .CURSOR = ERAADMN
+  .CURSOR = SETGFLTR
 )PROC
-  &ERAADMN  = TRANS (&ERAADMN  Y,YES, N,NO *,*)
-  &ERARAPI  = TRANS (&ERARAPI  Y,YES, N,NO *,*)
-  &ERACONF  = TRANS (&ERACONF  Y,YES, N,NO *,*)
-  &ERASHOW  = TRANS (&ERASHOW  D,DISPLAY L,LOG B,BOTH N,NO *,*)
-  &ERADISP  = TRANS (&ERADISP  B,BROWSE E,EDIT V,VIEW *,*)
-  &ERATRACE = TRANS (&ERATRACE L,LABELS P,PROGRAMS R,RESULTS, N,NO *,*)
-  VER (&ERAADMN,NB,LIST,NO,YES)
-  VER (&ERARAPI,NB,LIST,NO,YES)
-  IF (&ERAADMN = NO)
-     &ERARAPI = NO
-  IF (&ERASINT > 0)
-     VER (&ERASINT,NB,RANGE,0,9999)
-     VER (&ERASINTP,LIST, )
-  IF (&ERASINTP > 0)
-     VER (&ERASINT,LIST, )
-     VER (&ERASINTP,NB,RANGE,1,99)
-  IF (&ERASINT = &Z & &ERASINTP = &Z)
-     &ERASINT = 0
-  VER (&ERADISP,NB,LIST,BROWSE,EDIT,VIEW)
-  VER (&ERACONF,NB,LIST,NO,YES)
-  VER (&ERASHOW,NB,LIST,DISPLAY,LOG,BOTH,NO)
-  VER (&ERATRACE,NB,LIST,LABELS,PROGRAMS,RESULTS,NO)
-  IF (&ERACTLG NE ' ')
-     VER (&ERAISPP,NB)
-  VPUT (ERAADMN  ERARAPI ERAFLTR  ERASINT ERASINTP ERADISP ERACONF +
-        ERASHOW ERATRACE ERAIPSWD ERACTLG ERAISPP ERAULIB) PROFILE
+  /* General Settings */
+  &SETGCONF = TRANS (&SETGCONF Y,YES, N,NO *,*)
+  &SETGDISP = TRANS (&SETGDISP B,BROWSE E,EDIT V,VIEW *,*)
+
+  /* Management Settings */
+  &SETMADMN = TRANS (&SETMADMN Y,YES, N,NO *,*)
+  &SETMIRRX = TRANS (&SETMIRRX Y,YES, N,NO *,*)
+  &SETMSHOW = TRANS (&SETMSHOW D,DISPLAY L,LOG B,BOTH N,NO *,*)
+  &SETMTRAC = TRANS (&SETMTRAC L,LABELS P,PROGRAMS R,RESULTS, N,NO *,*)
+
+  /* General Settings */
+  IF (&SETGSTA > 0)
+     VER (&SETGSTA,NB,RANGE,0,9999)
+     VER (&SETGSTAP,LIST, )
+  IF (&SETGSTAP > 0)
+     VER (&SETGSTA,LIST, )
+     VER (&SETGSTAP,NB,RANGE,1,99)
+  IF (&SETGSTA = &Z & &SETGSTAP = &Z)
+     &SETGSTA = 0
+  VER (&SETGDISP,NB,LIST,BROWSE,EDIT,VIEW)
+  VER (&SETGCONF,NB,LIST,NO,YES)
+
+  /* Management Settings */
+  VER (&SETMADMN,NB,LIST,NO,YES)
+  VER (&SETMIRRX,NB,LIST,NO,YES)
+  IF (&SETMADMN = NO)
+      &SETMIRRX = NO
+  VER (&SETMSHOW,NB,LIST,DISPLAY,LOG,BOTH,NO)
+  VER (&SETMTRAC,NB,LIST,LABELS,PROGRAMS,RESULTS,NO)
+
+  /* Adding TSO Userid Settings */
+  IF (&SETTCTLG NE ' ')
+     VER (&SETTPROF,NB)
+
+  VPUT (SETGFLTR SETGSTA SETGSTAP SETGDISP SETGCONF +
+        SETMADMN SETMIRRX SETMSHOW SETMTRAC +
+        SETTPSWD SETTCTLG SETTPROF SETTUDSN) PROFILE
 )END
 /*--------------------------------------------------------------------*/
 /*                             Comments                               */
@@ -74,5 +94,13 @@
 /*                                                                    */
 /*  1) The variables contain the full word, no abbreviations, in      */
 /*     hopes of making it easier to understand/maintain code          */
+/*                                                                    */
+/*  2) Naming standards for variables:                                */
+/*     - Syntax                                                       */
+/*         SET#@@@@                                                   */
+/*     - Where                                                        */
+/*         SET  ... Settings (option 0)                               */
+/*         #    ... G=General, M=Management and T=Adding TSO Userid   */
+/*         @@@@ ... Field name                                        */
 /*                                                                    */
 /*--------------------------------------------------------------------*/
