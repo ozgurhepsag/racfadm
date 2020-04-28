@@ -384,7 +384,7 @@ GET_PASSPHRASE:                                               /* @AF */
   Address TSO cmd                                             /* @AF */
   cmd_rc = rc                                                 /* @AF */
   x = outtrap('off')                                          /* @AF */
-  if cmd_rc > 0 then return                                   /* @AF */
+  if (cmd_rc > 0) then return                                 /* @AF */
   Do i = 1 to var.0                                           /* @AF */
      parse var var.i 'PASSPHRASE(' pphrase ')'                /* @AF */
      if (pphrase = 'ON') | (pphrase = 'OFF') then leave       /* @AF */

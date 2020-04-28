@@ -10,7 +10,7 @@
 +
 %Help+displays tutorials on 53 commonly used RACF commands.
 +
-+Primary Commands:
++Primary Commands
 %    Locate cmd next   +Locate the requested command in the table
 %    Only string       +Remove all rows without string (ALL is alias)
 @  *%Refresh           +Refresh the table after using ONLY

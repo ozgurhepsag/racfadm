@@ -2,6 +2,14 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  28 Apr 2020 - V21R8
+     - Standards (Option S)
+       -- Added bullets/examples
+     - Other Items
+       -- Minor updates to:
+          * Panels #RACHEL1/2 and RACFMENU
+          * REXX program RACFPRMS
+
   27 Apr 2020 - V21R7
      - Tutorials (Option T)
        -- Minor updates to panels #RACSET1/2/3

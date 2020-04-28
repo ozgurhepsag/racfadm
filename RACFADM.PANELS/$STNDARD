@@ -13,26 +13,57 @@
          RACF???? ... Menu, data entry and table panels
        Where ? can be anything
      - Code
-       -- When possible, document items of interest at the bottom of
-          the member as comments
+       -- At the bottom of the panel are comments documenting
+          items of interest
+       -- All panels allow invocation of a tutorial panel
+     - Main menu
+       -- Number entries (1-99) are designated for obtaining,
+          displaying and changing the RACF database (Userids,
+          Groups, etc.) and customizing the utility (Settings)
+       -- Alphabetic entries (A-Z) are used to assist in maintaining
+          or documenting RACFADM
+       -- All entries are point-n-shoot fields
+     - Tables
+       -- Panels displaying tables
+          * Primary commands SORT, LOCATE, ONLY and RESET are
+            available and operate in the same manner
+          * The SORTed column is the color turquois and un-sorted
+            columns are green
+          * The LOCATE command operates on the SORTed column
+          * Column headers are point-n-shoot sort fields
 
   2) REXX
      - Member names
          $$DIR ...... Directory of all members and a description
          RACF???? ... REXX programs, where ???? can be anything
      - Code
-       -- Document line changes by commenting/using a flag character
-          /* @?? */ in columns 62-71, where ??, 1st character is
-          A-Z, and 2nd character is 1-9, then A-Z
-       -- Place a flower box above the subroutine documenting what
-          the routine accomplishes/does
+       -- Changes are documented by commenting/using a flag character
+          * '/* @?? */' in columns 62-71
+            o Where ??, 1st character is A-Z, and 2nd character is
+              is 1-9, then A-Z
+          * Example:
+              /*------------------------------------------------------*
+              /* FLG  YYMMDD  USERID   DESCRIPTION                    *
+              /* ---  ------  -------  -------------------------------*
+              /* @A1  200420  RACFA    Obtain REXX pgm name           *
+              /* @A0  200419  RACFA    Created REXX                   *
+              /*======================================================*
+              parse source . . REXXPGM .                     /* @A1 */
+              REXXPGM  = LEFT(REXXPGM,8)                     /* @A1 */
+       -- A comment box is coded above each subroutine, documenting
+          the purpose of the code
+       -- All REXX programs allow:
+          * Viewing and logging the RACF commands and the return code,
+            by changing the Settings (option 0) field 'RACF commands'
+          * Tracing the REXX program, by changing the Settings
+            (Option 0) field 'REXX trace'
 
   3) Settings
-     - Below are the naming standard for variables used to save
-       the user's settings
+     - The following are the naming standard for variables used to save
+       the user's settings (menu option 0)
        -- Syntax
             SET#????
        -- Where
-            SET  ... Settings (option 0)
+            SET  ... Settings (menu option 0)
             #    ... G=General, M=Management and T=Adding TSO Userid
             ???? ... Field name

@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V21R7+)\-\
++\-\(%RACFADM - RACF Administration - V21R8+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options       %C ~Changes   +Version/updates
@@ -172,7 +172,12 @@
 /*     capability to type =1, =2, =n to skip around from one          */
 /*     panel to another                                               */
 /*                                                                    */
-/*  2) The default Settings, menu option 0, are defined in the        */
+/*  2) The )INIT section executes a REXX code to:                     */
+/*     - Obtain RACF information displayed at the bottom of panel     */
+/*       (RACF, Dbase, z/OS, etc)                                     */
+/*     - Verify RACF is executing, if not issue message               */
+/*                                                                    */
+/*  3) The default Settings, menu option 0, are defined in the        */
 /*     )INIT section of this panel and the naming standards for       */
 /*     the these variables are:                                       */
 /*     - Syntax                                                       */
@@ -181,18 +186,20 @@
 /*         SET  ... Settings (option 0)                               */
 /*         #    ... G=General, M=Management and T=Adding TSO Userid   */
 /*         @@@@ ... Field name                                        */
+/*     - The variables contain the full word, no abbreviations, in    */
+/*       hopes of making it easier to understand/maintain code,       */
+/*       for example: YES, instead of Y                               */
 /*                                                                    */
-/*  3) The variables contain the full word, no abbreviations, in      */
-/*     hopes of making it easier to understand/maintain code          */
+/*  4) The following are the menu entry standards:                    */
+/*     - Number entries (1-99) are designated for obtaining,          */
+/*       displaying and changing the RACF database (Userids,          */
+/*       Groups, etc.) and customizing the utility (Settings)         */
+/*     - Alphabetic entries (A-Z) are used to assist in maintaining   */
+/*       or documenting RACFADM                                       */
 /*                                                                    */
-/*  4) Below menu options are hidden, not displayed:                  */
+/*  5) Below menu options are hidden, not displayed:                  */
 /*       9  Analyze   Verify ACL                                      */
 /*       B  BookMgr   RACF manuals                                    */
-/*                                                                    */
-/*  5) The )INIT section executes a REXX code to:                     */
-/*     - Obtain RACF information displayed at the bottom of panel     */
-/*       (RACF, Dbase, z/OS, etc)                                     */
-/*     - Verify RACF is executing, if not issue message               */
 /*                                                                    */
 /*  6) The menu entries (Settings, User, etc.) are point-n-shoot      */
 /*     fields                                                         */
