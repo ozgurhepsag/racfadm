@@ -6,7 +6,7 @@
 %Tutorial+\-\(%RACFADM - Settings - 2 of 3+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
-+Management:
++Management
 !  Admin RACF API   %Yes+to use RACF API module (IRRXUTIL) to obtain
 +                    information when Adding/Changing a userid and allow access
 +                    to use the line command Profile,%No+is the default

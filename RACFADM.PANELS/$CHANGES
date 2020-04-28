@@ -2,6 +2,20 @@
 *                          RACFADM - Changes                           *
 *----------------------------------------------------------------------*
 
+  27 Apr 2020 - V21R7
+     - Tutorials (Option T)
+       -- Minor updates to panels #RACSET1/2/3
+
+  27 Apr 2020 - V21R6
+     - RACFdb (Option 7)
+       -- Display parmeters in a table
+          * Primary commands are SORT, LOCATE, ONLY and RESET
+            o These commands operate like all the other panels
+       -- Added 'Password phrase'
+       -- Updated tutorial
+     - Other Items
+       -- Update comments at bottom of panels RACFMENU and RACFSETG
+
   27 Apr 2020 - V21R5
      - Main Menu
        -- Adjusted spacing on menu entries
@@ -34,8 +48,7 @@
        -- Updated comments to right of some fields
        -- Fixed 'Status interval' field, now allows typing in a
           four digit number, prior was two digits
-       -- Standardized variable names that are used to save the
-          settings:
+       -- Standardized variable names used to save the settings:
           o Syntax:
               SET#@@@@
           o Where:

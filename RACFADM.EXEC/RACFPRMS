@@ -3,6 +3,9 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AG  200427  RACFA    Standardize SORT, LOCATE, ONLY & RESET cmds  */
+/* @AF  200427  TRIDJK   Added 'Password phrase'                      */
+/* @AE  200427  LBD      Convert to table display                     */
 /* @AD  200424  TRIDJK   Swapped rcvtelen & rcvtslen (end/start leng) */
 /* @AC  200424  TRIDJK   Add password lowercase/spc char/ext support  */
 /* @AB  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
@@ -19,8 +22,10 @@
 /* @A0  011229  NICORIZ  Created REXX, V2.1, www.rizzuto.it           */
 /*====================================================================*/
 PANEL19  = "RACFPRMS"   /* RACF parameters, menu option 7  */ /* @A5 */
+TBLA     = "RA"TIME('S')                                      /* @AE */
 parse source . . REXXPGM .                                    /* @AB */
 REXXPGM  = LEFT(REXXPGM,8)                                    /* @AB */
+parse value '' with null                                      /* @AE */
 
 ADDRESS ISPEXEC                                               /* @A4 */
   "VGET (SETMTRAC) ASIS"                                      /* @A3 */
@@ -49,15 +54,118 @@ ADDRESS ISPEXEC                                               /* @A4 */
   call Racf_terminal_options
   call Racf_tape_options
   call Racf_statistics
-  'display panel('PANEL19')'                                  /* @A5 */
+  call Get_passphrase                       /* Password phrase   @AF */
 
+  SORT = "DESCU,C,A"                                          /* @AG */
+  sortdesc = 'D'; sortvalu = 'A'                              /* @AG */
+  call Build_Table                                            /* @AE */
+  /*----------------------------------*/                      /* @AE */
+  /* Display the table and process it */                      /* @AE */
+  /*----------------------------------*/                      /* @AE */
+  Do forever                                                  /* @AE */
+     'tbdispl' tbla 'panel('panel19')'                        /* @AE */
+     if (rc > 0) then leave                                   /* @AE */
+     /*-------------------------*/                            /* @AE */
+     /* Reset racfrfnd to blank */                            /* @AE */
+     /*-------------------------*/                            /* @AE */
+     PARSE VAR ZCMD ZCMD PARM SEQ                             /* @AG */
+     Select                                                   /* @AG */
+        When (abbrev('LOCATE',zcmd,1) = 1) then               /* @AG */
+             call do_locate                                   /* @AG */
+        When (abbrev('ONLY',zcmd,1) = 1) then                 /* @AG */
+             call do_only                                     /* @AG */
+        when (abbrev('SORT',zcmd,1) = 1) then do              /* @AG */
+             if (abbrev('DESCRIPTION',PARM,1)) THEN           /* @AG */
+                call do_sort 'DESCU'                          /* @AG */
+             if (abbrev('VALUE',PARM,1)) THEN                 /* @AG */
+                call do_sort 'VALUE'                          /* @AG */
+        end                                                   /* @AG */
+        When (abbrev('RESET',zcmd,1) = 1) then do             /* @AG */
+             sort     = 'DESCU,C,A'                           /* @AG */
+             sortdesc = 'A'; sortvalu = 'A'                   /* @AG */
+             "TBEND" tbla                                     /* @AG */
+             call Build_table                                 /* @AG */
+        end                                                   /* @AG */
+        otherwise nop                                         /* @AG */
+     end                                                      /* @AG */
+  end                                                         /* @AE */
+  'tbend' tbla                                                /* @AE */
+                                                              /* @AE */
   If (SETMTRAC <> 'NO') then do                               /* @A6 */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */
      Say "*"Center("End Program = "REXXPGM,70)"*"             /* @A6 */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */
   end                                                         /* @A6 */
-
-RETURN 0000                                 /* exit                   */
+                                                              /* @AE */
+RETURN 0000                                                   /* @AE */
+/*--------------------------------------------------------------------*/
+/*  Reset the table                                              @AE  */
+/*--------------------------------------------------------------------*/
+Do_Reset:                                                     /* @AE */
+  'tbend' tbla                                                /* @AE */
+  call table_create                                           /* @AE */
+  call build_table                                            /* @AE */
+RETURN                                                        /* @AE */
+/*--------------------------------------------------------------------*/
+/*  Sort the table - 1st ascending then descending               @AE  */
+/*--------------------------------------------------------------------*/
+DO_SORT:                                                      /* @AE */
+  parse arg sortcol                                           /* @AG */
+  INTERPRET "TMPSEQ = SORT"substr(SORTCOL,1,4)                /* @AG */
+  select                                                      /* @AG */
+     when (seq <> "") then do                                 /* @AG */
+          if (seq = 'A') then                                 /* @AG */
+             tmpseq = 'D'                                     /* @AG */
+          else                                                /* @AG */
+             tmpseq = 'A'                                     /* @AG */
+          sort = sortcol',C,'seq                              /* @AG */
+     end                                                      /* @AG */
+     when (seq = ""),                                         /* @AG */
+        & (tmpseq = 'A') then do                              /* @AG */
+           sort   = sortcol',C,A'                             /* @AG */
+           tmpseq = 'D'                                       /* @AG */
+     end                                                      /* @AG */
+     Otherwise do                                             /* @AG */
+        sort   = sortcol',C,D'                                /* @AG */
+        tmpseq = 'A'                                          /* @AG */
+     end                                                      /* @AG */
+  end                                                         /* @AG */
+  INTERPRET "SORT"SUBSTR(SORTCOL,1,4)" = TMPSEQ"              /* @AG */
+  'TBSort' tbla 'Fields('sort')'                              /* @AG */
+  'tbtop'  tbla                                               /* @AE */
+  CLRDESC = "GREEN"; CLRVALU = "GREEN"                        /* @AG */
+  INTERPRET "CLR"SUBSTR(SORTCOL,1,4)" = 'TURQ'"               /* @AG */
+RETURN                                                        /* @AE */
+/*--------------------------------------------------------------------*/
+/*  Locate table entry                                           @AE  */
+/*--------------------------------------------------------------------*/
+DO_LOCATE:                                                    /* @AE */
+  ASTERICK = "*"                                              /* @AG */
+  PARSE VAR SORT LOCARG "," .                                 /* @AG */
+  INTERPRET LOCARG" = parm||ASTERICK"                         /* @AG */
+  PARSE VAR SORT . "," . "," SEQ                              /* @AG */
+  IF (SEQ = "D") THEN                                         /* @AG */
+     CONDLIST = "LE"                                          /* @AG */
+  ELSE                                                        /* @AG */
+     CONDLIST = "GE"                                          /* @AG */
+  "TBSCAN "tbla,                                              /* @AG */
+          "ARGLIST("LOCARG") CONDLIST("CONDLIST")"            /* @AG */
+RETURN                                                        /* @AE */
+/*--------------------------------------------------------------------*/
+/*  Only display rows with the provided text string              @AE  */
+/*--------------------------------------------------------------------*/
+DO_ONLY:                                                      /* @AE */
+  'tbtop' tbla                                                /* @AE */
+  hit = 0                                                     /* @AE */
+  do forever                                                  /* @AE */
+     'tbskip' tbla                                            /* @AE */
+     if (rc > 0) then leave                                   /* @AE */
+     hit = 0                                                  /* @AE */
+     if (pos(parm,descu value) > 0) then                      /* @AG */
+        iterate                                               /* @AE */
+     'tbdelete' tbla                                          /* @AE */
+  end                                                         /* @AE */
+RETURN                                                        /* @AE */
 /*--------------------------------------------------------------------*/
 /*  Get initial RCVT values                                           */
 /*--------------------------------------------------------------------*/
@@ -267,3 +375,89 @@ GET_BKP_DATABASE_NAME:                                        /* @A9 */
   BNAME    = D2X(X2D(DSDTBACK) + X2D(21)) /* Addr of backup name     */
   RCVTBDSN = STRIP(STORAGE(BNAME,44))     /* Backup name             */
 RETURN                                                        /* @A9 */
+/*--------------------------------------------------------------------*/
+/*  Get RACF backup database name                                @AF  */
+/*--------------------------------------------------------------------*/
+GET_PASSPHRASE:                                               /* @AF */
+  cmd    = "PARMLIB LIST(LOGON)"                              /* @AF */
+  x = outtrap('var.')                                         /* @AF */
+  Address TSO cmd                                             /* @AF */
+  cmd_rc = rc                                                 /* @AF */
+  x = outtrap('off')                                          /* @AF */
+  if cmd_rc > 0 then return                                   /* @AF */
+  Do i = 1 to var.0                                           /* @AF */
+     parse var var.i 'PASSPHRASE(' pphrase ')'                /* @AF */
+     if (pphrase = 'ON') | (pphrase = 'OFF') then leave       /* @AF */
+  end                                                         /* @AF */
+RETURN                                                        /* @AF */
+/*--------------------------------------------------------------------*/
+/*  Add the data to the table                                    @AE  */
+/*--------------------------------------------------------------------*/
+ADD_T:                                                        /* @AE */
+  parse arg desc 34 value .                                   /* @AE */
+  desc  = strip(desc)                                         /* @AE */
+  descu = translate(desc)                                     /* @AG */
+  value = strip(value)                                        /* @AE */
+  'tbadd' tbla                                                /* @AE */
+RETURN                                                        /* @AE */
+/*--------------------------------------------------------------------*/
+/*  Build the Table with the RACF Information                    @AE  */
+/*--------------------------------------------------------------------*/
+BUILD_TABLE:                                                  /* @AE */
+  'tbcreate' tbla 'names(desc,descu,value) nowrite'           /* @AE */
+  call add_t  'Version                          'RCVTGRNM     /* @AE */
+  call add_t  'Data Base Primary                'RCVTPDSN     /* @AE */
+  call add_t  'Data Base Backup                 'RCVTBDSN     /* @AE */
+  call add_t  'Audit appl                       'RCVTSAPL     /* @AE */
+  call add_t  'Audit operations                 'RCVTSAUO     /* @AE */
+  call add_t  'Audit special                    'RCVTSAUS     /* @AE */
+  call add_t  'Catalogued datasets only         'RCVTSCAT     /* @AE */
+  call add_t  'Dataset protection               'RCVTSADS     /* @AE */
+  call add_t  'Duplicate datasets               'RCVTNDUP     /* @AE */
+  call add_t  'DASD volume protection           'RCVTDVPR     /* @AE */
+  call add_t  'Enhanced generic naming          'RCVTSEGN     /* @AE */
+  call add_t  'Erase on scratch                 'RCVTSEOS     /* @AE */
+  call add_t  'Generic owner                    'RCVTSGNO     /* @AE */
+  call add_t  'Initialize statistics            'RCVTNLSM     /* @AE */
+  call add_t  'JES batch all                    'RCVTJALL     /* @AE */
+  call add_t  'JES early verify                 'RCVTJCHK     /* @AE */
+  call add_t  'JES undefined userid             'RCVTJUND     /* @AE */
+  call add_t  'JES NJE userid                   'RCVTJSYS     /* @AE */
+  call add_t  'JES XBM all                      'RCVTJXAL     /* @AE */
+  call add_t  'List groups access checking      'RCVTSGRC     /* @AE */
+  call add_t  'LU session interval              'RCVTSLUI     /* @AE */
+  call add_t  'Model groups                     'RCVTMGRP     /* @AE */
+  call add_t  'Model users                      'RCVTMUSR     /* @AE */
+  call add_t  'Model GDG                        'RCVTMGDG     /* @AE */
+  call add_t  'Multi factor authentication      'RCVTMFAM     /* @AE */
+  call add_t  'Multi level quiet                'RCVTSMLQ     /* @AE */
+  call add_t  'Multi level secure               'RCVTSMLT     /* @AE */
+  call add_t  'Multi level stable               'RCVTSMLS     /* @AE */
+  call add_t  'Multi level                      'RCVTSMLA     /* @AE */
+  call add_t  'Password attempts                'RCVTPRVK     /* @AE */
+  call add_t  'Password extended support        'RCVTXPWD     /* @AE */
+  call add_t  'Password history                 'RCVTPHIS     /* @AE */
+  call add_t  'Password interval                'RCVTPINV     /* @AE */
+  call add_t  'Password lower case allowed      'RCVTPLCM     /* @AE */
+  call add_t  'Password maximum length          'RCVTELEN     /* @AE */
+  call add_t  'Password minimum length          'RCVTSLEN     /* @AE */
+  call add_t  'Password phrase                  'PPHRASE      /* @AF */
+  call add_t  'Password rules                   'RCVTRULS     /* @AE */
+  call add_t  'Password special chars allowed   'RCVTPSCM     /* @AE */
+  call add_t  'Password warning                 'RCVTPWRN     /* @AE */
+  call add_t  'Protect all                      'RCVTSPRA     /* @AE */
+  call add_t  'Retention period                 'RCVTSRPE     /* @AE */
+  call add_t  'Security label audit             'RCVTSSLA     /* @AE */
+  call add_t  'Security level control           'RCVTSSLC     /* @AE */
+  call add_t  'Single level prefix              'RCVTQUAL     /* @AE */
+  call add_t  'Tape dataset protection          'RCVTTDPR     /* @AE */
+  call add_t  'Tape volume protection           'RCVTTVPR     /* @AE */
+  call add_t  'Terminal authority               'RCVTTAUT     /* @AE */
+  call add_t  'Terminal UACC                    'RCVTTUAC     /* @AE */
+  call add_t  'Userid inactive                  'RCVTPINA     /* @AE */
+  call add_t  'UADS datasets                    'RCVTUADS     /* @AE */
+  call add_t  'UADS volume                      'RCVTUVOL     /* @AE */
+  call add_t  'When program                     'RCVTSWHE     /* @AE */
+  CLRDESC = "TURQ" ; CLRVALU = "GREEN"  /* COL COLORS */      /* @AG */
+  'TBSort' tbla 'Fields('sort')'                              /* @AG */
+RETURN                                                        /* @AE */

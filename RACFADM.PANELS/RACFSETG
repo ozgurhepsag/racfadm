@@ -27,7 +27,7 @@
 +  ISPPROF dataset{..._Z                              { TSO ISPF profile
 +  User dataset{......_Z                              { TSO programmer library
 )INIT
-  VGET (SETGFLTR SETGSTA SETGSTAP SETGDISP SETGCONF +
+  VGET (SETGFLTR SETGSTA  SETGSTAP SETGDISP SETGCONF +
         SETMADMN SETMIRRX SETMSHOW SETMTRAC +
         SETTPSWD SETTCTLG SETTPROF SETTUDSN) PROFILE
 

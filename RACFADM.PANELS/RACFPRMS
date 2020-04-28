@@ -1,96 +1,31 @@
 )ATTR DEFAULT(%+_)
-   $  TYPE(OUTPUT)  INTENS(LOW)  JUST(LEFT) COLOR(TURQ)
-   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON)   JUST(LEFT)   HILITE(USCORE)
-   {  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)   COLOR(BLUE)
-   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)   COLOR(GREEN)
-   @  AREA(SCRL)    EXTEND(ON)
+  01  TYPE(OUTPUT)  INTENS(LOW)  SKIP(ON) COLOR(&CLRDESC)
+  02  TYPE(OUTPUT)  INTENS(LOW)  SKIP(ON) COLOR(&CLRVALU)
+   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON) JUST(LEFT)   HILITE(USCORE)
+   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
+   ~  TYPE(PS)
 )BODY EXPAND(\\)
 +\-\(%RACFADM - RACF Parameters+)\-\
-%Command ===>_ZCMD
+%Command ===>_ZCMD                                              +Scroll==>_SAMT+
 +
-+System parameters: %Access Control CVT (CVTRAC)
-+
-+Current status of RACF parameters
-@area1                                                                         @
-@                                                                              @
-@                                                                              @
-@                                                                              @
-@                                                                              @
-@                                                                              @
-@                                                                              @
-@                                                                              @
-@                                                                              @
-@                                                                              @
-@                                                                              @
-@                                                                              @
-@                                                                              @
-@                                                                              @
-@                                                                              @
-@                                                                              @
-@                                                                              @
-)AREA AREA1
-{\-\
-+ Version{..........................$RCVTGRNM+
-+ Database (Primary){...............$RCVTPDSN
-+ Database (Backup){................$RCVTBDSN
-{\-\
-+ Audit appl{.......................$RCVTSAPL+
-+ Audit operations{.................$RCVTSAUO+
-+ Audit special{....................$RCVTSAUS+
-+ Catalogued datasets only{.........$RCVTSCAT+
-+ Dataset protection{...............$RCVTSADS+
-+ Duplicate datasets{...............$RCVTNDUP+
-+ DASD volume protection{...........$RCVTDVPR+
-+ Enhanced generic naming{..........$RCVTSEGN+
-+ Erase on scratch{.................$RCVTSEOS+
-+ Generic owner{....................$RCVTSGNO+
-+ Initialize statistics{............$RCVTNLS +
-+ JES batch all{....................$RCVTJALL+
-+ JES early verify{.................$RCVTJCHK+
-+ JES undefined userid{.............$RCVTJUND+
-+ JES NJE userid{...................$RCVTJSYS+
-+ JES XBM all{......................$RCVTJXAL+
-+ List groups access checking{......$RCVTSGRC+
-+ LU session interval{..............$RCVTSLUI+
-+ Model groups{.....................$RCVTMGRP+
-+ Model users{......................$RCVTMUSR+
-+ Model GDG{........................$RCVTMGDG+
-+ Multi factor authentication{......$RCVTMFA +
-+ Multi level quiet{................$RCVTSMLQ+
-+ Multi level secure{...............$RCVTSMLT+
-+ Multi level stable{...............$RCVTSMLS+
-+ Multi level{......................$RCVTSMLA+
-+ Password attempts{................$RCVTPRVK+
-+ Password extended support{........$RCVTXPWD+
-+ Password history{.................$RCVTPHIS+
-+ Password interval{................$RCVTPINV+
-+ Password lower case allowed{......$RCVTPLC +
-+ Password maximum length{..........$RCVTELEN+
-+ Password minimum length{..........$RCVTSLEN+
-+ Password rules{...................$RCVTRULS+
-+ Password special chars allowed{...$RCVTPSC +
-+ Password warning{.................$RCVTPWRN+
-+ Protect all{......................$RCVTSPRA+
-+ Retention period{.................$RCVTSRPE+
-+ Security label audit{.............$RCVTSSLA+
-+ Security level control{...........$RCVTSSLC+
-+ Single level prefix{..............$RCVTQUAL+
-+ Tape dataset protection{..........$RCVTTDPR+
-+ Tape volume protection{...........$RCVTTVPR+
-+ Terminal authority{...............$RCVTTAUT+
-+ Terminal UACC{....................$RCVTTUAC+
-+ Userid inactive{..................$RCVTPINA+
-+ UADS datasets{....................$RCVTUADS                     +
-+ UADS volume{......................$RCVTUVOL+
-+ When program{.....................$RCVTSWHE+
+~Description                        ~Value
+%-------------------------------------------------------------------------------
+)Model
+desc                               value
 )INIT
+  &ZCMD    = ' '
+  &SAMT = &ZSCED
   .HELP   = #RACPRMS
+)PROC
+)PNTS
+  FIELD(ZPS00001) VAR(ZCMD) VAL('SORT DESC')
+  FIELD(ZPS00002) VAR(ZCMD) VAL('SORT VALUE')
 )END
 /*--------------------------------------------------------------------*/
 /*                             Comments                               */
 /*--------------------------------------------------------------------*/
 /*                                                                    */
-/*  1) The above RACF parameters in the scrollable area are in        */
-/*     aphabetical order                                              */
+/*  1) The column headers are point-n-shoot fields to sort the data   */
+/*     in ascending or descending order                               */
 /*                                                                    */
 /*--------------------------------------------------------------------*/

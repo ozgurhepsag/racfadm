@@ -6,7 +6,7 @@
 %Tutorial+\-\(%RACFADM - Settings - 3 of 3+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
-+Adding TSO userid:
++Adding TSO userid
 !  Default password +The initial password given to a new TSO user or when
 +                    resetting an individual's password%(Option 5 and line
 +                   %command PW).+ The password can be in upper/lower case and

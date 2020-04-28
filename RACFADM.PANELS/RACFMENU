@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V21R5+)\-\
++\-\(%RACFADM - RACF Administration - V21R7+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options       %C ~Changes   +Version/updates
@@ -61,7 +61,7 @@
   VPUT (SETGSTA  SETGSTAP SETGDISP SETGCONF +
         SETMADMN SETMIRRX SETMSHOW SETMTRAC) PROFILE
 
-  /* Obtain/display RACF/system information on bottom of panel */
+  /* Obtain RACF/system info displayed at the bottom of panel */
   &RACFVER  = &Z
   &PRMDBASE = &Z
   &BKPDBASE = &Z

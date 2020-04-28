@@ -6,7 +6,7 @@
 %Tutorial+\-\(%RACFADM - Settings - 1 of 3+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
-+General:
++General
 !  Default filter   +Specify a default search string, when selecting menu
 +                   +option 1 (Userid), 2 (Group) and 3 (Dataset)
 +
@@ -19,7 +19,7 @@
 +
 !  Confirm panel    +Specify whether each modify operation must be confirmed
 +
-+Management:
++Management
 !  Administrator    +Specify full administrator authority,+providing more line
 +                   +commands: Add, Change, etc.%(Y=Yes, N=No is default)
 +
