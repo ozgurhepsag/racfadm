@@ -3,11 +3,11 @@
 *---------------------------------------------------------------------*
 
   The following standards have been put in place, in hopes of making
-  RACFADM easier to maintain and understand:
+  RACFADM easier to use and maintain:
 
   1) Panels
      - Member names
-         $$DIR ...... Directory of all members and a description
+         $$DIR ...... Directory of all members and description
          $??????? ... Data/informational ($CHANGES, $ISSUES, etc.)
          #??????? ... Tutorials
          RACF???? ... Menu, data entry and table panels
@@ -18,7 +18,7 @@
        -- All panels allow invocation of a tutorial panel
      - Main menu
        -- Number entries (1-99) are designated for obtaining,
-          displaying and changing the RACF database (Userids,
+          displaying/changing the RACF database (Userids,
           Groups, etc.) and customizing the utility (Settings)
        -- Alphabetic entries (A-Z) are used to assist in maintaining
           or documenting RACFADM
@@ -27,20 +27,30 @@
        -- Panels displaying tables
           * Primary commands SORT, LOCATE, ONLY and RESET are
             available and operate in the same manner
+            o When possible the RESET command will allow changing
+              the filter criteria, by passing it a text string as
+              a parameter
           * The SORTed column is the color turquois and un-sorted
             columns are green
           * The LOCATE command operates on the SORTed column
           * Column headers are point-n-shoot sort fields
+            o Can place cursor on column header and press ENTER
+            o It will sort the column ascending order the 1st time,
+              and if accomplished again, will sort the column in
+              descending order (some fields may be reversed, due the
+              column is already sorted in ascending order)
 
   2) REXX
      - Member names
-         $$DIR ...... Directory of all members and a description
+         $$DIR ...... Directory of all members and description
          RACF???? ... REXX programs, where ???? can be anything
      - Code
        -- Changes are documented by commenting/using a flag character
           * '/* @?? */' in columns 62-71
             o Where ??, 1st character is A-Z, and 2nd character is
               is 1-9, then A-Z
+            o Also, the flag character is documented in the comment
+              box at the top of the program, most current at the top
           * Example:
               /*------------------------------------------------------*
               /* FLG  YYMMDD  USERID   DESCRIPTION                    *
@@ -54,16 +64,19 @@
           the purpose of the code
        -- All REXX programs allow:
           * Viewing and logging the RACF commands and the return code,
-            by changing the Settings (option 0) field 'RACF commands'
+            by changing the Settings (option 0) 'RACF commands' field
           * Tracing the REXX program, by changing the Settings
-            (Option 0) field 'REXX trace'
+            (Option 0) 'REXX trace' field
+          * The capability to have the user control how they want
+            to display any files/reports by changing the Settings
+            (option 0) 'Display files' field to Browse, Edit or View
 
   3) Settings
-     - The following are the naming standard for variables used to save
-       the user's settings (menu option 0)
+     - The following are the naming standard for variables used to
+       save the user's Settings (option 0)
        -- Syntax
             SET#????
        -- Where
-            SET  ... Settings (menu option 0)
+            SET  ... Settings (option 0)
             #    ... G=General, M=Management and T=Adding TSO Userid
             ???? ... Field name

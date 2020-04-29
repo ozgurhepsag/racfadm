@@ -7,7 +7,13 @@
 %Tutorial+\-\(%RACFADM - Installation Notes+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
-!  4)+To use the line command%Profile,+the following will need to be
+!  4)+Line command%XR,+Cross Reference Report, is not displayed
++     - Reason for this is sites with a large RACF database, the time
++       for%IRRUT100+to read/obtain the data is significant
++     - To access/use this command, turn on the%Settings+(option 0):
++          !Administrator ..... Y
++
+!  5)+To use the line command%Profile,+the following will need to be
 +     accomplished:
 +      !-+Turn on the%Settings+(Option 0)
 +          !Administrator ..... Y
@@ -18,12 +24,6 @@
 +          @        AUDIT(FAILURES(READ)) DATA('RACF ADMINISTRATION API')
 +          @        WARNING
 +          @PERMIT IRR.RADMIN.* CLASS(FACILITY) ID(group) GEN
-+
-+
-+
-+
-+
-+
 +
 +
 + \ \ (press%ENTER+to continue) \ \

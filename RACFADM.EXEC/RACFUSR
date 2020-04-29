@@ -1,6 +1,14 @@
 /*%NOCOMMENT====================* REXX *==============================*/
 /*  PURPOSE:  RACFADM - User - User profiles (Menu option 1)          */
 /*--------------------------------------------------------------------*/
+/*  NOTES:    1) Line command 'XR', Cross Reference Report, is not    */
+/*               displayed (hidden) on panel RACFUSR2                 */
+/*               - Reason for this is sites with a large RACF         */
+/*                 database, the time for 'IRRUT100' to read/obtain   */
+/*                 the data is significant                            */
+/*               - This command can only be accessed/used when        */
+/*                 Settings (option 0) 'Administration = Y'           */
+/*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
 /* @E9  200426  RACFA    Chged var. ERAIPSWD to SETTPSWD (user pswd)  */

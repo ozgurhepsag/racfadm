@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AH  200428  TRIDJK   Fixed variable names                         */
 /* @AG  200427  RACFA    Standardize SORT, LOCATE, ONLY & RESET cmds  */
 /* @AF  200427  TRIDJK   Added 'Password phrase'                      */
 /* @AE  200427  LBD      Convert to table display                     */
@@ -418,7 +419,7 @@ BUILD_TABLE:                                                  /* @AE */
   call add_t  'Enhanced generic naming          'RCVTSEGN     /* @AE */
   call add_t  'Erase on scratch                 'RCVTSEOS     /* @AE */
   call add_t  'Generic owner                    'RCVTSGNO     /* @AE */
-  call add_t  'Initialize statistics            'RCVTNLSM     /* @AE */
+  call add_t  'Initialize statistics            'RCVTNLS      /* @AH */
   call add_t  'JES batch all                    'RCVTJALL     /* @AE */
   call add_t  'JES early verify                 'RCVTJCHK     /* @AE */
   call add_t  'JES undefined userid             'RCVTJUND     /* @AE */
@@ -429,7 +430,7 @@ BUILD_TABLE:                                                  /* @AE */
   call add_t  'Model groups                     'RCVTMGRP     /* @AE */
   call add_t  'Model users                      'RCVTMUSR     /* @AE */
   call add_t  'Model GDG                        'RCVTMGDG     /* @AE */
-  call add_t  'Multi factor authentication      'RCVTMFAM     /* @AE */
+  call add_t  'Multi factor authentication      'RCVTMFA      /* @AH */
   call add_t  'Multi level quiet                'RCVTSMLQ     /* @AE */
   call add_t  'Multi level secure               'RCVTSMLT     /* @AE */
   call add_t  'Multi level stable               'RCVTSMLS     /* @AE */
@@ -438,12 +439,12 @@ BUILD_TABLE:                                                  /* @AE */
   call add_t  'Password extended support        'RCVTXPWD     /* @AE */
   call add_t  'Password history                 'RCVTPHIS     /* @AE */
   call add_t  'Password interval                'RCVTPINV     /* @AE */
-  call add_t  'Password lower case allowed      'RCVTPLCM     /* @AE */
+  call add_t  'Password lower case allowed      'RCVTPLC      /* @AH */
   call add_t  'Password maximum length          'RCVTELEN     /* @AE */
   call add_t  'Password minimum length          'RCVTSLEN     /* @AE */
   call add_t  'Password phrase                  'PPHRASE      /* @AF */
   call add_t  'Password rules                   'RCVTRULS     /* @AE */
-  call add_t  'Password special chars allowed   'RCVTPSCM     /* @AE */
+  call add_t  'Password special chars allowed   'RCVTPSC      /* @AH */
   call add_t  'Password warning                 'RCVTPWRN     /* @AE */
   call add_t  'Protect all                      'RCVTSPRA     /* @AE */
   call add_t  'Retention period                 'RCVTSRPE     /* @AE */

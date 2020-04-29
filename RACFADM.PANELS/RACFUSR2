@@ -69,9 +69,11 @@ _Z ^Z      Z       Z                   Z       œZ       	Z       †Z  Z  —Z
 /*     the user tabbed down to a row and pressed ENTER to select      */
 /*     an entry                                                       */
 /*                                                                    */
-/*  3) Line command 'XR' is not displayed (hidden), reason for this   */
-/*     is sites with a large RACF database, the time for 'IRRUT100'   */
-/*     to read/obtain the data is significant                         */
+/*  3) Line command 'XR', Cross Reference Report, is not displayed    */
+/*     - Reason for this is sites with a large RACF database, the     */
+/*       time for 'IRRUT100' to read/obtain the data is significant   */
+/*     - This command can only be accessed/used when Settings         */
+/*       (option 0) 'Administration=Y'                                */
 /*                                                                    */
 /*  4) The column headers are point-n-shoot fields to sort the data   */
 /*     in ascending or descending order                               */

@@ -11,7 +11,7 @@
 %    S+                +Select a command to be browsed under View or FSHelp
 %    X+                +Exclude a command from the list
 +
-+Notes:
++Notes
 +    To use the tab key to access!point and shoot+fields the
 +   !'Tab to point-and-shoot fields'+must be selected (turned on)
 +    from the!ISPF Settings (Option 0).
