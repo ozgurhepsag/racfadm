@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CE  200429  RACFA    Re-arranged variables (General, Mgmt, TSO)   */
 /* @CD  200424  RACFA    Updated RESET, pass filter, ex: R filter     */
 /* @CA  200424  RACFA    Chg msg RACF013 to RACF012                   */
 /* @C9  200424  RACFA    Move DDNAME at top, standardize/del dups     */
@@ -109,8 +110,8 @@ ADDRESS ISPEXEC                                               /* @AO */
      Rfilter = SETGFLTR                                       /* @AB */
   end                                                         /* @AB */
   "CONTROL ERRORS RETURN"                                     /* @B1 */
-  "VGET (ZSCREEN SETMSHOW SETMTRAC SETGSTA SETGSTAP",         /* @C7 */
-        "SETMADMN SETGDISP SETMIRRX) ASIS"                    /* @BS */
+  "VGET (ZSCREEN SETGSTA  SETGSTAP SETGDISP SETMADMN",        /* @CE */
+                "SETMIRRX SETMSHOW SETMTRAC) ASIS"            /* @CE */
   If (SETMTRAC <> 'NO') then do                               /* @BZ */
      Say "*"COPIES("-",70)"*"                                 /* @BZ */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @BZ */

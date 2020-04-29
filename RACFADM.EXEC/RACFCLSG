@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BS  200429  RACFA    Re-arranged variables (General, Mgmt, TSO)   */
 /* @BR  200424  RACFA    Updated RESET, pass filter, ex: R filter     */
 /* @BQ  200424  RACFA    Chg msg RACF013 to RACF012                   */
 /* @BP  200424  RACFA    Move DDNAME at top, standardize/del dups     */
@@ -91,8 +92,8 @@ ADDRESS ISPEXEC                                               /* @AG */
   Pnl_list_prof = PANEL02                                     /* @AP */
   Rclass        = strip(rclass)
   "CONTROL ERRORS RETURN"                                     /* @AS */
-  "VGET (ZSCREEN SETMSHOW SETMTRAC SETGCONF SETGSTA",         /* @AA */
-        "SETGSTAP SETMADMN SETGDISP SETMIRRX) ASIS"           /* @BN */
+  "VGET (ZSCREEN SETGSTA  SETGSTAP SETGDISP SETGCONF",        /* @BS */
+                "SETMADMN SETMIRRX SETMSHOW SETMTRAC"         /* @BS */
   If (SETMTRAC <> 'NO') then do                               /* @BJ */
      Say "*"COPIES("-",70)"*"                                 /* @BJ */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @BJ */

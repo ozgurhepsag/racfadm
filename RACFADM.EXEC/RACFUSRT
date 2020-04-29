@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @B3  200429  RACFA    Re-arranged variables (General, Mgmt, TSO)   */
 /* @B2  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @B1  200422  RACFA    Ensure the REXX program name is 8 chars      */
 /* @AZ  200422  RACFA    Use variable REXXPGM in log msg              */
@@ -51,7 +52,7 @@ parse source . . REXXPGM .                                    /* @B2 */
 REXXPGM  = LEFT(REXXPGM,8)                                    /* @B2 */
 
 ADDRESS ISPEXEC                                               /* @AF */
-  "VGET (SETMSHOW SETMTRAC SETTPROF SETTCTLG SETTUDSN) ASIS"  /* @A4 */
+  "VGET (SETMSHOW SETMTRAC SETTCTLG SETTPROF SETTUDSN) ASIS"  /* @B3 */
   If (SETMTRAC <> 'NO') then do                               /* @AT */
      Say "*"COPIES("-",70)"*"                                 /* @AT */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AT */

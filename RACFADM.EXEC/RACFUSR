@@ -11,6 +11,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @EA  200429  RACFA    Re-arranged variables (General, Mgmt, TSO)   */
 /* @E9  200426  RACFA    Chged var. ERAIPSWD to SETTPSWD (user pswd)  */
 /* @E8  200425  RACFA    Chk Settings (Opt 0) 'Initial Password' field*/
 /* @E7  200424  RACFA    Chged 'A'dd, 'C'hange and 'P'roile act msg   */
@@ -184,9 +185,9 @@ ADDRESS ISPEXEC                                               /* @BC */
   Rclass = 'USER'
   lparm  =''                              /* Locate parm */   /* @A5 */
   "CONTROL ERRORS RETURN"                                     /* @B1 */
-  "VGET (ZSCREEN SETMSHOW SETMIRRX SETMTRAC SETTPROF",        /* @D4 */
-        "SETTUDSN SETMADMN SETGSTA SETGSTAP SETGDISP",        /* @E8 */
-        "SETTPSWD) ASIS"                                      /* @E9 */
+  "VGET (ZSCREEN  SETGSTA  SETGSTAP SETGDISP SETMADMN",       /* @EA */
+        "SETMIRRX SETMSHOW SETMTRAC SETTPSWD SETTPROF",       /* @EA */
+        "SETTUDSN) ASIS"                                      /* @EA */
   If (SETMTRAC <> 'NO') then do                               /* @DK */
      Say "*"COPIES("-",70)"*"                                 /* @DK */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @DK */

@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMhDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @B3  200429  RACFA    Re-arranged variables (General, Mgmt, TSO)   */
 /* @B2  200424  RACFA    Move DDNAME at top, standardize/del dups     */
 /* @B1  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @AZ  200422  RACFA    Ensure the REXX program name is 8 chars      */
@@ -52,7 +53,7 @@ REXXPGM  = LEFT(REXXPGM,8)                                    /* @B1 */
 ADDRESS ISPEXEC                                               /* @A7 */
   Arg class
   "CONTROL ERRORS RETURN"                                     /* @AJ */
-  "VGET (ZSCREEN SETMADMN SETMSHOW SETMTRAC SETGDISP) ASIS"   /* @AL */
+  "VGET (ZSCREEN SETGDISP SETMADMN SETMSHOW SETMTRAC) ASIS"   /* @B3 */
   If (SETMTRAC <> 'NO') then do                               /* @AW */
      Say "*"COPIES("-",70)"*"                                 /* @AW */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AW */

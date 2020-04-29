@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @C6  200429  RACFA    Re-arranged variables (General, Mgmt, TSO)   */
 /* @C5  200424  RACFA    Fixed displaying error msg for PERMIT cmd    */
 /* @C4  200424  RACFA    Updated RESET, pass filter, ex: R filter     */
 /* @C3  200424  RACFA    Chg msg RACF013 to RACF012                   */
@@ -97,8 +98,8 @@ REXXPGM  = LEFT(REXXPGM,8)                                    /* @C1 */
 ADDRESS ISPEXEC                                               /* @AJ */
   Rclass = 'DATASET'
   "CONTROL ERRORS RETURN"                                     /* @B1 */
-  "VGET (ZSCREEN SETMSHOW SETMTRAC SETGFLTR",                 /* @AD */
-        "SETMADMN SETGSTA SETGSTAP SETGDISP SETMIRRX) ASIS"   /* @BH */
+  "VGET (ZSCREEN SETGFLTR SETGSTA  SETGSTAP SETGDISP",        /* @C6 */
+                "SETMADMN SETMIRRX SETMSHOW SETMTRAC) ASIS"   /* @C6 */
   If (SETMTRAC <> 'NO') then do                               /* @BV */
      Say "*"COPIES("-",70)"*"                                 /* @BV */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @BV */

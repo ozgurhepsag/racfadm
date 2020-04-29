@@ -5,9 +5,9 @@
   Member      Subject                   Description
  --------  -------------  --------------------------------------------
  $$DIR     Directory      Document members
- $CHANGES  Updates        Document all changes and version
  $ISSUES   Problems       Document all reported issues
  $STNDARD  Standards      Document coding and design
+ $UPDATES  Updates        Document version/updates
  #RACACKN  Tutorial       Acknowledgements
  #RACCLSA  Tutorial       Add/Change class profile
  #RACCLSR  Tutorial       List classes (show, refresh)
@@ -48,6 +48,7 @@
  RACFCLS6  Class          Change access
  RACFCLS7  Class          Add access
  RACFCLS8  Class          List classes and profiles
+ RACFCMDS  Commands       Execute TSO RACF commands
  RACFDSN1  Dataset        Set filter, menu option 3
  RACFDSN2  Dataset        List profiles and types
  RACFDSN3  Dataset        Add profile

@@ -4,18 +4,18 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V21R9+)\-\
++\-\(%RACFADM - RACF Administration - V22R0+)\-\
 %Option ===>_ZCMD                                                              +
 %
-%   0 ~Settings +Customize options       %C ~Changes   +Version/updates
-%   1 ~User     +User profiles           %D ~Dslist    +Dataset list
-%   2 ~Group    +Group profiles          %E ~Enqueues  +Dataset enqueues
-%   3 ~Dataset  +Dataset profiles        %H ~Help      +RACF commands
-%   4 ~General  +General resources       %I ~Issues    +Known issues
-%   5 ~Password +Password reset          %S ~Standards +Coding/design
-%   6 ~GrpTree  +Group tree report       %T ~Tutorial  +Help
-%   7 ~RACFprms +RACF parameters         %X ~Exit      +Terminate
-%   8 ~RACFdb   +RACF databases
+%   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
+%   1 ~User     +User profiles          %D ~Dslist    +Dataset list
+%   2 ~Group    +Group profiles         %E ~Enqueues  +Dataset enqueues
+%   3 ~Dataset  +Dataset profiles       %H ~Help      +RACF help commands
+%   4 ~General  +General resources      %I ~Issues    +Known issues
+%   5 ~Password +Password reset         %S ~Standards +Coding/design
+%   6 ~GrpTree  +Group tree report      %T ~Tutorial  +Help
+%   7 ~RACFprms +RACF parameters        %U ~Updates   +Version/updates
+%   8 ~RACFdb   +RACF databases         %X ~Exit      +Terminate
 +
 +
 +
@@ -135,13 +135,14 @@
       8,'CMD(%RACFDB)'
       9,'CMD(%RACFCLSA)'        /* Analyze - Verify ACL */  /* Hidden */
       B,'CMD(%BOOKMGR SHELF(''EOYBOOK.ICHZBKC0.BKSHELF''))' /* Hidden */
+      C,'CMD(%RACFCMDS)'
       D,'CMD(%RACFDSL)'
-      C,'CMD(%RACFLOG $CHANGES)'
       E,'CMD(%RACFENQ)'
       H,'CMD(%RACFHELP)'
       I,'CMD(%RACFLOG $ISSUES)'
       S,'CMD(%RACFLOG $STNDARD)'
       T,'PGM(ISPTUTOR) PARM(#RACMENU)'
+      U,'CMD(%RACFLOG $UPDATES)'
       X,'EXIT'
     ' ',' '
       *,'?')
@@ -160,9 +161,10 @@
   FIELD(ZPS00012) VAR(ZCMD) VAL('S')
   FIELD(ZPS00013) VAR(ZCMD) VAL('6')
   FIELD(ZPS00014) VAR(ZCMD) VAL('T')
-  FIELD(ZPS00015) VAR(ZCMD) VAL('X')
-  FIELD(ZPS00016) VAR(ZCMD) VAL('7')
+  FIELD(ZPS00015) VAR(ZCMD) VAL('7')
+  FIELD(ZPS00016) VAR(ZCMD) VAL('U')
   FIELD(ZPS00017) VAR(ZCMD) VAL('8')
+  FIELD(ZPS00018) VAR(ZCMD) VAL('X')
 )END
 /*--------------------------------------------------------------------*/
 /*                             Comments                               */

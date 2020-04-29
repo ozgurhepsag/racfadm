@@ -1,0 +1,245 @@
+/*%NOCOMMENT====================* REXX *==============================*/
+/*  PURPOSE:  Execute RACF commands                                   */
+/*--------------------------------------------------------------------*/
+/* FLG  YYMMDD  USERID   DESCRIPTION                                  */
+/* ---  ------  -------  -------------------------------------------- */
+/* @A3  200429  RACFA    Chk Setting's 'REXX trace'                   */
+/* @A2  200429  RACFA    Chg HELP PF-Key to invoke 'TSO RACFHELP'     */
+/* @A1  200429  RACFA    Get Settings (Opt 0) 'Display files' to view */
+/* @A0  200429  LBD      Created REXX                                 */
+/*====================================================================*/
+  /* --------------------  rexx procedure  -------------------- *
+  | Name:      racfcmds                                        |
+  |                                                            |
+  | Function:  Issue any RACF command and review the results   |
+  |            while maintaining a history of used commands    |
+  |            for reuse.                                      |
+  |                                                            |
+  | Syntax:    %racfcmds                                       |
+  |                                                            |
+  | Author:    Lionel B. Dyck                                  |
+  |                                                            |
+  | History:  (most recent on top)                             |
+  |            04/29/20 LBD - Creation                         |
+  |                                                            |
+  * ---------------------------------------------------------- */
+PANEL01  = "RACFCMDS"    /* Execute RACF command           */ /* @A1 */
+EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @A1 */
+parse source . . REXXPGM .                                    /* @A3 */
+REXXPGM  = LEFT(REXXPGM,8)                                    /* @A3 */
+
+
+ADDRESS ISPEXEC
+  "VGET (SETGDISP SETMTRAC) ASIS"                             /* @A3 */
+  If (SETMTRAC <> 'NO') then do                               /* @A3 */
+     Say "*"COPIES("-",70)"*"                                 /* @A3 */
+     Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A3 */
+     Say "*"COPIES("-",70)"*"                                 /* @A3 */
+     if (SETMTRAC <> 'PROGRAMS') THEN                         /* @A3 */
+        interpret "Trace "SUBSTR(SETMTRAC,1,1)                /* @A3 */
+  end                                                         /* @A3 */
+  "VGET (ZPF01 ZPF02 ZPF03 ZPF04 ZPF05 ZPF06 ZPF07 ZPF08",    /* @A2 */
+         ZPF09 ZPF10 ZPF11 ZPF12 ZPF13 ZPF14 ZPF15 ZPF16",    /* @A2 */
+         ZPF17 ZPF18 ZPF19 ZPF20 ZPF21 ZPF22 ZPF23 ZPF24)"    /* @A2 */
+  DO J = 1 TO 24                                              /* @A2 */
+     K = RIGHT(J,2,0)                                         /* @A2 */
+     INTERPRET "PFKEY = ZPF"K                                 /* @A2 */
+     UPPER PFKEY                                              /* @A2 */
+     IF (PFKEY = "HELP") THEN DO                              /* @A2 */
+        INTERPRET "ZPF"K" = 'TSO RACFHELP'"                   /* @A2 */
+        "VPUT (ZPF"K")"                                       /* @A2 */
+     END                                                      /* @A2 */
+  END                                                         /* @A2 */
+
+  parse arg cmd
+
+  parse value '' with null rcsel
+  zerrhm = 'zigih0'
+  zerralrm = 'NO'
+  zerrtp   = 'NOTIFY'
+
+  /* ---------------------------------------------------- *
+  | Set ISPExec                                          |
+  | Get the ISPF vars from ZIGI for localrep and zigirep |
+  | Define localdir as a composite variable              |
+  * ---------------------------------------------------- */
+  'Control Errors Return'
+
+  /* -------------------------------------------------- *
+  | Check to see if the user has ISPTABL allocated and |
+  | if not then use ISPPROF as our table DD            |
+  * -------------------------------------------------- */
+  isptabl = 'ISPTABL'
+  x = listdsi(isptabl 'FILE')
+  if x > 0 then isptabl = 'ISPPROF'
+
+  /* ----------------------------------------------------- *
+  | Open the table but if it doesn't exist then create it |
+  * ----------------------------------------------------- */
+  'TBOpen racfacmd Library('isptabl') Write Share'
+  if rc > 0 then do
+  'tbcreate racfacmd keys(racfcmde) library('isptabl') write share'
+  call populate
+  end
+
+  /* -------------------- *
+  | Setup table defaults |
+  * -------------------- */
+  ztdtop = 0
+  ztdsels = 0
+
+  /* ---------------------------------------------------------------- *
+  | Process the table.                                               |
+  |                                                                  |
+  | Row selections:  S to copy the command to the git command  entry |
+  |                  D to delete the command (supports multipe row   |
+  |                    selections)                                   |
+  |                  X to execute the command now and update the     |
+  |                    git command entry field                       |
+  * ---------------------------------------------------------------- */
+  do forever
+     if ztdsels = 0 then do
+        'tbtop racfacmd'
+        'tbskip racfacmd number('ztdtop')'
+        'tbdispl racfacmd panel('panel01') cursor(racfcmd)'
+     end
+     else
+     'tbdispl racfacmd'
+     if rc > 4 then leave
+     if row = 0 then rcsel = null
+     if row <> null then
+     if row > 0 then do
+       'TBTop racfacmd'
+       'TBSkip racfacmd Number('row')'
+     end
+     Select
+        When zcmd = 'CLEAR' then do
+             'tbclose racfacmd replcopy library('isptabl')'
+             'tberase racfacmd library('isptabl')'
+             'tbcreate racfacmd keys(racfcmde) library('isptabl') write share'
+             racfcmd = null
+             end
+        When rcsel = 'D' then 'tbdelete racfacmd'
+        When rcsel = 'S' then do
+           racfcmd = racfcmde
+           ztdsels = 0
+        end
+        When rcsel = 'X' then do
+           racfcmd = racfcmde
+           ztdsels = 0
+           call do_racfcmd
+        end
+        When racfcmd /= null then call do_racfcmd
+        Otherwise nop
+     end
+     rcsel = null
+  end
+
+  /* -------------- *
+  | Close and exit |
+  * -------------- */
+  'tbclose racfacmd replcopy library('isptabl')'
+
+  DO J = 1 TO 24                                              /* @A2 */
+     K = RIGHT(J,2,0)                                         /* @A2 */
+     INTERPRET "PFKEY = ZPF"K                                 /* @A2 */
+     IF (PFKEY = "TSO RACFHELP") THEN DO                      /* @A2 */
+        INTERPRET "ZPF"K" = 'HELP'"                           /* @A2 */
+        "VPUT (ZPF"K")"                                       /* @A2 */
+     END                                                      /* @A2 */
+  END                                                         /* @A2 */
+  If (SETMTRAC <> 'NO') then do                               /* @A3 */
+     Say "*"COPIES("-",70)"*"                                 /* @A3 */
+     Say "*"Center("End Program = "REXXPGM,70)"*"             /* @A3 */
+     Say "*"COPIES("-",70)"*"                                 /* @A3 */
+  end                                                         /* @A3 */
+
+  exit
+
+  /* ------------------------------------------------------------- *
+  | Execute the racf command                                      |
+  * ------------------------------------------------------------- */
+do_racfcmd:
+  racfcmde = racfcmd
+  'tbadd racfacmd'
+  call outtrap 'so.'
+  Address TSO ,
+  racfcmde
+  call outtrap 'off'
+  call view_std
+  return
+
+  /* ---------------------------------------------------------- *
+  | Generalized routine to browse or view the results of the   |
+  | command.                                                   |
+  * ---------------------------------------------------------- */
+view_std:
+  stdopt = 'B'
+  'Control Display Save'
+  /* ------------------------------- *
+  | Randomly define a DDName to use |
+  * ------------------------------- */
+  dd = 'dd'random(9999)
+  /* --------------------------------------- *
+  | Get lrecl to determine dcb for temp d/s |
+  * --------------------------------------- */
+  vlrecl = 80
+  do li  = 1 to so.0
+     so.li = strip(so.li)
+     if length(so.li) > vlrecl then vlrecl = length(so.li)
+     if so.li = null then so.li = ' '
+  end
+  sec = so.0
+  if vlrecl < 81 then vlrecl = 80
+  else vlrecl = vlrecl + 4
+  if vlrecl = 80 then vrecfm = 'f b'
+  else vrecfm = 'v b'
+  /* ------------------------------------------ *
+  | Allocate a temporary data set for our data |
+  * ------------------------------------------ */
+  Address TSO
+  'Alloc f('dd') new spa(5,5) tr' ,
+    'recfm('vrecfm') lrecl('vlrecl') blksize(0)'
+  stdopt = null
+  /* ----------------------- *
+  | Write out the stem data |
+  * ----------------------- */
+  if stdopt = null
+  then do
+     'Execio * diskw' dd '(finis stem so.'
+     drop so.
+  end
+  /* -------------------------------------------------- *
+  | Access the Temporary Data Set using ISPF           |
+  | Library Services.                                  |
+  | Then using ISPF Browse service to browse the data. |
+  | And use Library Services to Free the Data Set.     |
+  * -------------------------------------------------- */
+  Address ISPExec
+  if sec > 0 then do
+     'lminit dataid(ddb) ddname('dd')'
+     SELECT                                                   /* @A1 */
+        WHEN (SETGDISP = "VIEW") THEN                         /* @A1 */
+             "VIEW DATAID("DDB") MACRO("EDITMACR")"           /* @A1 */
+        WHEN (SETGDISP = "EDIT") THEN                         /* @A1 */
+             "EDIT DATAID("DDB") MACRO("EDITMACR")"           /* @A1 */
+        OTHERWISE                                             /* @A1 */
+             "BROWSE DATAID("DDB")"                           /* @A1 */
+     END                                                      /* @A1 */
+     'lmfree dataid('ddb')'
+  end
+  /* ----------------------------- *
+  | Last Free the z/OS Allocation |
+  * ----------------------------- */
+  Address TSO ,
+    'Free f('dd')'
+  'Control Display Restore'
+  return
+
+/* ---------------------------------- *
+ | Pre-Populate the git command table |
+ * ---------------------------------- */
+Populate:
+  racfcmde = 'LU'
+  'tbadd racfacmd'
+  return

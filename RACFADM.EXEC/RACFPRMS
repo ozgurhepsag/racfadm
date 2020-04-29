@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AI  200429  RACFA    Chg 'Datasets' to 'Dataset'                  */
 /* @AH  200428  TRIDJK   Fixed variable names                         */
 /* @AG  200427  RACFA    Standardize SORT, LOCATE, ONLY & RESET cmds  */
 /* @AF  200427  TRIDJK   Added 'Password phrase'                      */
@@ -456,7 +457,7 @@ BUILD_TABLE:                                                  /* @AE */
   call add_t  'Terminal authority               'RCVTTAUT     /* @AE */
   call add_t  'Terminal UACC                    'RCVTTUAC     /* @AE */
   call add_t  'Userid inactive                  'RCVTPINA     /* @AE */
-  call add_t  'UADS datasets                    'RCVTUADS     /* @AE */
+  call add_t  'UADS dataset                     'RCVTUADS     /* @AI */
   call add_t  'UADS volume                      'RCVTUVOL     /* @AE */
   call add_t  'When program                     'RCVTSWHE     /* @AE */
   CLRDESC = "TURQ" ; CLRVALU = "GREEN"  /* COL COLORS */      /* @AG */

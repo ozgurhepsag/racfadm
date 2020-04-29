@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AC  200429  RACFA    Re-arranged variables (General, Mgmt, TSO)   */
 /* @AB  200426  RACFA    Chged var. ERAIPSWD to SETTPSWD (user pswd)  */
 /* @AA  200425  RACFA    Chk Settings (Opt 0) 'Initial Password' field*/
 /* @A9  200424  RACFA    Added lower case to random password          */
@@ -23,7 +24,7 @@ REXXPGM  = LEFT(REXXPGM,8)                                    /* @A8 */
 
 parse arg userid
 Address ISPExec
-  "VGET (SETMSHOW SETMTRAC SETMADMN SETTPSWD) ASIS"           /* @AB */
+  "VGET (SETMADMN SETMSHOW SETMTRAC SETTPSWD) ASIS"           /* @AC */
   If (SETMTRAC <> 'NO') then do                               /* @A4 */
      Say "*"COPIES("-",70)"*"                                 /* @A4 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A4 */
