@@ -15,7 +15,7 @@
  RACFDSL   Dslist         Invoke DSLIST on ALTLIB/LIBDEF DSNs, opt D
  RACFDSN   Dataset        Display dataset profiles
  RACFEMAC  Edit macro     View/edit, turn off highlighting
- RACFENQ   Enqueues       Display enqueues on ALTLIB/LIBDEF dsns, opt E
+ RACFENQS  Enqueues       Display enqueues on ALTLIB/LIBDEF dsns, opt E
  RACFGRP   Group          Display group profiles, menu option 2
  RACFHELP  Help           Display TSO HELP on RACF commands
  RACFLOG   Documentation  Display changes/issues, menu option C/I

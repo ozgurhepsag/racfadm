@@ -1,33 +1,19 @@
 /*%NOCOMMENT====================* REXX *==============================*/
-/*  PURPOSE:  Execute RACF commands                                   */
+/*  PURPOSE:  Execute/display RACF cmds and keep history of used cmds */
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A4  200429  RACFA    Standardize ddname, etc.                     */
 /* @A3  200429  RACFA    Chk Setting's 'REXX trace'                   */
 /* @A2  200429  RACFA    Chg HELP PF-Key to invoke 'TSO RACFHELP'     */
 /* @A1  200429  RACFA    Get Settings (Opt 0) 'Display files' to view */
 /* @A0  200429  LBD      Created REXX                                 */
 /*====================================================================*/
-  /* --------------------  rexx procedure  -------------------- *
-  | Name:      racfcmds                                        |
-  |                                                            |
-  | Function:  Issue any RACF command and review the results   |
-  |            while maintaining a history of used commands    |
-  |            for reuse.                                      |
-  |                                                            |
-  | Syntax:    %racfcmds                                       |
-  |                                                            |
-  | Author:    Lionel B. Dyck                                  |
-  |                                                            |
-  | History:  (most recent on top)                             |
-  |            04/29/20 LBD - Creation                         |
-  |                                                            |
-  * ---------------------------------------------------------- */
 PANEL01  = "RACFCMDS"    /* Execute RACF command           */ /* @A1 */
 EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @A1 */
 parse source . . REXXPGM .                                    /* @A3 */
 REXXPGM  = LEFT(REXXPGM,8)                                    /* @A3 */
-
+DDNAME   = "RACFA"RANDOM(0,999)                               /* @A4 */
 
 ADDRESS ISPEXEC
   "VGET (SETGDISP SETMTRAC) ASIS"                             /* @A3 */
@@ -54,10 +40,6 @@ ADDRESS ISPEXEC
   parse arg cmd
 
   parse value '' with null rcsel
-  zerrhm = 'zigih0'
-  zerralrm = 'NO'
-  zerrtp   = 'NOTIFY'
-
   /* ---------------------------------------------------- *
   | Set ISPExec                                          |
   | Get the ISPF vars from ZIGI for localrep and zigirep |
@@ -71,15 +53,16 @@ ADDRESS ISPEXEC
   * -------------------------------------------------- */
   isptabl = 'ISPTABL'
   x = listdsi(isptabl 'FILE')
-  if x > 0 then isptabl = 'ISPPROF'
+  if (x > 0) then isptabl = 'ISPPROF'
 
   /* ----------------------------------------------------- *
   | Open the table but if it doesn't exist then create it |
   * ----------------------------------------------------- */
   'TBOpen racfacmd Library('isptabl') Write Share'
-  if rc > 0 then do
-  'tbcreate racfacmd keys(racfcmde) library('isptabl') write share'
-  call populate
+  if (rc > 0) then do
+     'tbcreate racfacmd keys(racfcmde)',
+              'library('isptabl') write share'
+      call populate
   end
 
   /* -------------------- *
@@ -98,39 +81,39 @@ ADDRESS ISPEXEC
   |                    git command entry field                       |
   * ---------------------------------------------------------------- */
   do forever
-     if ztdsels = 0 then do
+     if (ztdsels = 0) then do
         'tbtop racfacmd'
         'tbskip racfacmd number('ztdtop')'
         'tbdispl racfacmd panel('panel01') cursor(racfcmd)'
      end
      else
-     'tbdispl racfacmd'
-     if rc > 4 then leave
-     if row = 0 then rcsel = null
-     if row <> null then
-     if row > 0 then do
-       'TBTop racfacmd'
-       'TBSkip racfacmd Number('row')'
-     end
+        'tbdispl racfacmd'
+     if (rc > 4) then leave
+     if (row = 0) then rcsel = null
+     if (row <> null) then
+        if (row > 0) then do
+          'TBTop racfacmd'
+          'TBSkip racfacmd Number('row')'
+        end
      Select
-        When zcmd = 'CLEAR' then do
+        When (zcmd = 'CLEAR') then do
              'tbclose racfacmd replcopy library('isptabl')'
              'tberase racfacmd library('isptabl')'
              'tbcreate racfacmd keys(racfcmde)',
                       'library('isptabl') write share'
              racfcmd = null
-             end
-        When rcsel = 'D' then 'tbdelete racfacmd'
-        When rcsel = 'S' then do
-           racfcmd = racfcmde
-           ztdsels = 0
         end
-        When rcsel = 'X' then do
-           racfcmd = racfcmde
-           ztdsels = 0
-           call do_racfcmd
+        When (rcsel = 'D') then 'tbdelete racfacmd'
+        When (rcsel = 'S') then do
+             racfcmd = racfcmde
+             ztdsels = 0
         end
-        When racfcmd /= null then call do_racfcmd
+        When (rcsel = 'X') then do
+             racfcmd = racfcmde
+             ztdsels = 0
+             call do_racfcmd
+        end
+        When (racfcmd /= null) then call do_racfcmd
         Otherwise nop
      end
      rcsel = null
@@ -149,76 +132,69 @@ ADDRESS ISPEXEC
         "VPUT (ZPF"K")"                                       /* @A2 */
      END                                                      /* @A2 */
   END                                                         /* @A2 */
+
   If (SETMTRAC <> 'NO') then do                               /* @A3 */
      Say "*"COPIES("-",70)"*"                                 /* @A3 */
      Say "*"Center("End Program = "REXXPGM,70)"*"             /* @A3 */
      Say "*"COPIES("-",70)"*"                                 /* @A3 */
   end                                                         /* @A3 */
-
-  exit
-
-  /* ------------------------------------------------------------- *
-  | Execute the racf command                                      |
-  * ------------------------------------------------------------- */
-do_racfcmd:
+EXIT
+/*--------------------------------------------------------------------*/
+/*  Execute the racf command                                          */
+/*--------------------------------------------------------------------*/
+DO_RACFCMD:
   racfcmde = racfcmd
   'tbadd racfacmd'
   call outtrap 'so.'
-  Address TSO ,
-  racfcmde
+  Address TSO racfcmde
   call outtrap 'off'
   call view_std
-  return
-
-  /* ---------------------------------------------------------- *
-  | Generalized routine to browse or view the results of the   |
-  | command.                                                   |
-  * ---------------------------------------------------------- */
-view_std:
+RETURN
+/*--------------------------------------------------------------------*/
+/*  Generalized routine to browse or view the results of the command  */
+/*--------------------------------------------------------------------*/
+VIEW_STD:
   stdopt = 'B'
   'Control Display Save'
-  /* ------------------------------- *
-  | Randomly define a DDName to use |
-  * ------------------------------- */
-  dd = 'dd'random(9999)
   /* --------------------------------------- *
   | Get lrecl to determine dcb for temp d/s |
   * --------------------------------------- */
   vlrecl = 80
   do li  = 1 to so.0
      so.li = strip(so.li)
-     if length(so.li) > vlrecl then vlrecl = length(so.li)
-     if so.li = null then so.li = ' '
+     if (length(so.li) > vlrecl) then vlrecl = length(so.li)
+     if (so.li = null) then so.li = ' '
   end
   sec = so.0
-  if vlrecl < 81 then vlrecl = 80
+  if (vlrecl < 81) then vlrecl = 80
   else vlrecl = vlrecl + 4
-  if vlrecl = 80 then vrecfm = 'f b'
+  if (vlrecl = 80) then vrecfm = 'f b'
   else vrecfm = 'v b'
+
   /* ------------------------------------------ *
   | Allocate a temporary data set for our data |
   * ------------------------------------------ */
-  Address TSO
-  'Alloc f('dd') new spa(5,5) tr' ,
-    'recfm('vrecfm') lrecl('vlrecl') blksize(0)'
+Address TSO
+  'Alloc f('ddname') new reuse spa(5,5) tr' ,                 /* @A4 */
+        'recfm('vrecfm') lrecl('vlrecl') blksize(0)'
   stdopt = null
   /* ----------------------- *
   | Write out the stem data |
   * ----------------------- */
-  if stdopt = null
-  then do
-     'Execio * diskw' dd '(finis stem so.'
+  if (stdopt = null) then do
+     'Execio * diskw' ddname '(finis stem so.'                /* @A4 */
      drop so.
   end
+
   /* -------------------------------------------------- *
   | Access the Temporary Data Set using ISPF           |
   | Library Services.                                  |
   | Then using ISPF Browse service to browse the data. |
   | And use Library Services to Free the Data Set.     |
   * -------------------------------------------------- */
-  Address ISPExec
-  if sec > 0 then do
-     'lminit dataid(ddb) ddname('dd')'
+Address ISPExec
+  if (sec > 0) then do
+     'lminit dataid(ddb) ddname('ddname')'                    /* @A4 */
      SELECT                                                   /* @A1 */
         WHEN (SETGDISP = "VIEW") THEN                         /* @A1 */
              "VIEW DATAID("DDB") MACRO("EDITMACR")"           /* @A1 */
@@ -229,18 +205,17 @@ view_std:
      END                                                      /* @A1 */
      'lmfree dataid('ddb')'
   end
+
   /* ----------------------------- *
   | Last Free the z/OS Allocation |
   * ----------------------------- */
-  Address TSO ,
-    'Free f('dd')'
+  Address TSO 'Free f('ddname')'                              /* @A4 */
   'Control Display Restore'
-  return
-
-/* ---------------------------------- *
- | Pre-Populate the git command table |
- * ---------------------------------- */
-Populate:
+RETURN
+/*--------------------------------------------------------------------*/
+/*  Pre-Populate the git command table                                */
+/*--------------------------------------------------------------------*/
+POPULATE:
   racfcmde = 'LU'
   'tbadd racfacmd'
-  return
+RETURN

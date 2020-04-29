@@ -2,6 +2,12 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  29 Apr 2020 - V22R4
+     - Other Items
+       -- Renamed REXX program RACFENQ to RACFENQS
+       -- Minor update to REXX programs RACFCMDS and RACFENQS
+       -- Updated REXX dataset member $DIR
+
   29 Apr 2020 - V22R3
      - Main Menu
        -- Changed 'Date' at bottom of panel to be MM/DD/YY, was YY/MM/DD

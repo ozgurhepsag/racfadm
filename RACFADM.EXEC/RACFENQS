@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AM  200429  RACFA    Added a astericks to dsn/enqueues headers    */
 /* @AL  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @AK  200423  RACFA    Place DSN/Enques in flower/comment box       */
 /* @AJ  200423  RACFA    Del 'call racfmsgs ERR19' when rows = 0      */
@@ -132,7 +133,7 @@ GET_ENQS:                                                     /* @A7 */
   ELSE DO                                                     /* @A7 */
      QUEUE COPIES("-",72)                                     /* @AK */
      ENQUES = strip(rows,'L',0)                               /* @AK */
-     QUEUE CENTER(Rname" - "ENQUES" Enqueues",70)             /* @AK */
+     QUEUE '*'CENTER(Rname" - "ENQUES" Enqueues",70)'*'       /* @AM */
      QUEUE COPIES("-",72)                                     /* @AK */
      QUEUE " "
      QUEUE "         Lpar     Disp    Jobname ",              /* @A7 */

@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V22R3+)\-\
++\-\(%RACFADM - RACF Administration - V22R4+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -139,7 +139,7 @@
       B,'CMD(%BOOKMGR SHELF(''EOYBOOK.ICHZBKC0.BKSHELF''))' /* Hidden */
       C,'CMD(%RACFCMDS)'
       D,'CMD(%RACFDSL)'
-      E,'CMD(%RACFENQ)'
+      E,'CMD(%RACFENQS)'
       H,'CMD(%RACFHELP)'
       I,'CMD(%RACFLOG $ISSUES)'
       S,'CMD(%RACFLOG $STNDARD)'
