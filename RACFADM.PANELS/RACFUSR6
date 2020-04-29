@@ -164,7 +164,7 @@
   *REXX (PSWDFLD, PSWD)           /* Get password */
      PSWD = SUBSTR(PSWDFLD,16)
   *ENDREXX
-  IF (&ACTION = '*Insert')
+  IF (&ACTION = '*Add')
      IF (&OLDUSR = &USER)
         &USER = ' '
   VER (&USER,NB)

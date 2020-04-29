@@ -2,6 +2,22 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  29 Apr 2020 - V22R3
+     - Main Menu
+       -- Changed 'Date' at bottom of panel to be MM/DD/YY, was YY/MM/DD
+     - User (Option 1)
+       -- Line command 'A'dd and Settings (opt 0) 'Admin RACF API = Y'
+          * Chged message to right of userid to '*Add', was '*Inserted'
+
+  29 Apr 2020 - V22R2
+     - Commands (Option C)
+       -- Fixed scrolling left/right in field 'Command'
+
+  29 Apr 2020 - V22R1
+     - Commands (Option C)
+       -- Standardized panel
+       -- Allow typing in upper/lower case commands, prior was uppercase
+
   29 Apr 2020 - V22R0
      - Main Menu
        -- Renamed menu entries 'C Changes' to 'U Updates'

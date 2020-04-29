@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V22R0+)\-\
++\-\(%RACFADM - RACF Administration - V22R3+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -24,7 +24,7 @@
 +   RACF:!RACFVER        +Prmdb:!PRMDBASE
 +   FMID:!RACFFMID       +Bkpdb:!BKPDBASE
 +   z/OS:!ZOSVER         +Plex: !ZSYSPLEX       +Lpar:!ZSYSID
-+   Date:!ZDATE          +Jdate:!ZJDATE         +Time:!ZTIME
++   Date:!USADATE        +Jdate:!ZJDATE         +Time:!ZTIME
 +   User:!ZUSER          +Group:!RACFGRP        +Name:!RACFNAM
 + ---------------------------------------------------------------------------
 )INIT
@@ -71,9 +71,10 @@
   &RACFLMSG = &Z
   &SECSOFT  = &Z
   &RACFFMID = &Z
+  &USADATE  = &Z
 
   *REXX (RACFVER PRMDBASE BKPDBASE ZOSVER RACFGRP RACFNAM RACFLMSG
-         SECSOFT RACFFMID)
+         SECSOFT RACFFMID USADATE)
     CVT      = C2D(STORAGE(10,4))               /* Get RACF FMID     */
     CVTRAC   = C2D(STORAGE(D2X(CVT + 992),4))
     RACFFMID = "HRF"STORAGE(D2X(CVTRAC + 616),4)
@@ -117,6 +118,7 @@
     name$    = d2x((x2d(name$))+1)      /* ACEEUNAM Ptr +1           */
     RACFGRP  = storage(group$,8)        /* ACEEGRPN (RACF group name)*/
     RACFNAM  = storage(name$,20)        /* ACEEUNAM (RACF user name) */
+    USADATE  = DATE('U')
   *ENDREXX
 
   /* Is lpar running RACF? */

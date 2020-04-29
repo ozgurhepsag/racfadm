@@ -1,24 +1,25 @@
 )ATTR DEFAULT(%+_)
-   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON) JUST(LEFT)   HILITE(USCORE)
-   ~  TYPE(OUTPUT)  CAPS(OFF)    SKIP(ON) INTENS(LOW)
-   {  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(BLUE)
-   !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
-   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
+   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON)  JUST(LEFT)   HILITE(USCORE)
+   #  TYPE(INPUT)   INTENS(HIGH) CAPS(OFF) JUST(LEFT)   HILITE(USCORE)
+   ~  TYPE(OUTPUT)  CAPS(OFF)    SKIP(ON)  COLOR(TURQ)  INTENS(LOW)
+   {  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(BLUE)
+   !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(TURQ)
+   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(GREEN)
 )Body Expand(\\) Width(&zscreenw)
 +\-\(%RACFADM - TSO commands+)\-\
-+Command ===>_zcmd                                            +Scroll ===>_rscr+
+%Command ===>_ZCMD                                              +Scroll==>_rscr+
 +
 +Enter RACF command:
-_racfcmd
+#racfcmd
 
 
 +
-+SELECT: %S+Select%D+Delete%X+Execute
++SELECT: %S+Select,%D+Delete,%X+Execute
 +
-%S  Command
+%S   Command
 %-------------------------------------------------------------------------------
 )Model
-_z+~racfcmde             \ \ ~rs
+_z+ ~racfcmde             \ \ ~rs
 )Init
   .zvars = '(rcsel)'
   &rscr = CSR
@@ -41,5 +42,5 @@ _z+~racfcmde             \ \ ~rs
   ver (&gopt,list,B,V)
   ver (&rcsel,list,D,S,X)
 )Field
-  Field(racfcmd) ind(rs,'<>') len(255)
+  Field(racfcmde) ind(rs,'<>') len(255)
 )End

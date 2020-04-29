@@ -116,7 +116,8 @@ ADDRESS ISPEXEC
         When zcmd = 'CLEAR' then do
              'tbclose racfacmd replcopy library('isptabl')'
              'tberase racfacmd library('isptabl')'
-             'tbcreate racfacmd keys(racfcmde) library('isptabl') write share'
+             'tbcreate racfacmd keys(racfcmde)',
+                      'library('isptabl') write share'
              racfcmd = null
              end
         When rcsel = 'D' then 'tbdelete racfacmd'
