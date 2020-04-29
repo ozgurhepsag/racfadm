@@ -7,7 +7,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(GREEN)
 )Body Expand(\\) Width(&zscreenw)
 +\-\(%RACFADM - TSO commands+)\-\
-%Command ===>_ZCMD                                              +Scroll==>_rscr+
+%Command ===>_ZCMD                                      \ \     +Scroll==>_rscr+
 +
 +Enter RACF command:
 #racfcmd

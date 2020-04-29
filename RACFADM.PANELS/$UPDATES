@@ -2,6 +2,13 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  29 Apr 2020 - V22R5
+     - RACFprms (Option 7)
+       -- Updated two parameters so description would be more
+          meaningful 'Audit APPC' and 'Multi Level'
+     - Commands (Option C)
+       -- Updated panel RACFCMDS
+
   29 Apr 2020 - V22R4
      - Other Items
        -- Renamed REXX program RACFENQ to RACFENQS

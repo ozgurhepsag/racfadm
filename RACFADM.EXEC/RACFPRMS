@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AJ  200429  TRIDJK   Chg text on 2 parmeters                      */
 /* @AI  200429  RACFA    Chg 'Datasets' to 'Dataset'                  */
 /* @AH  200428  TRIDJK   Fixed variable names                         */
 /* @AG  200427  RACFA    Standardize SORT, LOCATE, ONLY & RESET cmds  */
@@ -410,7 +411,7 @@ BUILD_TABLE:                                                  /* @AE */
   call add_t  'Version                          'RCVTGRNM     /* @AE */
   call add_t  'Data Base Primary                'RCVTPDSN     /* @AE */
   call add_t  'Data Base Backup                 'RCVTBDSN     /* @AE */
-  call add_t  'Audit appl                       'RCVTSAPL     /* @AE */
+  call add_t  'Audit APPC transactions          'RCVTSAPL     /* @AJ */
   call add_t  'Audit operations                 'RCVTSAUO     /* @AE */
   call add_t  'Audit special                    'RCVTSAUS     /* @AE */
   call add_t  'Catalogued datasets only         'RCVTSCAT     /* @AE */
@@ -435,7 +436,7 @@ BUILD_TABLE:                                                  /* @AE */
   call add_t  'Multi level quiet                'RCVTSMLQ     /* @AE */
   call add_t  'Multi level secure               'RCVTSMLT     /* @AE */
   call add_t  'Multi level stable               'RCVTSMLS     /* @AE */
-  call add_t  'Multi level                      'RCVTSMLA     /* @AE */
+  call add_t  'Multi level active               'RCVTSMLA     /* @AJ */
   call add_t  'Password attempts                'RCVTPRVK     /* @AE */
   call add_t  'Password extended support        'RCVTXPWD     /* @AE */
   call add_t  'Password history                 'RCVTPHIS     /* @AE */
