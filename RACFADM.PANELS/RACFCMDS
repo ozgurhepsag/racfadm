@@ -9,7 +9,7 @@
 +\-\(%RACFADM - TSO commands+)\-\
 %Command ===>_ZCMD                                      \ \     +Scroll==>_rscr+
 +
-+Enter RACF command:
++Enter RACF command:                                  \ \ (F1 - RACF help cmds)
 #racfcmd
 
 

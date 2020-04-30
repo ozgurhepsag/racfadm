@@ -7,18 +7,18 @@
 %Tutorial+\-\(%RACFADM - Installation Notes+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
-!  4)+Line command%XR,+Cross Reference Report, is not displayed
-+     - Reason for this is sites with a large RACF database, the time
-+       for%IRRUT100+to read/obtain the data is significant
-+     - To access/use this command, turn on the%Settings+(option 0):
+!  4)+The%User+line command%XR,+Cross Reference Report, is not displayed
+!       -+Reason for this is sites with a large RACF database, the time
++         for%IRRUT100+to read/obtain the data is significant
+!       -+To access/use this command, turn on the%Settings+(option 0):
 +          !Administrator ..... Y
 +
 !  5)+To use the line command%Profile,+the following will need to be
 +     accomplished:
-+      !-+Turn on the%Settings+(Option 0)
+!       -+Turn on the%Settings+(Option 0)
 +          !Administrator ..... Y
 +          !Admin RACF API .... Y
-+      !-+Obtain authorization to following resources, by executing
+!       -+Obtain authorization to following resources, by executing
 +        !RACF RDEFINE+and!PERMIT+commands:
 +          @RDEFINE FACILITY (IRR.RADMIN.*) OWNER(SYS1) UACC(READ)
 +          @        AUDIT(FAILURES(READ)) DATA('RACF ADMINISTRATION API')

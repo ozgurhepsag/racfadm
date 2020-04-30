@@ -2,6 +2,14 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  30 Apr 2020 - V22R6
+     - Commands (Option C)
+       -- Added '(F1 - RACF help cmds)' to the panel
+     - Tutorial (Option T)
+       -- Updated 'Installation Notes'
+     - Other Items
+       -- Minor updates to a panel or two
+
   29 Apr 2020 - V22R5
      - RACFprms (Option 7)
        -- Updated two parameters so description would be more
