@@ -15,9 +15,9 @@
 /* @A1  200220  RACFA    Added SETMTRAC=YES, then TRACE R             */
 /* @A0  200123  TRIDJK   Created REXX program                         */
 /*====================================================================*/
-EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @A7 */
+EDITMACR  = "RACFEMAC"   /* Edit Macro, turn HILITE off    */ /* @A7 */
 parse source . . REXXPGM .                                    /* @A9 */
-REXXPGM  = LEFT(REXXPGM,8)                                    /* @A9 */
+REXXPGM     = LEFT(REXXPGM,8)                                 /* @A9 */
 
 ADDRESS ISPEXEC                                               /* @A2 */
   "VGET (SETGDISP SETMTRAC) ASIS"                             /* @AA */

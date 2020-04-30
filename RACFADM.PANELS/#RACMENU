@@ -25,7 +25,7 @@
 +  %2 ~Group profiles      %8 ~RACF databases      %14~Publications
 +  %3 ~Dataset profiles    %9 ~Dataset list        %15~Installation notes
 +  %4 ~General resources   %10~Dataset enqueues    %16~Acknowledgements
-+  %5 ~Password reset      %11~RACF commands
++  %5 ~Password reset      %11~RACF help commands
 )PROC
 &ZSEL = TRANS(&ZCMD 0,#RACSET1  1,#RACUSR2  2,#RACGRP8  3,#RACDSN2
                     4,#RACCLSR  5,#RACPSWD  6,#RACGTRE  7,#RACPRMS

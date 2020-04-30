@@ -17,10 +17,10 @@
 /* @A1  200407  RACFA    Removed unnecessary ISPF variables           */
 /* @A0  200407  TRIDJK   Created                                      */
 /*====================================================================*/
-PANELPW  = "RACFPSWD"    /* Password reset                 */
-PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */
+PANELPW     = "RACFPSWD"   /* Password reset               */
+PANELM2     = "RACFMSG2"   /* Display RACF command and RC  */
 parse source . . REXXPGM .                                    /* @A8 */
-REXXPGM  = LEFT(REXXPGM,8)                                    /* @A8 */
+REXXPGM     = LEFT(REXXPGM,8)                                 /* @A8 */
 
 parse arg userid
 Address ISPExec

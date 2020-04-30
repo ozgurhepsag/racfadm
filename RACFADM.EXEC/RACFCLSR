@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMhDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @B4  200430  RACFA    Chg tbla to tablea, moved def. var. up top   */
 /* @B3  200429  RACFA    Re-arranged variables (General, Mgmt, TSO)   */
 /* @B2  200424  RACFA    Move DDNAME at top, standardize/del dups     */
 /* @B1  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
@@ -43,17 +44,18 @@
 /* @A1  200119  RACFA    Placed comment boxes above procedures        */
 /* @A0  011229  NICORIZ  Created REXX, V2.1, www.rizzuto.it           */
 /*====================================================================*/
-PANEL27  = "RACFCLSR"    /* List classes (show, refresh)   */ /* @AF */
-PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */ /* @AF */
-EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @AT */
-DDNAME   = "RACFA"RANDOM(0,999)                               /* @B2 */
+PANEL27     = "RACFCLSR"   /* List classes (show, refresh) */ /* @AF */
+PANELM2     = "RACFMSG2"   /* Display RACF command and RC  */ /* @AF */
+EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @AT */
+TABLEA      = 'TA'RANDOM(0,99999)   /* Unique table name A */ /* @B4 */
+DDNAME      = 'RACFA'RANDOM(0,999)  /* Unique ddname       */ /* @B2 */
 parse source . . REXXPGM .                                    /* @B1 */
-REXXPGM  = LEFT(REXXPGM,8)                                    /* @B1 */
+REXXPGM     = LEFT(REXXPGM,8)                                 /* @B1 */
 
 ADDRESS ISPEXEC                                               /* @A7 */
   Arg class
   "CONTROL ERRORS RETURN"                                     /* @AJ */
-  "VGET (ZSCREEN SETGDISP SETMADMN SETMSHOW SETMTRAC) ASIS"   /* @B3 */
+  "VGET (SETGDISP SETMADMN SETMSHOW SETMTRAC) ASIS"           /* @B3 */
   If (SETMTRAC <> 'NO') then do                               /* @AW */
      Say "*"COPIES("-",70)"*"                                 /* @AW */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AW */
@@ -70,7 +72,7 @@ ADDRESS ISPEXEC                                               /* @A7 */
   if (class = '') then DO                                     /* @A9 */
      call Select_class
      rc = display_table()                                     /* @A9 */
-     "TBEND" tbla                                             /* @A9 */
+     "TBEND" tablea                                           /* @A9 */
   END                                                         /* @A9 */
   else
      call RACFCLSG class '**' 'YES' /*generic prof routine*/
@@ -86,8 +88,7 @@ EXIT
 /*--------------------------------------------------------------------*/
 SELECT_CLASS:
   seconds = time('S')
-  tbla= 'TB'ZSCREEN||SECONDS  /* table name unique */
-  "TBCREATE" TBLA "KEYS(CLASS)",
+  "TBCREATE" tablea "KEYS(CLASS)",
                   "NAMES(ACTION) REPLACE NOWRITE"
   call get_act_class
 RETURN
@@ -117,7 +118,7 @@ GET_ACT_CLASS:
                 if (class <> 'USER'),
                  & (class <> 'DATASET'),
                  & (class <> 'GROUP') then
-                   "TBMOD" tbla
+                   "TBMOD" tablea
              end
         end
         when (substr(temp,2,25) = 'GENERIC',
@@ -131,7 +132,7 @@ GET_ACT_CLASS:
                 if (class <> 'USER'),
                  & (class <> 'DATASET'),
                  & (class <> 'GROUP') then
-                   "TBMOD" tbla
+                   "TBMOD" tablea
              end
         end
      End  /* end_select */
@@ -144,9 +145,9 @@ DISPLAY_TABLE:
   opta     = ' '
   sort     = 'CLASS,C,A'                                      /* @AD */
   sortclas = 'D'                                              /* @AR */
-  "TBSORT " tbla "FIELDS("sort")"                             /* @AD */
-  "TBTOP  " tbla
-  "TBDISPL" tbla "PANEL("PANEL27")"                           /* @AF */
+  "TBSORT " tablea "FIELDS("sort")"                           /* @AD */
+  "TBTOP  " tablea
+  "TBDISPL" tablea "PANEL("PANEL27")"                         /* @AF */
   reta = rc
   do while (reta < 8)   /* tablea */
      action = ''
@@ -156,8 +157,8 @@ DISPLAY_TABLE:
      PARSE VAR ZCMD ZCMD PARM SEQ                             /* @AD */
      IF (SROW <> "") & (SROW <> 0) THEN                       /* @AA */
         IF (SROW > 0) THEN DO                                 /* @AA */
-           "TBTOP " TBLA                                      /* @AA */
-           "TBSKIP" TBLA "NUMBER("SROW")"                     /* @AA */
+           "TBTOP " tablea                                    /* @AA */
+           "TBSKIP" tablea "NUMBER("SROW")"                   /* @AA */
         END                                                   /* @AA */
      Select
         WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN                 /* @AD */
@@ -166,15 +167,15 @@ DISPLAY_TABLE:
              lclass = parm                                    /* @A8 */
         WHEN (ABBREV("ONLY",ZCMD,1) = 1) THEN DO              /* @A9 */
              find_str = translate(parm)                       /* @A9 */
-             'tbtop ' tbla                                    /* @A9 */
-             'tbskip' tbla                                    /* @A9 */
+             'tbtop ' tablea                                  /* @A9 */
+             'tbskip' tablea                                  /* @A9 */
              do forever                                       /* @A9 */
                 str = translate(class action)                 /* @A9 */
                 if (pos(find_str,str) > 0) then nop           /* @A9 */
-                else 'tbdelete' tbla                          /* @A9 */
-                'tbskip' tbla                                 /* @A9 */
+                else 'tbdelete' tablea                        /* @A9 */
+                'tbskip' tablea                               /* @A9 */
                 if (rc > 0) then do                           /* @A9 */
-                   'tbtop' tbla                               /* @A9 */
+                   'tbtop' tablea                             /* @A9 */
                    leave                                      /* @A9 */
                 end                                           /* @A9 */
              end                                              /* @A9 */
@@ -196,7 +197,7 @@ DISPLAY_TABLE:
      End
      Do while (reta = 4)   /* process multi selection */
         "CONTROL DISPLAY RESTORE"
-        "TBDISPL" tbla
+        "TBDISPL" tablea
         reta = rc
         "CONTROL DISPLAY SAVE"
         Select
@@ -208,17 +209,17 @@ DISPLAY_TABLE:
         End
      end
      opta = ' '
-     "TBSORT" tbla "FIELDS("sort")"
-     "TBTOP " tbla
+     "TBSORT" tablea "FIELDS("sort")"
+     "TBTOP " tablea
      if (lclass <> '') then do
         class = lclass
-        "TBSARG" TBLA "NEXT NAMECOND(CLASS,GE)"
-        "TBSCAN" TBLA "NOREAD"
+        "TBSARG" tablea "NEXT NAMECOND(CLASS,GE)"
+        "TBSCAN" tablea "NOREAD"
      end
      else
-        "TBSKIP" tbla "NUMBER("XTDTOP")"
+        "TBSKIP" tablea "NUMBER("XTDTOP")"
      "CONTROL DISPLAY RESTORE"
-     "TBDISPL" tbla "PANEL("PANEL27")"                        /* @AF */
+     "TBDISPL" tablea "PANEL("PANEL27")"                      /* @AF */
      reta = rc
   end  /* Do while (reta < 8) */
 RETURN 0
@@ -260,7 +261,7 @@ REFRESH:
         call racfmsgs "ERR10" /* CMD FAILED */
      else do
         action = '*REFRESHED'
-        "TBMOD" tbla
+        "TBMOD" tablea
      end
   end
 RETURN

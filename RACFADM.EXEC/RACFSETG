@@ -12,9 +12,9 @@
 /* @A1  200220  RACFA    Added SETMTRAC=YES, then TRACE R             */
 /* @A0  200123  RACFA    Created REXX                                 */
 /*====================================================================*/
-PANEL16  = "RACFSETG"   /* Settings, menu option 0         */ /* @A3 */
+PANEL16     = "RACFSETG"   /* Settings, menu option 0      */ /* @A3 */
 parse source . . REXXPGM .                                    /* @A7 */
-REXXPGM  = LEFT(REXXPGM,8)                                    /* @A7 */
+REXXPGM     = LEFT(REXXPGM,8)                                 /* @A7 */
 
 ADDRESS ISPEXEC                                               /* @A2 */
   "VGET (SETMTRAC) ASIS"                                      /* @A1 */

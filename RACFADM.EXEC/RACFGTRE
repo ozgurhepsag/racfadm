@@ -18,10 +18,10 @@
 /* @A1  200416  RACFA    Increased size of SYSPRINT                   */
 /* @A0  200416  TRIDJK   Created REXX program                         */
 /*====================================================================*/
-EDITMACR = "RACFEMAC"    /* Edit Macro, delete space lines */ /* @A5 */
-DDNAME   = "RACFA"RANDOM(0,999)                               /* @A5 */
+EDITMACR    = "RACFEMAC"   /* Edit Macro, turn hilite off  */ /* @A5 */
+DDNAME      = "RACFA"RANDOM(0,999)                            /* @A5 */
 parse source . . REXXPGM .                                    /* @AD */
-REXXPGM  = LEFT(REXXPGM,8)                                    /* @AD */
+REXXPGM     = LEFT(REXXPGM,8)                                 /* @AD */
 
 ADDRESS ISPEXEC
   "VGET (SETGDISP SETMTRAC) ASIS"                             /* @AE */

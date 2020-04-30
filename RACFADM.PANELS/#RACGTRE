@@ -16,8 +16,8 @@
 +  the superior group.
 +
 +  And it can be used to examine the overall RACF group structure
-+  and determine the scope of the scope of the group for group-related
-+  user attributes (group-SPECIAL, group-OPERATIONS and group-AUDITOR).
++  and determine the scope of the group for group-related user
++  attributes (group-SPECIAL, group-OPERATIONS and group-AUDITOR).
 )PROC
   &ZUP     = #RACGTRE
 )END

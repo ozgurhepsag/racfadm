@@ -7,7 +7,7 @@
 /* @A1  200120  LBD      Added code for sites using qual. PLIB/MLIB   */
 /* @A0  200120  LBD      Created REXX                                 */
 /*====================================================================*/
-PANEL01 = "RACFMENU"    /* RACF Main Menu                  */ /* @A2 */
+PANEL01   = "RACFMENU"     /* RACF Main Menu               */ /* @A2 */
 
 ADDRESS ISPEXEC
   call Setup

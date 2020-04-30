@@ -146,10 +146,10 @@
 /*           Z/OS V1R4 ON SINGLE AND SPLIT DATABASES.                */
 /*                                                                   */
 /*********************************************************************/
-EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @A4 */
-DDNAME   = "RACFA"RANDOM(0,999)                               /* @AC */
+EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @A4 */
+DDNAME      = 'RACFA'RANDOM(0,999)  /* Unique ddname       */ /* @AC */
 parse source . . REXXPGM .                                    /* @AB */
-REXXPGM  = LEFT(REXXPGM,8)                                    /* @AB */
+REXXPGM   = LEFT(REXXPGM,8)                                   /* @AB */
 
 ADDRESS ISPEXEC "VGET (SETGDISP SETMTRAC)"                    /* @A5 */
 If (SETMTRAC <> 'NO') then do                                 /* @A6 */

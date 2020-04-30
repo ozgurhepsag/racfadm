@@ -1,19 +1,38 @@
 /*%NOCOMMENT====================* REXX *==============================*/
-/*  PURPOSE:  Execute/display RACF cmds and keep history of used cmds */
+/*  PURPOSE:  Execute/save/display RACF commands                      */
+/*--------------------------------------------------------------------*/
+/*  NOTES:    1) This REXX program will save the commands entered     */
+/*               into the user's dataset allocated to ISPTABLE or     */
+/*               ISPPROF in member RACFCMDS                           */
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A6  200430  RACFA    Added skeleton RACF commands to table        */
+/* @A5  200430  RACFA    Place table name in variable at top of REXX  */
 /* @A4  200429  RACFA    Standardize ddname, etc.                     */
 /* @A3  200429  RACFA    Chk Setting's 'REXX trace'                   */
 /* @A2  200429  RACFA    Chg HELP PF-Key to invoke 'TSO RACFHELP'     */
 /* @A1  200429  RACFA    Get Settings (Opt 0) 'Display files' to view */
 /* @A0  200429  LBD      Created REXX                                 */
 /*====================================================================*/
-PANEL01  = "RACFCMDS"    /* Execute RACF command           */ /* @A1 */
-EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @A1 */
+PANEL01     = "RACFCMDS"   /* Execute RACF command         */ /* @A1 */
+EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @A1 */
 parse source . . REXXPGM .                                    /* @A3 */
-REXXPGM  = LEFT(REXXPGM,8)                                    /* @A3 */
-DDNAME   = "RACFA"RANDOM(0,999)                               /* @A4 */
+REXXPGM     = LEFT(REXXPGM,8)                                 /* @A3 */
+DDNAME      = 'RACFA'RANDOM(0,999)  /* Unique ddname       */
+TABLE       = "RACFACMD"   /* Permanent table in ISPPROF   */ /* @A5 */
+RACFCMDS.   = ""                                              /* @A6 */
+RACFCMDS.0  = 7            /* Populate table w/ RACF cmds  */ /* @A6 */
+RACFCMDS.1  = "LU ?        CICS CSDATA DCE DFP EIM KERB",     /* @A6 */
+              "LANGUAGE LNOTES MFA NDS NETVIEW OMVS",         /* @A6 */
+              "OPERPARM OVM PROXY TSO WORKATTR"               /* @A6 */
+RACFCMDS.2  = "LG ?        CSDATA DFP OMVS OVM TME"           /* @A6 */
+RACFCMDS.3  = "LISTDSD DATASET('"?                  "')",     /* @A6 */
+              "ALL"                                           /* @A6 */
+RACFCMDS.4  = "RL ?        * ALL"                             /* @A6 */
+RACFCMDS.5  = "RL ?        ?        AUTH"                     /* @A6 */
+RACFCMDS.6  = "SEARCH CLASS(?       ) USER(?       )"         /* @A6 */
+RACFCMDS.7  = "SETROPTS LIST"                                 /* @A6 */
 
 ADDRESS ISPEXEC
   "VGET (SETGDISP SETMTRAC) ASIS"                             /* @A3 */
@@ -58,9 +77,9 @@ ADDRESS ISPEXEC
   /* ----------------------------------------------------- *
   | Open the table but if it doesn't exist then create it |
   * ----------------------------------------------------- */
-  'TBOpen racfacmd Library('isptabl') Write Share'
+  'TBOpen 'table' Library('isptabl') Write Share'             /* @A5 */
   if (rc > 0) then do
-     'tbcreate racfacmd keys(racfcmde)',
+     'tbcreate 'table' keys(racfcmde)',                       /* @A5 */
               'library('isptabl') write share'
       call populate
   end
@@ -82,9 +101,9 @@ ADDRESS ISPEXEC
   * ---------------------------------------------------------------- */
   do forever
      if (ztdsels = 0) then do
-        'tbtop racfacmd'
-        'tbskip racfacmd number('ztdtop')'
-        'tbdispl racfacmd panel('panel01') cursor(racfcmd)'
+        'tbtop 'table                                         /* @A5 */
+        'tbskip 'table' number('ztdtop')'                     /* @A5 */
+        'tbdispl 'table' panel('panel01') cursor(racfcmd)'    /* @A5 */
      end
      else
         'tbdispl racfacmd'
@@ -92,18 +111,18 @@ ADDRESS ISPEXEC
      if (row = 0) then rcsel = null
      if (row <> null) then
         if (row > 0) then do
-          'TBTop racfacmd'
-          'TBSkip racfacmd Number('row')'
+          'TBTop 'table                                       /* @A5 */
+          'TBSkip 'table' Number('row')'                      /* @A5 */
         end
      Select
         When (zcmd = 'CLEAR') then do
-             'tbclose racfacmd replcopy library('isptabl')'
-             'tberase racfacmd library('isptabl')'
-             'tbcreate racfacmd keys(racfcmde)',
+             'tbclose 'table' replcopy library('isptabl')'    /* @A5 */
+             'tberase 'table' library('isptabl')'             /* @A5 */
+             'tbcreate 'table' keys(racfcmde)',               /* @A5 */
                       'library('isptabl') write share'
              racfcmd = null
         end
-        When (rcsel = 'D') then 'tbdelete racfacmd'
+        When (rcsel = 'D') then 'tbdelete 'table              /* @A5 */
         When (rcsel = 'S') then do
              racfcmd = racfcmde
              ztdsels = 0
@@ -122,7 +141,7 @@ ADDRESS ISPEXEC
   /* -------------- *
   | Close and exit |
   * -------------- */
-  'tbclose racfacmd replcopy library('isptabl')'
+  'tbclose 'table' replcopy library('isptabl')'               /* @A5 */
 
   DO J = 1 TO 24                                              /* @A2 */
      K = RIGHT(J,2,0)                                         /* @A2 */
@@ -144,7 +163,7 @@ EXIT
 /*--------------------------------------------------------------------*/
 DO_RACFCMD:
   racfcmde = racfcmd
-  'tbadd racfacmd'
+  'tbadd 'table                                               /* @A5 */
   call outtrap 'so.'
   Address TSO racfcmde
   call outtrap 'off'
@@ -213,9 +232,11 @@ Address ISPExec
   'Control Display Restore'
 RETURN
 /*--------------------------------------------------------------------*/
-/*  Pre-Populate the git command table                                */
+/*  Pre-Populate the command table for new user                       */
 /*--------------------------------------------------------------------*/
 POPULATE:
-  racfcmde = 'LU'
-  'tbadd racfacmd'
+  DO J = 1 TO RACFCMDS.0
+     racfcmde = RACFCMDS.J
+     'tbadd 'table                                            /* @A5 */
+  END
 RETURN

@@ -16,9 +16,9 @@
 /* @A1  200119  RACFA    Standardized/reduced lines of code           */
 /* @A0  011229  NICORIZ  Created REXX, V2.1, www.rizzuto.it           */
 /*====================================================================*/
-PANELM1  = "RACFMSG1"   /* Confirm Request (pop-up)        */ /* @A5 */
+PANELM1     = "RACFMSG1"   /* Confirm Request (pop-up)     */ /* @A5 */
 parse source . . REXXPGM .                                    /* @AB */
-REXXPGM  = LEFT(REXXPGM,8)                                    /* @AB */
+REXXPGM     = LEFT(REXXPGM,8)                                 /* @AB */
 
 ADDRESS ISPEXEC                                               /* @A3 */
   Arg message

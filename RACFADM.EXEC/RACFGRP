@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CG  200430  RACFA    Chg tblb to tableb, moved def. var. up top   */
+/* @CF  200430  RACFA    Chg tbla to tablea, moved def. var. up top   */
 /* @CE  200429  RACFA    Re-arranged variables (General, Mgmt, TSO)   */
 /* @CD  200424  RACFA    Updated RESET, pass filter, ex: R filter     */
 /* @CA  200424  RACFA    Chg msg RACF013 to RACF012                   */
@@ -87,19 +89,21 @@
 /* @A1  200110  RACFA    Invoke RACFLIST when displaying a userid     */
 /* @A0  011229  NICORIZ  Created REXX, V2.1, www.rizzuto.it           */
 /*====================================================================*/
-PANEL01  = "RACFGRP1"    /* Set filter, menu option 2      */ /* @AW */
-PANEL02  = "RACFGRP2"    /* Add group                      */ /* @AW */
-PANEL04  = "RACFGRP4"    /* Alter profile                  */ /* @AW */
-PANEL05  = "RACFGRP5"    /* List userids and access        */ /* @AW */
-PANEL06  = "RACFGRP6"    /* Change connection              */ /* @AW */
-PANEL07  = "RACFGRP7"    /* Add connection                 */ /* @AW */
-PANEL08  = "RACFGRP8"    /* List groups and descriptions   */ /* @AW */
-PANELM1  = "RACFMSG1"    /* Confirm Request (pop-up)       */ /* @AW */
-PANELM2  = "RACFMSG2"    /* Display RACF command and RC    */ /* @AW */
-EDITMACR = "RACFEMAC"    /* Edit Macro, turn HILITE off    */ /* @BO */
-DDNAME   = "RACFA"RANDOM(0,999)                               /* @C9 */
+PANEL01     = "RACFGRP1"   /* Set filter, menu option 2    */ /* @AW */
+PANEL02     = "RACFGRP2"   /* Add group                    */ /* @AW */
+PANEL04     = "RACFGRP4"   /* Alter profile                */ /* @AW */
+PANEL05     = "RACFGRP5"   /* List userids and access      */ /* @AW */
+PANEL06     = "RACFGRP6"   /* Change connection            */ /* @AW */
+PANEL07     = "RACFGRP7"   /* Add connection               */ /* @AW */
+PANEL08     = "RACFGRP8"   /* List groups and descriptions */ /* @AW */
+PANELM1     = "RACFMSG1"   /* Confirm Request (pop-up)     */ /* @AW */
+PANELM2     = "RACFMSG2"   /* Display RACF command and RC  */ /* @AW */
+EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @BO */
+TABLEA      = 'TA'RANDOM(0,99999)   /* Unique table name A */ /* @CF */
+TABLEB      = 'TB'RANDOM(0,99999)   /* Unique table name B */ /* @CG */
+DDNAME      = 'RACFA'RANDOM(0,999)  /* Unique ddname       */ /* @C9 */
 parse source . . REXXPGM .                                    /* @C8 */
-REXXPGM  = LEFT(REXXPGM,8)                                    /* @C8 */
+REXXPGM     = LEFT(REXXPGM,8)                                 /* @C8 */
 
 ADDRESS ISPEXEC                                               /* @AO */
   Rclass = 'GROUP'
@@ -110,8 +114,8 @@ ADDRESS ISPEXEC                                               /* @AO */
      Rfilter = SETGFLTR                                       /* @AB */
   end                                                         /* @AB */
   "CONTROL ERRORS RETURN"                                     /* @B1 */
-  "VGET (ZSCREEN SETGSTA  SETGSTAP SETGDISP SETMADMN",        /* @CE */
-                "SETMIRRX SETMSHOW SETMTRAC) ASIS"            /* @CE */
+  "VGET (SETGSTA  SETGSTAP SETGDISP SETMADMN",                /* @CE */
+        "SETMIRRX SETMSHOW SETMTRAC) ASIS"                    /* @CE */
   If (SETMTRAC <> 'NO') then do                               /* @BZ */
      Say "*"COPIES("-",70)"*"                                 /* @BZ */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @BZ */
@@ -153,7 +157,7 @@ EXIT
 PROFL:
   call CREATE_TABLEA                                          /* @AP */
   if (group = 'INVALID') | (group = 'NO') then do             /* @B3 */
-     "TBEND" tbla
+     "TBEND" tablea
      if (cmd_rc > 0) then DO                                  /* @C5 */
         call racfmsgs 'ERR16'                                 /* @B3 */
         RETURN                                                /* @C5 */
@@ -167,9 +171,9 @@ PROFL:
   sortowne = 'A'; sortdata = 'A'                              /* @BL */
   CLRGROU  = "TURQ";  CLRDATA = "GREEN"  /* Col colors */     /* @AH */
   CLRSUPG  = "GREEN"; CLROWNE = "GREEN"                       /* @BC */
-  "TBSORT " tbla "FIELDS("sort")"                             /* @AU */
-  "TBTOP  " tbla
-  "TBDISPL" tbla "PANEL("PANEL08")"                           /* @AW */
+  "TBSORT " tablea "FIELDS("sort")"                           /* @AU */
+  "TBTOP  " tablea
+  "TBDISPL" tablea "PANEL("PANEL08")"                         /* @AW */
   reta = rc
   do while (reta < 8)   /* tablea panel */
      "CONTROL DISPLAY SAVE"
@@ -178,8 +182,8 @@ PROFL:
      PARSE VAR ZCMD ZCMD PARM seq                             /* @AC */
      IF (SROW <> "") & (SROW <> 0) THEN                       /* @AR */
         IF (SROW > 0) THEN DO                                 /* @AR */
-           "TBTOP " TBLA                                      /* @AR */
-           "TBSKIP" TBLA "NUMBER("SROW")"                     /* @AR */
+           "TBTOP " tablea                                    /* @AR */
+           "TBSKIP" tablea "NUMBER("SROW")"                   /* @AR */
         END                                                   /* @AR */
      Select
         WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN DO              /* @AF */
@@ -199,15 +203,15 @@ PROFL:
              lparm = parm                                     /* @A3 */
         WHEN (ABBREV("ONLY",ZCMD,1) = 1) THEN DO              /* @AP */
              find_str = translate(parm)                       /* @AP */
-             'tbtop ' tbla                                    /* @AP */
-             'tbskip' tbla                                    /* @AP */
+             'tbtop ' tablea                                  /* @AP */
+             'tbskip' tablea                                  /* @AP */
              do forever                                       /* @AP */
                 str = translate(group supgrp owner data)      /* @BC */
                 if (pos(find_str,str) > 0) then nop           /* @AP */
-                else 'tbdelete' tbla                          /* @AP */
-                'tbskip' tbla                                 /* @AP */
+                else 'tbdelete' tablea                        /* @AP */
+                'tbskip' tablea                               /* @AP */
                 if (rc > 0) then do                           /* @AP */
-                   'tbtop' tbla                               /* @AP */
+                   'tbtop' tablea                             /* @AP */
                    leave                                      /* @AP */
                 end                                           /* @AP */
              end                                              /* @AP */
@@ -219,7 +223,7 @@ PROFL:
              sortgrou = 'D'; sortsupg = 'A'                   /* @BL */
              sortowne = 'A'; sortdata = 'A'                   /* @BL */
              xtdtop   = 1                                     /* @AE */
-             "TBEND" tbla                                     /* @BL */
+             "TBEND" tablea                                   /* @BL */
              call CREATE_TABLEA                               /* @AP */
         END                                                   /* @AE */
         otherwise lparm = ''
@@ -237,13 +241,13 @@ PROFL:
      End /* Select */
      Do while (reta = 4)   /* process multi selection */
         "CONTROL DISPLAY RESTORE"
-        "TBDISPL" tbla
+        "TBDISPL" tablea
         reta = rc
         "CONTROL DISPLAY SAVE"
         IF (SROW <> "") & (SROW <> 0) THEN                    /* @AR */
            IF (SROW > 0) THEN DO                              /* @AR */
-              "TBTOP " TBLA                                   /* @AR */
-              "TBSKIP" TBLA "NUMBER("SROW")"                  /* @AR */
+              "TBTOP " tablea                                 /* @AR */
+              "TBSKIP" tablea "NUMBER("SROW")"                /* @AR */
            END                                                /* @AR */
         Select
            when (opta = 'A') then call Addd
@@ -260,8 +264,8 @@ PROFL:
      CLRGROU = "GREEN"; CLRDATA = "GREEN"                     /* @AH */
      CLRSUPG = "GREEN"; CLROWNE = "GREEN"                     /* @BC */
      INTERPRET "CLR"SUBSTR(LOCARG,1,4)" = 'TURQ'"             /* @AH */
-     "TBSORT" tbla "FIELDS("sort")"
-     "TBTOP " tbla
+     "TBSORT" tablea "FIELDS("sort")"
+     "TBTOP " tablea
      if (lparm <> '') then do
         ASTERICK = "*"                                        /* @A3 */
         INTERPRET LOCARG" = lparm||ASTERICK"                  /* @A3 */
@@ -270,14 +274,14 @@ PROFL:
            CONDLIST = "LE"                                    /* @AD */
         ELSE                                                  /* @AD */
            CONDLIST = "GE"                                    /* @AD */
-        "TBSCAN "tbla,                                        /* @A3 */
+        "TBSCAN "tablea,                                      /* @A3 */
                 "ARGLIST("LOCARG") CONDLIST("CONDLIST")"      /* @AD */
      end
      else
-        "TBSKIP" tbla "NUMBER("XTDTOP")"
+        "TBSKIP" tablea "NUMBER("XTDTOP")"
      opta = ' '
      "CONTROL DISPLAY RESTORE"
-     "TBDISPL" tbla "PANEL("PANEL08")"                        /* @AW */
+     "TBDISPL" tablea "PANEL("PANEL08")"                      /* @AW */
      reta = rc
   end  /* Do while (reta < 8) */
 RETURN
@@ -328,10 +332,10 @@ ADDD:
      CALL racfmsgs 'ERR01' /* Add failed */                   /* @B5 */
      return
   end
-  "TBMOD" TBLA
+  "TBMOD" tablea
   if (new = 'YES') then do
      group = 'NONE'
-     "TBDELETE"  TBLA
+     "TBDELETE"  tablea
   end
 RETURN
 /*--------------------------------------------------------------------*/
@@ -354,7 +358,7 @@ CHGD:
   if (cmd_rc > 0) then                                        /* @BA */
      call racfmsgs 'ERR07' /* Altgroup failed */              /* @B5 */
   else
-     "TBMOD" tbla
+     "TBMOD" tablea
 RETURN
 /*--------------------------------------------------------------------*/
 /*  Delete profile                                                    */
@@ -367,7 +371,7 @@ DELD:
   if (sure_? = 'YES') then do
      call EXCMD "DG ("group")"
      if (cmd_rc = 0) then                                     /* @BA */
-        "TBDELETE" TBLA
+        "TBDELETE" tablea
      else
        CALL racfmsgs "ERR02" /* RDELETE failed */             /* @B5 */
   end
@@ -385,18 +389,18 @@ DISD:
      rb   = 'NO'
      optb = ' '
      drop rownum
-     "TBQUERY" tblb "ROWNUM("rownum")"
+     "TBQUERY" tableb "ROWNUM("rownum")"
      if (rownum = 0) then do
         id  = 'NONE'
         acc = ''                                              /* @C6 */
-        "TBMOD" tblb
+        "TBMOD" tableb
      end
      sort   = 'ID,C,A'                                        /* @BN */
      sortid = 'D'; sortacce = 'A'         /* Sort order */    /* @BM */
      CLRID  = "TURQ";  CLRACC = "GREEN"   /* COL COLORS */    /* @BM */
-     "TBSORT " tblb "FIELDS("sort")"                          /* @BM */
-     "TBTOP  " tblb
-     "TBDISPL" tblb "PANEL("PANEL05")"                        /* @AW */
+     "TBSORT " tableb "FIELDS("sort")"                        /* @BM */
+     "TBTOP  " tableb
+     "TBDISPL" tableb "PANEL("PANEL05")"                      /* @AW */
      retb = rc
      Do while (retb < 8)        /* tableb panel */
         "CONTROL DISPLAY SAVE"
@@ -405,8 +409,8 @@ DISD:
         PARSE VAR ZCMD ZCMD PARM seq                          /* @BM */
         IF (SROW <> "") & (SROW <> 0) THEN                    /* @AR */
            IF (SROW > 0) THEN DO                              /* @AR */
-              "TBTOP " TBLB                                   /* @AR */
-              "TBSKIP" TBLB "NUMBER("SROW")"                  /* @AR */
+              "TBTOP " tableb                                 /* @AR */
+              "TBSKIP" tableb "NUMBER("SROW")"                /* @AR */
            END                                                /* @AR */
         Select                                                /* @BM */
            WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN DO           /* @BM */
@@ -422,15 +426,15 @@ DISD:
                 lparm = parm                                  /* @BM */
            WHEN (ABBREV("ONLY",ZCMD,1) = 1) THEN DO           /* @BM */
                 find_str = translate(parm)                    /* @BM */
-                'tbtop ' tblb                                 /* @BM */
-                'tbskip' tblb                                 /* @BM */
+                'tbtop ' tableb                               /* @BM */
+                'tbskip' tableb                               /* @BM */
                 do forever                                    /* @BM */
                    str = translate(id acc)                    /* @BM */
                    if (pos(find_str,str) > 0) then nop        /* @BM */
-                   else 'tbdelete' tblb                       /* @BM */
-                   'tbskip' tblb                              /* @BM */
+                   else 'tbdelete' tableb                     /* @BM */
+                   'tbskip' tableb                            /* @BM */
                    if (rc > 0) then do                        /* @BM */
-                      'tbtop' tblb                            /* @BM */
+                      'tbtop' tableb                          /* @BM */
                       leave                                   /* @BM */
                    end                                        /* @BM */
                 end                                           /* @BM */
@@ -439,7 +443,7 @@ DISD:
                 sort     = 'ID,C,A'                           /* @BM */
                 sortid   = 'D'; sortacc = 'A'                 /* @BM */
                 xtdtop   = 1                                  /* @BM */
-                "TBEND" tblb                                  /* @BM */
+                "TBEND" tableb                                /* @BM */
                 call create_tableb                            /* @BM */
            END                                                /* @BM */
            otherwise lparm = ''                               /* @BM */
@@ -460,7 +464,7 @@ DISD:
            End
            Do while (retb = 4)   /* process multi-section */
               "CONTROL DISPLAY RESTORE"
-              "TBDISPL" tblb
+              "TBDISPL" tableb
               retb = rc
               "CONTROL DISPLAY SAVE"
               Select
@@ -481,8 +485,8 @@ DISD:
         PARSE VAR SORT LOCARG "," .                           /* @BM */
         CLRID = "GREEN"; CLRACC = "GREEN"                     /* @BM */
         INTERPRET "CLR"SUBSTR(LOCARG,1,4)" = 'TURQ'"          /* @BM */
-        "TBSORT" tblb "FIELDS("sort")"                        /* @BM */
-        "TBTOP " tblb                                         /* @BM */
+        "TBSORT" tableb "FIELDS("sort")"                      /* @BM */
+        "TBTOP " tableb                                       /* @BM */
         if (lparm <> '') then do                              /* @BM */
            ASTERICK = "*"                                     /* @BM */
            INTERPRET LOCARG" = lparm||ASTERICK"               /* @BM */
@@ -491,19 +495,19 @@ DISD:
               CONDLIST = "LE"                                 /* @BM */
            ELSE                                               /* @BM */
               CONDLIST = "GE"                                 /* @BM */
-           "TBSCAN "tblb,                                     /* @BM */
+           "TBSCAN "tableb,                                   /* @BM */
                    "ARGLIST("LOCARG") CONDLIST("CONDLIST")"   /* @BM */
         end                                                   /* @BM */
         else                                                  /* @BM */
-           "TBSKIP" tblb "NUMBER("XTDTOP")"                   /* @BM */
+           "TBSKIP" tableb "NUMBER("XTDTOP")"                 /* @BM */
         if (rb = "YES") then
            retb = 12         /* rebuild table required */
         else do
-           "TBDISPL" tblb "PANEL("PANEL05")"                  /* @AW */
+           "TBDISPL" tableb "PANEL("PANEL05")"                /* @AW */
            retb = rc
         end
      end /* While retb < 8 */
-     "TBEND" tblb
+     "TBEND" tableb
   end /* Do until */
   sort = tmpsort                                              /* @BM */
 RETURN
@@ -511,8 +515,7 @@ RETURN
 /*  Create table 'B'                                             @BM  */
 /*--------------------------------------------------------------------*/
 CREATE_TABLEB:                                                /* @BM */
-  tblb = 'TB'ZSCREEN||SECONDS   /* table name unique */
-  "TBCREATE" TBLB "KEYS(ID) NAMES(ACC)",
+  "TBCREATE" tableb "KEYS(ID) NAMES(ACC)",
                   "REPLACE NOWRITE"
   flags  = 'OFF'
   audit  = ' '
@@ -589,7 +592,7 @@ CREATE_TABLEB:                                                /* @BM */
            acc = subword(temp,2,1)
         end
         if (substr(temp,8,2) <> ' ') then
-           "TBMOD" tblb
+           "TBMOD" tableb
      end
      if (subword(temp,1,1) = 'USER(S)=') then do
         flags = 'ON'   /* start access list */
@@ -630,7 +633,7 @@ CHGP:
      return
   call EXCMD "CONNECT ("id") GROUP("group") AUTH("acc")"
   if (cmd_rc = 0) then                                        /* @BA */
-     "TBMOD" tblb
+     "TBMOD" tableb
   else
      Call racfmsgs 'ERR03' /* Permit failed */                /* @B5 */
 RETURN
@@ -752,10 +755,10 @@ ADDP:
   fopt = ' '
   call EXCMD "CONNECT ("id") GROUP("group") AUTH("acc")"
   if (cmd_rc = 0) then do                                     /* @BA */
-     "TBMOD" tblb
+     "TBMOD" tableb
      if (new = 'YES') then do
         id = 'NONE'
-        "TBDELETE" tblb
+        "TBDELETE" tableb
      end
   end
   else do
@@ -776,7 +779,7 @@ DELP:
   if (sure_? = 'YES') then do
      call EXCMD "REMOVE "id" GROUP("group")"
      if (cmd_rc = 0) then                                     /* @BA */
-        "TBDELETE" tblb
+        "TBDELETE" tableb
      else
         call racfmsgs 'ERR06' /* Permit Failed */             /* @B5 */
   end
@@ -840,8 +843,7 @@ RETURN                                                        /* @AN */
 /*--------------------------------------------------------------------*/
 CREATE_TABLEA:                                                /* @AP */
   seconds = TIME('S')
-  tbla    = 'TA'ZSCREEN||SECONDS  /* table name unique */
-  "TBCREATE" tbla "KEYS(GROUP) NAMES(DATA SUPGRP OWNER)",     /* @BC */
+  "TBCREATE" tablea "KEYS(GROUP) NAMES(DATA SUPGRP OWNER)",   /* @BC */
            "REPLACE NOWRITE"
   cmd = "SEARCH FILTER("RFILTER") CLASS("rclass")"            /* @AN */
   x = OUTTRAP('var.')
@@ -914,6 +916,6 @@ CREATE_TABLEA:                                                /* @AP */
      END                                                      /* @C7 */
      /* Get further information */
      Call GETD
-     "TBMOD" tbla
+     "TBMOD" tablea
   end /* Do i=1 to var.0 */
 RETURN                                                        /* @AP */

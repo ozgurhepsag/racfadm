@@ -44,12 +44,12 @@
 /* @A1  200118  RACFA    Fixed NOPREF issue with users TSO PROFILE    */
 /* @A0  011229  NICORIZ  Created REXX, V2.1, www.rizzuto.it           */
 /*====================================================================*/
-PANEL29  = "RACFUSRT"   /* Add, chg and del a TSO userid   */ /* @A9 */
-PANELM2  = "RACFMSG2"   /* Display RACF command and RC     */ /* @AW */
-X        = MSG("OFF")   /* No informational messages       */ /* @AD */
-DDNAME   = "RACFA"RANDOM(0,999)                               /* @AW */
+X           = MSG("OFF")   /* No informational messages    */ /* @AD */
+PANEL29     = "RACFUSRT"   /* Add, chg and del TSO userid  */ /* @A9 */
+PANELM2     = "RACFMSG2"   /* Display RACF command and RC  */ /* @AW */
+DDNAME      = 'RACFA'RANDOM(0,999)  /* Unique ddname       */ /* @AW */
 parse source . . REXXPGM .                                    /* @B2 */
-REXXPGM  = LEFT(REXXPGM,8)                                    /* @B2 */
+REXXPGM     = LEFT(REXXPGM,8)                                 /* @B2 */
 
 ADDRESS ISPEXEC                                               /* @AF */
   "VGET (SETMSHOW SETMTRAC SETTCTLG SETTPROF SETTUDSN) ASIS"  /* @B3 */

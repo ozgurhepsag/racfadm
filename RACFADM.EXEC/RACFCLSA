@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AP  200430  RACFA    Chg tbla to tablea, moved def. var. up top   */
 /* @AO  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @AN  200422  RACFA    Ensure the REXX program name is 8 chars      */
 /* @AM  200422  RACFA    Use variable REXXPGM in log msg              */
@@ -29,16 +30,17 @@
 /* @A1  200119  RACFA    Standardized/reduced lines of code           */
 /* @A0  011229  NICORIZ  Created REXX, V2.1, www.rizzuto.it           */
 /*====================================================================*/
-PANEL14  = "RACFCLSE"    /* Enter profile/class/user        */ /* @AL */
-PANEL15  = "RACFCLSF"    /* List group/ids and access       */ /* @AL */
-PANELM2  = "RACFMSG2"    /* Display RACF command and RC     */ /* @A8 */
-parse source . . REXXPGM .                                     /* @AO */
-REXXPGM  = LEFT(REXXPGM,8)                                     /* @AO */
+PANEL14     = "RACFCLSE"   /* Enter profile/class/user     */ /* @AL */
+PANEL15     = "RACFCLSF"   /* List group/ids and access    */ /* @AL */
+PANELM2     = "RACFMSG2"   /* Display RACF command and RC  */ /* @A8 */
+TABLEA      = 'TA'RANDOM(0,99999)   /* Unique table name A */ /* @AP */
+parse source . . REXXPGM .                                    /* @AO */
+REXXPGM   = LEFT(REXXPGM,8)                                   /* @AO */
 
 ADDRESS ISPEXEC                                               /* @A6 */
   Arg rclass profile user
   "CONTROL ERRORS RETURN"                                     /* @AC */
-  "VGET (ZSCREEN SETMSHOW SETMTRAC) ASIS"                     /* @A3 */
+  "VGET (SETMSHOW SETMTRAC) ASIS"                             /* @A3 */
   If (SETMTRAC <> 'NO') then do                               /* @AI */
      Say "*"COPIES("-",70)"*"                                 /* @AI */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AI */
@@ -74,21 +76,20 @@ RETURN 0
 /*--------------------------------------------------------------------*/
 ANALYSE:
   seconds = time('S')
-  tbla    = 'TB'ZSCREEN||SECONDS  /* make table name unique */
-  "TBCREATE" TBLA "KEYS(ID) NAMES(ACC) REPLACE NOWRITE"
+  "TBCREATE" tablea "KEYS(ID) NAMES(ACC) REPLACE NOWRITE"
   do a = 1 to acl_ix
      id  = subword(acl.a,1,1)
      acc = subword(acl.a,2,1)
      do g = 1 to grp_ix
         if (id = subword(grp.g,1,1)) | (id = user) then
-           "TBMOD" tbla
+           "TBMOD" tablea
      end
   end
   /* Permit table display section */
-  "TBSORT " tbla "FIELDS(ID)"
-  "TBTOP  " tbla
-  "TBDISPL" tbla "PANEL("PANEL15")"                           /* @A8 */
-  "TBEND  " tbla
+  "TBSORT " tablea "FIELDS(ID)"
+  "TBTOP  " tablea
+  "TBDISPL" tablea "PANEL("PANEL15")"                         /* @A8 */
+  "TBEND  " tablea
 RETURN
 /*--------------------------------------------------------------------*/
 /*  Get profile permits                                               */

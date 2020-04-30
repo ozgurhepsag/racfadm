@@ -10,7 +10,7 @@
  RACFCLSG  Class          Extract generic class profiles
  RACFCLSR  Class          Display class profiles, menu option 4
  RACFCLSS  Class          Search and display classes
- RACFCMDS  Commands       Execute TSO RACF commands
+ RACFCMDS  Commands       Execute/save/display TSO RACF commands
  RACFDB    Database       Display RACF database info, menu option 8
  RACFDSL   Dslist         Invoke DSLIST on ALTLIB/LIBDEF DSNs, opt D
  RACFDSN   Dataset        Display dataset profiles

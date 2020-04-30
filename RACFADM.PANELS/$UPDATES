@@ -2,6 +2,25 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  30 Apr 2020 - V22R7
+     - User (Option 1)
+       -- Line command 'AL'ter, allow selecting NOTSO, NOCICS, NODFP
+          and NOOMVS
+          * Prior the user had to select all the entries below these
+            column headers
+     - Commands (Option C)
+       -- Updated panel RACFCMDS
+       -- Added more example RACF commands
+          * If you used this menu entry prior to this change,
+            you will need to delete the member RACFCMDS in the
+            dataset allocated to ISPTABL or ISPPROF dd card
+     - Tutorial (Option T)
+       -- Updated panels #RACMENU, #RACGTRE and #RACNOT1
+     - Other Items
+       -- Updated all REXX programs
+          * Defined tables names at the top of the program, using a
+            random number
+
   30 Apr 2020 - V22R6
      - Commands (Option C)
        -- Added '(F1 - RACF help cmds)' to the panel
