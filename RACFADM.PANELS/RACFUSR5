@@ -45,9 +45,9 @@
   &nodfp1  = ''
   &nodfp2  = ''
   &nodfp3  = ''
-  &nomvs   = ''
-  &nomvs1  = ''
-  &nomvs2  = ''
+  &noomvs  = ''
+  &noomvs1 = ''
+  &noomvs2 = ''
   &nospec  = ''
   &noop    = ''
   &nogrp   = ''
@@ -55,9 +55,9 @@
   &noadsp  = ''
   &noraud  = ''
   &norest  = ''
-  .zvars   = '(notso  nocics  nodfp  nomvs   +
-               notso1 nocics1 nodfp1 nomvs1  +
-               notso2 nocics2 nodfp2 nomvs2  +
+  .zvars   = '(notso  nocics  nodfp  noomvs  +
+               notso1 nocics1 nodfp1 noomvs1 +
+               notso2 nocics2 nodfp2 noomvs2 +
                notso3 nocics3 nodfp3  +
                notso4 nocics4  +
                nospec noop nogrp noaud noadsp noraud norest)'
@@ -65,6 +65,10 @@
   VER (&USER,NB)
   *rexx(*)
       if (notso <> '') then do
+         notso = 'NOTSO'
+         call addnos notso
+         end
+      else do
          if (notso1  /= '') then notso  = 'NOPROC'
          if (notso2  /= '') then notso  = notso 'NOACCT'
          if (notso3  /= '') then notso  = notso 'NOSIZE'
@@ -72,12 +76,14 @@
          if (notso   /= '') then do
             notso = 'TSO('strip(notso)')'
             call addnos notso
+            end
          end
-      end
-      else
-         notso = 'TSO(NOPROC NOACCT NOSIZE NOUNIT)'
 
       if (nocics <> '') then do
+         nocics = 'NOCICS'
+         call addnos nocics
+         end
+      else do
          if (nocics1 /= '') then nocics = 'NOOPCLASS'
          if (nocics2 /= '') then nocics = nocics 'NOOPIDENT'
          if (nocics3 /= '') then nocics = nocics 'NOOPPRTY'
@@ -85,34 +91,35 @@
          if (nocics  /= '') then do
             nocics = 'CICS('strip(nocics)')'
             call addnos nocics
+            end
          end
-      end
-      else
-         nocics = 'CICS(NOOPCLASS NOOPIDENT NOOPRTY',
-                       'NOTIMEOUT)'
 
-      if (nodfp = '') then do
+      if (nodfp <> '') then do
+         nodfp = 'NODFP'
+         call addnos nodfp
+         end
+      else do
          if (nodfp1  /= '') then nodfp  = 'NODATACLAS'
          if (nodfp2  /= '') then nodfp  = nodfp 'NOSTORCLAS'
          if (nodfp3  /= '') then nodfp  = nodfp 'NOMGMTCLAS'
          if (nodfp   /= '') then do
             nodfp = 'DFP('strip(nodfp)')'
             call addnos nodfp
+            end
          end
-      end
-      else
-         nodfp = 'DFP(NODATACLAS NOSTORCLAS NOMGMTCLAS)'
 
-      if (noomvs = '') then do
-         if (nomvs1  /= '') then noomvs = 'NOHOME'
-         if (nomvs2  /= '') then noomvs = noomvs 'NOPROGRAM'
+      if (noomvs <> '') then do
+         noomvs = 'NOOMVS'
+         call addnos noomvs
+         end
+      else do
+         if (noomvs1 /= '') then noomvs = 'NOHOME'
+         if (noomvs2 /= '') then noomvs = noomvs 'NOPROGRAM'
          if (noomvs  /= '') then do
             noomvs = 'OMVS('strip(noomvs)')'
             call addnos noomvs
+            end
          end
-      end
-      else
-         noomvs = 'OMVS(NOHOME NOPROGRAM)'
 
       if (nospec  /= '') then call addnos 'NOSPECIAL'
       if (noop    /= '') then call addnos 'NOOPERATIONS'

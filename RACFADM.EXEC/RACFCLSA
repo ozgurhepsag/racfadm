@@ -3,7 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @AP  200430  RACFA    Chg tbla to table1, moved def. var. up top   */
+/* @AP  200430  RACFA    Chg tbla to TABLEA, moved def. var. up top   */
 /* @AO  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @AN  200422  RACFA    Ensure the REXX program name is 8 chars      */
 /* @AM  200422  RACFA    Use variable REXXPGM in log msg              */
@@ -33,7 +33,7 @@
 PANEL14     = "RACFCLSE"   /* Enter profile/class/user     */ /* @AL */
 PANEL15     = "RACFCLSF"   /* List group/ids and access    */ /* @AL */
 PANELM2     = "RACFMSG2"   /* Display RACF command and RC  */ /* @A8 */
-table1      = 'TA'RANDOM(0,99999)   /* Unique table name A */ /* @AP */
+TABLEA      = 'TA'RANDOM(0,99999)   /* Unique table name A */ /* @AP */
 parse source . . REXXPGM .                                    /* @AO */
 REXXPGM   = LEFT(REXXPGM,8)                                   /* @AO */
 
@@ -76,20 +76,20 @@ RETURN 0
 /*--------------------------------------------------------------------*/
 ANALYSE:
   seconds = time('S')
-  "TBCREATE" table1 "KEYS(ID) NAMES(ACC) REPLACE NOWRITE"
+  "TBCREATE" TABLEA "KEYS(ID) NAMES(ACC) REPLACE NOWRITE"
   do a = 1 to acl_ix
      id  = subword(acl.a,1,1)
      acc = subword(acl.a,2,1)
      do g = 1 to grp_ix
         if (id = subword(grp.g,1,1)) | (id = user) then
-           "TBMOD" table1
+           "TBMOD" TABLEA
      end
   end
   /* Permit table display section */
-  "TBSORT " table1 "FIELDS(ID)"
-  "TBTOP  " table1
-  "TBDISPL" table1 "PANEL("PANEL15")"                         /* @A8 */
-  "TBEND  " table1
+  "TBSORT " TABLEA "FIELDS(ID)"
+  "TBTOP  " TABLEA
+  "TBDISPL" TABLEA "PANEL("PANEL15")"                         /* @A8 */
+  "TBEND  " TABLEA
 RETURN
 /*--------------------------------------------------------------------*/
 /*  Get profile permits                                               */

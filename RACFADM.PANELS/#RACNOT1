@@ -21,10 +21,10 @@
 !       9  Analyze   Verify ACL
 !       B  Bookmgr   RACF Manuals
 +
-!  4)+The menu option%Command,+saves the commands into the user's dataset
+!  4)+To set site default%Settings+for new users, edit the panel mbr%$DEFSETG
++
+!  5)+The menu option%Command,+saves the commands into the user's dataset
 +     allocated to%ISPTABLE+or%ISPPROF+in member%RACFCMDS
-+
-+
 +
 + \ \ (press%ENTER+to continue) \ \
 )PROC

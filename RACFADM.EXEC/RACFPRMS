@@ -3,7 +3,9 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @AK  200430  RACFA    Chg tbla to table1, moved def. var. up top   */
+/* @AM  200501  RACFA    Commented 'JES early verify', obsolete parm  */
+/* @AL  200501  LBD      Add primary commands FIND/RFIND              */
+/* @AK  200430  RACFA    Chg tbla to TABLEA, moved def. var. up top   */
 /* @AJ  200429  TRIDJK   Chg text on 2 parmeters                      */
 /* @AI  200429  RACFA    Chg 'Datasets' to 'Dataset'                  */
 /* @AH  200428  TRIDJK   Fixed variable names                         */
@@ -26,7 +28,7 @@
 /* @A0  011229  NICORIZ  Created REXX, V2.1, www.rizzuto.it           */
 /*====================================================================*/
 PANEL19     = "RACFPRMS"   /* RACF parameters, menu opt 7  */ /* @A5 */
-table1      = 'TA'RANDOM(0,99999)   /* Unique table name A */ /* @AK */
+TABLEA      = 'TA'RANDOM(0,99999)   /* Unique table name A */ /* @AK */
 parse source . . REXXPGM .                                    /* @AB */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @AB */
 parse value '' with null                                      /* @AE */
@@ -67,13 +69,26 @@ ADDRESS ISPEXEC                                               /* @A4 */
   /* Display the table and process it */                      /* @AE */
   /*----------------------------------*/                      /* @AE */
   Do forever                                                  /* @AE */
-     'tbdispl' table1 'panel('panel19')'                      /* @AE */
-     if (rc > 0) then leave                                   /* @AE */
+     radmrfnd = 'PASSTHRU'                                    /* @AL */
+     'vput (radmrfnd)'                                        /* @AL */
+     'tbdispl' TABLEA 'panel('panel19')'                      /* @AE */
+     lastrc = rc                                              /* @AL */
+     radmrfnd = null                                          /* @AL */
+     'vput (radmrfnd)'                                        /* @AL */
+     if (lastrc > 0) then leave                               /* @AE */
      /*-------------------------*/                            /* @AE */
      /* Reset racfrfnd to blank */                            /* @AE */
      /*-------------------------*/                            /* @AE */
      PARSE VAR ZCMD ZCMD PARM SEQ                             /* @AG */
+     if (zcmd = 'RFIND') then do                              /* @AL */
+        zcmd = 'FIND'                                         /* @AL */
+        parm = findit                                         /* @AL */
+        'tbtop' tablea                                        /* @AL */
+        'tbskip' tablea 'number('last_find')'                 /* @AL */
+     end                                                      /* @AL */
      Select                                                   /* @AG */
+        When (abbrev("FIND",zcmd,1) = 1) then                 /* @AL */
+             call do_find                                     /* @AL */
         When (abbrev('LOCATE',zcmd,1) = 1) then               /* @AG */
              call do_locate                                   /* @AG */
         When (abbrev('ONLY',zcmd,1) = 1) then                 /* @AG */
@@ -87,13 +102,13 @@ ADDRESS ISPEXEC                                               /* @A4 */
         When (abbrev('RESET',zcmd,1) = 1) then do             /* @AG */
              sort     = 'DESCU,C,A'                           /* @AG */
              sortdesc = 'A'; sortvalu = 'A'                   /* @AG */
-             "TBEND" table1                                   /* @AG */
+             "TBEND" TABLEA                                   /* @AG */
              call Build_table                                 /* @AG */
         end                                                   /* @AG */
         otherwise nop                                         /* @AG */
      end                                                      /* @AG */
   end                                                         /* @AE */
-  'tbend' table1                                              /* @AE */
+  'tbend' TABLEA                                              /* @AE */
                                                               /* @AE */
   If (SETMTRAC <> 'NO') then do                               /* @A6 */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */
@@ -103,10 +118,55 @@ ADDRESS ISPEXEC                                               /* @A4 */
                                                               /* @AE */
 RETURN 0000                                                   /* @AE */
 /*--------------------------------------------------------------------*/
+/*  Process primary command FIND                                 @AL  */
+/*--------------------------------------------------------------------*/
+DO_FIND:                                                      /* @AL */
+  if (parm = null) then do                                    /* @AL */
+     racfsmsg = 'Error'                                       /* @AL */
+     racflmsg = 'Find requires a value to search for.' ,      /* @AL */
+                'Try again.'                                  /* @AL */
+     'setmsg msg(RACF011)'                                    /* @AL */
+     return                                                   /* @AL */
+  end                                                         /* @AL */
+  findit    = translate(parm)                                 /* @AL */
+  last_find = 0                                               /* @AL */
+  wrap      = 0                                               /* @AL */
+  do forever                                                  /* @AL */
+     'tbskip' tablea                                          /* @AL */
+     if (rc > 0) then do                                      /* @AL */
+        if (wrap = 1) then do                                 /* @AL */
+           racfsmsg = 'Not Found'                             /* @AL */
+           racflmsg = findit 'not found.'                     /* @AL */
+           'setmsg msg(RACF011)'                              /* @AL */
+           return                                             /* @AL */
+        end                                                   /* @AL */
+        if (wrap = 0) then wrap = 1                           /* @AL */
+        'tbtop' tablea                                        /* @AL */
+     end                                                      /* @AL */
+     else do                                                  /* @AL */
+        testit = translate(desc value)                        /* @AL */
+        if (pos(findit,testit) > 0) then do                   /* @AL */
+           'tbquery' tablea 'position(srow)'                  /* @AL */
+           'tbtop'   tablea                                   /* @AL */
+           'tbskip'  tablea 'number('srow')'                  /* @AL */
+           last_find = srow                                   /* @AL */
+           xtdtop    = srow                                   /* @AL */
+           if (wrap = 0) then                                 /* @AL */
+              racfsmsg = 'Found'                              /* @AL */
+           else                                               /* @AL */
+              racfsmsg = 'Found/Wrapped'                      /* @AL */
+           racflmsg = findit 'found in row' srow + 0          /* @AL */
+           'setmsg msg(RACF011)'                              /* @AL */
+           return                                             /* @AL */
+        end                                                   /* @AL */
+     end                                                      /* @AL */
+  end                                                         /* @AL */
+RETURN                                                        /* @AL */
+/*--------------------------------------------------------------------*/
 /*  Reset the table                                              @AE  */
 /*--------------------------------------------------------------------*/
 Do_Reset:                                                     /* @AE */
-  'tbend' table1                                              /* @AE */
+  'tbend' TABLEA                                              /* @AE */
   call table_create                                           /* @AE */
   call build_table                                            /* @AE */
 RETURN                                                        /* @AE */
@@ -135,8 +195,8 @@ DO_SORT:                                                      /* @AE */
      end                                                      /* @AG */
   end                                                         /* @AG */
   INTERPRET "SORT"SUBSTR(SORTCOL,1,4)" = TMPSEQ"              /* @AG */
-  'TBSort' table1 'Fields('sort')'                            /* @AG */
-  'tbtop'  table1                                             /* @AE */
+  'TBSort' TABLEA 'Fields('sort')'                            /* @AG */
+  'tbtop'  TABLEA                                             /* @AE */
   CLRDESC = "GREEN"; CLRVALU = "GREEN"                        /* @AG */
   INTERPRET "CLR"SUBSTR(SORTCOL,1,4)" = 'TURQ'"               /* @AG */
 RETURN                                                        /* @AE */
@@ -152,22 +212,22 @@ DO_LOCATE:                                                    /* @AE */
      CONDLIST = "LE"                                          /* @AG */
   ELSE                                                        /* @AG */
      CONDLIST = "GE"                                          /* @AG */
-  "TBSCAN "table1,                                            /* @AG */
+  "TBSCAN "TABLEA,                                            /* @AG */
           "ARGLIST("LOCARG") CONDLIST("CONDLIST")"            /* @AG */
 RETURN                                                        /* @AE */
 /*--------------------------------------------------------------------*/
 /*  Only display rows with the provided text string              @AE  */
 /*--------------------------------------------------------------------*/
 DO_ONLY:                                                      /* @AE */
-  'tbtop' table1                                              /* @AE */
+  'tbtop' TABLEA                                              /* @AE */
   hit = 0                                                     /* @AE */
   do forever                                                  /* @AE */
-     'tbskip' table1                                          /* @AE */
+     'tbskip' TABLEA                                          /* @AE */
      if (rc > 0) then leave                                   /* @AE */
      hit = 0                                                  /* @AE */
      if (pos(parm,descu value) > 0) then                      /* @AG */
         iterate                                               /* @AE */
-     'tbdelete' table1                                        /* @AE */
+     'tbdelete' TABLEA                                        /* @AE */
   end                                                         /* @AE */
 RETURN                                                        /* @AE */
 /*--------------------------------------------------------------------*/
@@ -402,13 +462,13 @@ ADD_T:                                                        /* @AE */
   desc  = strip(desc)                                         /* @AE */
   descu = translate(desc)                                     /* @AG */
   value = strip(value)                                        /* @AE */
-  'tbadd' table1                                              /* @AE */
+  'tbadd' TABLEA                                              /* @AE */
 RETURN                                                        /* @AE */
 /*--------------------------------------------------------------------*/
 /*  Build the Table with the RACF Information                    @AE  */
 /*--------------------------------------------------------------------*/
 BUILD_TABLE:                                                  /* @AE */
-  'tbcreate' table1 'names(desc,descu,value) nowrite'         /* @AE */
+  'tbcreate' TABLEA 'names(desc,descu,value) nowrite'         /* @AE */
   call add_t  'Version                          'RCVTGRNM     /* @AE */
   call add_t  'Data Base Primary                'RCVTPDSN     /* @AE */
   call add_t  'Data Base Backup                 'RCVTBDSN     /* @AE */
@@ -424,7 +484,7 @@ BUILD_TABLE:                                                  /* @AE */
   call add_t  'Generic owner                    'RCVTSGNO     /* @AE */
   call add_t  'Initialize statistics            'RCVTNLS      /* @AH */
   call add_t  'JES batch all                    'RCVTJALL     /* @AE */
-  call add_t  'JES early verify                 'RCVTJCHK     /* @AE */
+/*call add_t  'JES early verify                 'RCVTJCHK  */ /* @AM */
   call add_t  'JES undefined userid             'RCVTJUND     /* @AE */
   call add_t  'JES NJE userid                   'RCVTJSYS     /* @AE */
   call add_t  'JES XBM all                      'RCVTJXAL     /* @AE */
@@ -463,5 +523,5 @@ BUILD_TABLE:                                                  /* @AE */
   call add_t  'UADS volume                      'RCVTUVOL     /* @AE */
   call add_t  'When program                     'RCVTSWHE     /* @AE */
   CLRDESC = "TURQ" ; CLRVALU = "GREEN"  /* COL COLORS */      /* @AG */
-  'TBSort' table1 'Fields('sort')'                            /* @AG */
+  'TBSort' TABLEA 'Fields('sort')'                            /* @AG */
 RETURN                                                        /* @AE */

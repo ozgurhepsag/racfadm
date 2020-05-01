@@ -3,26 +3,33 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A4  200501  RACFA    If 1st time used, get site default settings  */
+/* @A3  200501  LBD      Add dynamic command table                    */
 /* @A2  200124  RACFA    Place panels at top of REXX in variables     */
 /* @A1  200120  LBD      Added code for sites using qual. PLIB/MLIB   */
 /* @A0  200120  LBD      Created REXX                                 */
 /*====================================================================*/
-PANEL01   = "RACFMENU"     /* RACF Main Menu               */ /* @A2 */
+PANEL01     = "RACFMENU"  /* RACF Main Menu                */ /* @A2 */
+REXXPGM1    = "RACFSETD"  /* Get def settings for new user */ /* @A4 */
 
 ADDRESS ISPEXEC
   call Setup
-  'Select Panel('PANEL01')'
+  'Select cmd('REXXPGM1')  NewAppl(RADM) PassLib'             /* @A4 */
+  'Select Panel('PANEL01') NewAppl(RADM) PassLib'             /* @A2 */
   'libdef ispmlib'
   'libdef ispplib'
-
+  'tbclose radmcmds'
    Address TSO 'altlib deact app(exec)'
 EXIT 0
 /*--------------------------------------------------------------------*/
 /*  Obtain dataset names and LIBDEF/ALTLIB them                       */
 /*--------------------------------------------------------------------*/
 SETUP:
+  'vget (zapplid)'                                            /* @A3 */
+  if (zapplid /= 'RADM') then call setup_rfind                /* @A3 */
   parse source src
-  parse value src with TSO Type Name DDName DSName NameO Env Addr Token
+  parse value src with TSO Type Name DDName DSName,
+                       NameO Env Addr Token
   cmd = name
   if (DSName /= '?') then exec = "'"dsname"'"
   else do
@@ -47,3 +54,18 @@ SETUP:
   'Libdef ISPMLIB dataset id('msgs') Stack'
   'Libdef ISPPLIB dataset id('panels') Stack'
 RETURN
+/*--------------------------------------------------------------------*/
+/*  Define the ISPF Command Table to enable RFIND                @A3  */
+/*--------------------------------------------------------------------*/
+SETUP_RFIND:                                                  /* @A3 */
+  'control errors return'                                     /* @A3 */
+  'tbquery radmcmds'                                          /* @A3 */
+  if (rc = 0) then return                                     /* @A3 */
+  "TBCreate radmcmds names(zctverb zcttrunc zctact" ,         /* @A3 */
+                     "zctdesc) replace share nowrite"         /* @A3 */
+  zctverb = "RFIND"                                           /* @A3 */
+  zcttrunc = 0                                                /* @A3 */
+  zctact = "&RADMRFND"                                        /* @A3 */
+  zctdesc = "RADM User controlled Repeat Find (RFIND)"        /* @A3 */
+  "TBAdd radmcmds"                                            /* @A3 */
+RETURN                                                        /* @A3 */

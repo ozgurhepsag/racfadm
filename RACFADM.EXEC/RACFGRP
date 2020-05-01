@@ -3,8 +3,10 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @CG  200430  RACFA    Chg tblb to table2, moved def. var. up top   */
-/* @CF  200430  RACFA    Chg tbla to table1, moved def. var. up top   */
+/* @CI  200501  RACFA    Fixed F3 (END) out of panel RACFGRP8         */
+/* @CH  200501  LBD      Add primary commands FIND/RFIND              */
+/* @CG  200430  RACFA    Chg tblb to TABLEB, moved def. var. up top   */
+/* @CF  200430  RACFA    Chg tbla to TABLEA, moved def. var. up top   */
 /* @CE  200429  RACFA    Re-arranged variables (General, Mgmt, TSO)   */
 /* @CD  200424  RACFA    Updated RESET, pass filter, ex: R filter     */
 /* @CA  200424  RACFA    Chg msg RACF013 to RACF012                   */
@@ -99,11 +101,12 @@ PANEL08     = "RACFGRP8"   /* List groups and descriptions */ /* @AW */
 PANELM1     = "RACFMSG1"   /* Confirm Request (pop-up)     */ /* @AW */
 PANELM2     = "RACFMSG2"   /* Display RACF command and RC  */ /* @AW */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @BO */
-table1      = 'TA'RANDOM(0,99999)   /* Unique table name A */ /* @CF */
-table2      = 'TB'RANDOM(0,99999)   /* Unique table name B */ /* @CG */
+TABLEA      = 'TA'RANDOM(0,99999)   /* Unique table name A */ /* @CF */
+TABLEB      = 'TB'RANDOM(0,99999)   /* Unique table name B */ /* @CG */
 DDNAME      = 'RACFA'RANDOM(0,999)  /* Unique ddname       */ /* @C9 */
 parse source . . REXXPGM .                                    /* @C8 */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @C8 */
+NULL        = ''                                              /* @CH */
 
 ADDRESS ISPEXEC                                               /* @AO */
   Rclass = 'GROUP'
@@ -138,7 +141,8 @@ ADDRESS ISPEXEC                                               /* @AO */
   called = SYSVAR('SYSNEST')
   If (called = 'YES') then "CONTROL NONDISPL ENTER"
   "DISPLAY PANEL("PANEL01")" /* get profile filter */         /* @AW */
-  Do while (rc = 0)
+  reta = rc                                                   /* @CI */
+  Do while (reta < 8)                                         /* @CI */
      call Profl
      If (called <> 'YES') then do
         "DISPLAY PANEL("PANEL01")"                            /* @AW */
@@ -155,9 +159,9 @@ EXIT
 /*  Show all profiles for a filter                                    */
 /*--------------------------------------------------------------------*/
 PROFL:
-  call CREATE_table1                                          /* @AP */
+  call CREATE_TABLEA                                          /* @AP */
   if (group = 'INVALID') | (group = 'NO') then do             /* @B3 */
-     "TBEND" table1
+     "TBEND" TABLEA
      if (cmd_rc > 0) then DO                                  /* @C5 */
         call racfmsgs 'ERR16'                                 /* @B3 */
         RETURN                                                /* @C5 */
@@ -171,21 +175,33 @@ PROFL:
   sortowne = 'A'; sortdata = 'A'                              /* @BL */
   CLRGROU  = "TURQ";  CLRDATA = "GREEN"  /* Col colors */     /* @AH */
   CLRSUPG  = "GREEN"; CLROWNE = "GREEN"                       /* @BC */
-  "TBSORT " table1 "FIELDS("sort")"                           /* @AU */
-  "TBTOP  " table1
-  "TBDISPL" table1 "PANEL("PANEL08")"                         /* @AW */
+  "TBSORT " TABLEA "FIELDS("sort")"                           /* @AU */
+  "TBTOP  " TABLEA
+  radmrfnd = 'PASSTHRU'                                       /* @CH */
+  'vput (radmrfnd)'                                           /* @CH */
+  "TBDISPL" TABLEA "PANEL("PANEL08")"                         /* @AW */
   reta = rc
-  do while (reta < 8)   /* table1 panel */
+  radmrfnd = null                                             /* @CH */
+  'vput (radmrfnd)'                                           /* @CH */
+  do while (reta < 8)   /* TABLEA panel */
      "CONTROL DISPLAY SAVE"
      xtdtop = ztdtop
      lparm = ""                                               /* @A3 */
      PARSE VAR ZCMD ZCMD PARM seq                             /* @AC */
      IF (SROW <> "") & (SROW <> 0) THEN                       /* @AR */
         IF (SROW > 0) THEN DO                                 /* @AR */
-           "TBTOP " table1                                    /* @AR */
-           "TBSKIP" table1 "NUMBER("SROW")"                   /* @AR */
+           "TBTOP " TABLEA                                    /* @AR */
+           "TBSKIP" TABLEA "NUMBER("SROW")"                   /* @AR */
         END                                                   /* @AR */
+     if (zcmd = 'RFIND') then do                              /* @CH */
+        zcmd = 'FIND'                                         /* @CH */
+        parm = findit                                         /* @CH */
+        'tbtop' TABLEA                                        /* @CH */
+        'tbskip' TABLEA 'number('last_find')'                 /* @CH */
+     end                                                      /* @CH */
      Select
+        When (abbrev("FIND",zcmd,1) = 1) then                 /* @CH */
+             call do_finda                                    /* @CH */
         WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN DO              /* @AF */
              SELECT                                           /* @A3 */
                 when (ABBREV("GROUP",PARM,1) = 1) then        /* @AT */
@@ -203,15 +219,15 @@ PROFL:
              lparm = parm                                     /* @A3 */
         WHEN (ABBREV("ONLY",ZCMD,1) = 1) THEN DO              /* @AP */
              find_str = translate(parm)                       /* @AP */
-             'tbtop ' table1                                  /* @AP */
-             'tbskip' table1                                  /* @AP */
+             'tbtop ' TABLEA                                  /* @AP */
+             'tbskip' TABLEA                                  /* @AP */
              do forever                                       /* @AP */
                 str = translate(group supgrp owner data)      /* @BC */
                 if (pos(find_str,str) > 0) then nop           /* @AP */
-                else 'tbdelete' table1                        /* @AP */
-                'tbskip' table1                               /* @AP */
+                else 'tbdelete' TABLEA                        /* @AP */
+                'tbskip' TABLEA                               /* @AP */
                 if (rc > 0) then do                           /* @AP */
-                   'tbtop' table1                             /* @AP */
+                   'tbtop' TABLEA                             /* @AP */
                    leave                                      /* @AP */
                 end                                           /* @AP */
              end                                              /* @AP */
@@ -223,8 +239,8 @@ PROFL:
              sortgrou = 'D'; sortsupg = 'A'                   /* @BL */
              sortowne = 'A'; sortdata = 'A'                   /* @BL */
              xtdtop   = 1                                     /* @AE */
-             "TBEND" table1                                   /* @BL */
-             call CREATE_table1                               /* @AP */
+             "TBEND" TABLEA                                   /* @BL */
+             call CREATE_TABLEA                               /* @AP */
         END                                                   /* @AE */
         otherwise lparm = ''
      End  /* Select */
@@ -241,13 +257,13 @@ PROFL:
      End /* Select */
      Do while (reta = 4)   /* process multi selection */
         "CONTROL DISPLAY RESTORE"
-        "TBDISPL" table1
+        "TBDISPL" TABLEA
         reta = rc
         "CONTROL DISPLAY SAVE"
         IF (SROW <> "") & (SROW <> 0) THEN                    /* @AR */
            IF (SROW > 0) THEN DO                              /* @AR */
-              "TBTOP " table1                                 /* @AR */
-              "TBSKIP" table1 "NUMBER("SROW")"                /* @AR */
+              "TBTOP " TABLEA                                 /* @AR */
+              "TBSKIP" TABLEA "NUMBER("SROW")"                /* @AR */
            END                                                /* @AR */
         Select
            when (opta = 'A') then call Addd
@@ -264,8 +280,8 @@ PROFL:
      CLRGROU = "GREEN"; CLRDATA = "GREEN"                     /* @AH */
      CLRSUPG = "GREEN"; CLROWNE = "GREEN"                     /* @BC */
      INTERPRET "CLR"SUBSTR(LOCARG,1,4)" = 'TURQ'"             /* @AH */
-     "TBSORT" table1 "FIELDS("sort")"
-     "TBTOP " table1
+     "TBSORT" TABLEA "FIELDS("sort")"
+     "TBTOP " TABLEA
      if (lparm <> '') then do
         ASTERICK = "*"                                        /* @A3 */
         INTERPRET LOCARG" = lparm||ASTERICK"                  /* @A3 */
@@ -274,17 +290,64 @@ PROFL:
            CONDLIST = "LE"                                    /* @AD */
         ELSE                                                  /* @AD */
            CONDLIST = "GE"                                    /* @AD */
-        "TBSCAN "table1,                                      /* @A3 */
+        "TBSCAN "TABLEA,                                      /* @A3 */
                 "ARGLIST("LOCARG") CONDLIST("CONDLIST")"      /* @AD */
      end
      else
-        "TBSKIP" table1 "NUMBER("XTDTOP")"
+        "TBSKIP" TABLEA "NUMBER("XTDTOP")"
      opta = ' '
      "CONTROL DISPLAY RESTORE"
-     "TBDISPL" table1 "PANEL("PANEL08")"                      /* @AW */
+     radmrfnd = 'PASSTHRU'                                    /* @CH */
+     'vput (radmrfnd)'                                        /* @CH */
+     "TBDISPL" TABLEA "PANEL("PANEL08")"                      /* @AW */
      reta = rc
   end  /* Do while (reta < 8) */
 RETURN
+/*--------------------------------------------------------------------*/
+/*  Process primary command FIND for TABLEA                      @CH  */
+/*--------------------------------------------------------------------*/
+DO_FINDA:                                                     /* @CH */
+  if (parm = null) then do                                    /* @CH */
+     racfsmsg = 'Error'                                       /* @CH */
+     racflmsg = 'Find requires a value to search for.' ,      /* @CH */
+                'Try again.'                                  /* @CH */
+     'setmsg msg(RACF011)'                                    /* @CH */
+     return                                                   /* @CH */
+  end                                                         /* @CH */
+  findit    = translate(parm)                                 /* @CH */
+  last_find = 0                                               /* @CH */
+  wrap      = 0                                               /* @CH */
+  do forever                                                  /* @CH */
+     'tbskip' TABLEA                                          /* @CH */
+     if (rc > 0) then do                                      /* @CH */
+        if (wrap = 1) then do                                 /* @CH */
+           racfsmsg = 'Not Found'                             /* @CH */
+           racflmsg = findit 'not found.'                     /* @CH */
+           'setmsg msg(RACF011)'                              /* @CH */
+           return                                             /* @CH */
+        end                                                   /* @CH */
+        if (wrap = 0) then wrap = 1                           /* @CH */
+        'tbtop' TABLEA                                        /* @CH */
+     end                                                      /* @CH */
+     else do                                                  /* @CH */
+        testit = translate(group supgrp owner data)           /* @CH */
+        if (pos(findit,testit) > 0) then do                   /* @CH */
+           'tbquery' TABLEA 'position(srow)'                  /* @CH */
+           'tbtop'   TABLEA                                   /* @CH */
+           'tbskip'  TABLEA 'number('srow')'                  /* @CH */
+           last_find = srow                                   /* @CH */
+           xtdtop    = srow                                   /* @CH */
+           if (wrap = 0) then                                 /* @CH */
+              racfsmsg = 'Found'                              /* @CH */
+           else                                               /* @CH */
+              racfsmsg = 'Found/Wrapped'                      /* @CH */
+           racflmsg = findit 'found in row' srow + 0          /* @CH */
+           'setmsg msg(RACF011)'                              /* @CH */
+           return                                             /* @CH */
+        end                                                   /* @CH */
+     end                                                      /* @CH */
+  end                                                         /* @CH */
+RETURN                                                        /* @CH */
 /*--------------------------------------------------------------------*/
 /*  Define sort sequence, to allow point-n-shoot sorting (A/D)   @BL  */
 /*--------------------------------------------------------------------*/
@@ -332,10 +395,10 @@ ADDD:
      CALL racfmsgs 'ERR01' /* Add failed */                   /* @B5 */
      return
   end
-  "TBMOD" table1
+  "TBMOD" TABLEA
   if (new = 'YES') then do
      group = 'NONE'
-     "TBDELETE"  table1
+     "TBDELETE"  TABLEA
   end
 RETURN
 /*--------------------------------------------------------------------*/
@@ -358,7 +421,7 @@ CHGD:
   if (cmd_rc > 0) then                                        /* @BA */
      call racfmsgs 'ERR07' /* Altgroup failed */              /* @B5 */
   else
-     "TBMOD" table1
+     "TBMOD" TABLEA
 RETURN
 /*--------------------------------------------------------------------*/
 /*  Delete profile                                                    */
@@ -371,7 +434,7 @@ DELD:
   if (sure_? = 'YES') then do
      call EXCMD "DG ("group")"
      if (cmd_rc = 0) then                                     /* @BA */
-        "TBDELETE" table1
+        "TBDELETE" TABLEA
      else
        CALL racfmsgs "ERR02" /* RDELETE failed */             /* @B5 */
   end
@@ -384,35 +447,47 @@ DISD:
      return
   tmpsort = sort                                              /* @BM */
   Do until (RB = 'NO')   /* allow rebuild option to loop */
-     call create_table2                                       /* @BM */
+     call create_TABLEB                                       /* @BM */
      /* Permit table display section */
      rb   = 'NO'
      optb = ' '
      drop rownum
-     "TBQUERY" table2 "ROWNUM("rownum")"
+     "TBQUERY" TABLEB "ROWNUM("rownum")"
      if (rownum = 0) then do
         id  = 'NONE'
         acc = ''                                              /* @C6 */
-        "TBMOD" table2
+        "TBMOD" TABLEB
      end
      sort   = 'ID,C,A'                                        /* @BN */
      sortid = 'D'; sortacce = 'A'         /* Sort order */    /* @BM */
      CLRID  = "TURQ";  CLRACC = "GREEN"   /* COL COLORS */    /* @BM */
-     "TBSORT " table2 "FIELDS("sort")"                        /* @BM */
-     "TBTOP  " table2
-     "TBDISPL" table2 "PANEL("PANEL05")"                      /* @AW */
+     "TBSORT " TABLEB "FIELDS("sort")"                        /* @BM */
+     "TBTOP  " TABLEB
+     radmrfnd = 'PASSTHRU'                                    /* @CH */
+     'vput (radmrfnd)'                                        /* @CH */
+     "TBDISPL" TABLEB "PANEL("PANEL05")"                      /* @AW */
      retb = rc
-     Do while (retb < 8)        /* table2 panel */
+     radmrfnd = null                                          /* @CH */
+     'vput (radmrfnd)'                                        /* @CH */
+     Do while (retb < 8)        /* TABLEB panel */
         "CONTROL DISPLAY SAVE"
         xtdtop = ztdtop                                       /* @BM */
         lparm = ""                                            /* @BM */
         PARSE VAR ZCMD ZCMD PARM seq                          /* @BM */
         IF (SROW <> "") & (SROW <> 0) THEN                    /* @AR */
            IF (SROW > 0) THEN DO                              /* @AR */
-              "TBTOP " table2                                 /* @AR */
-              "TBSKIP" table2 "NUMBER("SROW")"                /* @AR */
+              "TBTOP " TABLEB                                 /* @AR */
+              "TBSKIP" TABLEB "NUMBER("SROW")"                /* @AR */
            END                                                /* @AR */
+        if (zcmd = 'RFIND') then do                           /* @CH */
+           zcmd = 'FIND'                                      /* @CH */
+           parm = findit                                      /* @CH */
+           'tbtop' TABLEB                                     /* @CH */
+           'tbskip' TABLEB 'number('last_find')'              /* @CH */
+        end                                                   /* @CH */
         Select                                                /* @BM */
+           When (abbrev("FIND",zcmd,1) = 1) then              /* @CH */
+                call do_findb                                 /* @CH */
            WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN DO           /* @BM */
                 SELECT                                        /* @BM */
                    when (ABBREV("USERID",PARM,1) = 1) then    /* @BM */
@@ -426,15 +501,15 @@ DISD:
                 lparm = parm                                  /* @BM */
            WHEN (ABBREV("ONLY",ZCMD,1) = 1) THEN DO           /* @BM */
                 find_str = translate(parm)                    /* @BM */
-                'tbtop ' table2                               /* @BM */
-                'tbskip' table2                               /* @BM */
+                'tbtop ' TABLEB                               /* @BM */
+                'tbskip' TABLEB                               /* @BM */
                 do forever                                    /* @BM */
                    str = translate(id acc)                    /* @BM */
                    if (pos(find_str,str) > 0) then nop        /* @BM */
-                   else 'tbdelete' table2                     /* @BM */
-                   'tbskip' table2                            /* @BM */
+                   else 'tbdelete' TABLEB                     /* @BM */
+                   'tbskip' TABLEB                            /* @BM */
                    if (rc > 0) then do                        /* @BM */
-                      'tbtop' table2                          /* @BM */
+                      'tbtop' TABLEB                          /* @BM */
                       leave                                   /* @BM */
                    end                                        /* @BM */
                 end                                           /* @BM */
@@ -443,8 +518,8 @@ DISD:
                 sort     = 'ID,C,A'                           /* @BM */
                 sortid   = 'D'; sortacc = 'A'                 /* @BM */
                 xtdtop   = 1                                  /* @BM */
-                "TBEND" table2                                /* @BM */
-                call create_table2                            /* @BM */
+                "TBEND" TABLEB                                /* @BM */
+                call create_TABLEB                            /* @BM */
            END                                                /* @BM */
            otherwise lparm = ''                               /* @BM */
         End  /* Select */                                     /* @BM */
@@ -464,7 +539,7 @@ DISD:
            End
            Do while (retb = 4)   /* process multi-section */
               "CONTROL DISPLAY RESTORE"
-              "TBDISPL" table2
+              "TBDISPL" TABLEB
               retb = rc
               "CONTROL DISPLAY SAVE"
               Select
@@ -485,8 +560,8 @@ DISD:
         PARSE VAR SORT LOCARG "," .                           /* @BM */
         CLRID = "GREEN"; CLRACC = "GREEN"                     /* @BM */
         INTERPRET "CLR"SUBSTR(LOCARG,1,4)" = 'TURQ'"          /* @BM */
-        "TBSORT" table2 "FIELDS("sort")"                      /* @BM */
-        "TBTOP " table2                                       /* @BM */
+        "TBSORT" TABLEB "FIELDS("sort")"                      /* @BM */
+        "TBTOP " TABLEB                                       /* @BM */
         if (lparm <> '') then do                              /* @BM */
            ASTERICK = "*"                                     /* @BM */
            INTERPRET LOCARG" = lparm||ASTERICK"               /* @BM */
@@ -495,27 +570,74 @@ DISD:
               CONDLIST = "LE"                                 /* @BM */
            ELSE                                               /* @BM */
               CONDLIST = "GE"                                 /* @BM */
-           "TBSCAN "table2,                                   /* @BM */
+           "TBSCAN "TABLEB,                                   /* @BM */
                    "ARGLIST("LOCARG") CONDLIST("CONDLIST")"   /* @BM */
         end                                                   /* @BM */
         else                                                  /* @BM */
-           "TBSKIP" table2 "NUMBER("XTDTOP")"                 /* @BM */
+           "TBSKIP" TABLEB "NUMBER("XTDTOP")"                 /* @BM */
+        radmrfnd = 'PASSTHRU'                                 /* @CH */
+        'vput (radmrfnd)'                                     /* @CH */
         if (rb = "YES") then
            retb = 12         /* rebuild table required */
         else do
-           "TBDISPL" table2 "PANEL("PANEL05")"                /* @AW */
+           "TBDISPL" TABLEB "PANEL("PANEL05")"                /* @AW */
            retb = rc
         end
      end /* While retb < 8 */
-     "TBEND" table2
+     "TBEND" TABLEB
   end /* Do until */
   sort = tmpsort                                              /* @BM */
 RETURN
 /*--------------------------------------------------------------------*/
+/*  Process primary command FIND for TABLEB                      @CH  */
+/*--------------------------------------------------------------------*/
+DO_FINDB:                                                     /* @CH */
+  if (parm = null) then do                                    /* @CH */
+     racfsmsg = 'Error'                                       /* @CH */
+     racflmsg = 'Find requires a value to search for.' ,      /* @CH */
+                'Try again.'                                  /* @CH */
+     'setmsg msg(RACF011)'                                    /* @CH */
+     return                                                   /* @CH */
+  end                                                         /* @CH */
+  findit    = translate(parm)                                 /* @CH */
+  last_find = 0                                               /* @CH */
+  wrap      = 0                                               /* @CH */
+  do forever                                                  /* @CH */
+     'tbskip' TABLEB                                          /* @CH */
+     if (rc > 0) then do                                      /* @CH */
+        if (wrap = 1) then do                                 /* @CH */
+           racfsmsg = 'Not Found'                             /* @CH */
+           racflmsg = findit 'not found.'                     /* @CH */
+           'setmsg msg(RACF011)'                              /* @CH */
+           return                                             /* @CH */
+        end                                                   /* @CH */
+        if (wrap = 0) then wrap = 1                           /* @CH */
+        'tbtop' TABLEB                                        /* @CH */
+     end                                                      /* @CH */
+     else do                                                  /* @CH */
+        testit = translate(id acc)                            /* @CH */
+        if (pos(findit,testit) > 0) then do                   /* @CH */
+           'tbquery' TABLEB 'position(srow)'                  /* @CH */
+           'tbtop'   TABLEB                                   /* @CH */
+           'tbskip'  TABLEB 'number('srow')'                  /* @CH */
+           last_find = srow                                   /* @CH */
+           xtdtop    = srow                                   /* @CH */
+           if (wrap = 0) then                                 /* @CH */
+              racfsmsg = 'Found'                              /* @CH */
+           else                                               /* @CH */
+              racfsmsg = 'Found/Wrapped'                      /* @CH */
+           racflmsg = findit 'found in row' srow + 0          /* @CH */
+           'setmsg msg(RACF011)'                              /* @CH */
+           return                                             /* @CH */
+        end                                                   /* @CH */
+     end                                                      /* @CH */
+  end                                                         /* @CH */
+RETURN                                                        /* @CH */
+/*--------------------------------------------------------------------*/
 /*  Create table 'B'                                             @BM  */
 /*--------------------------------------------------------------------*/
-CREATE_table2:                                                /* @BM */
-  "TBCREATE" table2 "KEYS(ID) NAMES(ACC)",
+CREATE_TABLEB:                                                /* @BM */
+  "TBCREATE" TABLEB "KEYS(ID) NAMES(ACC)",
                   "REPLACE NOWRITE"
   flags  = 'OFF'
   audit  = ' '
@@ -592,7 +714,7 @@ CREATE_table2:                                                /* @BM */
            acc = subword(temp,2,1)
         end
         if (substr(temp,8,2) <> ' ') then
-           "TBMOD" table2
+           "TBMOD" TABLEB
      end
      if (subword(temp,1,1) = 'USER(S)=') then do
         flags = 'ON'   /* start access list */
@@ -633,7 +755,7 @@ CHGP:
      return
   call EXCMD "CONNECT ("id") GROUP("group") AUTH("acc")"
   if (cmd_rc = 0) then                                        /* @BA */
-     "TBMOD" table2
+     "TBMOD" TABLEB
   else
      Call racfmsgs 'ERR03' /* Permit failed */                /* @B5 */
 RETURN
@@ -755,10 +877,10 @@ ADDP:
   fopt = ' '
   call EXCMD "CONNECT ("id") GROUP("group") AUTH("acc")"
   if (cmd_rc = 0) then do                                     /* @BA */
-     "TBMOD" table2
+     "TBMOD" TABLEB
      if (new = 'YES') then do
         id = 'NONE'
-        "TBDELETE" table2
+        "TBDELETE" TABLEB
      end
   end
   else do
@@ -779,7 +901,7 @@ DELP:
   if (sure_? = 'YES') then do
      call EXCMD "REMOVE "id" GROUP("group")"
      if (cmd_rc = 0) then                                     /* @BA */
-        "TBDELETE" table2
+        "TBDELETE" TABLEB
      else
         call racfmsgs 'ERR06' /* Permit Failed */             /* @B5 */
   end
@@ -841,9 +963,9 @@ RETURN                                                        /* @AN */
 /*--------------------------------------------------------------------*/
 /*  Create table 'A'                                             @AP  */
 /*--------------------------------------------------------------------*/
-CREATE_table1:                                                /* @AP */
+CREATE_TABLEA:                                                /* @AP */
   seconds = TIME('S')
-  "TBCREATE" table1 "KEYS(GROUP) NAMES(DATA SUPGRP OWNER)",   /* @BC */
+  "TBCREATE" TABLEA "KEYS(GROUP) NAMES(DATA SUPGRP OWNER)",   /* @BC */
            "REPLACE NOWRITE"
   cmd = "SEARCH FILTER("RFILTER") CLASS("rclass")"            /* @AN */
   x = OUTTRAP('var.')
@@ -916,6 +1038,6 @@ CREATE_table1:                                                /* @AP */
      END                                                      /* @C7 */
      /* Get further information */
      Call GETD
-     "TBMOD" table1
+     "TBMOD" TABLEA
   end /* Do i=1 to var.0 */
 RETURN                                                        /* @AP */

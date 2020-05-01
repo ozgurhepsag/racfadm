@@ -2,13 +2,33 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
-  30 Apr 2020 - V22R8
-     - Tutorial (Option T)
-       * Added 'Execute RACF cmds'
-       * Modified 'Installation notes'
+  01 May 2020 - V22R9
+     - User (Option 1)
+       -- Fixed line command 'ALT', was not removing some segments,
+          panel RACFUSR5
+       -- Fixed line command 'S'how group, was not allowing user to
+          F3 (END) out of panel RACFGRP8
+     - RACFprms (Option 7)
+       -- Removed 'JES early verify', obsolete parm
+     - User, Group, Dataset and General Resources (Options 1/2/3/4)
+       -- Added primary command FIND/RFIND
+          o In order for FIND/RFIND commands to work, the REXX
+            program RACFADM must be used to invoke this utility
+          o Updated tutorials with new primary commands
      - Other Items
-       * Updated a few REXX programs, code cleanup
-       * Updated $DIR member in panel and REXX datasets
+       -- Added member $DEFSETG in panel dataset
+          * Allows setting site defaults for new users
+          * The settings are saved in the user's profile mbr RADMPROF
+          * Updated 'Installation notes' tutorial
+       -- Updated $DIR member in panel and REXX dataset
+
+  01 May 2020 - V22R8
+     - Tutorial (Option T)
+       -- Added 'Execute RACF cmds'
+       -- Modified 'Installation notes'
+     - Other Items
+       -- Updated a few REXX programs, code cleanup
+       -- Updated $DIR member in panel and REXX datasets
 
   30 Apr 2020 - V22R7
      - User (Option 1)

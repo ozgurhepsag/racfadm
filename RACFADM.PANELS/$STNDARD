@@ -22,6 +22,8 @@
           Groups, etc.) and customizing the utility (Settings)
        -- Alphabetic entries (A-Z) are used to assist in maintaining
           or documenting RACFADM
+       -- The RACFMENU panel is a primary option menu so one can use
+          the jump function to go directly to any RACFMENU option
        -- All entries are point-n-shoot fields
      - Tables
        -- Panels displaying tables

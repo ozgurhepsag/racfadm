@@ -1,0 +1,64 @@
+/*%NOCOMMENT====================* REXX *==============================*/
+/*  PURPOSE:  RACFADM - Settings - Get defualt settings for new users */
+/*--------------------------------------------------------------------*/
+/* FLG  YYMMDD  USERID   DESCRIPTION                                  */
+/* ---  ------  -------  -------------------------------------------- */
+/* @A0  200501  RACFA    Created REXX                                 */
+/*====================================================================*/
+MBRDSETG    = "$DEFSETG"   /* Default Settings member      */
+DDNAME      = 'RACFA'RANDOM(0,999)  /* Unique ddname       */
+
+ADDRESS ISPEXEC
+  'vget (SETMADMN) profile'
+  if (SETMADMN <> '') then return  /* Not new user, return */
+
+  "QLIBDEF ISPPLIB TYPE(DATASET) ID(DSNAME)"
+  if (RC > 0) then
+     call RACFMSGS ERR19
+  DSNAME = "'"STRIP(DSNAME,,"'")"("MBRDSETG")'"
+
+ADDRESS TSO
+  "ALLOC FI("DDNAME") DA("DSNAME") SHR REUSE"
+  "EXECIO * DISKR "DDNAME" (STEM REC. FINIS"
+  "FREE FI("DDNAME")"
+
+ADDRESS ISPEXEC
+  DO J = 1 TO REC.0
+     IF (SUBSTR(REC.J,1,1) = "*") THEN ITERATE
+     PARSE UPPER VAR REC.J W1 W2 W3 W4 .
+     SELECT
+        WHEN (W3 = "/*") THEN W3 = ""
+        WHEN (W3 = "Y")  THEN W3 = "YES"
+        WHEN (W3 = "N")  THEN W3 = "NO"
+        WHEN (W1 = "SETGDISP") THEN
+           SELECT
+              WHEN (W3 = "B")  THEN W3 = "BROWSE"
+              WHEN (W3 = "E")  THEN W3 = "EDIT"
+              WHEN (W3 = "V")  THEN W3 = "VIEW"
+              OTHERWISE NOP
+           END
+        WHEN (W1 = "SETMSHOW") THEN
+           SELECT
+              WHEN (W3 = "D")  THEN W3 = "DISPLAY"
+              WHEN (W3 = "L")  THEN W3 = "LOG"
+              WHEN (W3 = "B")  THEN W3 = "BOTH"
+              OTHERWISE NOP
+           END
+        WHEN (W1 = "SETMTRAC") THEN
+           SELECT
+              WHEN (W3 = "L")  THEN W3 = "LABELS"
+              WHEN (W3 = "P")  THEN W3 = "PROGRAMS"
+              WHEN (W3 = "R")  THEN W3 = "RESULTS"
+              OTHERWISE NOP
+           END
+        OTHERWISE NOP
+     END
+
+     INTERPRET W1" = W3"
+     INTERPRET "'VPUT ("W1") PROFILE'"
+  END
+
+  "VGET (SETGFLTR SETGSTA  SETGSTAP SETGDISP SETGCONF",
+        "SETMADMN SETMIRRX SETMSHOW SETMTRAC",
+        "SETTPSWD SETTCTLG SETTPROF SETTUDSN) PROFILE"
+RETURN

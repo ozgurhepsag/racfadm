@@ -1,0 +1,24 @@
+*---------------------------------------------------------------------*
+*                           Default Settings                          *
+*---------------------------------------------------------------------*
+*  General Settings
+*---------------------------------------------------------------------*
+SETGFLTR =                                  /* Default filter        */
+SETGSTA  = 100     /* Status interval (0-9999)                       */
+SETGSTAP =         /* Status percent  (0-99)                         */
+SETGDISP = V       /* Display files   (B=Browse, E=Edit, V=View)     */
+SETGCONF = Y       /* Confirm panel   (Y=Yes, N=No)                  */
+*---------------------------------------------------------------------*
+*  Management
+*---------------------------------------------------------------------*
+SETMADMN = N       /* Administrator (Y=Yes, N=No)                    */
+SETMIRRX = N       /* Admin RACF API (Y=Yes, N=No)                   */
+SETMSHOW = N       /* RACF commands (D=Display, L=Log, B=Both, N=No) */
+SETMTRAC = N       /* REXX trace (L=Labels, P=Pgms, R=Results, N=No) */
+*---------------------------------------------------------------------*
+*  Adding TSO userids
+*---------------------------------------------------------------------*
+SETTPWSD =                                  /* Default password      */
+SETTCTLG =                                  /* User catalog          */
+SETTPROF =                                  /* ISPPROF dataset       */
+SETTUDSN =                                  /* User dataset          */

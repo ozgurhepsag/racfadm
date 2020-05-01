@@ -7,10 +7,11 @@
 %Command ===>_ZCMD                                                             +
 %
 +Primary Commands
+%  Find text        +Find a text string
 %  Sort column A/D  +Sort a column, in ascending or descending order
 +                   +(Column headers are point-and-shoot sort fields)
-%  Only text        +Only display rows with text string
 %  Locate text      +Locate text in the sorted column
+%  Only text        +Only display rows with text string
 %  Reset            +Redisplay all rows and sort first column
 +
 +Line Commands
