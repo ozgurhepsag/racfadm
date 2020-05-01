@@ -3,7 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @AK  200430  RACFA    Chg tbla to tablea, moved def. var. up top   */
+/* @AK  200430  RACFA    Chg tbla to table1, moved def. var. up top   */
 /* @AJ  200429  TRIDJK   Chg text on 2 parmeters                      */
 /* @AI  200429  RACFA    Chg 'Datasets' to 'Dataset'                  */
 /* @AH  200428  TRIDJK   Fixed variable names                         */
@@ -26,7 +26,7 @@
 /* @A0  011229  NICORIZ  Created REXX, V2.1, www.rizzuto.it           */
 /*====================================================================*/
 PANEL19     = "RACFPRMS"   /* RACF parameters, menu opt 7  */ /* @A5 */
-TABLEA      = 'TA'RANDOM(0,99999)   /* Unique table name A */ /* @AK */
+table1      = 'TA'RANDOM(0,99999)   /* Unique table name A */ /* @AK */
 parse source . . REXXPGM .                                    /* @AB */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @AB */
 parse value '' with null                                      /* @AE */
@@ -67,7 +67,7 @@ ADDRESS ISPEXEC                                               /* @A4 */
   /* Display the table and process it */                      /* @AE */
   /*----------------------------------*/                      /* @AE */
   Do forever                                                  /* @AE */
-     'tbdispl' tablea 'panel('panel19')'                      /* @AE */
+     'tbdispl' table1 'panel('panel19')'                      /* @AE */
      if (rc > 0) then leave                                   /* @AE */
      /*-------------------------*/                            /* @AE */
      /* Reset racfrfnd to blank */                            /* @AE */
@@ -87,13 +87,13 @@ ADDRESS ISPEXEC                                               /* @A4 */
         When (abbrev('RESET',zcmd,1) = 1) then do             /* @AG */
              sort     = 'DESCU,C,A'                           /* @AG */
              sortdesc = 'A'; sortvalu = 'A'                   /* @AG */
-             "TBEND" tablea                                   /* @AG */
+             "TBEND" table1                                   /* @AG */
              call Build_table                                 /* @AG */
         end                                                   /* @AG */
         otherwise nop                                         /* @AG */
      end                                                      /* @AG */
   end                                                         /* @AE */
-  'tbend' tablea                                              /* @AE */
+  'tbend' table1                                              /* @AE */
                                                               /* @AE */
   If (SETMTRAC <> 'NO') then do                               /* @A6 */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */
@@ -106,7 +106,7 @@ RETURN 0000                                                   /* @AE */
 /*  Reset the table                                              @AE  */
 /*--------------------------------------------------------------------*/
 Do_Reset:                                                     /* @AE */
-  'tbend' tablea                                              /* @AE */
+  'tbend' table1                                              /* @AE */
   call table_create                                           /* @AE */
   call build_table                                            /* @AE */
 RETURN                                                        /* @AE */
@@ -135,8 +135,8 @@ DO_SORT:                                                      /* @AE */
      end                                                      /* @AG */
   end                                                         /* @AG */
   INTERPRET "SORT"SUBSTR(SORTCOL,1,4)" = TMPSEQ"              /* @AG */
-  'TBSort' tablea 'Fields('sort')'                            /* @AG */
-  'tbtop'  tablea                                             /* @AE */
+  'TBSort' table1 'Fields('sort')'                            /* @AG */
+  'tbtop'  table1                                             /* @AE */
   CLRDESC = "GREEN"; CLRVALU = "GREEN"                        /* @AG */
   INTERPRET "CLR"SUBSTR(SORTCOL,1,4)" = 'TURQ'"               /* @AG */
 RETURN                                                        /* @AE */
@@ -152,22 +152,22 @@ DO_LOCATE:                                                    /* @AE */
      CONDLIST = "LE"                                          /* @AG */
   ELSE                                                        /* @AG */
      CONDLIST = "GE"                                          /* @AG */
-  "TBSCAN "tablea,                                            /* @AG */
+  "TBSCAN "table1,                                            /* @AG */
           "ARGLIST("LOCARG") CONDLIST("CONDLIST")"            /* @AG */
 RETURN                                                        /* @AE */
 /*--------------------------------------------------------------------*/
 /*  Only display rows with the provided text string              @AE  */
 /*--------------------------------------------------------------------*/
 DO_ONLY:                                                      /* @AE */
-  'tbtop' tablea                                              /* @AE */
+  'tbtop' table1                                              /* @AE */
   hit = 0                                                     /* @AE */
   do forever                                                  /* @AE */
-     'tbskip' tablea                                          /* @AE */
+     'tbskip' table1                                          /* @AE */
      if (rc > 0) then leave                                   /* @AE */
      hit = 0                                                  /* @AE */
      if (pos(parm,descu value) > 0) then                      /* @AG */
         iterate                                               /* @AE */
-     'tbdelete' tablea                                        /* @AE */
+     'tbdelete' table1                                        /* @AE */
   end                                                         /* @AE */
 RETURN                                                        /* @AE */
 /*--------------------------------------------------------------------*/
@@ -402,13 +402,13 @@ ADD_T:                                                        /* @AE */
   desc  = strip(desc)                                         /* @AE */
   descu = translate(desc)                                     /* @AG */
   value = strip(value)                                        /* @AE */
-  'tbadd' tablea                                              /* @AE */
+  'tbadd' table1                                              /* @AE */
 RETURN                                                        /* @AE */
 /*--------------------------------------------------------------------*/
 /*  Build the Table with the RACF Information                    @AE  */
 /*--------------------------------------------------------------------*/
 BUILD_TABLE:                                                  /* @AE */
-  'tbcreate' tablea 'names(desc,descu,value) nowrite'         /* @AE */
+  'tbcreate' table1 'names(desc,descu,value) nowrite'         /* @AE */
   call add_t  'Version                          'RCVTGRNM     /* @AE */
   call add_t  'Data Base Primary                'RCVTPDSN     /* @AE */
   call add_t  'Data Base Backup                 'RCVTBDSN     /* @AE */
@@ -463,5 +463,5 @@ BUILD_TABLE:                                                  /* @AE */
   call add_t  'UADS volume                      'RCVTUVOL     /* @AE */
   call add_t  'When program                     'RCVTSWHE     /* @AE */
   CLRDESC = "TURQ" ; CLRVALU = "GREEN"  /* COL COLORS */      /* @AG */
-  'TBSort' tablea 'Fields('sort')'                            /* @AG */
+  'TBSort' table1 'Fields('sort')'                            /* @AG */
 RETURN                                                        /* @AE */

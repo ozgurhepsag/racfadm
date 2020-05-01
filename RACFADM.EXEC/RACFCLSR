@@ -3,7 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMhDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @B4  200430  RACFA    Chg tbla to tablea, moved def. var. up top   */
+/* @B4  200430  RACFA    Chg tbla to table1, moved def. var. up top   */
 /* @B3  200429  RACFA    Re-arranged variables (General, Mgmt, TSO)   */
 /* @B2  200424  RACFA    Move DDNAME at top, standardize/del dups     */
 /* @B1  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
@@ -47,7 +47,7 @@
 PANEL27     = "RACFCLSR"   /* List classes (show, refresh) */ /* @AF */
 PANELM2     = "RACFMSG2"   /* Display RACF command and RC  */ /* @AF */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @AT */
-TABLEA      = 'TA'RANDOM(0,99999)   /* Unique table name A */ /* @B4 */
+table1      = 'TA'RANDOM(0,99999)   /* Unique table name A */ /* @B4 */
 DDNAME      = 'RACFA'RANDOM(0,999)  /* Unique ddname       */ /* @B2 */
 parse source . . REXXPGM .                                    /* @B1 */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @B1 */
@@ -72,7 +72,7 @@ ADDRESS ISPEXEC                                               /* @A7 */
   if (class = '') then DO                                     /* @A9 */
      call Select_class
      rc = display_table()                                     /* @A9 */
-     "TBEND" tablea                                           /* @A9 */
+     "TBEND" table1                                           /* @A9 */
   END                                                         /* @A9 */
   else
      call RACFCLSG class '**' 'YES' /*generic prof routine*/
@@ -88,7 +88,7 @@ EXIT
 /*--------------------------------------------------------------------*/
 SELECT_CLASS:
   seconds = time('S')
-  "TBCREATE" tablea "KEYS(CLASS)",
+  "TBCREATE" table1 "KEYS(CLASS)",
                   "NAMES(ACTION) REPLACE NOWRITE"
   call get_act_class
 RETURN
@@ -118,7 +118,7 @@ GET_ACT_CLASS:
                 if (class <> 'USER'),
                  & (class <> 'DATASET'),
                  & (class <> 'GROUP') then
-                   "TBMOD" tablea
+                   "TBMOD" table1
              end
         end
         when (substr(temp,2,25) = 'GENERIC',
@@ -132,7 +132,7 @@ GET_ACT_CLASS:
                 if (class <> 'USER'),
                  & (class <> 'DATASET'),
                  & (class <> 'GROUP') then
-                   "TBMOD" tablea
+                   "TBMOD" table1
              end
         end
      End  /* end_select */
@@ -145,11 +145,11 @@ DISPLAY_TABLE:
   opta     = ' '
   sort     = 'CLASS,C,A'                                      /* @AD */
   sortclas = 'D'                                              /* @AR */
-  "TBSORT " tablea "FIELDS("sort")"                           /* @AD */
-  "TBTOP  " tablea
-  "TBDISPL" tablea "PANEL("PANEL27")"                         /* @AF */
+  "TBSORT " table1 "FIELDS("sort")"                           /* @AD */
+  "TBTOP  " table1
+  "TBDISPL" table1 "PANEL("PANEL27")"                         /* @AF */
   reta = rc
-  do while (reta < 8)   /* tablea */
+  do while (reta < 8)   /* table1 */
      action = ''
      "CONTROL DISPLAY SAVE"
      xtdtop = ztdtop                                          /* @A9 */
@@ -157,8 +157,8 @@ DISPLAY_TABLE:
      PARSE VAR ZCMD ZCMD PARM SEQ                             /* @AD */
      IF (SROW <> "") & (SROW <> 0) THEN                       /* @AA */
         IF (SROW > 0) THEN DO                                 /* @AA */
-           "TBTOP " tablea                                    /* @AA */
-           "TBSKIP" tablea "NUMBER("SROW")"                   /* @AA */
+           "TBTOP " table1                                    /* @AA */
+           "TBSKIP" table1 "NUMBER("SROW")"                   /* @AA */
         END                                                   /* @AA */
      Select
         WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN                 /* @AD */
@@ -167,15 +167,15 @@ DISPLAY_TABLE:
              lclass = parm                                    /* @A8 */
         WHEN (ABBREV("ONLY",ZCMD,1) = 1) THEN DO              /* @A9 */
              find_str = translate(parm)                       /* @A9 */
-             'tbtop ' tablea                                  /* @A9 */
-             'tbskip' tablea                                  /* @A9 */
+             'tbtop ' table1                                  /* @A9 */
+             'tbskip' table1                                  /* @A9 */
              do forever                                       /* @A9 */
                 str = translate(class action)                 /* @A9 */
                 if (pos(find_str,str) > 0) then nop           /* @A9 */
-                else 'tbdelete' tablea                        /* @A9 */
-                'tbskip' tablea                               /* @A9 */
+                else 'tbdelete' table1                        /* @A9 */
+                'tbskip' table1                               /* @A9 */
                 if (rc > 0) then do                           /* @A9 */
-                   'tbtop' tablea                             /* @A9 */
+                   'tbtop' table1                             /* @A9 */
                    leave                                      /* @A9 */
                 end                                           /* @A9 */
              end                                              /* @A9 */
@@ -197,7 +197,7 @@ DISPLAY_TABLE:
      End
      Do while (reta = 4)   /* process multi selection */
         "CONTROL DISPLAY RESTORE"
-        "TBDISPL" tablea
+        "TBDISPL" table1
         reta = rc
         "CONTROL DISPLAY SAVE"
         Select
@@ -209,17 +209,17 @@ DISPLAY_TABLE:
         End
      end
      opta = ' '
-     "TBSORT" tablea "FIELDS("sort")"
-     "TBTOP " tablea
+     "TBSORT" table1 "FIELDS("sort")"
+     "TBTOP " table1
      if (lclass <> '') then do
         class = lclass
-        "TBSARG" tablea "NEXT NAMECOND(CLASS,GE)"
-        "TBSCAN" tablea "NOREAD"
+        "TBSARG" table1 "NEXT NAMECOND(CLASS,GE)"
+        "TBSCAN" table1 "NOREAD"
      end
      else
-        "TBSKIP" tablea "NUMBER("XTDTOP")"
+        "TBSKIP" table1 "NUMBER("XTDTOP")"
      "CONTROL DISPLAY RESTORE"
-     "TBDISPL" tablea "PANEL("PANEL27")"                      /* @AF */
+     "TBDISPL" table1 "PANEL("PANEL27")"                      /* @AF */
      reta = rc
   end  /* Do while (reta < 8) */
 RETURN 0
@@ -261,7 +261,7 @@ REFRESH:
         call racfmsgs "ERR10" /* CMD FAILED */
      else do
         action = '*REFRESHED'
-        "TBMOD" tablea
+        "TBMOD" table1
      end
   end
 RETURN

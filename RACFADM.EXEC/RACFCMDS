@@ -27,7 +27,7 @@ RACFCMDS.1  = "LU ?        CICS CSDATA DCE DFP EIM KERB",     /* @A6 */
               "LANGUAGE LNOTES MFA NDS NETVIEW OMVS",         /* @A6 */
               "OPERPARM OVM PROXY TSO WORKATTR"               /* @A6 */
 RACFCMDS.2  = "LG ?        CSDATA DFP OMVS OVM TME"           /* @A6 */
-RACFCMDS.3  = "LISTDSD DATASET('"?                  "')",     /* @A6 */
+RACFCMDS.3  = "LISTDSD DATASET('"?"                  ')",     /* @A6 */
               "ALL"                                           /* @A6 */
 RACFCMDS.4  = "RL ?        * ALL"                             /* @A6 */
 RACFCMDS.5  = "RL ?        ?        AUTH"                     /* @A6 */

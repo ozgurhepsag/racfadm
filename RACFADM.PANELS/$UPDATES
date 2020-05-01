@@ -2,6 +2,14 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  30 Apr 2020 - V22R8
+     - Tutorial (Option T)
+       * Added 'Execute RACF cmds'
+       * Modified 'Installation notes'
+     - Other Items
+       * Updated a few REXX programs, code cleanup
+       * Updated $DIR member in panel and REXX datasets
+
   30 Apr 2020 - V22R7
      - User (Option 1)
        -- Line command 'AL'ter, allow selecting NOTSO, NOCICS, NODFP
@@ -13,7 +21,7 @@
        -- Added more example RACF commands
           * If you used this menu entry prior to this change,
             you will need to delete the member RACFCMDS in the
-            dataset allocated to ISPTABL or ISPPROF dd card
+            dataset allocated to ISPTABL or ISPPROF DD name
      - Tutorial (Option T)
        -- Updated panels #RACMENU, #RACGTRE and #RACNOT1
      - Other Items

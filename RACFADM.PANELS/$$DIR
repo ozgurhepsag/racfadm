@@ -11,8 +11,9 @@
  #RACACKN  Tutorial       Acknowledgements
  #RACCLSA  Tutorial       Add/Change class profile
  #RACCLSR  Tutorial       List classes (show, refresh)
- #RACCLS8  Tutorial       List classes and profiles
- #RACCLS9  Tutorial       List profiles and descriptions
+ #RACCLS2  Tutorial       List classes
+ #RACCLS8  Tutorial       List classes
+ #RACCMDS  Tutorial       Execute, save and delete TSO commands
  #RACDB    Tutorial       RACF database information
  #RACDSL   Tutorial       Dataset list
  #RACDSNA  Tutorial       Add/change dataset profile
@@ -25,14 +26,15 @@
  #RACHEL1  Tutorial       Help for RACF commands (1 of 2)
  #RACHEL2  Tutorial       Help for RACF commands (2 of 2)
  #RACMENU  Tutorial       Main menu, menu option T
- #RACNOTE  Tutorial       RACF notes (setup/use info)
+ #RACNOT1  Tutorial       Installation notes (1 of 2)
+ #RACNOT2  Tutorial       Installation notes (2 of 2)
  #RACPRMS  Tutorial       RACF parameters
  #RACPSWD  Tutorial       Password reset
+ #RACPUB1  Tutorial       RACF publications and downloads (1 of 2)
+ #RACPUB2  Tutorial       RACF eductional websites (2 of 2)
  #RACSET1  Tutorial       Settings - Customize options (1 of 3)
  #RACSET2  Tutorial       Settings - Customize options (2 of 3)
  #RACSET3  Tutorial       Settings - Customize options (3 of 3)
- #RACPUB1  Tutorial       RACF publications and downloads (1 of 2)
- #RACPUB2  Tutorial       RACF eductional websites (2 of 2)
  #RACUSR2  Tutorial       User profile
  RACFCLSB  Class          List members
  RACFCLSC  Class          Add class

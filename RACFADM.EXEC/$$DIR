@@ -17,6 +17,7 @@
  RACFEMAC  Edit macro     View/edit, turn off highlighting
  RACFENQS  Enqueues       Display enqueues on ALTLIB/LIBDEF dsns, opt E
  RACFGRP   Group          Display group profiles, menu option 2
+ RACFGRTE  Group Tree     DSMON Group tree report
  RACFHELP  Help           Display TSO HELP on RACF commands
  RACFLOG   Documentation  Display changes/issues, menu option C/I
  RACFMSGC  Message        Display 'Confirm Request' panel
