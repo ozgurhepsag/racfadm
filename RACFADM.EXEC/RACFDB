@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AD  200501  RACFA    A tweak to the text displayed                */
 /* @AC  200424  RACFA    Move DDNAME at top, standardize/del dups     */
 /* @AB  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @AA  200423  RACFA    Chg dash line to 72, was 62 columns in length*/
@@ -219,7 +220,7 @@ DO II = 1 TO DSDTNUM                 /* LOOP THROUGH ENTRIES         */
     QUEUE COPIES("-",72)                                      /* @AA */
     QSNAME = "'"STRIP(PNAME)"'"          /*PUT QUOTES AROUND RDB NAME*/
     CALL FINDSIZE QSNAME                 /* GET THE SPACE USED VALUE */
-    QUEUE "PRIMARY #"II":"                                    /* @A1 */
+    QUEUE "PRIMARY #"II                                       /* @AD */
     QUEUE "  Status ......... "PSTAT                          /* @A1 */
     QUEUE "  Dsname ......... "PNAME                          /* @A1 */
     QUEUE "  Volume ......... "VOLSER                         /* @A1 */
@@ -230,7 +231,7 @@ DO II = 1 TO DSDTNUM                 /* LOOP THROUGH ENTRIES         */
     QUEUE " "                                                 /* @A1 */
     QSNAME = "'"STRIP(BNAME)"'"          /*PUT QUOTES AROUND RDB NAME*/
     CALL FINDSIZE QSNAME                 /* GET THE SPACE USED VALUE */
-    QUEUE "BACKUP  #"II":"                                    /* @A1 */
+    QUEUE "BACKUP  #"II                                       /* @AD */
     QUEUE "  Status ......... "BSTAT                          /* @A1 */
     QUEUE "  Dsname ......... "BNAME                          /* @A1 */
     QUEUE "  Volume ......... "VOLSER                         /* @A1 */
@@ -454,9 +455,9 @@ SSVRM:
   REL      = STORAGE(D2X(ECVT+514),2)         /* POINT TO RELEASE     */
   MOD      = STORAGE(D2X(ECVT+516),2)         /* POINT TO MOD LEVEL   */
   VRM      = VER'.'REL'.'MOD                  /* VRM OF OS            */
-  QUEUE "RACF database statistics as of: "DATE() TIME()
+  QUEUE "RACF database statistics as of "DATE() TIME()        /* @AD */
   QUEUE "SMF name =",
         SMFNAME"  "SSNAME VRM"  RACF FMID = HRF"RACFMID
-  QUEUE "The application identity mapping stage is set at:",
-        C2D(RCVTALIS)
+  QUEUE "The application identity mapping stage is set at",   /* @AD */
+        STRIP(C2D(RCVTALIS))                                  /* @AD */
 RETURN

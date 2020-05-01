@@ -11,7 +11,7 @@
 +                    information when Adding/Changing a userid and allow access
 +                    to use the line command Profile,%No+is the default
 +
-!  RACF commands    +To view the RACF commands executed, type in the following:
+!  RACF commands    +To view the RACF commands executed
 +                     %Display+in pop-up panel
 +                     %Log+to the ISPF Log file
 +                     %Both+in a pop-up panel and the ISPF Log file

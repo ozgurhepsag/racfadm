@@ -2,6 +2,12 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  01 May 2020 - V23R0
+     - RACFdb (Option 8)
+       -- Minor text changes
+     - Tutorial (Option T)
+       -- Updated 'Settings' and 'Installation notes'
+
   01 May 2020 - V22R9
      - User (Option 1)
        -- Fixed line command 'ALT', was not removing some segments,
@@ -10,6 +16,8 @@
           F3 (END) out of panel RACFGRP8
      - RACFprms (Option 7)
        -- Removed 'JES early verify', obsolete parm
+     - Tutorial (Option T)
+       -- Updated 'Installation notes' tutorial
      - User, Group, Dataset and General Resources (Options 1/2/3/4)
        -- Added primary command FIND/RFIND
           o In order for FIND/RFIND commands to work, the REXX
@@ -19,7 +27,6 @@
        -- Added member $DEFSETG in panel dataset
           * Allows setting site defaults for new users
           * The settings are saved in the user's profile mbr RADMPROF
-          * Updated 'Installation notes' tutorial
        -- Updated $DIR member in panel and REXX dataset
 
   01 May 2020 - V22R8
@@ -108,7 +115,7 @@
             Password special chars allowed
      - Standards (Option S)
        -- Added bullets/examples
-     - Tutroial (Option T)
+     - Tutorial (Option T)
        -- Added more information to '15 Installation Notes'
      - Other Items
        -- Minor updates to below members (comments, etc.)
@@ -128,7 +135,7 @@
        -- Minor updates to panels #RACSET1/2/3
 
   27 Apr 2020 - V21R6
-     - RACFdb (Option 7)
+     - RACFdb (Option 8)
        -- Display parmeters in a table
           * Primary commands are SORT, LOCATE, ONLY and RESET
             o These commands operate like all the other panels

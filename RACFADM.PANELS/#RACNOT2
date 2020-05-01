@@ -9,7 +9,7 @@
 %
 !  4)+The%User+line command%XR,+Cross Reference Report, is not displayed
 !       -+Reason for this is sites with a large RACF database, the time
-+         for%IRRUT100+to read/obtain the data is significant
++         for!IRRUT100+to read/obtain the data is significant
 !       -+To access/use this command, turn on the%Settings+(option 0):
 +          !Administrator ..... Y
 +
