@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V23R0+)\-\
++\-\(%RACFADM - RACF Administration - V23R1+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -82,10 +82,10 @@
     cvtrac   = C2x(storage((d2x(x2d(cvt)+992)),4))
     ESM      = storage(d2x(x2d(cvtrac)),4)
     Select
-      When ESM = "RTSS" Then SECSOFT = "TSS"
-      When ESM = "RCVT" Then SECSOFT = "RACF"
-      When ESM = "ACF2" Then SECSOFT = "ACF2"
-      Otherwise              SECSOFT = "????"
+       When (ESM = "RTSS") Then SECSOFT = "TSS"
+       When (ESM = "RCVT") Then SECSOFT = "RACF"
+       When (ESM = "ACF2") Then SECSOFT = "ACF2"
+       Otherwise                SECSOFT = "????"
     End
     IF (SECSOFT <> "RACF") THEN
        RACFLMSG = "RACF is 'NOT' installed on this lpar,",

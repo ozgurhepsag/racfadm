@@ -13,9 +13,9 @@
 )Model
 desc                               value
 )INIT
-  &ZCMD    = ' '
+  &ZCMD = ' '
   &SAMT = &ZSCED
-  .HELP   = #RACPRMS
+  .HELP = #RACPRMS
 )PROC
 )PNTS
   FIELD(ZPS00001) VAR(ZCMD) VAL('SORT DESC')

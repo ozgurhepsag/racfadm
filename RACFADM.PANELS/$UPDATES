@@ -2,6 +2,13 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  02 May 2020 - V23R1
+     - Other Items
+       -- Updated $DIR in REXX dataset
+       -- Minor code cleanup in REXX program RACFPRMS
+       -- Updated/standardize several panels
+       -- Updated grammar/standardize tutorials
+
   01 May 2020 - V23R0
      - RACFdb (Option 8)
        -- Minor text changes
@@ -180,7 +187,7 @@
           o Syntax:
               SET#@@@@
           o Where:
-              SET  ... Settings (option 0)
+              SET  ... Settings (Option 0)
               #    ... G=General, M=Management and T=Adding TSO User
               @@@@ ... Field name
           o Prior the variable names where:
@@ -372,7 +379,7 @@
           no enqueues on RACF primary/backup databases
      - Other Items
        -- Ensure REXX program name displayed in ISPF Log, when Settings
-          (option 0) 'REXX trace = P'
+          (Option 0) 'REXX trace = P'
              RACFGTRE, RACFLOG, RACFMSGC, RACFMSGS, RACFPRMS, RACFSETG
              and RACFUSRX
 
@@ -397,18 +404,18 @@
           userid
      - Other Items
        -- Line command 'P'rofile, fixed displaying return code, when
-          Settings (option 0) REXX commands = Y' and executing IRRXUTIL
+          Settings (Option 0) REXX commands = Y' and executing IRRXUTIL
 
   22 Apr 2020 - V18R2
      - User (Option 1)
        -- Fixed 'A'dd and 'C'hange line commands, the 'Size' displayed
           was off by one character
-       -- Fixed allocating JOBLIB dataset, when Settings (option 0)
+       -- Fixed allocating JOBLIB dataset, when Settings (Option 0)
           'JOBLIB dataset' field was blank, it was still allocating
           a dataset
-       -- Fixed displaying return code, when Settings (option 0)
+       -- Fixed displaying return code, when Settings (Option 0)
           'REXX commands = Y' and executing IRRXUTIL
-       -- Updated 'XR' hidden line command, to honor Settings (option 0)
+       -- Updated 'XR' hidden line command, to honor Settings (Option 0)
           'Display files = B/E/V'
      - Group Tree (Option 6)
        -- Remove space in front of parenthesis ' )'
@@ -419,7 +426,7 @@
        -- Updated $README member in CNTL dataset
        -- Update all REXX programs to obtain the REXX program name
           from the REXXPGM variable when logging message to ISPF log
-          log file when Settings (option 0) 'RACF commands = L'
+          log file when Settings (Option 0) 'RACF commands = L'
 
   22 Apr 2020 - V18R1
      - Enqueues (Option E)
@@ -673,7 +680,7 @@
 
   12 Apr 2020 - V14R9
      - User (Option 1)
-       -- When Settings (option 0) is 'Admin RACF API = Y', and
+       -- When Settings (Option 0) is 'Admin RACF API = Y', and
           'A'dding or 'C'hanging a userid, if unsuccessfull,
           display error message
      - Changes (Option C)
@@ -731,7 +738,7 @@
 
   08 Apr 2020 - V14R3
      - User (Option 1)
-       -- When Settings (option 0) is 'Admin RACF API = N' and
+       -- When Settings (Option 0) is 'Admin RACF API = N' and
           'Admin RACF API = N'
           * Removed duplicate line command 'R Rem' from being displayed
           * Made the 'ATTR' field scrollable, when 'A'dding a userid
@@ -763,7 +770,7 @@
        -- Only display '(Enter new userid)' text to the right of
           the userid field when 'A'dding a new userid, and when
           'C'hanging a userid display '(Enter userid)'
-       -- When Settings (option 0) 'Admin RACF API = N', changed the
+       -- When Settings (Option 0) 'Admin RACF API = N', changed the
           panels (RACFUSR5/6) to allow scrolling the 'DATA' field when
           adding/changing a userid
 
@@ -809,7 +816,7 @@
   06 Apr 2020 - V13R6
      - User (Option 1)
        -- Line command 'A'dd, changed default password to be the
-          userid, when Settings (option 0) 'Admin RACF API = Y'
+          userid, when Settings (Option 0) 'Admin RACF API = Y'
        -- Line command 'C'hange, display '<>' to the far right of the
           'Attrib' field, informing user it is scrollable
      - Group (Option 2)
@@ -826,7 +833,7 @@
 
   04 Apr 2020 - V13R4
      - User (Option 1)
-       -- When Settings (option 0) is 'Admin RACF API', placed single
+       -- When Settings (Option 0) is 'Admin RACF API', placed single
           quotes around the variable userid (PGM=RACFUSR), like what
           was done for RACFPROF module, in next bullet
      - User and Group (Option 1/2)
@@ -836,7 +843,7 @@
 
   04 Apr 2020 - V13R3
      - User (Option 1)
-       -- When Settings (option 0) is:
+       -- When Settings (Option 0) is:
           * 'Admin RACF API = Y' and it executes IRRXUTIL, place
             single quotes around a parameter
           * "RACF Command = Y', the panel to display (RACFMSG3)
@@ -1238,7 +1245,7 @@
      - User (Option 1)
        -- SEarch line command when displaying a classes profiles
           * Added SORT, LOCATE, ONLY and RESET primary commands
-          * Honor the 'Status Interval' in Settings (option 0) when
+          * Honor the 'Status Interval' in Settings (Option 0) when
             displaying progress message
      - Group/Dataset (Option 2/3)
        -- Removed unnecessary TBTOP statement when executing LOCATE cmd
@@ -1446,7 +1453,7 @@
             (RACFCLSD, new panel)
      - General Resources (Option 4)
        -- Only display line command 'R, Refresh' when
-          'Administrator=YES' in 'Settings' (Menu option 0)
+          'Administrator=YES' in 'Settings' (Menu Option 0)
        -- Added primary command SORT
        -- When 'S'howing a class's dataset
           * Added primary commands SORT, LOCATE, ONLY, RESET

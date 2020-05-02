@@ -12,9 +12,9 @@
 )MODEL
 $Z                                                                             +
 )INIT
-  .ZVARS   = '(MSG)'
-  .HELP    = #RACMENU
-  &ZCMD    = ' '
+  .ZVARS = '(MSG)'
+  .HELP  = #RACMENU
+  &ZCMD  = ' '
   IF (&SAMT = ' ')
       &SAMT = &ZSCED
 )END

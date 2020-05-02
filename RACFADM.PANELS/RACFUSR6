@@ -102,9 +102,9 @@
        Address TSO cmd
        x = outtrap('off')
        parse var value '' with bowner defgrp name attr ohome,
-         tsoproc tsoacct tsosize tsounit oprogram,
-         copclass copident copprty ctimeout,
-         ddatacls dstorcls dmgmtcls
+                    tsoproc tsoacct tsosize tsounit oprogram,
+                    copclass copident copprty ctimeout,
+                    ddatacls dstorcls dmgmtcls
 
        parse var lu.1 'NAME='name
        parse var lu.1 'OWNER='bowner

@@ -27,9 +27,9 @@
 )MODEL
 _Z+ Z         Z
 )INIT
-  .ZVARS   = '(SCIND OPTB ID ACC)'
-  .HELP    = #RACGRP8
-  &ZCMD    = ' '
+  .ZVARS = '(SCIND OPTB ID ACC)'
+  .HELP  = #RACGRP8
+  &ZCMD  = ' '
   IF (&SAMT = ' ')
       &SAMT = &ZSCED
   IF (&ATTR = ' ')

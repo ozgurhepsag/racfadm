@@ -1,5 +1,5 @@
 )ATTR DEFAULT(%+_)
-   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON) JUST(LEFT) HILITE(USCORE)
+   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON) JUST(LEFT)   HILITE(USCORE)
    !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
    @  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(RED)
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
@@ -10,7 +10,7 @@
 !  4)+The%User+line command%XR,+Cross Reference Report, is not displayed
 !       -+Reason for this is sites with a large RACF database, the time
 +         for!IRRUT100+to read/obtain the data is significant
-!       -+To access/use this command, turn on the%Settings+(option 0):
+!       -+To access/use this command, turn on the%Settings+(Option 0):
 +          !Administrator ..... Y
 +
 !  5)+To use the line command%Profile,+the following will need to be

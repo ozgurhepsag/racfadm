@@ -66,19 +66,19 @@
           the purpose of the code
        -- All REXX programs allow:
           * Viewing and logging the RACF commands and the return code,
-            by changing the Settings (option 0) 'RACF commands' field
+            by changing the Settings (Option 0) 'RACF commands' field
           * Tracing the REXX program, by changing the Settings
             (Option 0) 'REXX trace' field
           * The capability to have the user control how they want
             to display any files/reports by changing the Settings
-            (option 0) 'Display files' field to Browse, Edit or View
+            (Option 0) 'Display files' field to Browse, Edit or View
 
   3) Settings
      - The following are the naming standard for variables used to
-       save the user's Settings (option 0)
+       save the user's Settings (Option 0)
        -- Syntax
             SET#????
        -- Where
-            SET  ... Settings (option 0)
+            SET  ... Settings (Option 0)
             #    ... G=General, M=Management and T=Adding TSO Userid
             ???? ... Field name

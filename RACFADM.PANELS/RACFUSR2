@@ -27,10 +27,10 @@
 )MODEL CLEAR(OPTA)
 _Z ^Z      Z       Z                   Z       œZ       	Z       †Z  Z  —Z
 )INIT
-  .ZVARS   = '(OPTA ACTION USER NAME DEFGRP DATELGN OWNER REVOKED +
-               ATTR2 TSOUSER)'
-  .HELP    = #RACUSR2
-  &ZCMD    = ' '
+  .ZVARS = '(OPTA ACTION USER NAME DEFGRP DATELGN OWNER REVOKED +
+             ATTR2 TSOUSER)'
+  .HELP  = #RACUSR2
+  &ZCMD  = ' '
   IF (&SAMT = ' ')
       &SAMT = &ZSCED
 )PROC
