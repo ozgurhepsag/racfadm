@@ -9,6 +9,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A5  200504  RACFA    Missing continuation (comma) in long msg     */
 /* @A4  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @A3  200423  RACFA    Ensure REXX program name is 8 chars long     */
 /* @A2  200420  RACFA    Verify last level qualifier is not blank/null*/
@@ -57,7 +58,7 @@ ADDRESS ISPEXEC
   IF (DSNAME = "") THEN DO
      racfsmsg = "Error - No DSNs"
      racflmsg = "Unable to determine RACFADM's",
-                "LIBDEF/ALTLIB dataset names,"
+                "LIBDEF/ALTLIB dataset names,",               /* @A5 */
                 "due to the HLQ name is different",
                 "on the panel, message or REXX",
                 "dataset"
