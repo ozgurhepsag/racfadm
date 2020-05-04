@@ -5,7 +5,7 @@
   Member      Subject                   Description
  --------  -------------  --------------------------------------------
  $$DIR     Directory      Document members
- $DEFSETG  Site settings  Default site settings for new users
+ $DEFSETG  Settings       Default site settings for new users
  $ISSUES   Problems       Document all reported issues
  $STNDARD  Standards      Document coding and design
  $UPDATES  Updates        Document version/updates

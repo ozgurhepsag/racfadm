@@ -1,6 +1,10 @@
 *---------------------------------------------------------------------*
 *                           Default Settings                          *
 *---------------------------------------------------------------------*
+*  To set the site's default Settings (Option 0) for new users, edit  *
+*  this member.  The user's Settings are saved in their ISPF profile  *
+*  dataset in member RADMPROF.                                        *
+*---------------------------------------------------------------------*
 *  General Settings
 *---------------------------------------------------------------------*
 SETGFLTR =                                  /* Default filter        */

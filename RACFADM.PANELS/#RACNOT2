@@ -7,13 +7,13 @@
 %Tutorial+\-\(%RACFADM - Installation Notes+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
-!  4)+The%User+line command%XR,+Cross Reference Report, is not displayed
+!  6)+The%User+line command%XR,+Cross Reference Report, is not displayed
 !       -+Reason for this is sites with a large RACF database, the time
 +         for!IRRUT100+to read/obtain the data is significant
 !       -+To access/use this command, turn on the%Settings+(Option 0):
 +          !Administrator ..... Y
 +
-!  5)+To use the line command%Profile,+the following will need to be
+!  7)+To use the line command%Profile,+the following will need to be
 +     accomplished:
 !       -+Turn on the%Settings+(Option 0)
 +          !Administrator ..... Y

@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMhDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @B6  200502  RACFA    Re-worked displaying tables, use DO FOREVER  */
 /* @B5  200501  LBD      Add primary commands FIND/RFIND              */
 /* @B4  200430  RACFA    Chg tbla to TABLEA, moved def. var. up top   */
 /* @B3  200429  RACFA    Re-arranged variables (General, Mgmt, TSO)   */
@@ -93,6 +94,10 @@ SELECT_CLASS:
   "TBCREATE" TABLEA "KEYS(CLASS)",
                   "NAMES(ACTION) REPLACE NOWRITE"
   call get_act_class
+  sort     = 'CLASS,C,A'                                      /* @B6 */
+  sortclas = 'D'                                              /* @B6 */
+  "TBSORT " TABLEA "FIELDS("sort")"                           /* @B6 */
+  "TBTOP  " TABLEA                                            /* @B6 */
 RETURN
 /*--------------------------------------------------------------------*/
 /*  Display profile permits                                           */
@@ -144,23 +149,24 @@ RETURN
 /*  Profiles table display section                                    */
 /*--------------------------------------------------------------------*/
 DISPLAY_TABLE:
-  opta     = ' '
-  sort     = 'CLASS,C,A'                                      /* @AD */
-  sortclas = 'D'                                              /* @AR */
-  "TBSORT " TABLEA "FIELDS("sort")"                           /* @AD */
-  "TBTOP  " TABLEA
-  radmrfnd = 'PASSTHRU'                                       /* @B5 */
-  'vput (radmrfnd)'                                           /* @B5 */
-  "TBDISPL" TABLEA "PANEL("PANEL27")"                         /* @AF */
-  radmrfnd = null                                             /* @B5 */
-  'vput (radmrfnd)'                                           /* @B5 */
-  reta = rc
-  do while (reta < 8)   /* TABLEA */
-     action = ''
-     "CONTROL DISPLAY SAVE"
-     xtdtop = ztdtop                                          /* @A9 */
-     lclass = ''                                              /* @A9 */
-     PARSE VAR ZCMD ZCMD PARM SEQ                             /* @AD */
+  opta   = ' '
+  xtdtop = 0                                                  /* @B6 */
+  rsels  = 0                                                  /* @B6 */
+  do forever                                                  /* @B6 */
+     if (rsels < 2) then do                                   /* @B6 */
+        "TBTOP " TABLEA                                       /* @B6 */
+        'tbskip' tablea 'number('xtdtop')'                    /* @B6 */
+        radmrfnd = 'PASSTHRU'                                 /* @B6 */
+        'vput (radmrfnd)'                                     /* @B6 */
+        "TBDISPL" TABLEA "PANEL("PANEL27")"                   /* @B6 */
+     end                                                      /* @B6 */
+     else 'tbdispl' tablea                                    /* @B6 */
+     if (rc > 4) then leave                                   /* @B6 */
+     xtdtop   = ztdtop                                        /* @B6 */
+     rsels    = ztdsels                                       /* @B6 */
+     radmrfnd = null                                          /* @B6 */
+     'vput (radmrfnd)'                                        /* @B6 */
+     PARSE VAR ZCMD ZCMD PARM SEQ                             /* @B6 */
      IF (SROW <> "") & (SROW <> 0) THEN                       /* @AA */
         IF (SROW > 0) THEN DO                                 /* @AA */
            "TBTOP " TABLEA                                    /* @AA */
@@ -169,16 +175,34 @@ DISPLAY_TABLE:
      if (zcmd = 'RFIND') then do                              /* @B5 */
         zcmd = 'FIND'                                         /* @B5 */
         parm = findit                                         /* @B5 */
-        'tbtop' TABLEA                                        /* @B5 */
+        'tbtop ' TABLEA                                       /* @B5 */
         'tbskip' TABLEA 'number('last_find')'                 /* @B5 */
      end                                                      /* @B5 */
      Select
         When (abbrev("FIND",zcmd,1) = 1) then                 /* @B5 */
              call do_find                                     /* @B5 */
-        WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN                 /* @AD */
+        WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN DO              /* @B6 */
              call sortseq 'CLASS'                             /* @AR */
-        WHEN (ABBREV("LOCATE",ZCMD,1) = 1) THEN               /* @A8 */
-             lclass = parm                                    /* @A8 */
+             "TBSORT" TABLEA "FIELDS("sort")"                 /* @B6 */
+             "TBTOP " TABLEA                                  /* @B6 */
+        END
+        WHEN (ABBREV("LOCATE",ZCMD,1) = 1) THEN do            /* @B6 */
+             if (parm <> '') then do                          /* @B6 */
+                locarg = parm'*'                              /* @B6 */
+                PARSE VAR SORT . "," . "," SEQ                /* @B6 */
+                IF (SEQ = "D") THEN                           /* @B6 */
+                   CONDLIST = "LE"                            /* @B6 */
+                ELSE                                          /* @B6 */
+                   CONDLIST = "GE"                            /* @B6 */
+                parse value sort with scan_field',' .         /* @B6 */
+                interpret scan_field ' = locarg'              /* @B6 */
+                'tbtop ' tablea                               /* @B6 */
+                "TBSCAN "TABLEA" ARGLIST("scan_field")",      /* @B6 */
+                        "CONDLIST("CONDLIST")",               /* @B6 */
+                        "position(scanrow)"                   /* @B6 */
+                xtdtop = scanrow                              /* @B6 */
+             end                                              /* @B6 */
+        end                                                   /* @B6 */
         WHEN (ABBREV("ONLY",ZCMD,1) = 1) THEN DO              /* @A9 */
              find_str = translate(parm)                       /* @A9 */
              'tbtop ' TABLEA                                  /* @A9 */
@@ -202,6 +226,8 @@ DISPLAY_TABLE:
         END                                                   /* @A9 */
         OTHERWISE NOP                                         /* @A8 */
      End
+     ZCMD = ""; PARM = ""                                     /* @B6 */
+     'control display save'                                   /* @B6 */
      Select
         when (opta = 'L') then call lisp                      /* @AL */
         when (opta = 'R') then call REFRESH
@@ -209,35 +235,8 @@ DISPLAY_TABLE:
              call RACFCLSG class '**' 'YES'
         otherwise nop
      End
-     Do while (reta = 4)   /* process multi selection */
-        "CONTROL DISPLAY RESTORE"
-        "TBDISPL" TABLEA
-        reta = rc
-        "CONTROL DISPLAY SAVE"
-        Select
-           when (opta = 'L') then call lisp                   /* @AL */
-           when (opta = 'R') then call REFRESH
-           when (opta = 'S') then /* gen prof. routine */
-                call RACFCLSG class '**' 'YES'
-           otherwise nop
-        End
-     end
-     opta = ' '
-     "TBSORT" TABLEA "FIELDS("sort")"
-     "TBTOP " TABLEA
-     if (lclass <> '') then do
-        class = lclass
-        "TBSARG" TABLEA "NEXT NAMECOND(CLASS,GE)"
-        "TBSCAN" TABLEA "NOREAD"
-     end
-     else
-        "TBSKIP" TABLEA "NUMBER("XTDTOP")"
-     "CONTROL DISPLAY RESTORE"
-     radmrfnd = 'PASSTHRU'                                    /* @B5 */
-     'vput (radmrfnd)'                                        /* @B5 */
-     "TBDISPL" TABLEA "PANEL("PANEL27")"                      /* @AF */
-     reta = rc
-  end  /* Do while (reta < 8) */
+     'control display restore'                                /* @B6 */
+  end  /* Do forever) */                                      /* @B6 */
 RETURN 0
 /*--------------------------------------------------------------------*/
 /*  Process primary command FIND                                 @B5  */

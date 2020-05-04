@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AF  200503  RACFA    Add 'Please be patient' message              */
 /* @AE  200429  RACFA    Re-arranged variables (General, Mgmt, TSO)   */
 /* @AD  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @AC  200423  RACFA    Removed blank in column 1 of report          */
@@ -32,6 +33,9 @@ ADDRESS ISPEXEC
      if (SETMTRAC <> 'PROGRAMS') THEN
         interpret "Trace "SUBSTR(SETMTRAC,1,1)
   end
+  racflmsg = "Retrieving data - Please be patient"            /* @AF */
+  "control display lock"                                      /* @AF */
+  "display msg(RACF011)"                                      /* @AF */
 
 Address TSO
   /*--------------------------------------------*/

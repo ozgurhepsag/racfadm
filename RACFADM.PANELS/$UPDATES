@@ -2,6 +2,10 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  03 May 2020 - V23R4
+     - Other Items
+       - Minor cleanup/updates to REXX pgms and tutorials
+
   03 May 2020 - V23R3
      - GrpTree (Option 6)
        -- Added 'Please be patient' message, due to it takes a few

@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CJ  200502  RACFA    Re-worked displaying tables, use DO FOREVER  */
 /* @CI  200501  RACFA    Fixed F3 (END) out of panel RACFGRP8         */
 /* @CH  200501  LBD      Add primary commands FIND/RFIND              */
 /* @CG  200430  RACFA    Chg tblb to TABLEB, moved def. var. up top   */
@@ -47,7 +48,7 @@
 /* @BA  200303  RACFA    Chg 'RL class ALL' to 'RL class * ALL'       */
 /* @B9  200302  RACFA    Chk RC 'LU id prms', if RC>0 then 'LU id'    */
 /* @B8  200303  RACFA    Fixed chking RC after executing command      */
-/* @B7  200302  RACFA    Chk RC 'LG grp prms', if RC>0 then 'LG grp' */
+/* @B7  200302  RACFA    Chk RC 'LG grp prms', if RC>0 then 'LG grp'  */
 /* @B6  200302  RACFA    Del TBTOP cmd, prior to TBSCAN for LOCATE    */
 /* @B5  200301  RACFA    Del EMSG procedure, instead call RACFMSGS    */
 /* @B4  200228  RACFA    Do not display User=No, Access=Command       */
@@ -110,7 +111,6 @@ NULL        = ''                                              /* @CH */
 
 ADDRESS ISPEXEC                                               /* @AO */
   Rclass = 'GROUP'
-  lparm  = ''                            /* Locate parm */    /* @A3 */
   Arg Rfilter
   If (Rfilter = '') Then Do                                   /* @AB */
      "VGET (SETGFLTR) ASIS"                                   /* @AB */
@@ -168,26 +168,25 @@ PROFL:
      END                                                      /* @C5 */
      return
   end
-  /* profiles table display section */
-  opta     = ' '
-  sort     = 'GROUP,C,A'                                      /* @AU */
-  sortgrou = 'D'; sortsupg = 'A'         /* Sort order */     /* @BL */
-  sortowne = 'A'; sortdata = 'A'                              /* @BL */
-  CLRGROU  = "TURQ";  CLRDATA = "GREEN"  /* Col colors */     /* @AH */
-  CLRSUPG  = "GREEN"; CLROWNE = "GREEN"                       /* @BC */
-  "TBSORT " TABLEA "FIELDS("sort")"                           /* @AU */
-  "TBTOP  " TABLEA
-  radmrfnd = 'PASSTHRU'                                       /* @CH */
-  'vput (radmrfnd)'                                           /* @CH */
-  "TBDISPL" TABLEA "PANEL("PANEL08")"                         /* @AW */
-  reta = rc
-  radmrfnd = null                                             /* @CH */
-  'vput (radmrfnd)'                                           /* @CH */
-  do while (reta < 8)   /* TABLEA panel */
-     "CONTROL DISPLAY SAVE"
-     xtdtop = ztdtop
-     lparm = ""                                               /* @A3 */
-     PARSE VAR ZCMD ZCMD PARM seq                             /* @AC */
+  opta   = ' '                                                /* @CJ */
+  xtdtop = 0                                                  /* @CJ */
+  rsels  = 0                                                  /* @CJ */
+  do forever                                                  /* @CJ */
+     if (rsels < 2) then do                                   /* @CJ */
+        "TBTOP  " TABLEA                                      /* @CJ */
+        'tbskip' tablea 'number('xtdtop')'                    /* @CJ */
+        radmrfnd = 'PASSTHRU'                                 /* @CJ */
+        'vput (radmrfnd)'                                     /* @CJ */
+        "TBDISPL" TABLEA "PANEL("PANEL08")"                   /* @CJ */
+     end                                                      /* @CJ */
+     else 'tbdispl' tablea                                    /* @CJ */
+     reta = rc                                                /* @CJ */
+     if (reta > 4) then leave                                 /* @CJ */
+     xtdtop   = ztdtop                                        /* @CJ */
+     rsels    = ztdsels                                       /* @CJ */
+     radmrfnd = null                                          /* @CJ */
+     'vput (radmrfnd)'                                        /* @CJ */
+     PARSE VAR ZCMD ZCMD PARM SEQ                             /* @CJ */
      IF (SROW <> "") & (SROW <> 0) THEN                       /* @AR */
         IF (SROW > 0) THEN DO                                 /* @AR */
            "TBTOP " TABLEA                                    /* @AR */
@@ -196,7 +195,7 @@ PROFL:
      if (zcmd = 'RFIND') then do                              /* @CH */
         zcmd = 'FIND'                                         /* @CH */
         parm = findit                                         /* @CH */
-        'tbtop' TABLEA                                        /* @CH */
+        'tbtop ' TABLEA                                       /* @CH */
         'tbskip' TABLEA 'number('last_find')'                 /* @CH */
      end                                                      /* @CH */
      Select
@@ -214,9 +213,30 @@ PROFL:
                      call sortseq 'DATA'                      /* @BL */
                 otherwise NOP                                 /* @A3 */
              END                                              /* @A3 */
+             PARSE VAR SORT LOCARG "," .                      /* @CJ */
+             CLRGROU = "GREEN"; CLRDATA = "GREEN"             /* @CJ */
+             CLRSUPG = "GREEN"; CLROWNE = "GREEN"             /* @CJ */
+             INTERPRET "CLR"SUBSTR(LOCARG,1,4)" = 'TURQ'"     /* @CJ */
+             "TBSORT" TABLEA "FIELDS("sort")"                 /* @CJ */
+             "TBTOP " TABLEA                                  /* @CJ */
         END                                                   /* @AF */
-        WHEN (ABBREV("LOCATE",ZCMD,1) = 1) THEN               /* @A3 */
-             lparm = parm                                     /* @A3 */
+        WHEN (ABBREV("LOCATE",ZCMD,1) = 1) THEN do            /* @CJ */
+             if (parm <> '') then do                          /* @CJ */
+                locarg = parm'*'                              /* @CJ */
+                PARSE VAR SORT . "," . "," SEQ                /* @CJ */
+                IF (SEQ = "D") THEN                           /* @CJ */
+                   CONDLIST = "LE"                            /* @CJ */
+                ELSE                                          /* @CJ */
+                   CONDLIST = "GE"                            /* @CJ */
+                parse value sort with scan_field',' .         /* @CJ */
+                interpret scan_field ' = locarg'              /* @CJ */
+                'tbtop ' tablea                               /* @CJ */
+                "TBSCAN "TABLEA" ARGLIST("scan_field")",      /* @CJ */
+                        "CONDLIST("CONDLIST")",               /* @CJ */
+                        "position(scanrow)"                   /* @CJ */
+                xtdtop = scanrow                              /* @CJ */
+             end                                              /* @CJ */
+        end
         WHEN (ABBREV("ONLY",ZCMD,1) = 1) THEN DO              /* @AP */
              find_str = translate(parm)                       /* @AP */
              'tbtop ' TABLEA                                  /* @AP */
@@ -235,16 +255,14 @@ PROFL:
         WHEN (ABBREV("RESET",ZCMD,1) = 1) THEN DO             /* @AE */
              if (parm <> '') then                             /* @CD */
                 rfilter = parm                                /* @CD */
-             sort     = 'GROUP,C,A'                           /* @AU */
-             sortgrou = 'D'; sortsupg = 'A'                   /* @BL */
-             sortowne = 'A'; sortdata = 'A'                   /* @BL */
              xtdtop   = 1                                     /* @AE */
              "TBEND" TABLEA                                   /* @BL */
              call CREATE_TABLEA                               /* @AP */
         END                                                   /* @AE */
-        otherwise lparm = ''
+        otherwise NOP
      End  /* Select */
-     ZCMD = ""; PARM = ""                                     /* @A3 */
+     ZCMD = ""; PARM = ""                                     /* @CJ */
+     'control display save'                                   /* @CJ */
      Select
         when (opta = 'A') then call Addd
         when (opta = 'C') then call Chgd
@@ -255,53 +273,8 @@ PROFL:
         when (opta = 'S') then call Disd
         otherwise nop
      End /* Select */
-     Do while (reta = 4)   /* process multi selection */
-        "CONTROL DISPLAY RESTORE"
-        "TBDISPL" TABLEA
-        reta = rc
-        "CONTROL DISPLAY SAVE"
-        IF (SROW <> "") & (SROW <> 0) THEN                    /* @AR */
-           IF (SROW > 0) THEN DO                              /* @AR */
-              "TBTOP " TABLEA                                 /* @AR */
-              "TBSKIP" TABLEA "NUMBER("SROW")"                /* @AR */
-           END                                                /* @AR */
-        Select
-           when (opta = 'A') then call Addd
-           when (opta = 'C') then call Chgd
-           when (opta = 'L') then call Lisd
-           when (opta = 'P') then                             /* @BE */
-                call RACFPROF 'GROUP' group                   /* @BG */
-           when (opta = 'R') then call Deld
-           when (opta = 'S') then call Disd
-           otherwise nop
-        End
-     end  /* Do while (reta < 4) */
-     PARSE VAR SORT LOCARG "," .                              /* @AU */
-     CLRGROU = "GREEN"; CLRDATA = "GREEN"                     /* @AH */
-     CLRSUPG = "GREEN"; CLROWNE = "GREEN"                     /* @BC */
-     INTERPRET "CLR"SUBSTR(LOCARG,1,4)" = 'TURQ'"             /* @AH */
-     "TBSORT" TABLEA "FIELDS("sort")"
-     "TBTOP " TABLEA
-     if (lparm <> '') then do
-        ASTERICK = "*"                                        /* @A3 */
-        INTERPRET LOCARG" = lparm||ASTERICK"                  /* @A3 */
-        PARSE VAR SORT . "," . "," SEQ                        /* @AU */
-        IF (SEQ = "D") THEN                                   /* @AD */
-           CONDLIST = "LE"                                    /* @AD */
-        ELSE                                                  /* @AD */
-           CONDLIST = "GE"                                    /* @AD */
-        "TBSCAN "TABLEA,                                      /* @A3 */
-                "ARGLIST("LOCARG") CONDLIST("CONDLIST")"      /* @AD */
-     end
-     else
-        "TBSKIP" TABLEA "NUMBER("XTDTOP")"
-     opta = ' '
-     "CONTROL DISPLAY RESTORE"
-     radmrfnd = 'PASSTHRU'                                    /* @CH */
-     'vput (radmrfnd)'                                        /* @CH */
-     "TBDISPL" TABLEA "PANEL("PANEL08")"                      /* @AW */
-     reta = rc
-  end  /* Do while (reta < 8) */
+     'control display restore'                                /* @CJ */
+  end  /* Do forever) */                                      /* @CJ */
 RETURN
 /*--------------------------------------------------------------------*/
 /*  Process primary command FIND for TABLEA                      @CH  */
@@ -448,9 +421,7 @@ DISD:
   tmpsort = sort                                              /* @BM */
   Do until (RB = 'NO')   /* allow rebuild option to loop */
      call create_TABLEB                                       /* @BM */
-     /* Permit table display section */
      rb   = 'NO'
-     optb = ' '
      drop rownum
      "TBQUERY" TABLEB "ROWNUM("rownum")"
      if (rownum = 0) then do
@@ -458,22 +429,24 @@ DISD:
         acc = ''                                              /* @C6 */
         "TBMOD" TABLEB
      end
-     sort   = 'ID,C,A'                                        /* @BN */
-     sortid = 'D'; sortacce = 'A'         /* Sort order */    /* @BM */
-     CLRID  = "TURQ";  CLRACC = "GREEN"   /* COL COLORS */    /* @BM */
-     "TBSORT " TABLEB "FIELDS("sort")"                        /* @BM */
-     "TBTOP  " TABLEB
-     radmrfnd = 'PASSTHRU'                                    /* @CH */
-     'vput (radmrfnd)'                                        /* @CH */
-     "TBDISPL" TABLEB "PANEL("PANEL05")"                      /* @AW */
-     retb = rc
-     radmrfnd = null                                          /* @CH */
-     'vput (radmrfnd)'                                        /* @CH */
-     Do while (retb < 8)        /* TABLEB panel */
-        "CONTROL DISPLAY SAVE"
-        xtdtop = ztdtop                                       /* @BM */
-        lparm = ""                                            /* @BM */
-        PARSE VAR ZCMD ZCMD PARM seq                          /* @BM */
+     xtdtop = 0                                               /* @CJ */
+     rsels  = 0                                               /* @CJ */
+     do forever                                               /* @CJ */
+        if (rsels < 2) then do                                /* @CJ */
+           optb = ' '                                         /* @CJ */
+           "TBTOP " TABLEB                                    /* @CJ */
+           'tbskip' tableb 'number('xtdtop')'                 /* @CJ */
+           radmrfnd = 'PASSTHRU'                              /* @CJ */
+           'vput (radmrfnd)'                                  /* @CJ */
+           "TBDISPL" TABLEB "PANEL("PANEL05")"                /* @CJ */
+        end                                                   /* @CJ */
+        else 'tbdispl' tableb                                 /* @CJ */
+        if (rc > 4) then leave                                /* @CJ */
+        xtdtop   = ztdtop                                     /* @CJ */
+        rsels    = ztdsels                                    /* @CJ */
+        radmrfnd = null                                       /* @CJ */
+        'vput (radmrfnd)'                                     /* @CJ */
+        PARSE VAR ZCMD ZCMD PARM SEQ                          /* @CJ */
         IF (SROW <> "") & (SROW <> 0) THEN                    /* @AR */
            IF (SROW > 0) THEN DO                              /* @AR */
               "TBTOP " TABLEB                                 /* @AR */
@@ -482,7 +455,7 @@ DISD:
         if (zcmd = 'RFIND') then do                           /* @CH */
            zcmd = 'FIND'                                      /* @CH */
            parm = findit                                      /* @CH */
-           'tbtop' TABLEB                                     /* @CH */
+           'tbtop ' TABLEB                                    /* @CH */
            'tbskip' TABLEB 'number('last_find')'              /* @CH */
         end                                                   /* @CH */
         Select                                                /* @BM */
@@ -496,9 +469,29 @@ DISD:
                         call sortseq 'ACC'                    /* @BM */
                    otherwise NOP                              /* @BM */
                 END                                           /* @BM */
+                PARSE VAR SORT LOCARG "," .                   /* @CJ */
+                CLRID = "GREEN"; CLRACC = "GREEN"             /* @CJ */
+                INTERPRET "CLR"SUBSTR(LOCARG,1,4)" = 'TURQ'"  /* @CJ */
+                "TBSORT" TABLEB "FIELDS("sort")"              /* @CJ */
+                "TBTOP " TABLEB                               /* @CJ */
            END                                                /* @BM */
-           WHEN (ABBREV("LOCATE",ZCMD,1) = 1) THEN            /* @BM */
-                lparm = parm                                  /* @BM */
+           WHEN (ABBREV("LOCATE",ZCMD,1) = 1) THEN DO         /* @CJ */
+                if (parm <> '') then do                       /* @CJ */
+                   locarg = parm'*'                           /* @CJ */
+                   PARSE VAR SORT . "," . "," SEQ             /* @CJ */
+                   IF (SEQ = "D") THEN                        /* @CJ */
+                      CONDLIST = "LE"                         /* @CJ */
+                   ELSE                                       /* @CJ */
+                      CONDLIST = "GE"                         /* @CJ */
+                   parse value sort with scan_field',' .      /* @CJ */
+                   interpret scan_field ' = locarg'           /* @CJ */
+                   'tbtop ' tableb                            /* @CJ */
+                   "TBSCAN "TABLEB" ARGLIST("scan_field")",   /* @CJ */
+                           "CONDLIST("CONDLIST")",            /* @CJ */
+                           "position(scanrow)"                /* @CJ */
+                   xtdtop = scanrow                           /* @CJ */
+                end                                           /* @CJ */
+           END                                                /* @CJ */
            WHEN (ABBREV("ONLY",ZCMD,1) = 1) THEN DO           /* @BM */
                 find_str = translate(parm)                    /* @BM */
                 'tbtop ' TABLEB                               /* @BM */
@@ -521,8 +514,10 @@ DISD:
                 "TBEND" TABLEB                                /* @BM */
                 call create_TABLEB                            /* @BM */
            END                                                /* @BM */
-           otherwise lparm = ''                               /* @BM */
+           otherwise NOP                                      /* @BM */
         End  /* Select */                                     /* @BM */
+        ZCMD = ""; PARM = ""                                  /* @CJ */
+        'control display save'                                /* @CJ */
         if (optb <> 'A') & (id = 'NONE') then                 /* @BX */
            Call RACFMSGS ERR21                                /* @BX */
         else do                                               /* @BX */
@@ -537,53 +532,9 @@ DISD:
               when (optb = 'SE') then call RACFCLSS id
               otherwise nop
            End
-           Do while (retb = 4)   /* process multi-section */
-              "CONTROL DISPLAY RESTORE"
-              "TBDISPL" TABLEB
-              retb = rc
-              "CONTROL DISPLAY SAVE"
-              Select
-                 when (optb = 'A')  then call Addp
-                 when (optb = 'C')  then call Chgp
-                 when (optb = 'L')  then call Lisp            /* @A5 */
-                 when (optb = 'P') then                       /* @BI */
-                      call RACFPROF 'USER' id                 /* @BI */
-                 when (optb = 'R')  then call Delp
-                 when (optb = 'S')  then call RACFUSR id
-                 when (optb = 'SE') then call RACFCLSS id
-                 otherwise nop
-              End
-           end /* If 'None' */                                /* @BX */
-        end /* While retb= 4 */
-        optb = ' '
-        "CONTROL DISPLAY RESTORE"
-        PARSE VAR SORT LOCARG "," .                           /* @BM */
-        CLRID = "GREEN"; CLRACC = "GREEN"                     /* @BM */
-        INTERPRET "CLR"SUBSTR(LOCARG,1,4)" = 'TURQ'"          /* @BM */
-        "TBSORT" TABLEB "FIELDS("sort")"                      /* @BM */
-        "TBTOP " TABLEB                                       /* @BM */
-        if (lparm <> '') then do                              /* @BM */
-           ASTERICK = "*"                                     /* @BM */
-           INTERPRET LOCARG" = lparm||ASTERICK"               /* @BM */
-           PARSE VAR SORT . "," . "," SEQ                     /* @BM */
-           IF (SEQ = "D") THEN                                /* @BM */
-              CONDLIST = "LE"                                 /* @BM */
-           ELSE                                               /* @BM */
-              CONDLIST = "GE"                                 /* @BM */
-           "TBSCAN "TABLEB,                                   /* @BM */
-                   "ARGLIST("LOCARG") CONDLIST("CONDLIST")"   /* @BM */
-        end                                                   /* @BM */
-        else                                                  /* @BM */
-           "TBSKIP" TABLEB "NUMBER("XTDTOP")"                 /* @BM */
-        radmrfnd = 'PASSTHRU'                                 /* @CH */
-        'vput (radmrfnd)'                                     /* @CH */
-        if (rb = "YES") then
-           retb = 12         /* rebuild table required */
-        else do
-           "TBDISPL" TABLEB "PANEL("PANEL05")"                /* @AW */
-           retb = rc
         end
-     end /* While retb < 8 */
+        'control display restore'                             /* @CJ */
+     end  /* Do forever) */                                   /* @CJ */
      "TBEND" TABLEB
   end /* Do until */
   sort = tmpsort                                              /* @BM */
@@ -720,6 +671,11 @@ CREATE_TABLEB:                                                /* @BM */
         flags = 'ON'   /* start access list */
      end
   end /* loop scan output */
+  sort   = 'ID,C,A'                                           /* @CJ */
+  sortid = 'D'; sortacce = 'A'         /* Sort order */       /* @CJ */
+  CLRID  = "TURQ"; CLRACC = "GREEN"    /* COL COLORS */       /* @CJ */
+  "TBSORT " TABLEB "FIELDS("sort")"                           /* @CJ */
+  "TBTOP  " TABLEB                                            /* @CJ */
 RETURN                                                        /* @BM */
 /*--------------------------------------------------------------------*/
 /*  Get LG info to initialize add or change option                    */
@@ -1040,4 +996,11 @@ CREATE_TABLEA:                                                /* @AP */
      Call GETD
      "TBMOD" TABLEA
   end /* Do i=1 to var.0 */
+  sort     = 'GROUP,C,A'                                      /* @CJ */
+  sortgrou = 'D'; sortsupg = 'A'         /* Sort order */     /* @CJ */
+  sortowne = 'A'; sortdata = 'A'                              /* @CJ */
+  CLRGROU  = "TURQ";  CLRDATA = "GREEN"  /* Col colors */     /* @CJ */
+  CLRSUPG  = "GREEN"; CLROWNE = "GREEN"                       /* @CJ */
+  "TBSORT " TABLEA "FIELDS("sort")"                           /* @CJ */
+  "TBTOP  " TABLEA                                            /* @CJ */
 RETURN                                                        /* @AP */

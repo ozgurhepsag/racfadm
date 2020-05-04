@@ -17,8 +17,6 @@
 /*====================================================================*/
 PANEL01     = "RACFCMDS"   /* Execute RACF command         */ /* @A1 */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @A1 */
-parse source . . REXXPGM .                                    /* @A3 */
-REXXPGM     = LEFT(REXXPGM,8)                                 /* @A3 */
 DDNAME      = 'RACFA'RANDOM(0,999)  /* Unique ddname       */
 TABLE       = "RACFACMD"   /* Permanent table in ISPPROF   */ /* @A5 */
 RACFCMDS.   = ""                                              /* @A6 */
@@ -33,6 +31,8 @@ RACFCMDS.4  = "RL ?        * ALL"                             /* @A6 */
 RACFCMDS.5  = "RL ?        ?        AUTH"                     /* @A6 */
 RACFCMDS.6  = "SEARCH CLASS(?       ) USER(?       )"         /* @A6 */
 RACFCMDS.7  = "SETROPTS LIST"                                 /* @A6 */
+parse source . . REXXPGM .                                    /* @A3 */
+REXXPGM     = LEFT(REXXPGM,8)                                 /* @A3 */
 
 ADDRESS ISPEXEC
   "VGET (SETGDISP SETMTRAC) ASIS"                             /* @A3 */
@@ -101,8 +101,8 @@ ADDRESS ISPEXEC
   * ---------------------------------------------------------------- */
   do forever
      if (ztdsels = 0) then do
-        'tbtop 'table                                         /* @A5 */
-        'tbskip 'table' number('ztdtop')'                     /* @A5 */
+        'tbtop   'table                                       /* @A5 */
+        'tbskip  'table' number('ztdtop')'                    /* @A5 */
         'tbdispl 'table' panel('panel01') cursor(racfcmd)'    /* @A5 */
      end
      else
@@ -111,13 +111,13 @@ ADDRESS ISPEXEC
      if (row = 0) then rcsel = null
      if (row <> null) then
         if (row > 0) then do
-          'TBTop 'table                                       /* @A5 */
+          'TBTop  'table                                      /* @A5 */
           'TBSkip 'table' Number('row')'                      /* @A5 */
         end
      Select
         When (zcmd = 'CLEAR') then do
-             'tbclose 'table' replcopy library('isptabl')'    /* @A5 */
-             'tberase 'table' library('isptabl')'             /* @A5 */
+             'tbclose  'table' replcopy library('isptabl')'   /* @A5 */
+             'tberase  'table' library('isptabl')'            /* @A5 */
              'tbcreate 'table' keys(racfcmde)',               /* @A5 */
                       'library('isptabl') write share'
              racfcmd = null

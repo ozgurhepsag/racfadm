@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @B4  200502  RACFA    Added return                                 */
 /* @B3  200429  RACFA    Re-arranged variables (General, Mgmt, TSO)   */
 /* @B2  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @B1  200422  RACFA    Ensure the REXX program name is 8 chars      */
@@ -174,7 +175,8 @@ DELD:
 
   cmd = "DELETE ('"user"') ALIAS"                             /* @AK */
   call exccmd                                                 /* @AG */
-call Goodbye                                                  /* @AT */
+  call Goodbye                                                /* @AT */
+RETURN cmd_rc                                                 /* @B4 */
 /*--------------------------------------------------------------------*/
 /*  Delete temporary authorizations for RACF administrator            */
 /*--------------------------------------------------------------------*/

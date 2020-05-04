@@ -14,10 +14,10 @@
  RACFDB    Database       Display RACF database info, menu option 8
  RACFDSL   Dslist         Invoke DSLIST on ALTLIB/LIBDEF DSNs, opt D
  RACFDSN   Dataset        Display dataset profiles
- RACFEMAC  Edit macro     View/edit, turn off highlighting
+ RACFEMAC  Edit Macro     View/edit, turn off highlighting
  RACFENQS  Enqueues       Display enqueues on ALTLIB/LIBDEF dsns, opt E
  RACFGRP   Group          Display group profiles, menu option 2
- RACFGRTE  Group Tree     DSMON Group tree report
+ RACFGTRE  Group Tree     Execute/display DSMON group tree rpt, opt 6
  RACFHELP  Help           Display TSO HELP on RACF commands
  RACFLOG   Documentation  Display changes/issues, menu option C/I
  RACFMSGC  Message        Display 'Confirm Request' panel
@@ -27,7 +27,6 @@
  RACFPSWD  Password       Reset userid password (menu opt 5/linecmd PW)
  RACFSETD  Settings       Set default settings (opt 0) for new users
  RACFSETG  Settings       Customize settings, menu option 0
- RACFGTRE  Group tree     Execute/display DSMON group tree rpt, opt 6
  RACFUSR   User           Display userid profiles, menu option 1
  RACFUSRT  User           Add, delete and change TSO userid
  RACFUSRX  User           Userid cross reference report (line cmd XR)

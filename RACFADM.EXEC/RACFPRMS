@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AN  200502  RACFA    Del line 170, 'call table_create', not used  */
 /* @AM  200501  RACFA    Commented 'JES early verify', obsolete parm  */
 /* @AL  200501  LBD      Add primary commands FIND/RFIND              */
 /* @AK  200430  RACFA    Chg tbla to TABLEA, moved def. var. up top   */
@@ -165,9 +166,8 @@ RETURN                                                        /* @AL */
 /*--------------------------------------------------------------------*/
 /*  Reset the table                                              @AE  */
 /*--------------------------------------------------------------------*/
-Do_Reset:                                                     /* @AE */
+DO_RESET:                                                     /* @AE */
   'tbend' TABLEA                                              /* @AE */
-  call table_create                                           /* @AE */
   call build_table                                            /* @AE */
 RETURN                                                        /* @AE */
 /*--------------------------------------------------------------------*/
