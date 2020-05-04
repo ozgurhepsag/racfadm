@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CB  200504  TRIDJK   Adding, place in order, prior was at bottom  */
 /* @CA  200502  RACFA    Re-worked displaying tables, use DO FOREVER  */
 /* @C9  200501  LBD      Add primary commands FIND/RFIND              */
 /* @C8  200430  RACFA    Chg tblb to TABLEB, moved def. var. up top   */
@@ -388,7 +389,7 @@ ADDD:
   end
   if (type = ' ') then
      type = 'DISCRETE'
-  "TBMOD" TABLEA
+  "TBMOD" TABLEA "ORDER"                                      /* @CB */
   if (new = 'YES') then do
      dataset = 'NONE'
      type    = 'GEN'

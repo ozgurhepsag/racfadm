@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CK  200504  TRIDJK   Adding, place in order, prior was at bottom  */
 /* @CJ  200502  RACFA    Re-worked displaying tables, use DO FOREVER  */
 /* @CI  200501  RACFA    Fixed F3 (END) out of panel RACFGRP8         */
 /* @CH  200501  LBD      Add primary commands FIND/RFIND              */
@@ -368,7 +369,7 @@ ADDD:
      CALL racfmsgs 'ERR01' /* Add failed */                   /* @B5 */
      return
   end
-  "TBMOD" TABLEA
+  "TBMOD" TABLEA "ORDER"                                      /* @CK */
   if (new = 'YES') then do
      group = 'NONE'
      "TBDELETE"  TABLEA

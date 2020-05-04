@@ -11,6 +11,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @EF  200504  TRIDJK   Adding, place in order, prior was at bottom  */
 /* @EE  200502  LBD      Re-worked displaying tables, use DO FOREVER  */
 /* @ED  200501  LBD      Add primary commands FIND/RFIND              */
 /* @EC  200430  RACFA    Chg tblb to TABLEB, moved def. var. up top   */
@@ -1318,7 +1319,7 @@ RETURN                                                        /* @BE */
      return                                                   /* @D6 */
   end                                                         /* @DL */
   call @chkattr                                               /* @D4 */
-  "TBMOD" TABLEA                                              /* @D4 */
+  "TBMOD" TABLEA "ORDER"                                      /* @EF */
   call disd /* Connect basic group */                         /* @D4 */
 RETURN                                                        /* @D4 */
 /*--------------------------------------------------------------------*/

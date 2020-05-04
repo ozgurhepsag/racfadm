@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BX  200504  TRIDJK   Adding, place in order, prior was at bottom  */
 /* @BW  200502  RACFA    Re-worked displaying tables, use DO FOREVER  */
 /* @BV  200501  LBD      Add primary commands FIND/RFIND              */
 /* @BU  200430  RACFA    Chg tblb to TABLEB, moved def. var. up top   */
@@ -376,7 +377,7 @@ ADDD:
   end
   if (type = ' ') then
      type = 'DISCRETE'
-  "TBMOD" TABLEA
+  "TBMOD" TABLEA "ORDER"                                      /* @BX */
   if (new = 'YES') then do
      profile = 'NONE'
      type    = 'GEN'
