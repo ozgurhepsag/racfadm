@@ -2,17 +2,38 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
-  03 May 2020 - V23R6
+  05 May 2020 - V24R0
+     - Other Items
+       -- Updated CNTL dataset... update members: $$README, $INSTALL
+          and added member $STUB
+          o Documented/created a way to execute RACFADM by placing
+            $STUB in a different/site dataset
+
+  04 May 2020 - V23R9
+     - Other Items
+       -- Updated $DIR in REXX dataset
+       -- Updated comments in REXX program $RACFLOG
+
+  04 May 2020 - V23R8
+     - ISPLog (Option L)
+       -- Made long message more meaningful, when ISPF log dataset
+          is not activated/turned on
+
+  04 May 2020 - V23R7
+     - Main Menu
+       -- Added option L, ISPLog, ISPF Log file
+
+  04 May 2020 - V23R6
      - Dslist (Option D)
        -- Fixed displaying message, if LIBDEF/ALTLIB dataset name's
           high level qualifiers are not the same
 
-  03 May 2020 - V23R5
+  04 May 2020 - V23R5
      - User, Group, DSN and General Resources (Opt 1/2/3/4)
        -- When adding a profile, place in order, prior was located
           at the bottom
 
-  03 May 2020 - V23R4
+  04 May 2020 - V23R4
      - Other Items
        -- Minor cleanup/updates to REXX pgms and tutorials
 

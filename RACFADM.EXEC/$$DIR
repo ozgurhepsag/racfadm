@@ -19,7 +19,7 @@
  RACFGRP   Group          Display group profiles, menu option 2
  RACFGTRE  Group Tree     Execute/display DSMON group tree rpt, opt 6
  RACFHELP  Help           Display TSO HELP on RACF commands
- RACFLOG   Documentation  Display changes/issues, menu option C/I
+ RACFLOG   Documentation  Display changes/issues/isplog, opt C/I/L
  RACFMSGC  Message        Display 'Confirm Request' panel
  RACFMSGS  Message        Display error message
  RACFPRMS  Parameter      Display RACF parameters, menu option 7

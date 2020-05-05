@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V23R6+)\-\
++\-\(%RACFADM - RACF Administration - V24R0+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -12,11 +12,11 @@
 %   2 ~Group    +Group profiles         %E ~Enqueues  +Dataset enqueues
 %   3 ~Dataset  +Dataset profiles       %H ~Help      +RACF help commands
 %   4 ~General  +General resources      %I ~Issues    +Known issues
-%   5 ~Password +Password reset         %S ~Standards +Coding/design
-%   6 ~GrpTree  +Group tree report      %T ~Tutorial  +Help
-%   7 ~RACFprms +RACF parameters        %U ~Updates   +Version/updates
-%   8 ~RACFdb   +RACF databases         %X ~Exit      +Terminate
-+
+%   5 ~Password +Password reset         %L ~ISPLog    +ISPF log file
+%   6 ~GrpTree  +Group tree report      %S ~Standards +Coding/design
+%   7 ~RACFprms +RACF parameters        %T ~Tutorial  +Help
+%   8 ~RACFdb   +RACF databases         %U ~Updates   +Version/updates
++                                       %X ~Exit      +Terminate
 +
 +
 +
@@ -142,6 +142,7 @@
       E,'CMD(%RACFENQS)'
       H,'CMD(%RACFHELP)'
       I,'CMD(%RACFLOG $ISSUES)'
+      L,'CMD(%RACFLOG ISPLOG)'
       S,'CMD(%RACFLOG $STNDARD)'
       T,'PGM(ISPTUTOR) PARM(#RACMENU)'
       U,'CMD(%RACFLOG $UPDATES)'
@@ -160,13 +161,14 @@
   FIELD(ZPS00009) VAR(ZCMD) VAL('4')
   FIELD(ZPS00010) VAR(ZCMD) VAL('I')
   FIELD(ZPS00011) VAR(ZCMD) VAL('5')
-  FIELD(ZPS00012) VAR(ZCMD) VAL('S')
+  FIELD(ZPS00012) VAR(ZCMD) VAL('L')
   FIELD(ZPS00013) VAR(ZCMD) VAL('6')
-  FIELD(ZPS00014) VAR(ZCMD) VAL('T')
+  FIELD(ZPS00014) VAR(ZCMD) VAL('S')
   FIELD(ZPS00015) VAR(ZCMD) VAL('7')
-  FIELD(ZPS00016) VAR(ZCMD) VAL('U')
+  FIELD(ZPS00016) VAR(ZCMD) VAL('T')
   FIELD(ZPS00017) VAR(ZCMD) VAL('8')
-  FIELD(ZPS00018) VAR(ZCMD) VAL('X')
+  FIELD(ZPS00018) VAR(ZCMD) VAL('U')
+  FIELD(ZPS00019) VAR(ZCMD) VAL('X')
 )END
 /*--------------------------------------------------------------------*/
 /*                             Comments                               */

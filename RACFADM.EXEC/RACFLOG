@@ -1,8 +1,10 @@
 /*%NOCOMMENT====================* REXX *==============================*/
-/*  PURPOSE:  RACFADM - Changes/Issues - Menu option C and I          */
+/*  PURPOSE:  RACFADM - Changes/Issues/ISPLog - Menu Options C, I, L  */
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AG  200504  RACFA    Make long msg more meaningful                */
+/* @AF  200504  RACFA    Added the capability to view ISPLOG file     */
 /* @AE  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @AD  200423  RACFA    Ensure REXX program name is 8 chars long     */
 /* @AC  200422  RACFA    Fixed displaying error message               */
@@ -33,11 +35,25 @@ ADDRESS ISPEXEC                                               /* @A3 */
      if (SETMTRAC <> 'PROGRAMS') THEN                         /* @AB */
         interpret "Trace "SUBSTR(SETMTRAC,1,1)                /* @AA */
   end                                                         /* @AA */
+  IF (member = "ISPLOG") THEN                                 /* @AF */
+     CALL ISPLOG_FILE                                         /* @AF */
+  ELSE                                                        /* @AF */
+     CALL LOG_FILE
 
+  If (SETMTRAC <> 'NO') then do                               /* @AA */
+     Say "*"COPIES("-",70)"*"                                 /* @AA */
+     Say "*"Center("End Program = "REXXPGM,70)"*"             /* @AA */
+     Say "*"COPIES("-",70)"*"                                 /* @AA */
+  end                                                         /* @AA */
+EXIT                                                          /* @AA */
+/*--------------------------------------------------------------------*/
+/*  Display the Change or Issues Log file                             */
+/*--------------------------------------------------------------------*/
+LOG_FILE:
   "QLIBDEF ISPPLIB TYPE(DATASET) ID(DSNAME)"
   if (RC > 0) then do                                         /* @A9 */
      call RACFMSGS ERR19                                      /* @AC */
-     call Goodbye                                             /* @AA */
+     return                                                   /* @AA */
   end                                                         /* @A9 */
   DSNAME = "'"STRIP(DSNAME,,"'")"("MEMBER")'"                 /* @A5 */
 
@@ -49,15 +65,46 @@ ADDRESS ISPEXEC                                               /* @A3 */
      OTHERWISE                                                /* @A1 */
           "BROWSE DATASET("DSNAME")"                          /* @A1 */
   END                                                         /* @A1 */
-  call Goodbye                                                /* @AA */
-EXIT                                                          /* @AA */
+RETURN                                                        /* @AA */
 /*--------------------------------------------------------------------*/
-/*  If tracing is on, display flower box                         @AA  */
+/*  Display the ISPLog file                                      @AF  */
 /*--------------------------------------------------------------------*/
-GOODBYE:                                                      /* @AA */
-  If (SETMTRAC <> 'NO') then do                               /* @AA */
-     Say "*"COPIES("-",70)"*"                                 /* @AA */
-     Say "*"Center("End Program = "REXXPGM,70)"*"             /* @AA */
-     Say "*"COPIES("-",70)"*"                                 /* @AA */
-  end                                                         /* @AA */
-EXIT                                                          /* @AA */
+ISPLOG_FILE:                                                  /* @AF */
+  "VGET (ZLOGNAME)"                                           /* @AF */
+  IF (ZLOGNAME = "") THEN DO                                  /* @AF */
+     RACFSMSG = ""                                            /* @AF */
+     RACFLMSG = "The ISPF Log file is not allocated or",      /* @AF */
+                "may not have been written to.  Verify",      /* @AF */
+                "ISPF Settings (=0), 'Log/List',",            /* @AG */
+                "'1. Log Data set defaults', has primary",    /* @AG */
+                "and secondary pages.  If not, suggest",      /* @AG */
+                "making 'Primary pages = 10' and",            /* @AG */
+                "'Secondary pages = 10', then",               /* @AG */
+                "terminate and re-invoke ISPF."               /* @AG */
+     'setmsg msg(RACF011)'                                    /* @AF */
+     return                                                   /* @AF */
+  END                                                         /* @AF */
+                                                              /* @AF */
+  "SELECT PGM(ISPLLP) PARM(LOG KEEP) SUSPEND"                 /* @AF */
+                                                              /* @AF */
+  ADDRESS TSO "ALLOC FI("DDNAME") DA('"ZLOGNAME"') SHR REUS"  /* @AF */
+  IF (RC > 0) THEN DO                                         /* @AF */
+     RACFSMSG = ""                                            /* @AF */
+     RACFLMSG = "Unable to allocate the ISPF log file:",      /* @AF */
+                 ZLOGNAME".  Please investigate."             /* @AF */
+     'setmsg msg(RACF011)'                                    /* @AF */
+     return                                                   /* @AF */
+  END                                                         /* @AF */
+                                                              /* @AF */
+  "LMINIT DATAID(DATAID) DDNAME("DDNAME")"                    /* @AF */
+  SELECT                                                      /* @AF */
+     WHEN (SETGDISP = "VIEW") THEN                            /* @AF */
+          "VIEW DATAID("DATAID") MACRO("EDITMACR")"           /* @AF */
+     WHEN (SETGDISP = "EDIT") THEN                            /* @AF */
+          "EDIT DATAID("DATAID") MACRO("EDITMACR")"           /* @AF */
+     OTHERWISE                                                /* @AF */
+          "BROWSE DATAID("DATAID")"                           /* @AF */
+  END                                                         /* @AF */
+  ADDRESS TSO "FREE FI("DDNAME")"                             /* @AF */
+                                                              /* @AF */
+RETURN                                                        /* @AF */
