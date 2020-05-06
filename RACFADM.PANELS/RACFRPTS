@@ -53,25 +53,28 @@
 ZDATA,ZSHADOW/ /                                                              
 / /                                                                           
 )INIT
-  .ZVARS = '(ZVMODET ZTITLE ZCL ZCR ZCMD ZSCED)'
+  .ZVARS  = '(ZVMODET ZTITLE ZCL ZCR ZCMD ZSCED)'
   &ZHIDEX = 'Y'
   VGET (ZSCED) PROFILE                /* Fill Scroll Vars if */
   IF (&ZSCED = ' ') &ZSCED = 'PAGE'      /* Blank with page  */
   &MIXED = TRANS(&ZPDMIX N,EBCDIC *,MIX) /* set mixed format */
-  *REXX(* zdata zshadow zwidth)
+  vget (vtype) shared
+  *REXX(* zdata zshadow zwidth vtype)
     colorb = left('B',zwidth,'B')
     colorg = left('G',zwidth,'G')
     colorr = left('R',zwidth,'R')
     colort = left('T',zwidth,'T')
     colorw = left('W',zwidth,'W')
     colory = left('Y',zwidth,'Y')
-    blank = left(' ',zwidth,' ')
+    blank  = left(' ',zwidth,' ')
     if (length(zshadow) /= length(zdata)) then
        zshadow = left('G',length(zdata),'G')
     do i = 1 to length(zshadow) by zwidth
        color = ''
-       titlec = colort              /* Color for the title section */
+       titlec = colort                /* Color for the title section */
        Select
+          When substr(zdata,i+8,5)  = '*****' then     /* Top/Bottom */
+               nop
           When substr(zdata,i+8,10) = 'RACF DATA ' then /* GrpTree   */
                zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
           When substr(zdata,i+8,5) = '-----' then    /* GrpTree Rpt  */
@@ -86,30 +89,38 @@
                zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
           When substr(zdata,i+8,11) = '1      Time' then
                zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
-          Otherwise
-               do li = 0 to 50
-                  if (substr(zdata,i+8+li,1) = '|') then do
-                     select
-                        when color = '' then
-                             color = colorw       /* White  */
-                        when color = colorw then
-                             color = colorr       /* Red    */
-                        when color = colorr then
-                             color = colort       /* Turq   */
-                        when color = colort then
-                             color = colorb       /* Blue   */
-                        when color = colorb then
-                             color = colorg       /* Green  */
-                        when color = colorg then
-                             color = colorw       /* White  */
-                        when color = colorw then
-                             color = colory       /* Yellow */
-                        otherwise
-                             color = colory
-                     end /* Select */
-                     zshadow = overlay(color,zshadow,i+8+li,1)
-                  end /* if */
-               end /* Do li */
+          Otherwise do
+             if vtype = 'TREE' then
+                zshadow = overlay(colorr,zshadow,i+8,5)
+             if vtype = 'TREE' then
+                if substr(zdata,i+8+8,1) /= '|' then
+                   zshadow = overlay(colorw,zshadow,i+8+8,9)
+             do li = 0 to 50
+                if (substr(zdata,i+8+li,1) = '|') then do
+                   select
+                      when color = '' then
+                           color = colorw       /* White  */
+                      when color = colorw then
+                           color = colorr       /* Red    */
+                      when color = colorr then
+                           color = colort       /* Turq   */
+                      when color = colort then
+                           color = colorb       /* Blue   */
+                      when color = colorb then
+                           color = colorg       /* Green  */
+                      when color = colorg then
+                           color = colorw       /* White  */
+                      when color = colorw then
+                           color = colory       /* Yellow */
+                      otherwise
+                           color = colory
+                   end /* Select */
+                   zshadow = overlay(color,zshadow,i+8+li,1)
+                   if substr(zdata,i+8+li+2) /= '|' then
+                      zshadow = overlay(colorw,zshadow,i+8+li+2,10)
+                end /* if */
+             end /* Do li */
+          end /* Otherwise */
        end /* Select */
     end  /* Do i */
   *ENDREXX

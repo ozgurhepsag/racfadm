@@ -1,0 +1,37 @@
+)Attr Default(%+_)
+   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON)  JUST(LEFT)   HILITE(USCORE)
+   ~  TYPE(INPUT)   INTENS(HIGH) CAPS(OFF) JUST(LEFT)   HILITE(USCORE)
+   {  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(BLUE)
+   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(GREEN)
+)Body window(36,10) expand(\\)
+%Command ===>_zcmd
++
++  Userid  %==>_userid  +
++  Password%==>~pswd    +
++
++  EXPIRED %==>_z{    (Y=Yes, N=No)
++  RESUME  %==>_z{    (Y=Yes, N=No)
++
++%ENTER+to continue or%F3+to cancel
+)Init
+  .cursor  = userid
+  .zvars   = '(expired resume)'
+  .HELP    = #RACPSWD
+  &ZWINTTL = 'RACFADM - Password Reset'
+  if (&resume = '')
+     &resume = 'N'
+  if (&expired = '')
+     &expired = 'Y'
+)Proc
+  ver (&userid,nb,name)
+  ver (&pswd,nb)
+)End
+/*--------------------------------------------------------------------*/
+/*                             Comments                               */
+/*--------------------------------------------------------------------*/
+/*                                                                    */
+/*  1) To display/use this panel, the user must have the Settings     */
+/*     (menu option 0) turned on:                                     */
+/*       Administrator ..... Y                                        */
+/*                                                                    */
+/*--------------------------------------------------------------------*/

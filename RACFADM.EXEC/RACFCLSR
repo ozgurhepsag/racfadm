@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMhDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @B7  200506  RACFA    Drop array immediately when done using       */
 /* @B6  200502  RACFA    Re-worked displaying tables, use DO FOREVER  */
 /* @B5  200501  LBD      Add primary commands FIND/RFIND              */
 /* @B4  200430  RACFA    Chg tbla to TABLEA, moved def. var. up top   */
@@ -362,10 +363,13 @@ LISP:
      if (SETMSHOW <> 'NO') then                               /* @AP */
         call SHOWCMD                                          /* @AM */
   end                                                         /* @AM */
+
   ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",
               "LRECL(80) BLKSIZE(0) RECFM(F B)",              /* @AU */
               "UNIT(VIO) SPACE(1 5) CYLINDERS"
   ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM CMDREC. FINIS"
+  DROP CMDREC.                                                /* @B7 */
+                                                              /* @B7 */
   "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"
   SELECT
      WHEN (SETGDISP = "VIEW") THEN
@@ -376,7 +380,6 @@ LISP:
           "BROWSE DATAID("CMDDATID")"
   END
   ADDRESS TSO "FREE FI("DDNAME")"
-  DROP CMDREC.
   if (cmd_rc > 0) then                                        /* @AC */
      CALL racfmsgs "ERR10" /* Generic failure */              /* @AC */
 RETURN

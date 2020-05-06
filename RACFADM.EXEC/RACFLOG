@@ -99,18 +99,35 @@ ISPLOG_FILE:                                                  /* @AF */
      'setmsg msg(RACF011)'                                    /* @AF */
      return                                                   /* @AF */
   END                                                         /* @AF */
-                                                              /* @AF */
-  "LMINIT DATAID(DATAID) DDNAME("DDNAME")"                    /* @AF */
-  SELECT                                                      /* @AF */
-     WHEN (SETGDISP = "VIEW") THEN                            /* @AF */
-          "VIEW DATAID("DATAID") MACRO("EDITMACR")",          /* @AH */
+                                                              /* @XX */
+  ADDRESS TSO "EXECIO * DISKR "DDNAME" (STEM RECIN. FINIS"    /* @XX */
+  ADDRESS TSO "FREE FI("DDNAME")"                             /* @XX */
+                                                              /* @XX */
+  K = 0                                                       /* @XX */
+  DO J = RECIN.0 To 1 by -1                                   /* @XX */
+     K = K + 1                                                /* @XX */
+     RECOUT.K = RECIN.J                                       /* @XX */
+  END                                                         /* @XX */
+  RECOUT.0 = K                                                /* @XX */
+  DROP RECIN.
+                                                              /* @XX */
+  ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",                  /* @XX */
+              "LRECL(125) BLKSIZE(0) RECFM(V B A)",           /* @XX */
+              "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @XX */
+  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM RECOUT. FINIS"   /* @XX */
+  DROP RECOUT.                                                /* @XX */
+                                                              /* @XX */
+  "LMINIT DATAID(DATAID) DDNAME("DDNAME")"                    /* @XX */
+  SELECT                                                      /* @XX */
+     WHEN (SETGDISP = "VIEW") THEN                            /* @XX */
+          "VIEW DATAID("DATAID") MACRO("EDITMACR")",          /* @XX */
                "PANEL("PANEL01")"                             /* @AH */
-     WHEN (SETGDISP = "EDIT") THEN                            /* @AF */
-          "EDIT DATAID("DATAID") MACRO("EDITMACR")",          /* @AH */
+     WHEN (SETGDISP = "EDIT") THEN                            /* @XX */
+          "EDIT DATAID("DATAID") MACRO("EDITMACR")",          /* @XX */
                "PANEL("PANEL01")"                             /* @AH */
-     OTHERWISE                                                /* @AF */
-          "BROWSE DATAID("DATAID")"                           /* @AF */
-  END                                                         /* @AF */
-  ADDRESS TSO "FREE FI("DDNAME")"                             /* @AF */
+     OTHERWISE                                                /* @XX */
+          "BROWSE DATAID("DATAID")"                           /* @XX */
+  END                                                         /* @XX */
+  ADDRESS TSO "FREE FI("DDNAME")"                             /* @XX */
                                                               /* @AF */
 RETURN                                                        /* @AF */

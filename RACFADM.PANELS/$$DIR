@@ -73,6 +73,7 @@
  RACFMSG3  Message        'RACF Command = Y', 7 lines (pop-up panel)
  RACFPRMS  Parameter      RACF parameters, menu option 6
  RACFPSWD  Password       Reset userid password, opt 5 and line cmd PW
+ RACFPSWE  Password       Reset userid password with expire keyword
  RACFSETG  Settings       Settings, customize options, menu option 0
  RACFUSRT  User           Add, change and delete a TSO userid
  RACFUSR1  User           Set filter, menu option 1

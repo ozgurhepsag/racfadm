@@ -2,6 +2,23 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  06 May 2020 - V24R3
+     - Password (Option 5)
+       -- When Settings (option 0) 'Administration = Y', then display
+          panel RACFPSWE, which allows revoking the userid
+     - GrpTree (Option 6)
+       -- Made the color of the Level different from the Group
+     - ISPLog (Option L)
+       -- Display the ISPF Log file in reverse chronological order,
+          most current entries at the top, least current at the bottom
+     - Other Items
+       -- Updated member $DIR in panel dataset
+       -- Updated Tutorial 'Acknowledgments'
+       -- Updated member $CONTRIB in CNTL dataset
+       -- Moved the DROPing of array immediately after done using,
+          in below REXX programs:
+            RACFCLSG/R/S, RACFDB, RACFDSN, RACFGRP and RACFUSR
+
   06 May 2020 - V24R2
      - Enqueues (Option E)
        -- Fixed header when dataset has no enqueues

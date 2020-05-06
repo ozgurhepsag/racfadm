@@ -573,6 +573,8 @@ DISPLAY_INFO:                                                 /* @D2 */
               "LRECL(80) BLKSIZE(0) RECFM(F B)",              /* @D3 */
               "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @A2 */
   ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM CMDREC. FINIS"   /* @A2 */
+  DROP CMDREC.                                                /* @A2 */
+                                                              /* @A2 */
   "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"                  /* @A2 */
   SELECT                                                      /* @B7 */
      WHEN (SETGDISP = "VIEW") THEN                            /* @B7 */
@@ -583,7 +585,6 @@ DISPLAY_INFO:                                                 /* @D2 */
           "BROWSE DATAID("CMDDATID")"                         /* @B7 */
   END                                                         /* @B7 */
   ADDRESS TSO "FREE FI("DDNAME")"                             /* @A2 */
-  DROP CMDREC.                                                /* @A2 */
 RETURN                                                        /* @D2 */
 /*--------------------------------------------------------------------*/
 /*  Get Multi Factor Authentication (MFA) option from RCVT            */

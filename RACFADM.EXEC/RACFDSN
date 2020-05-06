@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CC  200506  RACFA    Drop array immediately when done using       */
 /* @CB  200504  TRIDJK   Adding, place in order, prior was at bottom  */
 /* @CA  200502  RACFA    Re-worked displaying tables, use DO FOREVER  */
 /* @C9  200501  LBD      Add primary commands FIND/RFIND              */
@@ -933,6 +934,8 @@ DISPLAY_INFO:
               "LRECL(80) BLKSIZE(0) RECFM(F B)",              /* @BQ */
               "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @A1 */
   ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM CMDREC. FINIS"   /* @A1 */
+  DROP CMDREC.                                                /* @CC */
+                                                              /* @CC */
   "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"                  /* @A1 */
   SELECT                                                      /* @AF */
      WHEN (SETGDISP = "VIEW") THEN                            /* @AF */
@@ -943,7 +946,6 @@ DISPLAY_INFO:
           "BROWSE DATAID("CMDDATID")"                         /* @AF */
   END                                                         /* @AF */
   ADDRESS TSO "FREE FI("DDNAME")"                             /* @A1 */
-  DROP CMDREC.                                                /* @A1 */
 RETURN                                                        /* @BP */
 /*--------------------------------------------------------------------*/
 /*  List group                                                        */

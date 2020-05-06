@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BJ  200506  RACFA    Drop array immediately when done using       */
 /* @BI  200502  RACFA    Re-worked displaying tables, use DO FOREVER  */
 /* @BH  200501  LBD      Add primary commands FIND/RFIND              */
 /* @BG  200430  RACFA    Chg tblb to TABLEB, moved def. var. up top   */
@@ -539,6 +540,8 @@ DISPLAY_INFO:                                                 /* @AY */
               "LRECL(80) BLKSIZE(0) RECFM(F B)",              /* @B1 */
               "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @AR */
   ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM CMDREC. FINIS"   /* @AR */
+  DROP CMDREC.                                                /* @BJ */
+                                                              /* @BJ */
   "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"                  /* @AR */
   SELECT                                                      /* @AR */
      WHEN (SETGDISP = "VIEW") THEN                            /* @AR */
@@ -549,7 +552,6 @@ DISPLAY_INFO:                                                 /* @AY */
           "BROWSE DATAID("CMDDATID")"                         /* @AR */
   END                                                         /* @AR */
   ADDRESS TSO "FREE FI("DDNAME")"                             /* @AR */
-  DROP CMDREC.                                                /* @AY */
 RETURN                                                        /* @AY */
 /*--------------------------------------------------------------------*/
 /*  List class's profile                                         @AS  */

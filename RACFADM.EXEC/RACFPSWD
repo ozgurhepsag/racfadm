@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AE  200504  JRT      SET vars are stored in PROFILE, line was ASIS*/
+/* @AD  200504  JRT      Use RACFPSWE panel if admin mode set         */
 /* @AC  200429  RACFA    Re-arranged variables (General, Mgmt, TSO)   */
 /* @AB  200426  RACFA    Chged var. ERAIPSWD to SETTPSWD (user pswd)  */
 /* @AA  200425  RACFA    Chk Settings (Opt 0) 'Initial Password' field*/
@@ -24,7 +26,7 @@ REXXPGM     = LEFT(REXXPGM,8)                                 /* @A8 */
 
 parse arg userid
 Address ISPExec
-  "VGET (SETMADMN SETMSHOW SETMTRAC SETTPSWD) ASIS"           /* @AC */
+  "VGET (SETMADMN SETMSHOW SETMTRAC SETTPSWD) PROFILE"        /* @AE */
   If (SETMTRAC <> 'NO') then do                               /* @A4 */
      Say "*"COPIES("-",70)"*"                                 /* @A4 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A4 */
@@ -32,6 +34,8 @@ Address ISPExec
      if (SETMTRAC <> 'PROGRAMS') THEN                         /* @A5 */
         interpret "Trace "SUBSTR(SETMTRAC,1,1)                /* @A4 */
   end                                                         /* @A4 */
+  If (SETMADMN = 'YES') then                                  /* @AD */
+     panelpw = 'RACFPSWE'                                     /* @AD */
   If (SETTPSWD = "") THEN                                     /* @AB */
      pswd = newpswd()                                         /* @AA */
   else                                                        /* @AA */
@@ -47,6 +51,8 @@ Address ISPExec
   added = ''
   if (resume = 'Y') then
      added = 'RESUME'
+  if (expired = 'N') then                                     /* @AD */
+     added = added||' NOEXPIRED'                              /* @AD */
   call EXCMD 'ALTUSER 'userid' PASSWORD('pswd')' added
   if (cmd_rc > 0) then do
      racfsmsg = 'ALTUSER failed'

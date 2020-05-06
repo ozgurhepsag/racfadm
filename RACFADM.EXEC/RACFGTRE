@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AI  200506  LBD      Add ISPF Variable for report                 */
 /* @AH  200506  RACFA    Fix spaces from text between paranthesis (.) */
 /* @AG  200506  LBD      Disp rpt header and bar lines in diff. color */
 /* @AF  200503  RACFA    Add 'Please be patient' message              */
@@ -108,6 +109,8 @@ Address ISPExec
      'setmsg msg(racf001)'
      call Goodbye
   end
+  vtype = 'TREE'                                              /* @AI */
+  'vput (vtype) shared'                                       /* @AI */
   SELECT                                                      /* @A2 */
      WHEN (SETGDISP = "VIEW") THEN                            /* @A2 */
           "VIEW DATAID("ID") MACRO("EDITMACR")",              /* @A2 */
@@ -118,6 +121,8 @@ Address ISPExec
      OTHERWISE                                                /* @A2 */
           "BROWSE DATAID("ID")"                               /* @A2 */
   END                                                         /* @A2 */
+  vtype = ''                                                  /* @AI */
+  'vput (vtype) shared'                                       /* @AI */
   'lmfree dataid('id')'
   Address TSO 'Free fi('DDNAME')'                             /* @A7 */
   call Goodbye
