@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AE  200506  RACFA    Display headers in a different color         */
 /* @AD  200501  RACFA    A tweak to the text displayed                */
 /* @AC  200424  RACFA    Move DDNAME at top, standardize/del dups     */
 /* @AB  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
@@ -147,6 +148,7 @@
 /*           Z/OS V1R4 ON SINGLE AND SPLIT DATABASES.                */
 /*                                                                   */
 /*********************************************************************/
+PANEL01     = "RACFRPTS"   /* Display with colors          */ /* @AE */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @A4 */
 DDNAME      = 'RACFA'RANDOM(0,999)  /* Unique ddname       */ /* @AC */
 parse source . . REXXPGM .                                    /* @AB */
@@ -269,10 +271,12 @@ ADDRESS ISPEXEC "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"    /* @A1 */
 SELECT                                                        /* @A1 */
    WHEN (SETGDISP = "VIEW") THEN                              /* @A1 */
         ADDRESS ISPEXEC "VIEW DATAID("CMDDATID")",            /* @A3 */
-                        "MACRO("EDITMACR")"                   /* @A3 */
+                        "MACRO("EDITMACR")",                  /* @AE */
+                        "PANEL("PANEL01")"                    /* @AE */
    WHEN (SETGDISP = "EDIT") THEN                              /* @A1 */
         ADDRESS ISPEXEC "EDIT DATAID("CMDDATID")",            /* @A3 */
-                        "MACRO("EDITMACR")"                   /* @A3 */
+                        "MACRO("EDITMACR")",                  /* @AE */
+                        "PANEL("PANEL01")"                    /* @AE */
    OTHERWISE                                                  /* @A1 */
         ADDRESS ISPEXEC "BROWSE DATAID("CMDDATID")"           /* @A1 */
 END                                                           /* @A1 */

@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AH  200506  RACFA    Fix spaces from text between paranthesis (.) */
+/* @AG  200506  LBD      Disp rpt header and bar lines in diff. color */
 /* @AF  200503  RACFA    Add 'Please be patient' message              */
 /* @AE  200429  RACFA    Re-arranged variables (General, Mgmt, TSO)   */
 /* @AD  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
@@ -19,6 +21,7 @@
 /* @A1  200416  RACFA    Increased size of SYSPRINT                   */
 /* @A0  200416  TRIDJK   Created REXX program                         */
 /*====================================================================*/
+PANEL01     = "RACFRPTS"   /* Display with colors          */ /* @AG */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn hilite off  */ /* @A5 */
 DDNAME      = "RACFA"RANDOM(0,999)                            /* @A5 */
 parse source . . REXXPGM .                                    /* @AD */
@@ -76,9 +79,14 @@ Address TSO
         otherwise                                             /* @A5 */
              nop                                              /* @A5 */
      end                                                      /* @A5 */
-     PARSE VAR SYSUT2.J W1 " )" W2                            /* @A8 */
+     PARSE VAR SYSUT2.J W1 "(" W2 ")" W3                      /* @AH */
      K = K + 1                                                /* @A5 */
-     REC.K = W1")"W2                                          /* @A8 */
+     SELECT                                                   /* @AH */
+        WHEN (W2 = "") THEN                                   /* @AH */
+             REC.K = W1                                       /* @AH */
+        OTHERWISE                                             /* @AH */
+             REC.K = W1"("STRIP(W2)")"W3                      /* @AH */
+     END                                                      /* @AH */
   end                                                         /* @A5 */
   rec.0 = K                                                   /* @A5 */
   drop sysut2.                                                /* @A5 */
@@ -102,11 +110,11 @@ Address ISPExec
   end
   SELECT                                                      /* @A2 */
      WHEN (SETGDISP = "VIEW") THEN                            /* @A2 */
-          "VIEW DATAID("ID") MACRO("EDITMACR")" ,             /* @A2 */
-          "Panel(racfvedt)"
+          "VIEW DATAID("ID") MACRO("EDITMACR")",              /* @A2 */
+               "PANEL("PANEL01")"                             /* @AG */
      WHEN (SETGDISP = "EDIT") THEN                            /* @A2 */
-          "EDIT DATAID("ID") MACRO("EDITMACR")" ,             /* @A2 */
-          "Panel(racfvedt)"
+          "EDIT DATAID("ID") MACRO("EDITMACR")",              /* @A2 */
+               "PANEL("PANEL01")"                             /* @AG */
      OTHERWISE                                                /* @A2 */
           "BROWSE DATAID("ID")"                               /* @A2 */
   END                                                         /* @A2 */

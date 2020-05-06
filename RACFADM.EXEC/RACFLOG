@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AH  200506  RACFA    Display headers in a different color         */
 /* @AG  200504  RACFA    Make long msg more meaningful                */
 /* @AF  200504  RACFA    Added the capability to view ISPLOG file     */
 /* @AE  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
@@ -21,6 +22,7 @@
 /* @A1  200220  RACFA    Added capability to browse/edit/view file    */
 /* @A0  200218  RACFA    Created REXX                                 */
 /*====================================================================*/
+PANEL01     = "RACFRPTS"   /* Display with colors          */ /* @AG */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @A8 */
 parse source . . REXXPGM .                                    /* @AE */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @AE */
@@ -59,9 +61,11 @@ LOG_FILE:
 
   SELECT                                                      /* @A1 */
      WHEN (SETGDISP = "VIEW") THEN                            /* @A1 */
-          "VIEW DATASET("DSNAME") MACRO("EDITMACR")"          /* @A7 */
+          "VIEW DATASET("DSNAME") MACRO("EDITMACR")",         /* @AH */
+               "PANEL("PANEL01")"                             /* @AH */
      WHEN (SETGDISP = "EDIT") THEN                            /* @A1 */
-          "EDIT DATASET("DSNAME") MACRO("EDITMACR")"          /* @A7 */
+          "EDIT DATASET("DSNAME") MACRO("EDITMACR")",         /* @AH */
+               "PANEL("PANEL01")"                             /* @AH */
      OTHERWISE                                                /* @A1 */
           "BROWSE DATASET("DSNAME")"                          /* @A1 */
   END                                                         /* @A1 */
@@ -99,9 +103,11 @@ ISPLOG_FILE:                                                  /* @AF */
   "LMINIT DATAID(DATAID) DDNAME("DDNAME")"                    /* @AF */
   SELECT                                                      /* @AF */
      WHEN (SETGDISP = "VIEW") THEN                            /* @AF */
-          "VIEW DATAID("DATAID") MACRO("EDITMACR")"           /* @AF */
+          "VIEW DATAID("DATAID") MACRO("EDITMACR")",          /* @AH */
+               "PANEL("PANEL01")"                             /* @AH */
      WHEN (SETGDISP = "EDIT") THEN                            /* @AF */
-          "EDIT DATAID("DATAID") MACRO("EDITMACR")"           /* @AF */
+          "EDIT DATAID("DATAID") MACRO("EDITMACR")",          /* @AH */
+               "PANEL("PANEL01")"                             /* @AH */
      OTHERWISE                                                /* @AF */
           "BROWSE DATAID("DATAID")"                           /* @AF */
   END                                                         /* @AF */

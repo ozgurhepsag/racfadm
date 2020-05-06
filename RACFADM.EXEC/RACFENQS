@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AN  200506  RACFA    Display headers in a different color         */
 /* @AM  200429  RACFA    Added a astericks to dsn/enqueues headers    */
 /* @AL  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @AK  200423  RACFA    Place DSN/Enques in flower/comment box       */
@@ -27,6 +28,7 @@
 /* @A1  200402  RACFA    Dropped array, save memory                   */
 /* @A0  200401  RACFA    Created REXX                                 */
 /*====================================================================*/
+PANEL01     = "RACFRPTS"   /* Display RACF command and RC  */
 PANELM2     = "RACFMSG2"   /* Display RACF command and RC  */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @A2 */
 QNAME       = "SYSDSN"     /* MAJOR resource name for DSNs */
@@ -64,9 +66,11 @@ ADDRESS ISPEXEC
   "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"
   SELECT
      WHEN (SETGDISP = "VIEW") THEN
-          "VIEW DATAID("CMDDATID") MACRO("EDITMACR")"         /* @A2 */
+          "VIEW DATAID("CMDDATID") MACRO("EDITMACR")",        /* @AN */
+               "PANEL("PANEL01")"                             /* @AN */
      WHEN (SETGDISP = "EDIT") THEN
-          "EDIT DATAID("CMDDATID") MACRO("EDITMACR")"         /* @A2 */
+          "EDIT DATAID("CMDDATID") MACRO("EDITMACR")",        /* @AN */
+               "PANEL("PANEL01")"                             /* @AN */
      OTHERWISE
           "BROWSE DATAID("CMDDATID")"
   END

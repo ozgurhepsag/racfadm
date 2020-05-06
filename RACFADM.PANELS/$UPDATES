@@ -2,6 +2,14 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  06 May 2020 - V24R1
+     - GrpTree (Option 6)
+       -- Fixed removing spaces between parentheses
+     - GrpTree, RACFdb, Changes, Enqueues, Issues, Standards and ISPLog
+       -- Changed the color of the report header and bar lines (|)
+          o These menu options now use panel RACFRPTS
+          o Updated $DIR member in panel dataset
+
   05 May 2020 - V24R0
      - Other Items
        -- Updated CNTL dataset... update members: $$README, $INSTALL

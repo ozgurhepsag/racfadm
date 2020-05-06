@@ -66,6 +66,7 @@
  RACFGRP6  Group          Change connection
  RACFGRP7  Group          Add connection
  RACFGRP8  Group          List groups and descriptions
+ RACFRPTS  Reports        GrpTree/RACFdb/Enque/Chgs/Issues/ISPLog/Stds
  RACFMENU  Menu           Main menu
  RACFMSG1  Message        'Confirm Request' (pop-up panel)
  RACFMSG2  Message        'RACF Command = Y', 3 lines (pop-up panel)
