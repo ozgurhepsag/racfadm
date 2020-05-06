@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AO  200506  RACFA    Standardize all headers                      */
 /* @AN  200506  RACFA    Display headers in a different color         */
 /* @AM  200429  RACFA    Added a astericks to dsn/enqueues headers    */
 /* @AL  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
@@ -129,7 +130,7 @@ GET_ENQS:                                                     /* @A7 */
      IF (QUERYRC <> 8) THEN                                   /* @AE */
         "TBCLOSE "ENQTBL                                      /* @A7 */
      QUEUE COPIES("-",72)                                     /* @AK */
-     QUEUE CENTER(Rname" - 0 Enqueues",70)                    /* @AK */
+     QUEUE '*'CENTER(Rname" - 0 Enqueues",70)'*'              /* @AO */
      QUEUE COPIES("-",72)                                     /* @AK */
      ENQRC = ENQRC + 8                                        /* @A7 */
      RETURN                                                   /* @A7 */

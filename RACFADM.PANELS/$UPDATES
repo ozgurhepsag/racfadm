@@ -2,6 +2,10 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  06 May 2020 - V24R2
+     - Enqueues (Option E)
+       -- Fixed header when dataset has no enqueues
+
   06 May 2020 - V24R1
      - GrpTree (Option 6)
        -- Fixed removing spaces between parentheses
