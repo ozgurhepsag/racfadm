@@ -102,9 +102,11 @@ Address ISPExec
   end
   SELECT                                                      /* @A2 */
      WHEN (SETGDISP = "VIEW") THEN                            /* @A2 */
-          "VIEW DATAID("ID") MACRO("EDITMACR")"               /* @A2 */
+          "VIEW DATAID("ID") MACRO("EDITMACR")" ,             /* @A2 */
+          "Panel(racfvedt)"
      WHEN (SETGDISP = "EDIT") THEN                            /* @A2 */
-          "EDIT DATAID("ID") MACRO("EDITMACR")"               /* @A2 */
+          "EDIT DATAID("ID") MACRO("EDITMACR")" ,             /* @A2 */
+          "Panel(racfvedt)"
      OTHERWISE                                                /* @A2 */
           "BROWSE DATAID("ID")"                               /* @A2 */
   END                                                         /* @A2 */
