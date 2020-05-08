@@ -20,6 +20,7 @@
 /* @A0  200407  TRIDJK   Created                                      */
 /*====================================================================*/
 PANELPW     = "RACFPSWD"   /* Password reset               */
+PANELPE     = "RACFPSWE"   /* Password reset and revoke    */ /* @AD */
 PANELM2     = "RACFMSG2"   /* Display RACF command and RC  */
 parse source . . REXXPGM .                                    /* @A8 */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @A8 */
@@ -35,7 +36,7 @@ Address ISPExec
         interpret "Trace "SUBSTR(SETMTRAC,1,1)                /* @A4 */
   end                                                         /* @A4 */
   If (SETMADMN = 'YES') then                                  /* @AD */
-     panelpw = 'RACFPSWE'                                     /* @AD */
+     panelpw = PANELPE                                        /* @AD */
   If (SETTPSWD = "") THEN                                     /* @AB */
      pswd = newpswd()                                         /* @AA */
   else                                                        /* @AA */

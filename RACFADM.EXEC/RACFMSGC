@@ -23,7 +23,7 @@ REXXPGM     = LEFT(REXXPGM,8)                                 /* @AB */
 ADDRESS ISPEXEC                                               /* @A3 */
   Arg message
   Signal off error
-  "VGET (SETMTRAC) ASIS"                                      /* @A7 */
+  "VGET (SETMTRAC) PROFILE"                                   /* @A7 */
   If (SETMTRAC <> 'NO') then do                               /* @A8 */
      Say "*"COPIES("-",70)"*"                                 /* @A8 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A8 */

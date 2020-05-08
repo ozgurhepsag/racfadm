@@ -2,6 +2,13 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  07 May 2020 - V24R4
+     - Other Items
+       -- Minor updates to code
+       -- Added REXX program RACFADRL to CNTL file
+          o Providing sites the capability to add invoking IBM's RACF
+            menu options 5/6/7 to the RACFMENU
+
   06 May 2020 - V24R3
      - Password (Option 5)
        -- When Settings (option 0) 'Administration = Y', then display

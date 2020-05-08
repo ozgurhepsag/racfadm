@@ -35,7 +35,7 @@ REXXPGM     = LEFT(REXXPGM,8)                                 /* @AB */
 parse value '' with null                                      /* @AE */
 
 ADDRESS ISPEXEC                                               /* @A4 */
-  "VGET (SETMTRAC) ASIS"                                      /* @A3 */
+  "VGET (SETMTRAC) PROFILE"                                   /* @A3 */
   If (SETMTRAC <> 'NO') then do                               /* @A6 */
      Say "*"COPIES("-",70)"*"                                 /* @A6 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A6 */
@@ -65,7 +65,7 @@ ADDRESS ISPEXEC                                               /* @A4 */
 
   SORT = "DESCU,C,A"                                          /* @AG */
   sortdesc = 'D'; sortvalu = 'A'                              /* @AG */
-  call Build_Table                                            /* @AE */
+  call CREATE_TABLEA                                          /* @AE */
   /*----------------------------------*/                      /* @AE */
   /* Display the table and process it */                      /* @AE */
   /*----------------------------------*/                      /* @AE */
@@ -104,7 +104,7 @@ ADDRESS ISPEXEC                                               /* @A4 */
              sort     = 'DESCU,C,A'                           /* @AG */
              sortdesc = 'A'; sortvalu = 'A'                   /* @AG */
              "TBEND" TABLEA                                   /* @AG */
-             call Build_table                                 /* @AG */
+             call CREATE_TABLEA                               /* @AG */
         end                                                   /* @AG */
         otherwise nop                                         /* @AG */
      end                                                      /* @AG */
@@ -168,7 +168,7 @@ RETURN                                                        /* @AL */
 /*--------------------------------------------------------------------*/
 DO_RESET:                                                     /* @AE */
   'tbend' TABLEA                                              /* @AE */
-  call build_table                                            /* @AE */
+  call CREATE_TABLEA                                          /* @AE */
 RETURN                                                        /* @AE */
 /*--------------------------------------------------------------------*/
 /*  Sort the table - 1st ascending then descending               @AE  */
@@ -467,7 +467,7 @@ RETURN                                                        /* @AE */
 /*--------------------------------------------------------------------*/
 /*  Build the Table with the RACF Information                    @AE  */
 /*--------------------------------------------------------------------*/
-BUILD_TABLE:                                                  /* @AE */
+CREATE_TABLEA:                                                /* @AE */
   'tbcreate' TABLEA 'names(desc,descu,value) nowrite'         /* @AE */
   call add_t  'Version                          'RCVTGRNM     /* @AE */
   call add_t  'Data Base Primary                'RCVTPDSN     /* @AE */

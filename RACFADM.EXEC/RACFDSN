@@ -108,7 +108,7 @@ ADDRESS ISPEXEC                                               /* @AJ */
   Rclass = 'DATASET'
   "CONTROL ERRORS RETURN"                                     /* @B1 */
   "VGET (SETGFLTR SETGSTA  SETGSTAP SETGDISP",                /* @C6 */
-        "SETMADMN SETMIRRX SETMSHOW SETMTRAC) ASIS"           /* @C6 */
+        "SETMADMN SETMIRRX SETMSHOW SETMTRAC) PROFILE"        /* @C6 */
   If (SETMTRAC <> 'NO') then do                               /* @BV */
      Say "*"COPIES("-",70)"*"                                 /* @BV */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @BV */

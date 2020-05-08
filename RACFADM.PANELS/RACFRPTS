@@ -140,8 +140,8 @@
 /*                             Comments                               */
 /*--------------------------------------------------------------------*/
 /*                                                                    */
-/*  1) Copied from IBM's ISREDDE2 panel and added REXX to the )INIT   */
-/*     section.                                                       */
+/*  1) Copied from IBM's ISREDDE2 panel                               */
+/*     - Added REXX to the )INIT section                              */
 /*                                                                    */
 /*  2) This panel changes the color of the report header and bar      */
 /*     lines (|) when selecting the following menu options:           */

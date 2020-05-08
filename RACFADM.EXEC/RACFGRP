@@ -115,12 +115,12 @@ ADDRESS ISPEXEC                                               /* @AO */
   Rclass = 'GROUP'
   Arg Rfilter
   If (Rfilter = '') Then Do                                   /* @AB */
-     "VGET (SETGFLTR) ASIS"                                   /* @AB */
+     "VGET (SETGFLTR) PROFILE"                                /* @AB */
      Rfilter = SETGFLTR                                       /* @AB */
   end                                                         /* @AB */
   "CONTROL ERRORS RETURN"                                     /* @B1 */
   "VGET (SETGSTA  SETGSTAP SETGDISP SETMADMN",                /* @CE */
-        "SETMIRRX SETMSHOW SETMTRAC) ASIS"                    /* @CE */
+        "SETMIRRX SETMSHOW SETMTRAC) PROFILE"                 /* @CE */
   If (SETMTRAC <> 'NO') then do                               /* @BZ */
      Say "*"COPIES("-",70)"*"                                 /* @BZ */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @BZ */

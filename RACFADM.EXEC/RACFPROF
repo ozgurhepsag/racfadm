@@ -77,7 +77,7 @@ irrxout. = ''
 irrx     = 0
 
 ADDRESS ISPEXEC
-  "VGET (SETGDISP SETMSHOW SETMTRAC) ASIS"                    /* @A9 */
+  "VGET (SETGDISP SETMSHOW SETMTRAC) PROFILE"                 /* @A9 */
   If (SETMTRAC <> 'NO') then do                               /* @AS */
      Say "*"COPIES("-",70)"*"                                 /* @AS */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AS */

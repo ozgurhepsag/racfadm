@@ -40,7 +40,7 @@ REXXPGM   = LEFT(REXXPGM,8)                                   /* @AO */
 ADDRESS ISPEXEC                                               /* @A6 */
   Arg rclass profile user
   "CONTROL ERRORS RETURN"                                     /* @AC */
-  "VGET (SETMSHOW SETMTRAC) ASIS"                             /* @A3 */
+  "VGET (SETMSHOW SETMTRAC) PROFILE"                          /* @A3 */
   If (SETMTRAC <> 'NO') then do                               /* @AI */
      Say "*"COPIES("-",70)"*"                                 /* @AI */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AI */

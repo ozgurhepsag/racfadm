@@ -186,7 +186,7 @@ NULL        = ''                                              /* @ED */
 ADDRESS ISPEXEC                                               /* @BC */
   Arg Rfilter
   If (Rfilter = '') Then Do                                   /* @AM */
-     "VGET (SETGFLTR) ASIS"                                   /* @AM */
+     "VGET (SETGFLTR) PROFILE"                                /* @AM */
      Rfilter = SETGFLTR                                       /* @AM */
   end                                                         /* @AM */
   Call Digital_Certs                                          /* @AP */
@@ -194,7 +194,7 @@ ADDRESS ISPEXEC                                               /* @BC */
   "CONTROL ERRORS RETURN"                                     /* @B1 */
   "VGET (SETGSTA  SETGSTAP SETGDISP SETMADMN",                /* @EA */
         "SETMIRRX SETMSHOW SETMTRAC SETTPSWD",                /* @EA */
-        "SETTPROF SETTUDSN) ASIS"                             /* @EA */
+        "SETTPROF SETTUDSN) PROFILE"                          /* @EA */
   If (SETMTRAC <> 'NO') then do                               /* @DK */
      Say "*"COPIES("-",70)"*"                                 /* @DK */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @DK */

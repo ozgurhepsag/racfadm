@@ -59,7 +59,7 @@ NULL        = ''                                              /* @B5 */
 ADDRESS ISPEXEC                                               /* @A7 */
   Arg class
   "CONTROL ERRORS RETURN"                                     /* @AJ */
-  "VGET (SETGDISP SETMADMN SETMSHOW SETMTRAC) ASIS"           /* @B3 */
+  "VGET (SETGDISP SETMADMN SETMSHOW SETMTRAC) PROFILE"        /* @B3 */
   If (SETMTRAC <> 'NO') then do                               /* @AW */
      Say "*"COPIES("-",70)"*"                                 /* @AW */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AW */

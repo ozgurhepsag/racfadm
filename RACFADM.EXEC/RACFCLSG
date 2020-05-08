@@ -94,7 +94,7 @@ NULL        = ''                                              /* @BV */
 ADDRESS ISPEXEC                                               /* @AG */
   Arg Rclass Rfilter Rdisp
   If (Rfilter = '') Then Do                                   /* @A9 */
-     "VGET (SETGFLTR) ASIS"                                   /* @A9 */
+     "VGET (SETGFLTR) PROFILE"                                /* @A9 */
      Rfilter = SETGFLTR                                       /* @A9 */
   end                                                         /* @A9 */
   Raclist       = 'NO'

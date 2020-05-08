@@ -29,7 +29,7 @@ REXXPGM     = LEFT(REXXPGM,8)                                 /* @AE */
 
 ADDRESS ISPEXEC                                               /* @A3 */
   PARSE ARG MEMBER                                            /* @A5 */
-  "VGET (SETGDISP SETMTRAC) ASIS"                             /* @A2 */
+  "VGET (SETGDISP SETMTRAC) PROFILE"                          /* @A2 */
   If (SETMTRAC <> 'NO') then do                               /* @AA */
      Say "*"COPIES("-",70)"*"                                 /* @AA */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AA */

@@ -35,7 +35,7 @@ parse source . . REXXPGM .                                    /* @A3 */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @A3 */
 
 ADDRESS ISPEXEC
-  "VGET (SETGDISP SETMTRAC) ASIS"                             /* @A3 */
+  "VGET (SETGDISP SETMTRAC) PROFILE"                          /* @A3 */
   If (SETMTRAC <> 'NO') then do                               /* @A3 */
      Say "*"COPIES("-",70)"*"                                 /* @A3 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A3 */

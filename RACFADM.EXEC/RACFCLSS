@@ -75,7 +75,7 @@ ADDRESS ISPEXEC                                               /* @A6 */
   selection = 0  /* something selected */
   "CONTROL ERRORS RETURN"                                     /* @AL */
   "VGET (SETGSTA SETGSTAP SETGDISP SETMSHOW",                 /* @BE */
-        "SETMTRAC) ASIS"                                      /* @BE */
+        "SETMTRAC) PROFILE"                                   /* @BE */
   If (SETMTRAC <> 'NO') then do                               /* @B2 */
      Say "*"COPIES("-",70)"*"                                 /* @B2 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @B2 */
