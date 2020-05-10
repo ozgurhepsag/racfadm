@@ -1,0 +1,56 @@
+  /* -------------- REXX --------------- *
+  | RACFADM Site Customization Defaults |
+  * ----------------------------------- */
+
+  /* ---------------------------------------------------- *
+  | Enable or Disable access to the IBM RACF ISPF Dialog |
+  | elements.  Y = enable N = disable                    |
+  * ---------------------------------------------------- */
+  setribm = 'Y'
+
+  /* --------------------------------------------------------- *
+  | Define the high-level-qualifier and lower-level-qualifier |
+  | for the IBM RACF ISPF dialog datasets.                    |
+  | NOTE: These are NOT for the RACFADM ISPF datasets.        |
+  * --------------------------------------------------------- */
+  sihlq  = 'SYS1'
+  siclst = 'HRFCLST'
+  simlib = 'HRFMSG'
+  siplib = 'HRFPANL'
+  sislib = 'HRFSKEL'
+
+/* ---------------------------------------------- *
+ | Validate the IBM RACF ISPF Datasets if Enabled |
+ * ---------------------------------------------- */
+  racflmsg = ''
+  if setribm = 'Y' then do
+    call test_dataset sihlq siclst
+    call test_dataset sihlq simlib
+    call test_dataset sihlq siplib
+    call test_dataset sihlq sislib
+  end
+
+ if racflmsg /= '' then do
+    racflmsg = racflmsg ,
+      'Turning off IBM RACF ISPF Dialog until resolved.'
+    Address ISPExec ,
+      'Setmsg msg(racf011)'
+      end
+
+  /* ------------------------------------------------ *
+  | Save the settings in the Profile Pool for Access |
+  * ------------------------------------------------ */
+  Address ISPExec ,
+    'Vput (setribm sihlq simlib siplib sislib siclst) Profile'
+
+  Exit 0
+
+Test_Dataset:
+  arg hlq llq
+  dsn = "'"hlq"."llq"'"
+  if sysdsn(dsn) /= 'OK' then do
+    racfsmsg = ''
+    racflmsg = racflmsg Left('Dataset:' dsn sysdsn(dsn),76)
+    setribm= 'N'
+  end
+  return

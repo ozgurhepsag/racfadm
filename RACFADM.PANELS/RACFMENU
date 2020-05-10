@@ -3,8 +3,11 @@
    _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON)  JUST(LEFT)   HILITE(USCORE)
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(GREEN)
    ~  TYPE(PS)
+   }  Type(output) intens(high) color(white) just(right) caps(off)
+   {  Type(output) intens(low) skip(on) color(green) caps(off)
+   [  Type(Output) pas(on) caps(off)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V24R4+)\-\
++\-\(%RACFADM - RACF Administration - V24R7+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -16,9 +19,9 @@
 %   6 ~GrpTree  +Group tree report      %S ~Standards +Coding/design
 %   7 ~RACFprms +RACF parameters        %T ~Tutorial  +Help
 %   8 ~RACFdb   +RACF databases         %U ~Updates   +Version/updates
-+                                       %X ~Exit      +Terminate
-+
-+
++ }a1+[ar1     +{d1                     %X ~Exit      +Terminate
++ }a2+[ar2     +{d2
++ }a3+[ar3     +{d3
 +
 + ---------------------------------------------------------------------------
 +   RACF:!RACFVER        +Prmdb:!PRMDBASE
@@ -34,6 +37,35 @@
 
   VPUT (SETGSTA  SETGSTAP SETGDISP SETGCONF +
         SETMADMN SETMIRRX SETMSHOW SETMTRAC) PROFILE
+
+  /* IBM RACF Dialog Entries */
+  VGET (SETRIBM) PROFILE
+  IF (&SETRIBM EQ Y)
+     &a1 = 9
+     &a2 = 10
+     &a3 = 11
+     &ar1 = System
+     &ar2 = RRSF
+     &ar3 = Certs
+     &d1 = 'System Wide Options'
+     &d2 = 'Remote Services Options'
+     &d3 = 'Digital Certificates'
+     &ra1 = 'cmd(%racfadrl 5)'
+     &ra2 = 'cmd(%racfadrl 6)'
+     &ra3 = 'cmd(%racfadrl 7)'
+  IF (&SETRIBM NE Y)
+     &a1 = &z
+     &a2 = &z
+     &a3 = &z
+     &ar1 = &z
+     &ar2 = &z
+     &ar3 = &z
+     &d1 = &z
+     &d2 = &z
+     &d3 = &z
+     &ra1 = &z
+     &ra2 = &z
+     &ra3 = &z
 
   /* General Settings */
   IF (&SETGSTA  = &Z & &SETGSTAP = &Z)
@@ -135,7 +167,10 @@
       6,'CMD(%RACFGTRE)'
       7,'CMD(%RACFPRMS)'
       8,'CMD(%RACFDB)'
-      9,'CMD(%RACFCLSA)'        /* Analyze - Verify ACL */  /* Hidden */
+      9,&ra1
+     10,&ra2
+     11,&ra3
+     99,'CMD(%RACFCLSA)'        /* Analyze - Verify ACL */  /* Hidden */
       B,'CMD(%BOOKMGR SHELF(''EOYBOOK.ICHZBKC0.BKSHELF''))' /* Hidden */
       C,'CMD(%RACFCMDS)'
       D,'CMD(%RACFDSL)'
@@ -169,6 +204,9 @@
   FIELD(ZPS00017) VAR(ZCMD) VAL('8')
   FIELD(ZPS00018) VAR(ZCMD) VAL('U')
   FIELD(ZPS00019) VAR(ZCMD) VAL('X')
+  FIELD(AR1     ) VAR(ZCMD) VAL('9')
+  FIELD(AR2     ) VAR(ZCMD) VAL('10')
+  FIELD(AR3     ) VAR(ZCMD) VAL('11')
 )END
 /*--------------------------------------------------------------------*/
 /*                             Comments                               */

@@ -1,0 +1,45 @@
+  /* ------------------ REXX ----------------------- *
+  | Link to IBM RACF Dialog elements                |
+  |                                                 |
+  | Parm is the IBM RACF Dialog Element Menu Number |
+  | 5 SYSTEM OPTIONS                                |
+  | 6 REMOTE SHARING FACILITY                       |
+  | 7 DIGITAL CERTIFICATES, KEY RINGS, AND TOKENS   |
+  * ----------------------------------------------- */
+  arg racfopt
+
+  if racfopt = '' then return 8
+
+  call setup
+  call process
+  call done
+
+Setup:
+  Address ISPExec ,
+  'VGet (sihlq simlib siplib sislib siclst) Profile'
+  Address TSO ,
+  "Altlib Act App(Clist) Dataset('"sihlq"."siclst"')"
+  Address ISPExec
+  "Libdef ISPMLIB Dataset ID('"sihlq"."simlib"')"
+  "Libdef ISPPLIB Dataset ID('"sihlq"."siplib"')"
+  "Libdef ISPSLIB Dataset ID('"sihlq"."sislib"')"
+  return
+
+Done:
+  Address ISPExec
+  "Libdef ISPMLIB"
+  "Libdef ISPPLIB"
+  "Libdef ISPSLIB"
+  Address TSO
+  "Altlib Deact app(clist)"
+  Exit 0
+
+Process:
+  Address ISPExec
+  Select
+    When racfopt = 5 then 'Select Panel(ichp50)'
+    When racfopt = 6 then 'Select Panel(ichp00) Opt(6)'
+    When racfopt = 7 then 'Select Panel(ichp70)'
+    Otherwise nop
+  end
+  Return

@@ -11,10 +11,12 @@
 /*====================================================================*/
 PANEL01     = "RACFMENU"  /* RACF Main Menu                */ /* @A2 */
 REXXPGM1    = "RACFSETD"  /* Get def settings for new user */ /* @A4 */
+REXXPGM2    = "RACFSITE"  /* Get def settings for site     */ /* @LD */
 
 ADDRESS ISPEXEC
   call Setup
   'Select cmd('REXXPGM1')  NewAppl(RADM) PassLib'             /* @A4 */
+  'Select cmd('REXXPGM2')  NewAppl(RADM) PassLib'             /* @LD */
   'Select Panel('PANEL01') NewAppl(RADM) PassLib'             /* @A2 */
   'libdef ispmlib'
   'libdef ispplib'

@@ -6,6 +6,7 @@
  --------  -------------  --------------------------------------------
  $$DIR     Directory      Document members
  RACFADM   Software       Dynamically allocate and invoke software
+ RACFADRL  Router         Calls IBM RACF dialog elements
  RACFCLSA  Authorization  Display authorization on profile, menu opt 9
  RACFCLSG  Class          Extract generic class profiles
  RACFCLSR  Class          Display class profiles, menu option 4
@@ -27,6 +28,7 @@
  RACFPSWD  Password       Reset userid password (menu opt 5/linecmd PW)
  RACFSETD  Settings       Set default settings (opt 0) for new users
  RACFSETG  Settings       Customize settings, menu option 0
+ RACFSITE  Settings       Site settings - must be customized (no panel)
  RACFUSR   User           Display userid profiles, menu option 1
  RACFUSRT  User           Add, delete and change TSO userid
  RACFUSRX  User           Userid cross reference report (line cmd XR)

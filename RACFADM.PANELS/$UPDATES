@@ -2,6 +2,23 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  09 May 2020 - V24R7
+     - Updated RACFSITE REXX program to validate customization settings.
+     - Clean up packaging for both GitHub and CBT File 417
+
+  08 May 2020 - V24R6
+     - IBM RACF ISPF Dialog Access
+       -- Added REXX program RACFADRL to invoke select IBM RACF ISPF
+          dialog elements (options 5, 6, and 7)
+       -- Added REXX program RACFSITE to define site default actions
+          initially to allow RACFADRL options or not
+       -- Updated Panel RACFMENU to dynamically display the IBM RACF
+          dialog options or not based on the RACFSITE settings
+
+  08 May 2020 - V24R5
+     - Other Items
+       -- Removed REXX program RACFADRL and documentation from CNTL file
+
   07 May 2020 - V24R4
      - Other Items
        -- Minor updates to code
