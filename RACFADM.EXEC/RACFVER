@@ -1,0 +1,8 @@
+/* ----------- REXX ----------------- *
+ | Set the current version of RACFADM |
+ * ---------------------------------- *
+ | Change History                     |
+ | 20200510 - LBD V24R9               |
+ * ---------------------------------- */
+ rver = 'V24R9'
+ return rver

@@ -2,6 +2,11 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  10 May 2020 - V24R9
+     - Change message about deleting active userid
+     - Remove redundant display save/restore in RACFUSR
+     - Make the version a variable set in RACFVER
+
   10 May 2020 - V24R8
      - Update RACFUSR to issue a better message if trying to delete the
        active userid

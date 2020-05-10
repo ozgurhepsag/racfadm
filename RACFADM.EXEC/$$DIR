@@ -32,6 +32,7 @@
  RACFUSR   User           Display userid profiles, menu option 1
  RACFUSRT  User           Add, delete and change TSO userid
  RACFUSRX  User           Userid cross reference report (line cmd XR)
+ RACFVER   Setting        Defines the current RACFADM Version
 
  Notes
    - Class is 'General Resources'

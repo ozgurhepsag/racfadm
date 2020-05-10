@@ -1,14 +1,21 @@
 )ATTR DEFAULT(%+_)
-   $  TYPE(OUTPUT)  INTENS(LOW)  CAPS(OFF)  COLOR(TURQ)  JUST(LEFT)
+   $  TYPE(OUTPUT)  INTENS(LOW)  CAPS(OFF)  COLOR(&clr)  JUST(LEFT)
    _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON)   JUST(LEFT)   HILITE(USCORE)
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)   COLOR(GREEN)
 )BODY WINDOW(60,6)
 +
 $message
 +
-+Are you sure?
++Are you SURE?
 +
 +Press%ENTER+to process or%END+to exit
+)Init
+ vget (msgc) shared
+ *Rexx(* msgc clr)
+  if msgc = ''
+     then clr = 'Turq'
+     else clr = 'Red'
+ *Endrexx
 )PROC
   &CKEY = .PFKEY
   IF (&CKEY = ' ')
