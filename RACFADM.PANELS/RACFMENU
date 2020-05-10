@@ -7,7 +7,7 @@
    {  Type(output) intens(low) skip(on) color(green) caps(off)
    [  Type(Output) pas(on) caps(off)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V24R7+)\-\
++\-\(%RACFADM - RACF Administration - V24R8+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands

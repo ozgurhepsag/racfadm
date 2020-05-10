@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @LD  200510  SLBD     Add Parse to Arg to keep message case        */
 /* @AB  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @AA  200423  RACFA    Ensure REXX program name is 8 chars long     */
 /* @A9  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
@@ -21,7 +22,7 @@ parse source . . REXXPGM .                                    /* @AB */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @AB */
 
 ADDRESS ISPEXEC                                               /* @A3 */
-  Arg message
+  Parse Arg message                                           /* @LD */
   Signal off error
   "VGET (SETMTRAC) PROFILE"                                   /* @A7 */
   If (SETMTRAC <> 'NO') then do                               /* @A8 */

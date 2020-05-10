@@ -2,6 +2,11 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  10 May 2020 - V24R8
+     - Update RACFUSR to issue a better message if trying to delete the
+       active userid
+     - Change panel RACFMSG1 to retain the case of the message
+
   09 May 2020 - V24R7
      - Updated RACFSITE REXX program to validate customization settings.
      - Clean up packaging for both GitHub and CBT File 417
