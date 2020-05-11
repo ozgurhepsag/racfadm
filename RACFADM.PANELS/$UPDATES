@@ -2,6 +2,10 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  11 May 2020 - V25R0
+     - Update RACFADRL to change invocation of IBM RACF dialog elements
+       and add Stack to the Libdefs
+
   10 May 2020 - V24R9
      - Change message about deleting active userid
      - Remove redundant display save/restore in RACFUSR

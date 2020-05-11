@@ -20,9 +20,9 @@ Setup:
   Address TSO ,
   "Altlib Act App(Clist) Dataset('"sihlq"."siclst"')"
   Address ISPExec
-  "Libdef ISPMLIB Dataset ID('"sihlq"."simlib"')"
-  "Libdef ISPPLIB Dataset ID('"sihlq"."siplib"')"
-  "Libdef ISPSLIB Dataset ID('"sihlq"."sislib"')"
+  "Libdef ISPMLIB Dataset ID('"sihlq"."simlib"') stack"
+  "Libdef ISPPLIB Dataset ID('"sihlq"."siplib"') stack"
+  "Libdef ISPSLIB Dataset ID('"sihlq"."sislib"') stack"
   return
 
 Done:
@@ -37,9 +37,9 @@ Done:
 Process:
   Address ISPExec
   Select
-    When racfopt = 5 then 'Select Panel(ichp50)'
+    When racfopt = 5 then 'Select Panel(ichp00) Opt(5)'
     When racfopt = 6 then 'Select Panel(ichp00) Opt(6)'
-    When racfopt = 7 then 'Select Panel(ichp70)'
+    When racfopt = 7 then 'Select Panel(ichp00) Opt(7)'
     Otherwise nop
   end
   Return
