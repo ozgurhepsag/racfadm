@@ -2,6 +2,12 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  12 May 2020 - V25R1
+     - Update RACFADM to improve recursion and reduce overhead in the
+       startup. Changed to eliminate a command table to use the sites
+       command table.
+     - Improved the $STUB example.
+
   11 May 2020 - V25R0
      - Update RACFADRL to change invocation of IBM RACF dialog elements
        and add Stack to the Libdefs

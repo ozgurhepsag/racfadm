@@ -5,6 +5,7 @@
    ~  TYPE(PS)
    }  Type(output) intens(high) color(white) just(right) caps(off)
    {  Type(output) intens(low) skip(on) color(green) caps(off)
+   ]  Type(output) intens(low) skip(on) color(green) caps(off) just(right)
    [  Type(Output) pas(on) caps(off)
 )BODY EXPAND(\\)
 +\-\(%RACFADM - RACF Administration -}rver +)\-\
@@ -28,11 +29,14 @@
 +   FMID:!RACFFMID       +Bkpdb:!BKPDBASE
 +   z/OS:!ZOSVER         +Plex: !ZSYSPLEX       +Lpar:!ZSYSID
 +   Date:!USADATE        +Jdate:!ZJDATE         +Time:!ZTIME
-+   User:!ZUSER          +Group:!RACFGRP        +Name:!RACFNAM
++ ]utype !ZUSER          +Group:!RACFGRP        +Name:!RACFNAM
 + ---------------------------------------------------------------------------
 )INIT
-  *rexx(* rver)
+  *rexx(* rver utype SETMADMN)
    rver = racfver()
+   if setmadmn = 'YES'
+      then utype = 'Admin:'
+      else utype = ' User:'
   *endrexx
   .CURSOR = ZCMD
   .HELP   = #RACMENU

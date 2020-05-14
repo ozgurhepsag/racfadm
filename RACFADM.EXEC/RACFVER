@@ -2,8 +2,9 @@
  | Set the current version of RACFADM |
  * ---------------------------------- *
  | Change History                     |
+ | 20200512 - LBD V25R1               |
  | 20200511 - LBD V25R0               |
  | 20200510 - LBD V24R9               |
  * ---------------------------------- */
- rver = 'V25R0'
+ rver = 'V25R1'
  return rver
