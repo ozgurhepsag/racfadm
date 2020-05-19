@@ -1,0 +1,22 @@
+)ATTR DEFAULT(%+_)
+   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON) JUST(LEFT)   HILITE(USCORE)
+   !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
+   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
+)BODY EXPAND(\\)
+%Tutorial+\-\(%RACFADM - ISPLOG+)\-\%Tutorial
+%Command ===>_ZCMD                                                             +
+%
++
++ %ISPLOG+obtains the current ISPF Log dataset and allows you to
++  browse it.
++
++  If the ISPF log is allocated to SYSOUT, the!ISFCALLS+interface
++  to SDSF/(E)JES will be used to locate and read the JES2 SYSOUT
++  file allocated to ISPLOG.
++
++  If the ISPF log is allocated to a dataset (prefix.SPFLOGn.LIST),
++  then the current log file will be kept and then read.
++
+)PROC
+  &ZUP     = #RACLOG
+)END

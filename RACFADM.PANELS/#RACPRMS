@@ -6,7 +6,7 @@
 %Tutorial+\-\(%RACFADM - RACF Parameters+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
-+ %RACFprms+reads the!Access Control Communication Vector Table (CVTRAC)
++ %RACFprms+locates the!RACF Communication Vector Table (RCVT)+control block
 +  in memory and displays the following RACF parameters:
 !    Audit options     Model options      Tape options
 !    DASD options      Password options   Terminal options

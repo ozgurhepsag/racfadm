@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @K1  200514  TRIDJK   Check user cmd table before site cmd table   */
 /* @L2  200512  LBD      Add Parm of NA to bypass Allocations         */
 /* @L1  200512  LBD      Changed several areas to improve processing  */
 /* @A4  200501  RACFA    If 1st time used, get site default settings  */
@@ -33,7 +34,7 @@ SETUP:
                        NameO Env Addr Token
   cmd = name
   'vget (zapplid)'                                              /*@L1*/
-  if raopt = 'NA' then return                                   /*@L1*/
+  if raopt = 'NA' then return                                   /*@L2*/
   if (zapplid /= 'RADM') then call setup_applid                 /*@L1*/
   if (DSName /= '?') then exec = "'"dsname"'"
   else do
@@ -63,7 +64,7 @@ RETURN
  * ------------------------------------------------------ */    /*@L1*/
 SETUP_Applid:                                                   /*@L1*/
   'Select cmd('cmd') NewAppl(RADM) Passlib'                     /*@L1*/
-  if raopt = 'NA' then exit                                     /*@L1*/
+  if raopt = 'NA' then exit                                     /*@L2*/
   'libdef ispmlib'                                              /*@L1*/
   'libdef ispplib'                                              /*@L1*/
    Address TSO 'altlib deact app(exec)'                         /*@L1*/
@@ -88,9 +89,15 @@ Check_Rfind:                                                    /*@L1*/
   zcttrunc = 0                                                  /*@L1*/
   zctact = "&RADMRFND"                                          /*@L1*/
   zctdesc = "RACFADM User controlled Repeat Find (RFIND)"       /*@L1*/
-  'vget (zsctpref)'                                             /*@L1*/
-  if zsctpref = '' then zsctpref = 'ISP'                        /*@L1*/
-  ctab = zsctpref'cmds'                                         /*@L1*/
+  'vget (zsctpref zuctpref)'                                    /*@K1*/
+  select                                                        /*@K1*/
+    when zuctpref <> '' then                                    /*@K1*/
+      ctab = zuctpref'cmds'                                     /*@K1*/
+    when zsctpref <> '' then                                    /*@K1*/
+      ctab = zsctpref'cmds'                                     /*@K1*/
+    otherwise                                                   /*@K1*/
+      ctab = 'ISPcmds'                                          /*@K1*/
+    end                                                         /*@K1*/
   'tbtop' ctab                                                  /*@L1*/
   'tbscan' ctab 'arglist(zctact)  condlist(EQ) Next'            /*@L1*/
   if rc > 0 then 'tbadd' ctab                                   /*@L1*/

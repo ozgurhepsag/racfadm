@@ -11,27 +11,28 @@
 +group, data set and general resource profiles by means of a user-friendly,
 +menu-driven interface; it provides interactive modification of most fields.
 +
-%Among its features are:+connecting groups to a user, adding permissions,
-+user authorization searching across classes, and displaying the group from
-+which an authorization is granted.
+%Among its features are:+connecting users to a group, adding permissions,
++user authorization searching across classes, displaying the group from which
++an authorization is granted, and displaying RACF system parameters.
 +
-+Adding a new TSO user will create the alias and necessary datasets.  Also,
-+the RACF system parameters can be displayed.
++Adding a new TSO user will create the alias and necessary datasets.
 +
 +The following topics are presented in sequence, or may be selected by number:
 +
-+  %0 ~Settings            %6 ~Group tree report   %12~RACF help commands
-+  %1 ~User profiles       %7 ~RACF parameters     %13~DSN access authority
-+  %2 ~Group profiles      %8 ~RACF databases      %14~Res access authority
-+  %3 ~Dataset profiles    %9 ~Execute RACF cmds   %15~Publications
-+  %4 ~General resources   %10~Dataset list        %16~Installation notes
-+  %5 ~Password reset      %11~Dataset enqueues    %17~Acknowledgements
++  %0 ~Settings            % 7~RACF parameters      %14~DSN access authority
++  %1 ~User profiles       % 8~RACF databases       %15~Res access authority
++  %2 ~Group profiles      % 9~Execute RACF cmds    %16~Publications
++  %3 ~Dataset profiles    %10~Dataset list         %17~Installation notes
++  %4 ~General resources   %11~Dataset enqueues     %18~Acknowledgements
++  %5 ~Password reset      %12~RACF help commands
++  %6 ~Group tree report   %13~ISPF log file
++
 )PROC
 &ZSEL = TRANS(&ZCMD 0,#RACSET1  1,#RACUSR2  2,#RACGRP8  3,#RACDSN2
                     4,#RACCLSR  5,#RACPSWD  6,#RACGTRE  7,#RACPRMS
                     8,#RACDB    9,#RACCMDS 10,#RACDSL  11,#RACENQ
-                   12,#RACHEL1 13,#RACDSNA 14,#RACCLSA 15,#RACPUB1
-                   16,#RACNOT1 17,#RACACKN  *,'?')
+                   12,#RACHEL1 13,#RACLOG  14,#RACDSNA 15,#RACCLSA
+                   16,#RACPUB1 17,#RACNOT1 18,#RACACKN  *,'?')
 &ZUP  = #RACMENU
 )PNTS
   FIELD(ZPS00001) VAR(ZCMD) VAL('0')

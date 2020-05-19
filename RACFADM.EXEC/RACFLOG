@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AI  200514  TRIDJK   Support ISPLOG SYSOUT datasets - SDSF/(E)JES */
 /* @AH  200506  RACFA    Display headers in a different color         */
 /* @AG  200504  RACFA    Make long msg more meaningful                */
 /* @AF  200504  RACFA    Added the capability to view ISPLOG file     */
@@ -22,8 +23,9 @@
 /* @A1  200220  RACFA    Added capability to browse/edit/view file    */
 /* @A0  200218  RACFA    Created REXX                                 */
 /*====================================================================*/
-PANEL01     = "RACFRPTS"   /* Display with colors          */ /* @AG */
+PANEL01     = "RACFRPTS"   /* Display with colors          */ /* @AH */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @A8 */
+LAST        = "LAST"       /* EDITMACR PARM for ISPLOG     */ /* @AI */
 parse source . . REXXPGM .                                    /* @AE */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @AE */
 
@@ -38,10 +40,20 @@ ADDRESS ISPEXEC                                               /* @A3 */
         interpret "Trace "SUBSTR(SETMTRAC,1,1)                /* @AA */
   end                                                         /* @AA */
   IF (member = "ISPLOG") THEN                                 /* @AF */
-     CALL ISPLOG_FILE                                         /* @AF */
+     CALL ISPLOG_CHECK                                        /* @AI */
   ELSE                                                        /* @AF */
      CALL LOG_FILE
+  CALL GOODBYE                                                /* @AI */
 
+ISPLOG_CHECK:                                                 /* @AI */
+  "VGET (ZLOGNAME)"                                           /* @AI */
+  If right(zlogname,2) = '.?' then       /* SYSOUT? */        /* @AI */
+    Call ISPLOG_SYSOUT                                        /* @AI */
+  else                                                        /* @AI */
+    Call ISPLOG_FILE                                          /* @AI */
+RETURN                                                        /* @AI */
+
+GOODBYE:
   If (SETMTRAC <> 'NO') then do                               /* @AA */
      Say "*"COPIES("-",70)"*"                                 /* @AA */
      Say "*"Center("End Program = "REXXPGM,70)"*"             /* @AA */
@@ -128,6 +140,101 @@ ISPLOG_FILE:                                                  /* @AF */
      OTHERWISE                                                /* @XX */
           "BROWSE DATAID("DATAID")"                           /* @XX */
   END                                                         /* @XX */
+  'LMFREE DATAID('DATAID')'                                   /* @AI */
   ADDRESS TSO "FREE FI("DDNAME")"                             /* @XX */
                                                               /* @AF */
 RETURN                                                        /* @AF */
+
+ISPLOG_SYSOUT:                                                /* @AI */
+  ADDRESS ISPEXEC
+  racflmsg = "Retrieving data - Please be patient"
+  "control display lock"
+  "display msg(RACF011)"
+
+  Call DO_ISFCALLS
+
+  Address TSO
+  'alloc f('DDNAME')  new reuse unit(sysallda)',
+         'space(20,50) cylinders',
+         'recfm(V B A) lrecl(125) blksize(0)'
+  'execio * diskw 'DDNAME' (stem racfadm. finis'
+  drop racfadm.
+
+  Address ISPExec
+  /*---------------------*/
+  /*  Browse the report  */
+  /*---------------------*/
+  'lminit dataid(id) ddname('DDNAME')'
+  if (rc ^= 0) then do
+     racfsmsg = 'Allocation error'
+     racflmsg = 'LMINIT failed for 'DDNAME
+     'setmsg msg(racf011)'
+     RETURN
+  end
+  SELECT
+     WHEN (SETGDISP = "VIEW") THEN
+          "VIEW DATAID("ID") MACRO("EDITMACR") PARM("LAST")"
+     WHEN (SETGDISP = "EDIT") THEN
+          "EDIT DATAID("ID") MACRO("EDITMACR") PARM("LAST")"
+     OTHERWISE
+          "BROWSE DATAID("ID")"
+  END
+  'lmfree dataid('id')'
+  Address TSO 'Free fi('DDNAME')'
+
+RETURN
+/*--------------------------------------------------------------------*/
+/*  Check for ISPLOG SYSOUT                                           */
+/*--------------------------------------------------------------------*/
+DO_ISFCALLS:                                                  /* @AI */
+   rc=isfcalls('ON')
+   /*-----------------------------*/
+   /*  Access the STATUS display  */
+   /*-----------------------------*/
+   Address SDSF "ISFEXEC ST "userid()
+   /*-------------------*/
+   /*  Find TSO Userid  */
+   /*-------------------*/
+   do ix=1 to JNAME.0
+      if JNAME.ix = userid() & ,
+        QUEUE.ix = "EXECUTION" & ,
+        ACTSYS.ix <> "" then
+      do
+         /*-----------------------------------------*/
+         /*  Issue the ? (JDS) action against the   */
+         /*  row to list the data sets in the job.  */
+         /*-----------------------------------------*/
+         Address SDSF "ISFACT ST TOKEN('"TOKEN.ix"') PARM(NP ?)" ,
+           "( prefix jds_"
+         /*---------------------------------------------*/
+         /*  Find the ISPLOG data sets and read them    */
+         /*  using ISFBROWSE.  Use isflinelim to limit  */
+         /*  the number of REXX variables returned.     */
+         /*---------------------------------------------*/
+         isflinelim=5000
+         ky = 1
+         racfadm. = ''
+         do jx=1 to jds_DDNAME.0
+            if left(jds_DDNAME.jx,6) = "ISPLOG" then
+            do
+               /*---------------------------------------*/
+               /*  Read the records from the data set.  */
+               /*---------------------------------------*/
+               do until isfnextlinetoken=''
+                  Address SDSF "ISFBROWSE ST TOKEN('"jds_TOKEN.jx"')"
+                  do kx=1 to isfline.0
+                     racfadm.ky = isfline.kx
+                     ky = ky + 1
+                     end
+                  /*-----------------------------*/
+                  /*  Set start for next browse  */
+                  /*-----------------------------*/
+                  isfstartlinetoken = isfnextlinetoken
+               end
+            end
+         end
+      end
+   end
+   rc=isfcalls('OFF')
+
+RETURN

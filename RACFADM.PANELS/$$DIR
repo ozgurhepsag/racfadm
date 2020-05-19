@@ -26,6 +26,7 @@
  #RACGTRE  Tutorial       Group tree report
  #RACHEL1  Tutorial       Help for RACF commands (1 of 2)
  #RACHEL2  Tutorial       Help for RACF commands (2 of 2)
+ #RACLOG   Tutorial       ISPF Log file
  #RACMENU  Tutorial       Main menu, menu option T
  #RACNOT1  Tutorial       Installation notes (1 of 2)
  #RACNOT2  Tutorial       Installation notes (2 of 2)

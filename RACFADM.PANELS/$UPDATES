@@ -2,11 +2,21 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  19 May 2020 - V25R2
+     - Update RACFLOG to support ISPLOG SYSOUT datasets - SDSF/(E)JES
+     - Update RACFEMAC to add PARM option for ISPLOG positioning
+     - Update RACFADM to use the user command table before the
+       site command table
+     - Update RACFCMDS to allow logging of RACF commands
+     - Tutorial (Option T)
+       -- Updated panels #RACMENU, #RACPRMS and #RACNOT1
+       -- Added panel #RACLOG
+
   12 May 2020 - V25R1
      - Update RACFADM to improve recursion and reduce overhead in the
-       startup. Changed to eliminate a command table to use the sites
+       startup. Changed to eliminate a command table to use the site
        command table.
-     - Improved the $STUB example.
+     - Improved the $STUB example
 
   11 May 2020 - V25R0
      - Update RACFADRL to change invocation of IBM RACF dialog elements

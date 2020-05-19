@@ -7,6 +7,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A7  200517  TRIDJK   Allow logging of RACF commands               */
 /* @A6  200430  RACFA    Added skeleton RACF commands to table        */
 /* @A5  200430  RACFA    Place table name in variable at top of REXX  */
 /* @A4  200429  RACFA    Standardize ddname, etc.                     */
@@ -16,6 +17,7 @@
 /* @A0  200429  LBD      Created REXX                                 */
 /*====================================================================*/
 PANEL01     = "RACFCMDS"   /* Execute RACF command         */ /* @A1 */
+PANELM2     = "RACFMSG2"   /* Display RACF command and RC  */ /* @A7 */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @A1 */
 DDNAME      = 'RACFA'RANDOM(0,999)  /* Unique ddname       */
 TABLE       = "RACFACMD"   /* Permanent table in ISPPROF   */ /* @A5 */
@@ -35,7 +37,7 @@ parse source . . REXXPGM .                                    /* @A3 */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @A3 */
 
 ADDRESS ISPEXEC
-  "VGET (SETGDISP SETMTRAC) PROFILE"                          /* @A3 */
+  "VGET (SETGDISP SETMSHOW SETMTRAC) PROFILE"                 /* @A7 */
   If (SETMTRAC <> 'NO') then do                               /* @A3 */
      Say "*"COPIES("-",70)"*"                                 /* @A3 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A3 */
@@ -166,8 +168,29 @@ DO_RACFCMD:
   'tbadd 'table                                               /* @A5 */
   call outtrap 'so.'
   Address TSO racfcmde
+  cmd_rc = rc                                                 /* @A7 */
   call outtrap 'off'
+  cmd = racfcmde                                              /* @A7 */
+  if (SETMSHOW <> 'NO') then                                  /* @A7 */
+     call SHOWCMD                                             /* @A7 */
   call view_std
+RETURN
+/*--------------------------------------------------------------------*/
+/*  Display RACF command and return code                              */
+/*--------------------------------------------------------------------*/
+SHOWCMD:                                                      /* @A7 */
+  IF (SETMSHOW = "BOTH") | (SETMSHOW = "DISPLAY") THEN DO
+     PARSE VAR CMD MSG1 60 MSG2 121 MSG3
+     MSG4 = "Return code = "cmd_rc
+     "ADDPOP ROW(6) COLUMN(4)"
+     "DISPLAY PANEL("PANELM2")"
+     "REMPOP"
+  END
+  IF (SETMSHOW = "BOTH") | (SETMSHOW = "LOG") THEN DO
+     zerrsm = "RACFADM "REXXPGM" RC="cmd_rc
+     zerrlm = cmd
+     'log msg(isrz003)'
+  END
 RETURN
 /*--------------------------------------------------------------------*/
 /*  Generalized routine to browse or view the results of the command  */

@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A4  200514  TRIDJK   Add PARM option for ISPLOG positioning       */
 /* @A3  200303  RACFA    Renamed member to RACFDSPE, was RACFCHGE     */
 /* @A2  200221  RACFA    Make 'ADDRESS ISREDIT' defualt, reduce code  */
 /* @A1  200220  RACFA    Added RESET, to remove messages (==MSG>)     */
@@ -12,3 +13,10 @@ ADDRESS ISREDIT                                               /* @A2 */
   "MACRO (PARM) NOPROCESS"
   "HI OFF"
   "RESET"                                                     /* @A1 */
+  if parm = 'LAST' then do                                    /* @A4 */
+    Address ISPExec "vget zscreend"                           /* @A4 */
+    "(LAST) = LINENUM .ZLAST"                                 /* @A4 */
+    if last > zscreend then                                   /* @A4 */
+      last = last - (zscreend - 7)                            /* @A4 */
+    "LOCATE "last                                             /* @A4 */
+    end                                                       /* @A4 */

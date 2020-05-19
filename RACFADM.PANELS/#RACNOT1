@@ -24,7 +24,7 @@
 +    !profile dataset+in member%RADMPROF+
 +
 !  5)+The menu option%Command+(Option C), saves the commands into the user's
-+     dataset allocated to!ISPTABLE+or!ISPPROF+in member%RACFCMDS
++     dataset allocated to!ISPTABL+or!ISPPROF+in member%RACFCMDS
 +
 + \ \ (press%ENTER+to continue) \ \
 )PROC
