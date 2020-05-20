@@ -6,7 +6,7 @@
 %Tutorial+\-\(%RACFADM - Dataset List+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
-+ %Dslist+obtains the%RACFADM's!ALTLIB/LIBDEF+dataset names and if
++ %DSList+obtains the%RACFADM's!ALTLIB/LIBDEF+dataset names and if
 +  they have the same high level qualifiers,!ISPF 3.4+will be invoked
 +  displaying the datasets, making it easier to maintain the code.
 )PROC

@@ -20,8 +20,8 @@
 +  Administrator{....._Z~ (Y=Yes, N=No)                {Line cmds add, chg, etc.
 +  Admin RACF API{...._Z~ (Y=Yes, N=No)                {IRRXUTIL to add/chg/prof
 +  IBM RACF opts{....._Z~ (Y=Yes, N=No)+Define DSNs_Z{  RACF Systems/RRSF/Certs
-+  RACF commands{....._Z~ (D=Display, L=Log, B=Both, N=No)      {View  RACF cmds
-+  REXX trace{........_Z~ (L=Labels, P=Pgms, R=Results, N=No)   {Trace REXX pgms
++  RACF commands{....._Z~ (D=Display, L=Log, B=Both, N=No)     {View  RACF cmds
++  REXX trace{........_Z~ (L=Labels, P=Pgms, R=Results, N=No)  {Trace REXX pgms
 +
 ^Adding TSO userids
 +  Default password{..@Z       ~ (Blank=Random pswd)  { New/chg user's password

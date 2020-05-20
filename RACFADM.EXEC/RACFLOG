@@ -76,8 +76,9 @@ RETURN                                                        /* @AA */
 /*  Display the ISPLog file                                      @AF  */
 /*--------------------------------------------------------------------*/
 ISPLOG_FILE:                                                  /* @AF */
+  "VGET (ZLOGNAME)"                                           /* @AJ */
   If right(zlogname,2) = '.?' then        /* SYSOUT? */       /* @AJ */
-     Call ISPLOG_SDSF                                         /* @AJ */
+     Call DO_ISFCALLS                                         /* @AJ */
   else                                                        /* @AJ */
      Call ISPLOG_ISPF                                         /* @AJ */
                                                               /* @AI */
@@ -185,7 +186,7 @@ DO_ISFCALLS:                                                  /* @AJ */
                     recin.ky = isfline.kx                     /* @AJ */
                     ky = ky + 1                               /* @AJ */
                  end                                          /* @AJ */
-                 recin.0 = ky                                 /* @AJ */
+                 recin.0 = ky - 1                             /* @AJ */
                  /*-----------------------------*/            /* @AJ */
                  /*  Set start for next browse  */            /* @AJ */
                  /*-----------------------------*/            /* @AJ */

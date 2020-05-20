@@ -19,12 +19,10 @@ system options from a single, scrollable display.
 
 To begin using execute the RACFADM member found in the EXEC library.
 
-*---------------------------------------------------------------------*
-*                            Contributors                             *
-*---------------------------------------------------------------------*
+# Contributors
 
-  Nico Rizzuto (Creator)       http://www.rizzuto.it
-  Lionel B. Dyck               http://www.lbdsoftware.com/
-  Bruce Koss
-  John Kalinich
-  Bill Smith
+* Nico Rizzuto (Creator)      [http://www.rizzuto.it](http://www.rizzuto.it)
+* Lionel B. Dyck              [https://www.lbdsoftware.com/](https://www.lbdsoftware.com)
+* Bruce Koss
+* John Kalinich
+* Bill Smith

@@ -2,7 +2,26 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
-  10 May 2020 - V25R3
+  20 May 2020 - V25R0
+     - Main Menu
+       -- Cosmetic changes at bottom of panel
+     - Tutorials
+       -- Added '13 ISPF log file'
+       -- Re-arranged a few entries, to be in the order they are
+          displayed on the main menu
+     - ISPLog (Option L)
+       -- Fixed displaying, if allocated/using SYSOUT
+     - Other Items
+       -- Updated member $DEFSETG in panel dataset
+          o Added comments in $DEFSETG, informing user what the IBM
+            default RACF dataset names are, which can easily be
+            uncommented, preventing time in researching/typing
+       -- Updated member $DIR in panel dataset
+          o Added $RACLOG entry
+       -- Updated member $INSTALL in CNTL dataset
+          o Added editing $DEFSETG
+
+  20 May 2020 - V24R9
      - Commands (Option C)
        -- Allow logging of RACF commands to the ISPF log file
      - ISPLog (Option L)
@@ -22,31 +41,6 @@
        -- Updated REXX program RACFDB
           * Standardized to make ISPEXEC the base/defualt environment
             like all the other programs
-
-  19 May 2020 - V25R2
-     - Update RACFLOG to support ISPLOG SYSOUT datasets - SDSF/(E)JES
-     - Update RACFEMAC to add PARM option for ISPLOG positioning
-     - Update RACFADM to use the user command table before the
-       site command table
-     - Update RACFCMDS to allow logging of RACF commands
-     - Tutorial (Option T)
-       -- Updated panels #RACMENU, #RACPRMS and #RACNOT1
-       -- Added panel #RACLOG
-
-  18 May 2020 - V25R1
-     - Update RACFADM to improve recursion and reduce overhead in the
-       startup. Changed to eliminate a command table to use the site
-       command table.
-     - Improved the $STUB example
-
-  17 May 2020 - V25R0
-     - Update RACFADRL to change invocation of IBM RACF dialog elements
-       and add Stack to the Libdefs
-
-  17 May 2020 - V24R9
-     - Change message about deleting active userid
-     - Remove redundant display save/restore in RACFUSR
-     - Make the version a variable set in RACFVER
 
   17 May 2020 - V24R8
      - Main Menu

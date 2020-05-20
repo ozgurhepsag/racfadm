@@ -17,14 +17,14 @@
 !       -+Prevents from having dead/unused members
 +
 !  3)+May want to add/display the two hidden menu entries in panel%RACFMENU
-!       9  Analyze   Verify ACL              B  Bookmgr   RACF Manuals
+!       99  Analyze   Verify ACL              B  Bookmgr   RACF Manuals
 +
 !  4)+To set the site default%Settings+(Option 0) for new users, edit the
 +     panel member%$DEFSETG.+ The user's%Settings+are saved in their!ISPF
 +    !profile dataset+in member%RADMPROF+
 +
 !  5)+The menu option%Command+(Option C), saves the commands into the user's
-+     dataset allocated to!ISPTABL+or!ISPPROF+in member%RACFCMDS
++     dataset allocated to!ISPTABLE+or!ISPPROF+in member%RACFCMDS
 +
 + \ \ (press%ENTER+to continue) \ \
 )PROC

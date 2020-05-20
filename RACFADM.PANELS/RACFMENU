@@ -7,7 +7,7 @@
    {  TYPE(OUTPUT)  PAS(ON)      CAPS(OFF)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V25R3+)\-\
++\-\(%RACFADM - RACF Administration - V25R0+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -25,10 +25,10 @@
 +  ¨z {OPT6DESC ÝOPT6INFO
 +
 + ---------------------------------------------------------------------------
-+   RACF:!RACFVER        +Prmdb:!PRMDBASE
-+   FMID:!RACFFMID       +Bkpdb:!BKPDBASE
++   RACF:!RACFVER        +PrmDB:!PRMDBASE
++   FMID:!RACFFMID       +BkpDB:!BKPDBASE
 +   z/OS:!ZOSVER         +Plex: !ZSYSPLEX       +Lpar:!ZSYSID
-+   Date:!USADATE        +Jdate:!ZJDATE         +Time:!ZTIME
++   Date:!USADATE        +JDate:!ZJDATE         +Time:!ZTIME
 +  Ýz    !ZUSER          +Group:!RACFGRP        +Name:!RACFNAM
 + ---------------------------------------------------------------------------
 )INIT
