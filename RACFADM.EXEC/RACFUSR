@@ -11,8 +11,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @LD  200510  SLBD     Check if delete active userid and set msg red*/
-/* @LD  200510  SLBD     Remove redundant display save/restore        */
+/* @EG  200517  LBD      Prevent user from deleting their own userid  */
 /* @EF  200504  TRIDJK   Adding, place in order, prior was at bottom  */
 /* @EE  200502  LBD      Re-worked displaying tables, use DO FOREVER  */
 /* @ED  200501  LBD      Add primary commands FIND/RFIND              */
@@ -258,10 +257,10 @@ PROFL:
      call racfmsgs 'ERR16'                                    /* @C5 */
      return
   end
+  opta   = ' '
   xtdtop = 0                                                  /* @EE */
   rsels  = 0                                                  /* @EE */
   do forever                                                  /* @EE */
-      opta   = ' '                                            /* @LD */
      if (rsels < 2) then do                                   /* @EE */
         "TBTOP " TABLEA                                       /* @EE */
         'tbskip' tablea 'number('xtdtop')'                    /* @EE */
@@ -366,9 +365,11 @@ PROFL:
         when (opta = 'A')  then call @Addd                    /* @DQ */
         when (opta = 'C')  then call @Chgd                    /* @DQ */
         when (opta = 'D')  then do                            /* @BW */
+             "CONTROL DISPLAY SAVE"                           /* @BW */
              "SELECT PGM(ISRDSLST)",                          /* @BW */
                     "PARM(DSL '"user"')",                     /* @BW */
                     "SUSPEND SCRNAME(DSL)"                    /* @BW */
+             "CONTROL DISPLAY RESTORE"                        /* @BW */
              action = '*Dsn'                                  /* @BW */
              "TBMOD" TABLEA                                   /* @BW */
         end                                                   /* @BW */
@@ -667,13 +668,17 @@ RETURN                                                        /* @CI */
 /*  Delete profile                                                    */
 /*--------------------------------------------------------------------*/
 DELD:
-  ACTION = "*Delete"                                           /* @A4 */
+  ACTION = "*Delete"                                          /* @A4 */
   if (USER = 'NONE') then
      return
-  if user = userid()                                          /* @LD */
-  then msg = 'You are about to DELETE your ACTIVE USERID:' ,  /* @LD */
-              user '\ x'                                      /* @LD */
-  else msg    = 'You are about to delete 'USER                /* @LD */
+  if (user = userid()) then do                                /* @EG */
+     racflmsg = 'You can NOT delete your userid',             /* @EG */
+                '('user').  This is for your own',            /* @EG */
+                'safety!'                                     /* @EG */
+     'setmsg msg(RACF011)'                                    /* @EG */
+     return
+  end
+  msg    = 'You are about to delete 'USER
   Sure_? = RACFMSGC(msg)
   if (sure_? = 'YES') then do
      if (tsouser = 'YES') then do

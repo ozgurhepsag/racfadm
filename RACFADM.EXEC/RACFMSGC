@@ -3,8 +3,6 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @LD  200510  SLBD     Support message color (variable msgc)       */
-/* @LD  200510  SLBD     Add Parse to Arg to keep message case        */
 /* @AB  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @AA  200423  RACFA    Ensure REXX program name is 8 chars long     */
 /* @A9  200413  RACFA    Chg TRACEing to only display banner (P=Pgms) */
@@ -23,9 +21,7 @@ parse source . . REXXPGM .                                    /* @AB */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @AB */
 
 ADDRESS ISPEXEC                                               /* @A3 */
-  Parse Arg message                                           /* @LD */
-  if pos('\',message) > 0 then                                /* @LD */
-     parse value message with message '\' msgc .              /* @LD */
+  Arg message
   Signal off error
   "VGET (SETMTRAC) PROFILE"                                   /* @A7 */
   If (SETMTRAC <> 'NO') then do                               /* @A8 */
@@ -35,11 +31,6 @@ ADDRESS ISPEXEC                                               /* @A3 */
      if (SETMTRAC <> 'PROGRAMS') THEN                         /* @A9 */
         interpret "Trace "SUBSTR(SETMTRAC,1,1)                /* @A8 */
   end                                                         /* @A8 */
-
-  if msgc /= '' then                                          /* @LD */
-     msgc = 'X'                                               /* @LD */
-  else msgc = ''                                              /* @LD */
-  'Vput (msgc) shared'                                        /* @LD */
 
   answer  = 'NO'
   zwinttl = 'CONFIRM REQUEST'

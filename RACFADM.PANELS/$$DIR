@@ -26,7 +26,6 @@
  #RACGTRE  Tutorial       Group tree report
  #RACHEL1  Tutorial       Help for RACF commands (1 of 2)
  #RACHEL2  Tutorial       Help for RACF commands (2 of 2)
- #RACLOG   Tutorial       ISPF Log file
  #RACMENU  Tutorial       Main menu, menu option T
  #RACNOT1  Tutorial       Installation notes (1 of 2)
  #RACNOT2  Tutorial       Installation notes (2 of 2)
@@ -34,9 +33,10 @@
  #RACPSWD  Tutorial       Password reset
  #RACPUB1  Tutorial       RACF publications and downloads (1 of 2)
  #RACPUB2  Tutorial       RACF eductional websites (2 of 2)
- #RACSET1  Tutorial       Settings - Customize options (1 of 3)
- #RACSET2  Tutorial       Settings - Customize options (2 of 3)
- #RACSET3  Tutorial       Settings - Customize options (3 of 3)
+ #RACSET1  Tutorial       Settings - Customize options (1 of 4)
+ #RACSET2  Tutorial       Settings - Customize options (2 of 4)
+ #RACSET3  Tutorial       Settings - Customize options (3 of 4)
+ #RACSET4  Tutorial       Settings - Customize options (4 of 4)
  #RACUSR2  Tutorial       User profile
  RACFCLSB  Class          List members
  RACFCLSC  Class          Add class
@@ -76,6 +76,8 @@
  RACFPSWD  Password       Reset userid password, opt 5 and line cmd PW
  RACFPSWE  Password       Reset userid password with expire keyword
  RACFSETG  Settings       Settings, customize options, menu option 0
+ RACFSETH  Settings       Define Showmvs dataset to LIBDEF
+ RACFSETI  Settings       Define IBM RACF datasets to ALTLIB/LIBDEF
  RACFUSRT  User           Add, change and delete a TSO userid
  RACFUSR1  User           Set filter, menu option 1
  RACFUSR2  User           List userids (admin/user)

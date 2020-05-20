@@ -3,29 +3,29 @@
    !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
-%Tutorial+\-\(%RACFADM - Settings - 3 of 3+)\-\%Tutorial
+%Tutorial+\-\(%RACFADM - Settings - 3 of 4+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
++Management
+!  RACF commands    +To view the RACF commands executed
++                     %Display+in pop-up panel
++                     %Log+to the ISPF Log file
++                     %Both+in a pop-up panel and the ISPF Log file
++                     %No+do not display/log (default)
++
+!  REXX trace       +Allow tracing REXX programs
++                     %Labels,+display programs/subroutines/labels
++                     %Programs,+display REXX program names
++                     %Results,+display commands and results
++                     %No,+turn off tracing (default)
++
 +Adding TSO userid
 !  Default password +The initial password given to a new TSO user or when
 +                    resetting an individual's password%(Option 5 and line
 +                   %command PW).+ The password can be in upper/lower case and
 +                    if left%blank,+will produce a%random+password (default)
 +
-!  User catalog     +The TSO user catalog to define all new TSO user aliases
-+
-!  ISPPROF dataset  +The name of the TSO profile
-+
-!  User dataset     +The PDS dataset to be allocated for a new TSO user
-+                    (optional)
-+
-+
-+
-+
-+
-+
-+
 + \ \ (press%ENTER+to continue) \ \
 )PROC
-  &ZUP     = #RACSET1
+  &ZCONT   = #RACSET4
 )END

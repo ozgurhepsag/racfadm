@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AG  200517  RACFA    Standardize environment (ADDRESS ISPEXEC)    */
+/* @AF  200516  RACFA    Fix display error messages                   */
 /* @AE  200506  RACFA    Display headers in a different color         */
 /* @AD  200501  RACFA    A tweak to the text displayed                */
 /* @AC  200424  RACFA    Move DDNAME at top, standardize/del dups     */
@@ -154,134 +156,143 @@ DDNAME      = 'RACFA'RANDOM(0,999)  /* Unique ddname       */ /* @AC */
 parse source . . REXXPGM .                                    /* @AB */
 REXXPGM   = LEFT(REXXPGM,8)                                   /* @AB */
 
-ADDRESS ISPEXEC "VGET (SETGDISP SETMTRAC)"                    /* @A5 */
-If (SETMTRAC <> 'NO') then do                                 /* @A6 */
-   Say "*"COPIES("-",70)"*"                                   /* @A6 */
-   Say "*"Center("Begin Program = "REXXPGM,70)"*"             /* @A6 */
-   Say "*"COPIES("-",70)"*"                                   /* @A6 */
-   if (SETMTRAC <> 'PROGRAMS') THEN                           /* @A8 */
-      interpret "Trace "SUBSTR(SETMTRAC,1,1)                  /* @A6 */
-end                                                           /* @A6 */
+ADDRESS ISPEXEC                                               /* @AG */
+  "VGET (SETGDISP SETMTRAC)"                                  /* @A5 */
+  If (SETMTRAC <> 'NO') then do                               /* @A6 */
+     Say "*"COPIES("-",70)"*"                                 /* @A6 */
+     Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A6 */
+     Say "*"COPIES("-",70)"*"                                 /* @A6 */
+     if (SETMTRAC <> 'PROGRAMS') THEN                         /* @A8 */
+        interpret "Trace "SUBSTR(SETMTRAC,1,1)                /* @A6 */
+  end                                                         /* @A6 */
 
-racflmsg = "Retrieving data - Please be patient"              /* @A1 */
-ADDRESS ISPEXEC "control display lock"                        /* @A1 */
-ADDRESS ISPEXEC "display msg(RACF011)"                        /* @A1 */
-NUMERIC DIGITS 10     /* DEFINE DIGIT SIZE FOR 31 BIT ADDRESSING     */
-RACFVRMN = ''
-LINE = ''
-CVT  = C2X( STORAGE(10,4) )          /* POINTER TO CVT               */
-RCVT = D2X(X2D(CVT) +X2D(3E0) )      /* POINTER TO RCVT POINTER      */
-RCVT = C2X(STORAGE(RCVT,4))          /* POINTER TO RCVT              */
-/*SAY "RCVT ACRONYM: "STORAGE(RCVT,4)  */
-DSDT = D2X(X2D(RCVT) + X2D(E0) )     /* POINTER TO DSDT POINTER      */
-DSDT = C2X(STORAGE(DSDT,4))          /* POINTER TO DSDT              */
-/*SAY "DSDT ACRONYM: "STORAGE(DSDT,4) */
-DSDTNUM = D2X(X2D(DSDT) + X2D(4))    /* ADDRESS OF DSDTNUM           */
-DSDTNUM = C2D(STORAGE(DSDTNUM,4))    /* DSDTNUM                      */
-DSDTPRIM = D2X(X2D(DSDT) + X2D(90))  /* ADDRESS OF FIRST PRIM DS     */
-DSDTBACK = D2X(X2D(DSDT) + X2D(140)) /* ADDRESS OF FIRST BKUP DS     */
-DSDTDSRQ = D2X(X2D(DSDT) + X2D(88))  /* DATASHARE FLAG ONE           */
-DSDTDSRQ= STORAGE(DSDTDSRQ,1)        /* GET CMD COMMUNICATIONS FLAG  */
-IF BITAND(DSDTDSRQ,'80'X) = '80'X THEN
-   SYSCOM = "Sysplex communications ENABLED and"              /* @A1 */
-   ELSE  SYSCOM = "Sysplex communications DISABLED and"       /* @A1 */
-DSDTDSMO = D2X(X2D(DSDT) + X2D(89))  /* DATASHARE FLAG TWO           */
-DSDTDSMO= C2D(STORAGE(DSDTDSMO,1))   /* GET DATASHARE STATUS FLAG    */
-SELECT
-   WHEN DSDTDSMO = 0 THEN
-        SYSDS = "in NON-DATA SHARING mode"                    /* @A1 */
-   WHEN DSDTDSMO = 1 THEN
-        SYSDS = "in DATASHARE mode"                           /* @A1 */
-   WHEN DSDTDSMO = 2 THEN
-        SYSDS = "in READ only mode"                           /* @A1 */
-   WHEN DSDTDSMO = 3 THEN
-        SYSDS = "in TRANSITION mode.",                        /* @A1 */
-              = "Either be READ ONLY or DATASHARE"            /* @A1 */
-   OTHERWISE
-        SYSDS = "WARNING: Unknown DSDTDSMO code==>" DSDTDSMO  /* @A1 */
-END  /*-- END OF SELECT SEQUENCE --*/
+  racflmsg = "Retrieving data - Please be patient"            /* @A1 */
+  ADDRESS ISPEXEC "control display lock"                      /* @AG */
+  ADDRESS ISPEXEC "display msg(RACF011)"                      /* @AG */
+  NUMERIC DIGITS 10     /* DEFINE DIGIT SIZE FOR 31 BIT ADDRESSING   */
+  RACFVRMN = ''
+  LINE = ''
+  CVT  = C2X( STORAGE(10,4) )          /* POINTER TO CVT             */
+  RCVT = D2X(X2D(CVT) +X2D(3E0) )      /* POINTER TO RCVT POINTER    */
+  RCVT = C2X(STORAGE(RCVT,4))          /* POINTER TO RCVT            */
+  /*SAY "RCVT ACRONYM: "STORAGE(RCVT,4)  */
+  DSDT = D2X(X2D(RCVT) + X2D(E0) )     /* POINTER TO DSDT POINTER    */
+  DSDT = C2X(STORAGE(DSDT,4))          /* POINTER TO DSDT            */
+  /*SAY "DSDT ACRONYM: "STORAGE(DSDT,4) */
+  DSDTNUM = D2X(X2D(DSDT) + X2D(4))    /* ADDRESS OF DSDTNUM         */
+  DSDTNUM = C2D(STORAGE(DSDTNUM,4))    /* DSDTNUM                    */
+  DSDTPRIM = D2X(X2D(DSDT) + X2D(90))  /* ADDRESS OF FIRST PRIM DS   */
+  DSDTBACK = D2X(X2D(DSDT) + X2D(140)) /* ADDRESS OF FIRST BKUP DS   */
+  DSDTDSRQ = D2X(X2D(DSDT) + X2D(88))  /* DATASHARE FLAG ONE         */
+  DSDTDSRQ= STORAGE(DSDTDSRQ,1)        /* GET CMD COMMUNICATIONS FLG */
+  IF BITAND(DSDTDSRQ,'80'X) = '80'X THEN
+     SYSCOM = "Sysplex communications ENABLED and"            /* @A1 */
+  ELSE                                                        /* @A1 */
+     SYSCOM = "Sysplex communications DISABLED and"           /* @A1 */
+  DSDTDSMO = D2X(X2D(DSDT) + X2D(89))  /* DATASHARE FLAG TWO         */
+  DSDTDSMO= C2D(STORAGE(DSDTDSMO,1))   /* GET DATASHARE STATUS FLAG  */
+  SELECT
+     WHEN (DSDTDSMO = 0) THEN
+          SYSDS = "in NON-DATA SHARING mode"                  /* @A1 */
+     WHEN (DSDTDSMO = 1) THEN
+          SYSDS = "in DATASHARE mode"                         /* @A1 */
+     WHEN (DSDTDSMO = 2) THEN
+          SYSDS = "in READ only mode"                         /* @A1 */
+     WHEN (DSDTDSMO = 3) THEN
+          SYSDS = "in TRANSITION mode.",                      /* @A1 */
+                = "Either be READ ONLY or DATASHARE"          /* @A1 */
+     OTHERWISE
+          SYSDS = "WARNING: Unknown DSDTDSMO code==>" DSDTDSMO/* @A1 */
+  END  /*-- END OF SELECT SEQUENCE --*/
 
-CALL SSVRM                           /*DISPLAY OS AND RACF FMID DATA */
-DO II = 1 TO DSDTNUM                 /* LOOP THROUGH ENTRIES         */
-    PNAME = D2X(X2D(DSDTPRIM) + X2D(21)) /* ADDR OF NAME             */
-    PNAME = STORAGE(PNAME,44)            /* NAME                     */
-    PNUM  = D2X(X2D(DSDTPRIM) + X2D(20)) /* ADDR OF BUFFER COUNT     */
-    PNUM  = C2D(STORAGE(PNUM,1))         /* BUFFER COUNT             */
-    PSTAT = D2X(X2D(DSDTPRIM) + X2D(1D)) /* ADDR OF DSDPSTAT         */
-    PSTAT = STORAGE(PSTAT,1)             /* PRIMARY STATUS BYTE      */
-    IF BITAND(PSTAT,'80'X) = '80'X THEN PSTAT = "ACTIVE"
-       ELSE  PSTAT = "INACTIVE"
-    BNAME = D2X(X2D(DSDTBACK) + X2D(21)) /* ADDR OF NAME             */
-    BNAME = STORAGE(BNAME,44)            /* NAME                     */
-    BNUM  = D2X(X2D(DSDTBACK) + X2D(20)) /* ADDR OF BUFFER COUNT     */
-    BNUM  = C2D(STORAGE(BNUM,1))         /* BUFFER COUNT             */
-    BSTAT = D2X(X2D(DSDTBACK) + X2D(1D)) /* ADDR OF DSDTSTAT         */
-    BSTAT = STORAGE(BSTAT,1)             /* BACKUP  STATUS BYTE      */
-    IF BITAND(BSTAT,'80'X) = '80'X THEN BSTAT = "ACTIVE"
-       ELSE  BSTAT = "INACTIVE"
-    QUEUE COPIES("-",72)                                      /* @AA */
-    QSNAME = "'"STRIP(PNAME)"'"          /*PUT QUOTES AROUND RDB NAME*/
-    CALL FINDSIZE QSNAME                 /* GET THE SPACE USED VALUE */
-    QUEUE "PRIMARY #"II                                       /* @AD */
-    QUEUE "  Status ......... "PSTAT                          /* @A1 */
-    QUEUE "  Dsname ......... "PNAME                          /* @A1 */
-    QUEUE "  Volume ......... "VOLSER                         /* @A1 */
-    QUEUE "  # Buffers ...... "PNUM                           /* @A1 */
-    QUEUE "  % Space used ...",                               /* @A1 */
-          "%"TRUNC(((USED_SEGS / SEG_COUNT) * 100),2) "OF",
-          SPACEUNIT"("SPACEALLOC")"
-    QUEUE " "                                                 /* @A1 */
-    QSNAME = "'"STRIP(BNAME)"'"          /*PUT QUOTES AROUND RDB NAME*/
-    CALL FINDSIZE QSNAME                 /* GET THE SPACE USED VALUE */
-    QUEUE "BACKUP  #"II                                       /* @AD */
-    QUEUE "  Status ......... "BSTAT                          /* @A1 */
-    QUEUE "  Dsname ......... "BNAME                          /* @A1 */
-    QUEUE "  Volume ......... "VOLSER                         /* @A1 */
-    QUEUE "  # Buffers ...... "BNUM                           /* @A1 */
-    QUEUE "  % Space used ...",                               /* @A1 */
-          "%"TRUNC(((USED_SEGS / SEG_COUNT) * 100),2) "OF",
-          SPACEUNIT"("SPACEALLOC")"
+  CALL SSVRM                         /*DISPLAY OS AND RACF FMID DATA */
+  DO II = 1 TO DSDTNUM                 /* LOOP THROUGH ENTRIES       */
+     PNAME = D2X(X2D(DSDTPRIM) + X2D(21))  /* ADDR OF NAME           */
+     PNAME = STORAGE(PNAME,44)             /* NAME                   */
+     PNUM  = D2X(X2D(DSDTPRIM) + X2D(20))  /* ADDR OF BUFFER COUNT   */
+     PNUM  = C2D(STORAGE(PNUM,1))          /* BUFFER COUNT           */
+     PSTAT = D2X(X2D(DSDTPRIM) + X2D(1D))  /* ADDR OF DSDPSTAT       */
+     PSTAT = STORAGE(PSTAT,1)              /* PRIMARY STATUS BYTE    */
+     IF (BITAND(PSTAT,'80'X) = '80'X) THEN
+        PSTAT = "ACTIVE"
+     ELSE
+        PSTAT = "INACTIVE"
+     BNAME = D2X(X2D(DSDTBACK) + X2D(21))  /* ADDR OF NAME           */
+     BNAME = STORAGE(BNAME,44)             /* NAME                   */
+     BNUM  = D2X(X2D(DSDTBACK) + X2D(20))  /* ADDR OF BUFFER COUNT   */
+     BNUM  = C2D(STORAGE(BNUM,1))          /* BUFFER COUNT           */
+     BSTAT = D2X(X2D(DSDTBACK) + X2D(1D))  /* ADDR OF DSDTSTAT       */
+     BSTAT = STORAGE(BSTAT,1)              /* BACKUP  STATUS BYTE    */
+     IF (BITAND(BSTAT,'80'X) = '80'X) THEN
+        BSTAT = "ACTIVE"
+     ELSE
+        BSTAT = "INACTIVE"
+     QUEUE COPIES("-",72)                                     /* @AA */
+     QSNAME = "'"STRIP(PNAME)"'"         /*PUT QUOTES AROUND RDB NAME*/
+     CALL FINDSIZE QSNAME                /* GET THE SPACE USED VALUE */
+     QUEUE "PRIMARY #"II                                      /* @AD */
+     QUEUE "  Status ......... "PSTAT                         /* @A1 */
+     QUEUE "  Dsname ......... "PNAME                         /* @A1 */
+     QUEUE "  Volume ......... "VOLSER                        /* @A1 */
+     QUEUE "  # Buffers ...... "PNUM                          /* @A1 */
+     QUEUE "  % Space used ...",                              /* @A1 */
+           "%"TRUNC(((USED_SEGS / SEG_COUNT) * 100),2) "OF",
+           SPACEUNIT"("SPACEALLOC")"
+     QUEUE " "                                                /* @A1 */
+     QSNAME = "'"STRIP(BNAME)"'"         /*PUT QUOTES AROUND RDB NAME*/
+     CALL FINDSIZE QSNAME                /* GET THE SPACE USED VALUE */
+     QUEUE "BACKUP  #"II                                      /* @AD */
+     QUEUE "  Status ......... "BSTAT                         /* @A1 */
+     QUEUE "  Dsname ......... "BNAME                         /* @A1 */
+     QUEUE "  Volume ......... "VOLSER                        /* @A1 */
+     QUEUE "  # Buffers ...... "BNUM                          /* @A1 */
+     QUEUE "  % Space used ...",                              /* @A1 */
+           "%"TRUNC(((USED_SEGS / SEG_COUNT) * 100),2) "OF",
+           SPACEUNIT"("SPACEALLOC")"
 
-    DSDTPRIM = D2X(X2D(DSDTPRIM) + 352)  /* BUMP TO NEXT SLOT        */
-    DSDTBACK = D2X(X2D(DSDTBACK) + 352)  /* BUMP TO NEXT SLOT        */
-   END                                   /* END OF II DO LOOP        */
+     DSDTPRIM = D2X(X2D(DSDTPRIM) + 352) /* BUMP TO NEXT SLOT        */
+     DSDTBACK = D2X(X2D(DSDTBACK) + 352) /* BUMP TO NEXT SLOT        */
+  END                                    /* END OF II DO LOOP        */
 
-CVDX = D2X(X2D(RCVT) + X2D(258) )      /* ADDR OF RCDX POINTER       */
-CVDX = C2X(STORAGE(CVDX,4))            /* POINTER TO CVDX            */
-PVERA = D2X(X2D(CVDX) + X2D(1DC))      /* ADDRESS OF TMPLATE VERSION */
-DPVER = STORAGE(PVERA,7)               /* DYNAMIC PARSE VERSION      */
+  CVDX = D2X(X2D(RCVT) + X2D(258) )    /* ADDR OF RCDX POINTER       */
+  CVDX = C2X(STORAGE(CVDX,4))          /* POINTER TO CVDX            */
+  PVERA = D2X(X2D(CVDX) + X2D(1DC))    /* ADDRESS OF TMPLATE VERSION */
+  DPVER = STORAGE(PVERA,7)             /* DYNAMIC PARSE VERSION      */
 
-QUEUE COPIES('-',72)                                          /* @AA */
-QUEUE "IRRMIN00 version/release/modification ... "RACFVRMN    /* @A1 */
-QUEUE "RACF database template RMID level ....... "RACFTEMP    /* @A1 */
-QUEUE "Dynamic parse version ................... "DPVER
+  QUEUE COPIES('-',72)                                        /* @AA */
+  QUEUE "IRRMIN00 version/release/modification ... "RACFVRMN  /* @A1 */
+  QUEUE "RACF database template RMID level ....... "RACFTEMP  /* @A1 */
+  QUEUE "Dynamic parse version ................... "DPVER
                                                               /* @A1 */
-/* IF ICBTMPRL /= '0000000000000000'X THEN DO             */  /* @A1 */
-/*     QUEUE "Template release/APAR level .............", */  /* @A1 */
-/*           ICBTMPRL33"."33ICBTMPAL                      */  /* @A1 */
-/* END                                                    */  /* @A1 */
-QUEUE SYSCOM SYSDS                                            /* @A1 */
-QUEUE                                                         /* @A1 */
+  /* IF ICBTMPRL /= '0000000000000000'X THEN DO             *//* @A1 */
+  /*     QUEUE "Template release/APAR level .............", *//* @A1 */
+  /*           ICBTMPRL33"."33ICBTMPAL                      *//* @A1 */
+  /* END                                                    *//* @A1 */
+  QUEUE SYSCOM SYSDS                                          /* @A1 */
+  QUEUE                                                       /* @A1 */
                                                               /* @A1 */
-"ALLOC F("DDNAME") NEW REUSE",                                /* @A1 */
-      "LRECL(80) BLKSIZE(0) RECFM(F B)",                      /* @A2 */
-      "UNIT(VIO) SPACE(1 5) CYLINDERS"                        /* @A1 */
-"EXECIO * DISKW "DDNAME" (FINIS"                              /* @A1 */
-ADDRESS ISPEXEC "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"    /* @A1 */
-SELECT                                                        /* @A1 */
-   WHEN (SETGDISP = "VIEW") THEN                              /* @A1 */
-        ADDRESS ISPEXEC "VIEW DATAID("CMDDATID")",            /* @A3 */
-                        "MACRO("EDITMACR")",                  /* @AE */
-                        "PANEL("PANEL01")"                    /* @AE */
-   WHEN (SETGDISP = "EDIT") THEN                              /* @A1 */
-        ADDRESS ISPEXEC "EDIT DATAID("CMDDATID")",            /* @A3 */
-                        "MACRO("EDITMACR")",                  /* @AE */
-                        "PANEL("PANEL01")"                    /* @AE */
-   OTHERWISE                                                  /* @A1 */
-        ADDRESS ISPEXEC "BROWSE DATAID("CMDDATID")"           /* @A1 */
-END                                                           /* @A1 */
-"FREE FI("DDNAME")"                                           /* @A1 */
-call Goodbye                                                  /* @A6 */
+  ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",                  /* @AG */
+              "LRECL(80) BLKSIZE(0) RECFM(F B)",              /* @A2 */
+              "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @A1 */
+  ADDRESS TSO "EXECIO * DISKW "DDNAME" (FINIS"                /* @AG */
+
+  "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"                  /* @AG */
+  SELECT                                                      /* @A1 */
+     WHEN (SETGDISP = "VIEW") THEN                            /* @A1 */
+          "VIEW DATAID("CMDDATID")",                          /* @AG */
+                       "MACRO("EDITMACR")",                   /* @AE */
+                       "PANEL("PANEL01")"                     /* @AE */
+     WHEN (SETGDISP = "EDIT") THEN                            /* @A1 */
+          "EDIT DATAID("CMDDATID")",                          /* @AG */
+                       "MACRO("EDITMACR")",                   /* @AE */
+                       "PANEL("PANEL01")"                     /* @AE */
+     OTHERWISE                                                /* @A1 */
+          "BROWSE DATAID("CMDDATID")"                         /* @AG */
+  END                                                         /* @A1 */
+
+  ADDRESS TSO "FREE FI("DDNAME")"                             /* @AG */
+
+  call Goodbye                                                /* @A6 */
 EXIT
 /*--------------------------------------------------------------------*/
 /*  If tracing is on, display flower box                         @A6  */
@@ -304,28 +315,30 @@ FINDSIZE:
   BAM_COUNTER = 0               /* COUNT NUMBER OF BAMS PROCESSED    */
 
   DO FOREVER
-    BAM_COUNTER = BAM_COUNTER + 1
-  /*SAY "PROCESSING BAM BLOCK " BAM_COUNTER "OF" C2D(BAM_BCNT)*/
+     BAM_COUNTER = BAM_COUNTER + 1
+     /*SAY "PROCESSING BAM BLOCK " BAM_COUNTER "OF" C2D(BAM_BCNT)*/
 
-    X = $GBLK(BAM_ADDR,BSIZE)   /*  READ IN A BAM BLOCK              */
-    PARSE VAR BLK.1   ,         /*  PARSE BAM HEADER AND MASK BITS   */
-            PREV_BAM_BLOCK +6,  /* PREVIOUS OR IF ZERO THE FIRST BAM */
-            NEXT_BAM_BLOCK +6,  /* NEXT BAM BLOCK ADDRESS            */
-            RBA1_BAM_BLOCK +6,  /* RBA OF 1ST. BLOCK BAM DEFINES     */
-            BLK_CNT +2,         /* NO. OF BLOCKS THIS BAM DEFINES    */
-            BAM_DATA            /* BAM MASK BITS (1 BIT = 1 SEGMENT) */
+     X = $GBLK(BAM_ADDR,BSIZE)   /* READ IN A BAM BLOCK              */
+     PARSE VAR BLK.1   ,         /* PARSE BAM HEADER AND MASK BITS   */
+           PREV_BAM_BLOCK +6,    /* PREVIOUS OR IF ZERO THE 1st BAM  */
+           NEXT_BAM_BLOCK +6,    /* NEXT BAM BLOCK ADDRESS           */
+           RBA1_BAM_BLOCK +6,    /* RBA OF 1ST. BLOCK BAM DEFINES    */
+           BLK_CNT +2,           /* NO. OF BLOCKS THIS BAM DEFINES   */
+           BAM_DATA              /* BAM MASK BIT (1 BIT = 1 SEGMENT) */
 
-    BLKC = C2D(BLK_CNT)                   /* EACH SEGMENT=256 BYTES  */
-    X = $GET_BAM_COUNT(BAM_DATA,BLKC)     /* GET ALLOC. DATA IN BAM  */
-    IF C2D(NEXT_BAM_BLOCK) = 0 THEN LEAVE /* NO MORE BAMS?           */
-       ELSE BAM_ADDR = NEXT_BAM_BLOCK     /*YES, CONTINUE PROCESSING */
-  END                                     /*      END OF DO FOREVER  */
+     BLKC = C2D(BLK_CNT)                   /* EACH SEGMENT=256 BYTES */
+     X = $GET_BAM_COUNT(BAM_DATA,BLKC)     /* GET ALLOC. DATA IN BAM */
+     IF C2D(NEXT_BAM_BLOCK) = 0 THEN       /* NO MORE BAMS?          */
+        LEAVE
+     ELSE
+        BAM_ADDR = NEXT_BAM_BLOCK          /* Yes CONTINUE           */
+  END                                      /*     END OF DO FOREVER  */
 
-/*            SAY "FREE SEGMENTS =>    " FREE_SEGS     */
-/*            SAY "USED SEGMENTS =>    " USED_SEGS     */
-/*            SAY "TOTAL SEGMENTS=>    " SEG_COUNT     */
-  "EXECIO 1 DISKR SYSRACF 1 (STEM ICB. FINIS"
-  "FREE F(SYSRACF)"
+  /* SAY "FREE SEGMENTS =>    " FREE_SEGS */
+  /* SAY "USED SEGMENTS =>    " USED_SEGS */
+  /* SAY "TOTAL SEGMENTS=>    " SEG_COUNT */
+  ADDRESS TSO "EXECIO 1 DISKR SYSRACF 1 (STEM ICB. FINIS"     /* @AG */
+  ADDRESS TSO "FREE F(SYSRACF)"                               /* @AG */
 RETURN
 /*---------------------------RDSN_SETUP-------------------------------*/
 /* THIS FUNCTION WILL QUERRY THE USER FOR A RACF DATABASE NAME AND    */
@@ -348,12 +361,12 @@ $RDSN_SETUP:
                 'database name: 'RDSN'. ',                    /* @A7 */
                 'Dataset must be cataloged,',                 /* @A7 */
                 'restructured RACF database.'                 /* @A7 */
-     "SETMSG MSG(RACF011)"                                    /* @A7 */
+     "SETMSG MSG(RACF011)"                                    /* @AG */
      call Goodbye                                             /* @A6 */
   END
-  BSIZE  = SYSBLKSIZE
-  VOLSER = SYSVOLUME
-  SPACEUNIT = SYSUNITS
+  BSIZE      = SYSBLKSIZE
+  VOLSER     = SYSVOLUME
+  SPACEUNIT  = SYSUNITS
   SPACEALLOC = SYSALLOC
   /*----------------------------------------*/
   /* TEST TO SEE IF THE BLOCK SIZE IS 4096. */
@@ -362,18 +375,19 @@ $RDSN_SETUP:
      racfsmsg = ''                                            /* @A7 */
      racflmsg = "RACF database entered does not have a",      /* @A7 */
                 "restructured 4096 block size."               /* @A7 */
-     "SETMSG MSG(RACF011)"                                    /* @A7 */
+     "SETMSG MSG(RACF011)"                                    /* @AG */
      call Goodbye                                             /* @A6 */
   END
   /*---------------------------------------------------*/
   /* ALLOCATE AND READ IN THE ICB TO GET BAM POINTERS. */
   /*---------------------------------------------------*/
-  "ALLOC F(SYSRACF) REUSE DA("RDSN") SHR LRECL("BSIZE")"
-  "EXECIO 1 DISKR SYSRACF 1 (STEM ICB. "
+  ADDRESS TSO "ALLOC F(SYSRACF) REUSE DA("RDSN")",            /* @AG */
+              "SHR LRECL("BSIZE")"                            /* @AG */
+  ADDRESS TSO "EXECIO 1 DISKR SYSRACF 1 (STEM ICB. "          /* @AG */
 
   BAM_BCNT = SUBSTR(ICB.1,05,4)       /* NUMBER OF BAM BLKS DEFINED  */
   BAM_ADDR = SUBSTR(ICB.1,21,6)       /* RBA OF 1st BAM BLK IN CHAIN */
-  IF RACFVRMN = '' THEN DO
+  IF (RACFVRMN = '') THEN DO
      RACFVRMN = SUBSTR(ICB.1,1019,6)  /* TEMPLATE VERSION/RELEASE/MOD*/
      RACFTEMP = SUBSTR(ICB.1,1057,7)  /* TEMPLATE LEVEL VALUE        */
      ICBTMPRL = SUBSTR(ICB.1,519,8)   /* TEMPLATE RELEASE LEVEL      */
@@ -389,10 +403,13 @@ RETURN
 /* ARGUMENT 1 = RBA ADDRESS IN CHARACTER FORMAT                       */
 /* ARGUMENT 2 = BLOCK SIZE OF THE RACF DATABASE BLOCKS IN DECIMAL     */
 /*--------------------------------------------------------------------*/
-$GBLK:PARSE ARG AD1,AD2
-  IF AD1 = 0 THEN REC_ADDR = 1
-  ELSE REC_ADDR = TRUNC(((C2D(AD1) / AD2) + 1))
-  "EXECIO 1 DISKR SYSRACF "REC_ADDR" (STEM BLK. "
+$GBLK:
+  PARSE ARG AD1, AD2
+  IF (AD1 = 0) THEN
+     REC_ADDR = 1
+  ELSE
+     REC_ADDR = TRUNC(((C2D(AD1) / AD2) + 1))
+  ADDRESS TSO "EXECIO 1 DISKR SYSRACF "REC_ADDR" (STEM BLK. " /* @AG */
   RRC = RC
 RETURN RRC
 /*------------------------$GET_BAM_COUNT------------------------------*/
@@ -408,34 +425,43 @@ RETURN RRC
 /* NOTE: A FREE SEGMENT = BIT MASK BIT = 1                            */
 /*       A USED SEGMENT = BIT MASK BIT = 0                            */
 /*--------------------------------------------------------------------*/
-$GET_BAM_COUNT:PARSE ARG AD1,AD2
+$GET_BAM_COUNT:
+  PARSE ARG AD1, AD2
   AD2 = (2 * AD2)
   DO I = 1 TO AD2
     BYTE = SUBSTR(AD1,I,1)
-    IF BITAND(BYTE,'80'X) = '80'X THEN
+    IF (BITAND(BYTE,'80'X) = '80'X) THEN
         FREE_SEGS = 1 + FREE_SEGS
-        ELSE USED_SEGS = 1 + USED_SEGS
-    IF BITAND(BYTE,'40'X) = '40'X THEN
+    ELSE
+        USED_SEGS = 1 + USED_SEGS
+    IF (BITAND(BYTE,'40'X) = '40'X) THEN
         FREE_SEGS = 1 + FREE_SEGS
-        ELSE USED_SEGS = 1 + USED_SEGS
-    IF BITAND(BYTE,'20'X) = '20'X THEN
+    ELSE
+        USED_SEGS = 1 + USED_SEGS
+    IF (BITAND(BYTE,'20'X) = '20'X) THEN
         FREE_SEGS = 1 + FREE_SEGS
-        ELSE USED_SEGS = 1 + USED_SEGS
-    IF BITAND(BYTE,'10'X) = '10'X THEN
+    ELSE
+        USED_SEGS = 1 + USED_SEGS
+    IF (BITAND(BYTE,'10'X) = '10'X) THEN
         FREE_SEGS = 1 + FREE_SEGS
-        ELSE USED_SEGS = 1 + USED_SEGS
-    IF BITAND(BYTE,'08'X) = '08'X THEN
+    ELSE
+        USED_SEGS = 1 + USED_SEGS
+    IF (BITAND(BYTE,'08'X) = '08'X) THEN
         FREE_SEGS = 1 + FREE_SEGS
-        ELSE USED_SEGS = 1 + USED_SEGS
-    IF BITAND(BYTE,'04'X) = '04'X THEN
+    ELSE
+        USED_SEGS = 1 + USED_SEGS
+    IF (BITAND(BYTE,'04'X) = '04'X) THEN
         FREE_SEGS = 1 + FREE_SEGS
-        ELSE USED_SEGS = 1 + USED_SEGS
-    IF BITAND(BYTE,'02'X) = '02'X THEN
+    ELSE
+        USED_SEGS = 1 + USED_SEGS
+    IF (BITAND(BYTE,'02'X) = '02'X) THEN
         FREE_SEGS = 1 + FREE_SEGS
-        ELSE USED_SEGS = 1 + USED_SEGS
-    IF BITAND(BYTE,'01'X) = '01'X THEN
+    ELSE
+        USED_SEGS = 1 + USED_SEGS
+    IF (BITAND(BYTE,'01'X) = '01'X) THEN
         FREE_SEGS = 1 + FREE_SEGS
-        ELSE USED_SEGS = 1 + USED_SEGS
+    ELSE
+        USED_SEGS = 1 + USED_SEGS
   END
   SEG_COUNT = USED_SEGS + FREE_SEGS
 RETURN SEG_COUNT

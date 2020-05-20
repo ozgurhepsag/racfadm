@@ -7,7 +7,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @A7  200517  TRIDJK   Allow logging of RACF commands               */
+/* @A7  200519  TRIDJK   Allow logging of RACF commands               */
 /* @A6  200430  RACFA    Added skeleton RACF commands to table        */
 /* @A5  200430  RACFA    Place table name in variable at top of REXX  */
 /* @A4  200429  RACFA    Standardize ddname, etc.                     */
@@ -176,22 +176,22 @@ DO_RACFCMD:
   call view_std
 RETURN
 /*--------------------------------------------------------------------*/
-/*  Display RACF command and return code                              */
+/*  Display RACF command and return code                         @A7  */
 /*--------------------------------------------------------------------*/
 SHOWCMD:                                                      /* @A7 */
-  IF (SETMSHOW = "BOTH") | (SETMSHOW = "DISPLAY") THEN DO
-     PARSE VAR CMD MSG1 60 MSG2 121 MSG3
-     MSG4 = "Return code = "cmd_rc
-     "ADDPOP ROW(6) COLUMN(4)"
-     "DISPLAY PANEL("PANELM2")"
-     "REMPOP"
-  END
-  IF (SETMSHOW = "BOTH") | (SETMSHOW = "LOG") THEN DO
-     zerrsm = "RACFADM "REXXPGM" RC="cmd_rc
-     zerrlm = cmd
-     'log msg(isrz003)'
-  END
-RETURN
+  IF (SETMSHOW = "BOTH") | (SETMSHOW = "DISPLAY") THEN DO     /* @A7 */
+     PARSE VAR CMD MSG1 60 MSG2 121 MSG3                      /* @A7 */
+     MSG4 = "Return code = "cmd_rc                            /* @A7 */
+     "ADDPOP ROW(6) COLUMN(4)"                                /* @A7 */
+     "DISPLAY PANEL("PANELM2")"                               /* @A7 */
+     "REMPOP"                                                 /* @A7 */
+  END                                                         /* @A7 */
+  IF (SETMSHOW = "BOTH") | (SETMSHOW = "LOG") THEN DO         /* @A7 */
+     zerrsm = "RACFADM "REXXPGM" RC="cmd_rc                   /* @A7 */
+     zerrlm = cmd                                             /* @A7 */
+     'log msg(isrz003)'                                       /* @A7 */
+  END                                                         /* @A7 */
+RETURN                                                        /* @A7 */
 /*--------------------------------------------------------------------*/
 /*  Generalized routine to browse or view the results of the command  */
 /*--------------------------------------------------------------------*/

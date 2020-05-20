@@ -111,9 +111,9 @@ ADDRESS ISPEXEC                                               /* @A4 */
                      'Settings is invalid or null'
      end
      WHEN (code = 'ERR19') then do                            /* @A7 */
-          racfsmsg = 'Error LIBDEF/ALTLIB DSN'                /* @AB */
-          racflmsg = 'Unable to determine the LIBDEFed',      /* @AB */
-                     'or ALTLIBed datasets used to',          /* @AB */
+          racfsmsg = 'Error ALTLIB/LIBDEF DSN'                /* @AB */
+          racflmsg = 'Unable to determine the ALTLIBed',      /* @AB */
+                     'or LIBDEFed datasets used to',          /* @AB */
                      'invoke RACFADM.'                        /* @AB */
      end                                                      /* @A7 */
      WHEN (code = 'ERR20') then do                            /* @A8 */

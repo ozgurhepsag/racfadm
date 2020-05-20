@@ -3,7 +3,7 @@
    !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
-%Tutorial+\-\(%RACFADM - Settings - 1 of 3+)\-\%Tutorial
+%Tutorial+\-\(%RACFADM - Settings - 1 of 4+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
 +General
@@ -19,10 +19,10 @@
 +
 !  Confirm panel    +Specify whether each modify operation must be confirmed
 +
-+Management
-!  Administrator    +Specify full administrator authority,+providing more line
-+                   +commands: Add, Change, etc.%(Y=Yes, N=No is default)
-+
+!  Showmvs data     %Yes+to display the below menu options,%Yes+is the default
++                     %7  !RACFdata +RACF data (Showmvs)
++                    To specify SHOWMVS executable dataset to LIBDEF, type in
++                   %Yes+in!Define DSN+field,%No+is the default
 +
 +
 + \ \ (press%ENTER+to continue) \ \

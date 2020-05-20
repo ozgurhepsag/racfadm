@@ -89,9 +89,8 @@ EXIT
 /*     allocated to the 'Application-level CLIST' ddname (SYS#####)   */
 /*--------------------------------------------------------------------*/
 GET_CLIST_DSN:
-ADDRESS TSO
   X = OUTTRAP("REC.")
-  "ALTLIB DISPLAY"
+  ADDRESS TSO "ALTLIB DISPLAY"
   X = OUTTRAP("OFF")
 
   IF (SUBSTR(REC.2,1,3) = "IKJ") THEN
@@ -106,7 +105,7 @@ ADDRESS TSO
   END
 
   X = OUTTRAP("REC.")
-  "LISTA STATUS"
+  ADDRESS TSO "LISTA STATUS"
   X = OUTTRAP("OFF")
   do J = 1 TO REC.0
      PARSE VAR REC.J W1 .
@@ -117,5 +116,4 @@ ADDRESS TSO
      END
   end
   DROP REC. W1 DDALTLIB
-ADDRESS ISPEXEC
 RETURN

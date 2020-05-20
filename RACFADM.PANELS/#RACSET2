@@ -3,25 +3,25 @@
    !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
-%Tutorial+\-\(%RACFADM - Settings - 2 of 3+)\-\%Tutorial
+%Tutorial+\-\(%RACFADM - Settings - 2 of 4+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
 +Management
+!  Administrator    +Specify full administrator authority,+providing more line
++                   +commands: Add, Change, etc.%(Y=Yes, N=No is default)
++
 !  Admin RACF API   %Yes+to use RACF API module (IRRXUTIL) to obtain
 +                    information when Adding/Changing a userid and allow access
 +                    to use the line command Profile,%No+is the default
 +
-!  RACF commands    +To view the RACF commands executed
-+                     %Display+in pop-up panel
-+                     %Log+to the ISPF Log file
-+                     %Both+in a pop-up panel and the ISPF Log file
-+                     %No+do not display/log (default)
+!  IBM's RACF opts  %Yes+to display the below menu options,%No+is the default
++                     %10 !IBMSys   +RACF system options
++                     %11 !IBMRRSF  +RACF remote services
++                     %12 !IBMCert  +RACF certificates
++                    To specify RACF datasets to ALTLIB/LIBDEF, type in%Yes+
++                    in!Define DSNs+field,%No+is the default
 +
-!  REXX trace       +Allow tracing REXX programs
-+                     %Labels,+display programs/subroutines/labels
-+                     %Programs,+display REXX program names
-+                     %Results,+display commands and results
-+                     %No,+turn off tracing (default)
++
 +
 +
 +

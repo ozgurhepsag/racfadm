@@ -1,41 +1,53 @@
 /*%NOCOMMENT====================* REXX *==============================*/
 /*  PURPOSE:  RACFADM - Display Menu - LIBDEF and ALTLIB datasets     */
 /*--------------------------------------------------------------------*/
+/*  NOTES:    1) There are two subroutines to allow defining repeat   */
+/*               find (RFIND):                                        */
+/*               - SETUP_RFIND1 allocates a ISPF table and            */
+/*                 defines/adds the RFIND command                     */
+/*               - SETUP_RFIND2 updates the currently used table      */
+/*                 and modifies the RFIND command                     */
+/*            2) Currently this program is using SETUP_RFIND2 and     */
+/*               we left SETUP_RFIND1, just incase someone was        */
+/*               interested in another way of accomplishing this      */
+/*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @K1  200514  TRIDJK   Check user cmd table before site cmd table   */
-/* @L2  200512  LBD      Add Parm of NA to bypass Allocations         */
-/* @L1  200512  LBD      Changed several areas to improve processing  */
+/* @A8  200519  TRIDJK   Check user cmd table before site cmd table   */
+/* @A7  200519  RACFA    Use SETUP_RFIND1, RFIND2 left entry in table */
+/* @A6  200514  LBD      Add parmeter of NA to bypass allocations     */
+/* @A5  200514  LBD      Added different way to setup/define RFIND    */
 /* @A4  200501  RACFA    If 1st time used, get site default settings  */
 /* @A3  200501  LBD      Add dynamic command table                    */
 /* @A2  200124  RACFA    Place panels at top of REXX in variables     */
 /* @A1  200120  LBD      Added code for sites using qual. PLIB/MLIB   */
 /* @A0  200120  LBD      Created REXX                                 */
 /*====================================================================*/
-Arg RAOPT                                                       /*@L1*/
-                                                                /*@L1*/
 PANEL01     = "RACFMENU"  /* RACF Main Menu                */ /* @A2 */
 REXXPGM1    = "RACFSETD"  /* Get def settings for new user */ /* @A4 */
-REXXPGM2    = "RACFSITE"  /* Get def settings for site     */ /* @LD */
+Arg RAOPT                 /* Invoked using $STUB mbr       */ /* @A6 */
 
 ADDRESS ISPEXEC
-  Call Setup                                                    /*@L1*/
-  Call Check_Rfind                                              /*@L1*/
-  'Select cmd('REXXPGM1')'                                      /*@L1*/
-  'Select cmd('REXXPGM2')'                                      /*@L1*/
-  'Select Panel('PANEL01')'                                     /*@L1*/
+  call Setup
+  'Select cmd('REXXPGM1')  NewAppl(RADM) PassLib'             /* @A4 */
+  'Select Panel('PANEL01') NewAppl(RADM) PassLib'             /* @A2 */
+  'libdef ispmlib'
+  'libdef ispplib'
+  'tbclose radmcmds'                                          /* @A7 */
+  Address TSO 'altlib deact app(exec)'
 EXIT 0
 /*--------------------------------------------------------------------*/
 /*  Obtain dataset names and LIBDEF/ALTLIB them                       */
 /*--------------------------------------------------------------------*/
 SETUP:
-  parse source src
-  parse value src with TSO Type Name DDName DSName,
-                       NameO Env Addr Token
-  cmd = name
-  'vget (zapplid)'                                              /*@L1*/
-  if raopt = 'NA' then return                                   /*@L2*/
-  if (zapplid /= 'RADM') then call setup_applid                 /*@L1*/
+  parse source src                                            /* @A6 */
+  parse value src with TSO Type Name DDName DSName,           /* @A6 */
+                       NameO Env Addr Token                   /* @A6 */
+  cmd = name                                                  /* @A6 */
+
+  'vget (zapplid)'                                            /* @A3 */
+  if raopt = 'NA' then return                                 /* @A6 */
+  if (zapplid /= 'RADM') then call setup_rfind1               /* @A5 */
   if (DSName /= '?') then exec = "'"dsname"'"
   else do
      x      = listdsi(DDName 'FILE')
@@ -55,52 +67,66 @@ SETUP:
   if (x = 0) then panels = plib                               /* @A1 */
   x = listdsi(mlib)                                           /* @A1 */
   if (x = 0) then msgs = mlib                                 /* @A1 */
+  if raopt = 'NA' then exit                                   /* @A6 */
   Address TSO 'Altlib Act app(Exec) Dataset('exec')'
   'Libdef ISPMLIB dataset id('msgs') Stack'
   'Libdef ISPPLIB dataset id('panels') Stack'
 RETURN
-/* ------------------------------------------------------ *     /*@L1*/
- | Setup Applid:  If not RADM applid then recurse into it |     /*@L1*/
- * ------------------------------------------------------ */    /*@L1*/
-SETUP_Applid:                                                   /*@L1*/
-  'Select cmd('cmd') NewAppl(RADM) Passlib'                     /*@L1*/
-  if raopt = 'NA' then exit                                     /*@L2*/
-  'libdef ispmlib'                                              /*@L1*/
-  'libdef ispplib'                                              /*@L1*/
-   Address TSO 'altlib deact app(exec)'                         /*@L1*/
-  Exit                                                          /*@L1*/
-/* --------------> Enable Repeat Find <------------------- *    /*@L1*/
- | This approach does not require recursion or creating an |    /*@L1*/
- | ISPF table for the applications commands. This approach |    /*@L1*/
- | updates the active site command table in memory.        |    /*@L1*/
- |                                                         |    /*@L1*/
- | This does:                                              |    /*@L1*/
- | 1. Define the commmand table entry                      |    /*@L1*/
- | 2. vget the variable with the prefix for the site ISPF  |    /*@L1*/
- |    command table.                                       |    /*@L1*/
- | 3. define a varable with the command table name         |    /*@L1*/
- | 4. Move to the top of the command table                 |    /*@L1*/
- | 5. Establish the table search                           |    /*@L1*/
- | 6. if the entry is found then add it                    |    /*@L1*/
- | 7. prime the variable to null                           |    /*@L1*/
- * ------------------------------------------------------- */   /*@L1*/
-Check_Rfind:                                                    /*@L1*/
-  zctverb = "RFIND"                                             /*@L1*/
-  zcttrunc = 0                                                  /*@L1*/
-  zctact = "&RADMRFND"                                          /*@L1*/
-  zctdesc = "RACFADM User controlled Repeat Find (RFIND)"       /*@L1*/
-  'vget (zsctpref zuctpref)'                                    /*@K1*/
-  select                                                        /*@K1*/
-    when zuctpref <> '' then                                    /*@K1*/
-      ctab = zuctpref'cmds'                                     /*@K1*/
-    when zsctpref <> '' then                                    /*@K1*/
-      ctab = zsctpref'cmds'                                     /*@K1*/
-    otherwise                                                   /*@K1*/
-      ctab = 'ISPcmds'                                          /*@K1*/
-    end                                                         /*@K1*/
-  'tbtop' ctab                                                  /*@L1*/
-  'tbscan' ctab 'arglist(zctact)  condlist(EQ) Next'            /*@L1*/
-  if rc > 0 then 'tbadd' ctab                                   /*@L1*/
-  radmrfnd = null                                               /*@L1*/
-  'vput (radmrfnd)'                                             /*@L1*/
-  return                                                        /*@L1*/
+/*--------------------------------------------------------------------*/
+/*  Define the ISPF Command Table to enable RFIND                @A3  */
+/*--------------------------------------------------------------------*/
+/*  This approach requires creating an ISPF table for the        @A3  */
+/*  applications commands (RFIND).                               @A3  */
+/*--------------------------------------------------------------------*/
+SETUP_RFIND1:                                                 /* @A3 */
+  'control errors return'                                     /* @A3 */
+  'tbquery radmcmds'                                          /* @A3 */
+  if (rc = 0) then return                                     /* @A3 */
+  "TBCreate radmcmds names(zctverb zcttrunc zctact" ,         /* @A3 */
+                     "zctdesc) replace share nowrite"         /* @A3 */
+  zctverb = "RFIND"                                           /* @A3 */
+  zcttrunc = 0                                                /* @A3 */
+  zctact = "&RADMRFND"                                        /* @A3 */
+  zctdesc = "RADM User controlled Repeat Find (RFIND)"        /* @A3 */
+  "TBAdd radmcmds"                                            /* @A3 */
+RETURN                                                        /* @A3 */
+/*--------------------------------------------------------------------*/
+/*  Define the ISPF Command Table to enable RFIND                @A3  */
+/*--------------------------------------------------------------------*/
+/*  This approach does not require recursion or creating an      @A5  */
+/*  ISPF table for the applications commands. This approach      @A5  */
+/*  updates the active site command table in memory.             @A5  */
+/*                                                               @A5  */
+/*  This does:                                                   @A5  */
+/*    1) Define the commmand table entry                         @A5  */
+/*    2) vget the variable with the prefix for the site ISPF     @A5  */
+/*       command table.                                          @A5  */
+/*    3) Define a varable with the command table name            @A5  */
+/*    4) Move to the top of the command table                    @A5  */
+/*    5) Establish the table search                              @A5  */
+/*    6) If the entry is found then add it                       @A5  */
+/*    7) Prime the variable to null                              @A5  */
+/*--------------------------------------------------------------------*/
+SETUP_RFIND2:                                                 /* @A5 */
+  zctverb = "RFIND"                                           /* @A5 */
+  zcttrunc = 0                                                /* @A5 */
+  zctact = "&RADMRFND"                                        /* @A5 */
+  zctdesc = "RACFADM User controlled Repeat Find (RFIND)"     /* @A5 */
+  'vget (zsctpref zuctpref)'                                  /* @A8 */
+  select                                                      /* @A8 */
+     when zuctpref <> '' then                                 /* @A8 */
+          ctab = zuctpref'cmds'                               /* @A8 */
+     when zsctpref <> '' then                                 /* @A8 */
+          ctab = zsctpref'cmds'                               /* @A8 */
+     otherwise                                                /* @A8 */
+          ctab = 'ISPcmds'                                    /* @A8 */
+  end                                                         /* @A8 */
+  'vget (zsctpref)'                                           /* @A5 */
+  if zsctpref = '' then zsctpref = 'ISP'                      /* @A5 */
+  ctab = zsctpref'cmds'                                       /* @A5 */
+  'tbtop' ctab                                                /* @A5 */
+  'tbscan' ctab 'arglist(zctact)  condlist(EQ) Next'          /* @A5 */
+  if rc > 0 then 'tbadd' ctab                                 /* @A5 */
+  radmrfnd = null                                             /* @A5 */
+  'vput (radmrfnd)'                                           /* @A5 */
+RETURN                                                        /* @A5 */

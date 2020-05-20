@@ -2,6 +2,27 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  10 May 2020 - V25R3
+     - Commands (Option C)
+       -- Allow logging of RACF commands to the ISPF log file
+     - ISPLog (Option L)
+       -- Support ISPLOG SYSOUT datasets (SDSF/EJES)
+     - Settings (Option 0)
+       -- Added field 'Define DSN' to 'Showmvs data', allows defining
+          the executable dataset containing SHOWMVS to LIBDEF, this
+          can also be defined site wide for new users in the member
+          $DEFSETG in the panel dataset
+     - Other Items
+       -- Changed REXX program RACFADM
+          * To use subroutine SETUP_RFIND1, instead of SETUP_RFIND2,
+            reason being is RFIND2 does not cleanup/remove the entry
+            from the table after exiting
+          * Update RACFADM to use the user command table before the
+            site command table
+       -- Updated REXX program RACFDB
+          * Standardized to make ISPEXEC the base/defualt environment
+            like all the other programs
+
   19 May 2020 - V25R2
      - Update RACFLOG to support ISPLOG SYSOUT datasets - SDSF/(E)JES
      - Update RACFEMAC to add PARM option for ISPLOG positioning
@@ -12,38 +33,61 @@
        -- Updated panels #RACMENU, #RACPRMS and #RACNOT1
        -- Added panel #RACLOG
 
-  12 May 2020 - V25R1
+  18 May 2020 - V25R1
      - Update RACFADM to improve recursion and reduce overhead in the
        startup. Changed to eliminate a command table to use the site
        command table.
      - Improved the $STUB example
 
-  11 May 2020 - V25R0
+  17 May 2020 - V25R0
      - Update RACFADRL to change invocation of IBM RACF dialog elements
        and add Stack to the Libdefs
 
-  10 May 2020 - V24R9
+  17 May 2020 - V24R9
      - Change message about deleting active userid
      - Remove redundant display save/restore in RACFUSR
      - Make the version a variable set in RACFVER
 
-  10 May 2020 - V24R8
-     - Update RACFUSR to issue a better message if trying to delete the
-       active userid
-     - Change panel RACFMSG1 to retain the case of the message
+  17 May 2020 - V24R8
+     - Main Menu
+       -- Lower bottom right hand screen, containing system/user info,
+          change the 'User:' field to 'Admn:' when the Settings (Opt 0)
+          'Administrator = Y'
+     - Settings
+       -- Added 'General' settings 'Showmvs data (Y/N)', will display
+          the below menu entry, Yes is the default
+            7  RACFData  RACF data (Showmvs)
+          This can also be set site wide for new users in $DEFSETG
+          member in the panel dataset, updated tutorials
+     - User
+       -- Prevent the user from 'R'emoving their own userid
+     - RACFdb
+       -- Fixed displaying error messages
+       -- Standardized code, made default address ISPEXEC, etc.
+     - ISPLog
+       -- When paging right, display column header as Turquios,
+          prior was green
 
-  09 May 2020 - V24R7
-     - Updated RACFSITE REXX program to validate customization settings.
-     - Clean up packaging for both GitHub and CBT File 417
+  14 May 2020 - V24R7
+     - Other Items
+       -- Update the ISPF table's RFIND command to PASSTHRU,
+          prior was creating a new command table (Pgm=RACFADM)
+       -- Allow passing RACFADM a parameter of 'NA' to bypass
+          allocations when using $STUB member
 
-  08 May 2020 - V24R6
-     - IBM RACF ISPF Dialog Access
-       -- Added REXX program RACFADRL to invoke select IBM RACF ISPF
-          dialog elements (options 5, 6, and 7)
-       -- Added REXX program RACFSITE to define site default actions
-          initially to allow RACFADRL options or not
-       -- Updated Panel RACFMENU to dynamically display the IBM RACF
-          dialog options or not based on the RACFSITE settings
+  11 May 2020 - V24R6
+     - Settings (Option 0)
+       -- Added field 'Menu Opt 9/10/11 = Y/N', under 'Management'
+          * This will display the following menu options
+               9  IBMSys    RACF system options
+              10  IBMRRSF   RACF remote services
+              11  IBMCert   RACF certificates
+          * Also, added the capability to 'Define DSNs' to ALTLIB/LIBDEF
+            RACF datasets and updated tutorials
+            o This can be defined site wide for new users by updating
+              the %DEFSETG member in the panel dataset
+     - GrpTree (Option 6)
+       -- Fixed color of header when paging right (F11)
 
   08 May 2020 - V24R5
      - Other Items

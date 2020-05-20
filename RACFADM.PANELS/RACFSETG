@@ -14,10 +14,12 @@
 +  Status interval{..._Z   ~(0-9999){or_Z ~% (0-99)    {Progress message number
 +  Display files{....._Z~ (B=Browse, E=Edit, V=View)   {Display reports/files
 +  Confirm panel{....._Z~ (Y=Yes, N=No)                {Confirm command request
++  Showmvs data{......_Z~ (Y=Yes, N=No)+Define DSN_Z{  {Showmvs RACF data
 +
 ^Management
 +  Administrator{....._Z~ (Y=Yes, N=No)                {Line cmds add, chg, etc.
 +  Admin RACF API{...._Z~ (Y=Yes, N=No)                {IRRXUTIL to add/chg/prof
++  IBM RACF opts{....._Z~ (Y=Yes, N=No)+Define DSNs_Z{  RACF Systems/RRSF/Certs
 +  RACF commands{....._Z~ (D=Display, L=Log, B=Both, N=No)      {View  RACF cmds
 +  REXX trace{........_Z~ (L=Labels, P=Pgms, R=Results, N=No)   {Trace REXX pgms
 +
@@ -27,8 +29,8 @@
 +  ISPPROF dataset{..._Z                              { ISPF profile dataset
 +  User dataset{......_Z                              { User's PDS dataset (opt)
 )INIT
-  VGET (SETGFLTR SETGSTA  SETGSTAP SETGDISP SETGCONF +
-        SETMADMN SETMIRRX SETMSHOW SETMTRAC +
+  VGET (SETGFLTR SETGSTA  SETGSTAP SETGDISP  SETGCONF SETGMVS SETGMVSD +
+        SETMADMN SETMIRRX SETMIBMM SETMIBMD  SETMSHOW SETMTRAC +
         SETTPSWD SETTCTLG SETTPROF SETTUDSN) PROFILE
 
   /* General Settings */
@@ -36,27 +38,36 @@
      &SETGSTAP = ''
   &SETGDISP = TRANS (&SETGDISP BROWSE,B EDIT,E VIEW,V *,*)
   &SETGCONF = TRANS (&SETGCONF YES,Y NO,N *,*)
+  &SETGMVS  = TRANS (&SETGMVS  YES,Y NO,N *,*)
+  &SETGMVSD = TRANS (&SETGMVSD YES,Y NO,N *,*)
 
   /* Management Settings */
   &SETMADMN = TRANS (&SETMADMN YES,Y NO,N *,*)
   &SETMIRRX = TRANS (&SETMIRRX YES,Y NO,N *,*)
+  &SETMIBMM = TRANS (&SETMIBMM YES,Y NO,N *,*)
+  &SETMIBMD = TRANS (&SETMIBMD YES,Y NO,N *,*)
   &SETMSHOW = TRANS (&SETMSHOW DISPLAY,D LOG,L BOTH,B NO,N *,*)
   &SETMTRAC = TRANS (&SETMTRAC LABELS,L PROGRAMS,P RESULTS,R NO,N *,*)
 
   .ZVARS = '(SETGFLTR SETGSTA  SETGSTAP SETGDISP SETGCONF +
-             SETMADMN SETMIRRX SETMSHOW SETMTRAC +
+             SETGMVS  SETGMVSD +
+             SETMADMN SETMIRRX SETMIBMM SETMIBMD SETMSHOW SETMTRAC +
              SETTPSWD SETTCTLG SETTPROF SETTUDSN)'
 
   .HELP   = #RACSET1
   .CURSOR = SETGFLTR
 )PROC
   /* General Settings */
-  &SETGCONF = TRANS (&SETGCONF Y,YES, N,NO *,*)
   &SETGDISP = TRANS (&SETGDISP B,BROWSE E,EDIT V,VIEW *,*)
+  &SETGCONF = TRANS (&SETGCONF Y,YES, N,NO *,*)
+  &SETGMVS  = TRANS (&SETGMVS  Y,YES, N,NO *,*)
+  &SETGMVSD = TRANS (&SETGMVSD Y,YES, N,NO *,*)
 
   /* Management Settings */
   &SETMADMN = TRANS (&SETMADMN Y,YES, N,NO *,*)
   &SETMIRRX = TRANS (&SETMIRRX Y,YES, N,NO *,*)
+  &SETMIBMM = TRANS (&SETMIBMM Y,YES, N,NO *,*)
+  &SETMIBMD = TRANS (&SETMIBMD Y,YES, N,NO *,*)
   &SETMSHOW = TRANS (&SETMSHOW D,DISPLAY L,LOG B,BOTH N,NO *,*)
   &SETMTRAC = TRANS (&SETMTRAC L,LABELS P,PROGRAMS R,RESULTS, N,NO *,*)
 
@@ -71,10 +82,14 @@
      &SETGSTA = 0
   VER (&SETGDISP,NB,LIST,BROWSE,EDIT,VIEW)
   VER (&SETGCONF,NB,LIST,NO,YES)
+  VER (&SETGMVS,NB,LIST,NO,YES)
+  VER (&SETGMVSD,NB,LIST,NO,YES)
 
   /* Management Settings */
   VER (&SETMADMN,NB,LIST,NO,YES)
   VER (&SETMIRRX,NB,LIST,NO,YES)
+  VER (&SETMIBMM,NB,LIST,NO,YES)
+  VER (&SETMIBMD,NB,LIST,NO,YES)
   IF (&SETMADMN = NO)
       &SETMIRRX = NO
   VER (&SETMSHOW,NB,LIST,DISPLAY,LOG,BOTH,NO)
@@ -84,8 +99,14 @@
   IF (&SETTCTLG NE ' ')
      VER (&SETTPROF,NB)
 
-  VPUT (SETGFLTR SETGSTA SETGSTAP SETGDISP SETGCONF +
-        SETMADMN SETMIRRX SETMSHOW SETMTRAC +
+  *REXX (SETTCTLG SETTPROF DSTTUDSN)
+        SETTCTLG = STRIP(SETTCTLG,,"'")
+        SETTPROF = STRIP(SETTPROF,,"'")
+        SETTUDSN = STRIP(SETTUDSN,,"'")
+  *ENDREXX
+
+  VPUT (SETGFLTR SETGSTA  SETGSTAP SETGDISP  SETGCONF SETGMVS SETGMVSD +
+        SETMADMN SETMIRRX SETMIBMM SETMIBMD  SETMSHOW SETMTRAC +
         SETTPSWD SETTCTLG SETTPROF SETTUDSN) PROFILE
 )END
 /*--------------------------------------------------------------------*/

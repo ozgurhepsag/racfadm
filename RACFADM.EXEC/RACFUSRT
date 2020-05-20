@@ -103,7 +103,7 @@ ADDD:                                                         /* @AJ */
   cmd = "DEL '"user"' ALIAS PURGE"                            /* @AG */
   call exccmd                                                 /* @AG */
 
-  SETTCTLG = Strip(SETTCTLG,b,"'")                            /* @AC */
+  SETTCTLG = Strip(SETTCTLG,,"'")                             /* @AC */
   cmd = "DEF ALIAS (NAME('"user"') RELATE('"SETTCTLG"'))"     /* @AK */
   call exccmd                                                 /* @AG */
   IF (cmd_rc > 0) then do                                     /* @AO */

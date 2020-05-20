@@ -8,6 +8,7 @@
   1) Panels
      - Member names
          $$DIR ...... Directory of all members and description
+         $DEFSETG ... Define site wide defaults for new users
          $??????? ... Data/informational ($CHANGES, $ISSUES, etc.)
          #??????? ... Tutorials
          RACF???? ... Menu, data entry and table panels

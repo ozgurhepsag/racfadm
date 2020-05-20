@@ -1,22 +1,26 @@
 *---------------------------------------------------------------------*
 *                           Default Settings                          *
 *---------------------------------------------------------------------*
-*  To set the site's default Settings (Option 0) for new users, edit  *
-*  this member.  The user's Settings are saved in their ISPF profile  *
-*  dataset in member RADMPROF.                                        *
+*  This member initializes new user's default Settings (Option 0).    *
+*  The user's Settings are saved to their ISPF profile dataset in     *
+*  member RADMPROF.                                                   *
 *---------------------------------------------------------------------*
-*  General Settings
+*  General
 *---------------------------------------------------------------------*
 SETGFLTR =                                  /* Default filter        */
-SETGSTA  = 100     /* Status interval (0-9999)                       */
-SETGSTAP =         /* Status percent  (0-99)                         */
-SETGDISP = V       /* Display files   (B=Browse, E=Edit, V=View)     */
-SETGCONF = Y       /* Confirm panel   (Y=Yes, N=No)                  */
+SETGSTA  = 100     /* Status interval    (0-9999)                    */
+SETGSTAP =         /* Status percent     (0-99)                      */
+SETGDISP = V       /* Display files      (B=Browse, E=Edit, V=View)  */
+SETGCONF = Y       /* Confirm panel      (Y=Yes, N=No)               */
+SETGMVS  = Y       /* Showmvs RACF Data  (Y=Yes, N=No)               */
+SETGMVSD = N       /* Showmvs LIBDEF DSN (Y=Yes, N=No                */
 *---------------------------------------------------------------------*
 *  Management
 *---------------------------------------------------------------------*
-SETMADMN = N       /* Administrator (Y=Yes, N=No)                    */
+SETMADMN = N       /* Administrator  (Y=Yes, N=No)                   */
 SETMIRRX = N       /* Admin RACF API (Y=Yes, N=No)                   */
+SETMIBMM = N       /* IBM RACF menu options 6, 7 and 8 (Y=Yes, N=No) */
+SETMIBMD = N       /* Define IBM RACF ALTLIB/LIBDEF datasets         */
 SETMSHOW = N       /* RACF commands (D=Display, L=Log, B=Both, N=No) */
 SETMTRAC = N       /* REXX trace (L=Labels, P=Pgms, R=Results, N=No) */
 *---------------------------------------------------------------------*
@@ -26,3 +30,14 @@ SETTPWSD =                                  /* Default password      */
 SETTCTLG =                                  /* User catalog          */
 SETTPROF =                                  /* ISPPROF dataset       */
 SETTUDSN =                                  /* User dataset          */
+*---------------------------------------------------------------------*
+*  LIBDEF Showmvs dataset (no quotes)
+*---------------------------------------------------------------------*
+SETDMVSL =                                  /* Showmvs Linklib dsn   */
+*---------------------------------------------------------------------*
+*  ALTLIB/LIBDEF IBM's RACF DSNs for menu options (no quotes)
+*---------------------------------------------------------------------*
+SETDIBMC = SYS1.HRFCLST                     /* IBM RACF Clist dsn    */
+SETDIBMM = SYS1.HRFMSG                      /* IBM RACF Message dsn  */
+SETDIBMP = SYS1.HRFPANL                     /* IBM RACF Panel dsn    */
+SETDIBMS = SYS1.HRFSKEL                     /* IBM RACF Skeleton dsn */

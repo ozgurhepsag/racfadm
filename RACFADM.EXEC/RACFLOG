@@ -3,7 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @AI  200514  TRIDJK   Support ISPLOG SYSOUT datasets - SDSF/(E)JES */
+/* @AJ  200519  TRIDJK   Support ISPLOG SYSOUT datasets - SDSF/(E)JES */
+/* @AI  200511  RACFA    Place most current records at top of file    */
 /* @AH  200506  RACFA    Display headers in a different color         */
 /* @AG  200504  RACFA    Make long msg more meaningful                */
 /* @AF  200504  RACFA    Added the capability to view ISPLOG file     */
@@ -23,9 +24,8 @@
 /* @A1  200220  RACFA    Added capability to browse/edit/view file    */
 /* @A0  200218  RACFA    Created REXX                                 */
 /*====================================================================*/
-PANEL01     = "RACFRPTS"   /* Display with colors          */ /* @AH */
+PANEL01     = "RACFRPTS"   /* Display with colors          */ /* @AG */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @A8 */
-LAST        = "LAST"       /* EDITMACR PARM for ISPLOG     */ /* @AI */
 parse source . . REXXPGM .                                    /* @AE */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @AE */
 
@@ -40,20 +40,10 @@ ADDRESS ISPEXEC                                               /* @A3 */
         interpret "Trace "SUBSTR(SETMTRAC,1,1)                /* @AA */
   end                                                         /* @AA */
   IF (member = "ISPLOG") THEN                                 /* @AF */
-     CALL ISPLOG_CHECK                                        /* @AI */
+     CALL ISPLOG_FILE                                         /* @AF */
   ELSE                                                        /* @AF */
      CALL LOG_FILE
-  CALL GOODBYE                                                /* @AI */
 
-ISPLOG_CHECK:                                                 /* @AI */
-  "VGET (ZLOGNAME)"                                           /* @AI */
-  If right(zlogname,2) = '.?' then       /* SYSOUT? */        /* @AI */
-    Call ISPLOG_SYSOUT                                        /* @AI */
-  else                                                        /* @AI */
-    Call ISPLOG_FILE                                          /* @AI */
-RETURN                                                        /* @AI */
-
-GOODBYE:
   If (SETMTRAC <> 'NO') then do                               /* @AA */
      Say "*"COPIES("-",70)"*"                                 /* @AA */
      Say "*"Center("End Program = "REXXPGM,70)"*"             /* @AA */
@@ -86,6 +76,43 @@ RETURN                                                        /* @AA */
 /*  Display the ISPLog file                                      @AF  */
 /*--------------------------------------------------------------------*/
 ISPLOG_FILE:                                                  /* @AF */
+  If right(zlogname,2) = '.?' then        /* SYSOUT? */       /* @AJ */
+     Call ISPLOG_SDSF                                         /* @AJ */
+  else                                                        /* @AJ */
+     Call ISPLOG_ISPF                                         /* @AJ */
+                                                              /* @AI */
+  K = 0                                                       /* @AI */
+  DO J = RECIN.0 To 1 by -1                                   /* @AI */
+     K = K + 1                                                /* @AI */
+     RECOUT.K = RECIN.J                                       /* @AI */
+  END                                                         /* @AI */
+  RECOUT.0 = K                                                /* @AI */
+  DROP RECIN.
+
+  ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",                  /* @AI */
+              "LRECL(125) BLKSIZE(0) RECFM(V B A)",           /* @AI */
+              "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @AI */
+  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM RECOUT. FINIS"   /* @AI */
+  DROP RECOUT.                                                /* @AI */
+                                                              /* @AI */
+  "LMINIT DATAID(DATAID) DDNAME("DDNAME")"                    /* @AI */
+  SELECT                                                      /* @AI */
+     WHEN (SETGDISP = "VIEW") THEN                            /* @AI */
+          "VIEW DATAID("DATAID") MACRO("EDITMACR")",          /* @AI */
+               "PANEL("PANEL01")"                             /* @AH */
+     WHEN (SETGDISP = "EDIT") THEN                            /* @AI */
+          "EDIT DATAID("DATAID") MACRO("EDITMACR")",          /* @AI */
+               "PANEL("PANEL01")"                             /* @AH */
+     OTHERWISE                                                /* @AI */
+          "BROWSE DATAID("DATAID")"                           /* @AI */
+  END                                                         /* @AI */
+  ADDRESS TSO "FREE FI("DDNAME")"                             /* @AI */
+                                                              /* @AF */
+RETURN                                                        /* @AF */
+/*--------------------------------------------------------------------*/
+/*  Obtain the ISPF log file using ISPF                          @AJ  */
+/*--------------------------------------------------------------------*/
+ISPLOG_ISPF:                                                  /* @AJ */
   "VGET (ZLOGNAME)"                                           /* @AF */
   IF (ZLOGNAME = "") THEN DO                                  /* @AF */
      RACFSMSG = ""                                            /* @AF */
@@ -111,130 +138,62 @@ ISPLOG_FILE:                                                  /* @AF */
      'setmsg msg(RACF011)'                                    /* @AF */
      return                                                   /* @AF */
   END                                                         /* @AF */
-                                                              /* @XX */
-  ADDRESS TSO "EXECIO * DISKR "DDNAME" (STEM RECIN. FINIS"    /* @XX */
-  ADDRESS TSO "FREE FI("DDNAME")"                             /* @XX */
-                                                              /* @XX */
-  K = 0                                                       /* @XX */
-  DO J = RECIN.0 To 1 by -1                                   /* @XX */
-     K = K + 1                                                /* @XX */
-     RECOUT.K = RECIN.J                                       /* @XX */
-  END                                                         /* @XX */
-  RECOUT.0 = K                                                /* @XX */
-  DROP RECIN.
-                                                              /* @XX */
-  ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",                  /* @XX */
-              "LRECL(125) BLKSIZE(0) RECFM(V B A)",           /* @XX */
-              "UNIT(VIO) SPACE(1 5) CYLINDERS"                /* @XX */
-  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM RECOUT. FINIS"   /* @XX */
-  DROP RECOUT.                                                /* @XX */
-                                                              /* @XX */
-  "LMINIT DATAID(DATAID) DDNAME("DDNAME")"                    /* @XX */
-  SELECT                                                      /* @XX */
-     WHEN (SETGDISP = "VIEW") THEN                            /* @XX */
-          "VIEW DATAID("DATAID") MACRO("EDITMACR")",          /* @XX */
-               "PANEL("PANEL01")"                             /* @AH */
-     WHEN (SETGDISP = "EDIT") THEN                            /* @XX */
-          "EDIT DATAID("DATAID") MACRO("EDITMACR")",          /* @XX */
-               "PANEL("PANEL01")"                             /* @AH */
-     OTHERWISE                                                /* @XX */
-          "BROWSE DATAID("DATAID")"                           /* @XX */
-  END                                                         /* @XX */
-  'LMFREE DATAID('DATAID')'                                   /* @AI */
-  ADDRESS TSO "FREE FI("DDNAME")"                             /* @XX */
-                                                              /* @AF */
-RETURN                                                        /* @AF */
-
-ISPLOG_SYSOUT:                                                /* @AI */
-  ADDRESS ISPEXEC
-  racflmsg = "Retrieving data - Please be patient"
-  "control display lock"
-  "display msg(RACF011)"
-
-  Call DO_ISFCALLS
-
-  Address TSO
-  'alloc f('DDNAME')  new reuse unit(sysallda)',
-         'space(20,50) cylinders',
-         'recfm(V B A) lrecl(125) blksize(0)'
-  'execio * diskw 'DDNAME' (stem racfadm. finis'
-  drop racfadm.
-
-  Address ISPExec
-  /*---------------------*/
-  /*  Browse the report  */
-  /*---------------------*/
-  'lminit dataid(id) ddname('DDNAME')'
-  if (rc ^= 0) then do
-     racfsmsg = 'Allocation error'
-     racflmsg = 'LMINIT failed for 'DDNAME
-     'setmsg msg(racf011)'
-     RETURN
-  end
-  SELECT
-     WHEN (SETGDISP = "VIEW") THEN
-          "VIEW DATAID("ID") MACRO("EDITMACR") PARM("LAST")"
-     WHEN (SETGDISP = "EDIT") THEN
-          "EDIT DATAID("ID") MACRO("EDITMACR") PARM("LAST")"
-     OTHERWISE
-          "BROWSE DATAID("ID")"
-  END
-  'lmfree dataid('id')'
-  Address TSO 'Free fi('DDNAME')'
-
+                                                              /* @AI */
+  ADDRESS TSO "EXECIO * DISKR "DDNAME" (STEM RECIN. FINIS"    /* @AI */
+  ADDRESS TSO "FREE FI("DDNAME")"                             /* @AI */
+                                                              /* @AI */
 RETURN
 /*--------------------------------------------------------------------*/
-/*  Check for ISPLOG SYSOUT                                           */
+/*  Check for ISPLOG SYSOUT                                      @AJ  */
 /*--------------------------------------------------------------------*/
-DO_ISFCALLS:                                                  /* @AI */
-   rc=isfcalls('ON')
-   /*-----------------------------*/
-   /*  Access the STATUS display  */
-   /*-----------------------------*/
-   Address SDSF "ISFEXEC ST "userid()
-   /*-------------------*/
-   /*  Find TSO Userid  */
-   /*-------------------*/
-   do ix=1 to JNAME.0
-      if JNAME.ix = userid() & ,
-        QUEUE.ix = "EXECUTION" & ,
-        ACTSYS.ix <> "" then
-      do
-         /*-----------------------------------------*/
-         /*  Issue the ? (JDS) action against the   */
-         /*  row to list the data sets in the job.  */
-         /*-----------------------------------------*/
-         Address SDSF "ISFACT ST TOKEN('"TOKEN.ix"') PARM(NP ?)" ,
-           "( prefix jds_"
-         /*---------------------------------------------*/
-         /*  Find the ISPLOG data sets and read them    */
-         /*  using ISFBROWSE.  Use isflinelim to limit  */
-         /*  the number of REXX variables returned.     */
-         /*---------------------------------------------*/
-         isflinelim=5000
-         ky = 1
-         racfadm. = ''
-         do jx=1 to jds_DDNAME.0
-            if left(jds_DDNAME.jx,6) = "ISPLOG" then
-            do
-               /*---------------------------------------*/
-               /*  Read the records from the data set.  */
-               /*---------------------------------------*/
-               do until isfnextlinetoken=''
-                  Address SDSF "ISFBROWSE ST TOKEN('"jds_TOKEN.jx"')"
-                  do kx=1 to isfline.0
-                     racfadm.ky = isfline.kx
-                     ky = ky + 1
-                     end
-                  /*-----------------------------*/
-                  /*  Set start for next browse  */
-                  /*-----------------------------*/
-                  isfstartlinetoken = isfnextlinetoken
-               end
-            end
-         end
-      end
-   end
-   rc=isfcalls('OFF')
-
-RETURN
+DO_ISFCALLS:                                                  /* @AJ */
+  rc=isfcalls('ON')                                           /* @AJ */
+  /*-----------------------------*/                           /* @AJ */
+  /*  Access the STATUS display  */                           /* @AJ */
+  /*-----------------------------*/                           /* @AJ */
+  Address SDSF "ISFEXEC ST "userid()                          /* @AJ */
+  /*-------------------*/                                     /* @AJ */
+  /*  Find TSO Userid  */                                     /* @AJ */
+  /*-------------------*/                                     /* @AJ */
+  do ix=1 to JNAME.0                                          /* @AJ */
+     if JNAME.ix = userid() & ,                               /* @AJ */
+        QUEUE.ix = "EXECUTION" & ,                            /* @AJ */
+        ACTSYS.ix <> "" then do                               /* @AJ */
+        /*-----------------------------------------*/         /* @AJ */
+        /*  Issue the ? (JDS) action against the   */         /* @AJ */
+        /*  row to list the data sets in the job.  */         /* @AJ */
+        /*-----------------------------------------*/         /* @AJ */
+        Address SDSF "ISFACT ST TOKEN('"TOKEN.ix"')",         /* @AJ */
+                     "PARM(NP ?) ( prefix jds_"               /* @AJ */
+        /*---------------------------------------------*/     /* @AJ */
+        /*  Find the ISPLOG data sets and read them    */     /* @AJ */
+        /*  using ISFBROWSE.  Use isflinelim to limit  */     /* @AJ */
+        /*  the number of REXX variables returned.     */     /* @AJ */
+        /*---------------------------------------------*/     /* @AJ */
+        isflinelim=5000                                       /* @AJ */
+        ky = 1                                                /* @AJ */
+        racfadm. = ''                                         /* @AJ */
+        do jx=1 to jds_DDNAME.0                               /* @AJ */
+           if left(jds_DDNAME.jx,6) = "ISPLOG" then do        /* @AJ */
+              /*---------------------------------------*/     /* @AJ */
+              /*  Read the records from the data set.  */     /* @AJ */
+              /*---------------------------------------*/     /* @AJ */
+              do until isfnextlinetoken=''                    /* @AJ */
+                 Address SDSF "ISFBROWSE ST",                 /* @AJ */
+                              "TOKEN('"jds_TOKEN.jx"')"       /* @AJ */
+                 do kx=1 to isfline.0                         /* @AJ */
+                    recin.ky = isfline.kx                     /* @AJ */
+                    ky = ky + 1                               /* @AJ */
+                 end                                          /* @AJ */
+                 recin.0 = ky                                 /* @AJ */
+                 /*-----------------------------*/            /* @AJ */
+                 /*  Set start for next browse  */            /* @AJ */
+                 /*-----------------------------*/            /* @AJ */
+                 isfstartlinetoken = isfnextlinetoken         /* @AJ */
+              end                                             /* @AJ */
+           end                                                /* @AJ */
+        end                                                   /* @AJ */
+     end                                                      /* @AJ */
+  end                                                         /* @AJ */
+  rc=isfcalls('OFF')                                          /* @AJ */
+RETURN                                                        /* @AJ */

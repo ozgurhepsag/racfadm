@@ -1,0 +1,48 @@
+)ATTR DEFAULT(%+_)
+   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON)  JUST(LEFT)   HILITE(USCORE)
+   {  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(BLUE)
+   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(GREEN)
+   !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(TURQ)
+)BODY EXPAND(\\)
++\-\(%RACFADM - Settings+)\-\
+%Command ===>_ZCMD                                                             +
+%
+{Specify the dataset to!LIBDEF{to invoke!Showmvs
++
+%Dataset
++  Linklib ...._SETDMVSL                                    +
++
+%Note
+{  - Leave%blank,{if modules exits in LINKLIST, STEPLIB or ISPLLIB,
+{    else, must supply dataset name containing executable
+{  - Single quotes are!not{required
+)INIT
+  VGET (SETDMVSL) PROFILE
+  .HELP   = #RACSET1
+  .CURSOR = SETDMVSL
+)PROC
+  &RACFSMSG = &Z
+  &RACFLMSG = &Z
+
+  VER (&SETDMVSL,DSNAME)
+
+  &BADDSNL = N
+  *REXX (SETDMVSL BADDSNL)
+     SETDMVSL = STRIP(SETDMVSL,,"'")
+     IF (SETDMVSL <> "") THEN
+        IF (SYSDSN("'"SETDMVSL"'") <> "OK") THEN DO
+           RACFSMSG = 'DSN does not exist'
+           RACFLMSG = 'The dataset does not reside in the catalog +
+                       or on a disk pack, please investigate.'
+           BADDSNL = "Y"
+           return
+        END
+  *ENDREXX
+
+  IF (&BADDSNL = Y)
+     .CURSOR = SETDMVSL
+     .MSG    = RACF011
+
+  IF (.MSG = &Z)
+     VPUT (SETDMVSL) PROFILE
+)END

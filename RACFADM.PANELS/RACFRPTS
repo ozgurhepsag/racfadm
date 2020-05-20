@@ -75,19 +75,23 @@
        Select
           When substr(zdata,i+8,5)  = '*****' then     /* Top/Bottom */
                nop
-          When substr(zdata,i+8,10) = 'RACF DATA ' then /* GrpTree   */
+          When substr(zdata,i+8,10) = 'RACF DATA ' then /* GrpTre 1st*/
                zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
-          When substr(zdata,i+8,5) = '-----' then    /* GrpTree Rpt  */
+          When substr(zdata,i+8,5) = '-----' then    /* GrpTree - 4rd*/
                zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
-          When substr(zdata,i+8,7) = 'R A C F' then  /* GrpTree Rpt  */
+          When substr(zdata,i+8,7) = 'R A C F' then  /* GrpTree - 2nd*/
                zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
-          When substr(zdata,i+8,5) = 'LEVEL' then    /* GrpTree Rpt  */
+          When substr(zdata,i+31,5) = 'DATE:' then   /* GrpTree - 1st*/
+               zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
+          When substr(zdata,i+8,5) = 'LEVEL' then    /* GrpTree - 3rd*/
                zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
           When substr(zdata,i+8,5) = '*    ' then    /* Chgs/Iss/etc */
                zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
           When substr(zdata,i+8,5) = '*----' then    /* Chgs/Iss/etc */
                zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
           When substr(zdata,i+8,11) = '1      Time' then
+               zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
+          When substr(zdata,i+8,11) = 'og ***     ' then
                zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
           Otherwise do
              if vtype = 'TREE' then
