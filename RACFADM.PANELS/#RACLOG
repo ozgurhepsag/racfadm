@@ -3,7 +3,7 @@
    !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
-%Tutorial+\-\(%RACFADM - ISPLOG+)\-\%Tutorial
+%Tutorial+\-\(%RACFADM - ISPF Log File+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
 + %ISPLog+will display the ISPF log file in reverse chronological order.
@@ -13,7 +13,7 @@
 +    - From the Action bar, click on!Log/List
 +    - From the drop down menu, select!1. Log Data set defaults
 +    - Ensure!Primary and Secondary pages+contain%10+(default)
-+    - Once space is defined, terminate and re-invoke ISPF
++    - Once defined, terminate and re-invoke ISPF
 +
 +  If the!ISPLOG+is allocated to a dataset!(prefix.SPFLOGn.LIST),
 +  then the current log file will read.

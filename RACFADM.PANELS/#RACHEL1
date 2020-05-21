@@ -5,7 +5,7 @@
    !  TYPE(TEXT)   INTENS(LOW)  SKIP(ON) COLOR(TURQ)
    @  TYPE(TEXT)   INTENS(LOW)  SKIP(ON) COLOR(RED)
 )BODY EXPAND(\\)
-%Tutorial+\-\(%RACFADM - RACF Commands - 1 of 2+)\-\%Tutorial
+%Tutorial+\-\(%RACFADM - RACF Help Commands - 1 of 2+)\-\%Tutorial
 %Command ===>_ZCMD
 +
 %Help+displays tutorials on several commonly used RACF commands.

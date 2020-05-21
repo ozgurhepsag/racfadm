@@ -2,10 +2,23 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  21 May 2020 - V25R1
+     - Settings (Option 0)
+       -- Cosmetic changes to panel
+     - Tutorials (Option T)
+       -- Updated '0 Settings'
+       -- Added   '7 RACF data (Showmvs)'
+       -- Added   '10 IBM RACF options'
+       -- Updated '15 ISPF log file'
+       -- Updated '19 Installation notes'
+       -- Fixed point-n-shoot
+     - Other Items
+       -- Updated member $DIR in panel dataset
+
   20 May 2020 - V25R0
      - Main Menu
        -- Cosmetic changes at bottom of panel
-     - Tutorials
+     - Tutorials (Option T)
        -- Added '13 ISPF log file'
        -- Re-arranged a few entries, to be in the order they are
           displayed on the main menu
@@ -22,15 +35,15 @@
           o Added editing $DEFSETG
 
   20 May 2020 - V24R9
-     - Commands (Option C)
-       -- Allow logging of RACF commands to the ISPF log file
-     - ISPLog (Option L)
-       -- Support ISPLOG SYSOUT datasets (SDSF/EJES)
      - Settings (Option 0)
        -- Added field 'Define DSN' to 'Showmvs data', allows defining
           the executable dataset containing SHOWMVS to LIBDEF, this
           can also be defined site wide for new users in the member
           $DEFSETG in the panel dataset
+     - Commands (Option C)
+       -- Allow logging of RACF commands to the ISPF log file
+     - ISPLog (Option L)
+       -- Support ISPLOG SYSOUT datasets (SDSF/EJES)
      - Other Items
        -- Changed REXX program RACFADM
           * To use subroutine SETUP_RFIND1, instead of SETUP_RFIND2,
@@ -39,7 +52,7 @@
           * Update RACFADM to use the user command table before the
             site command table
        -- Updated REXX program RACFDB
-          * Standardized to make ISPEXEC the base/defualt environment
+          * Standardized to make ISPEXEC the base/default environment
             like all the other programs
 
   17 May 2020 - V24R8
@@ -47,19 +60,19 @@
        -- Lower bottom right hand screen, containing system/user info,
           change the 'User:' field to 'Admn:' when the Settings (Opt 0)
           'Administrator = Y'
-     - Settings
+     - Settings (Option 0)
        -- Added 'General' settings 'Showmvs data (Y/N)', will display
           the below menu entry, Yes is the default
             7  RACFData  RACF data (Showmvs)
           This can also be set site wide for new users in $DEFSETG
           member in the panel dataset, updated tutorials
-     - User
+     - User (Option 1)
        -- Prevent the user from 'R'emoving their own userid
-     - RACFdb
+     - RACFdb (Option 8)
        -- Fixed displaying error messages
        -- Standardized code, made default address ISPEXEC, etc.
-     - ISPLog
-       -- When paging right, display column header as Turquios,
+     - ISPLog (Option L)
+       -- When paging right, display column header as Turquois,
           prior was green
 
   14 May 2020 - V24R7
@@ -1068,7 +1081,7 @@
             userid's name, reduce memory usage
      - General Resources (Option 4)
        -- Fixed issuing a command on panel RACFCLS5 and changing the
-          sorted column color to green, when it should be turquois
+          sorted column color to green, when it should be Turquois
      - Other Items
        -- REXX programs
           * Programs viewing/editing a file
