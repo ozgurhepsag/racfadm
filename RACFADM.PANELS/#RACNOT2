@@ -16,14 +16,14 @@
 !  7)+To use the line command%Profile,+the following will need to be
 +     accomplished:
 !       -+Turn on the%Settings+(Option 0)
-+          !Administrator ..... Y
 +          !Admin RACF API .... Y
-!       -+Obtain authorization to following resources, by executing
+!       -+Obtain authorization to the following resources, by executing
 +        !RACF RDEFINE+and!PERMIT+commands:
 +          @RDEFINE FACILITY (IRR.RADMIN.*) OWNER(SYS1) UACC(READ)
 +          @        AUDIT(FAILURES(READ)) DATA('RACF ADMINISTRATION API')
 +          @        WARNING
 +          @PERMIT IRR.RADMIN.* CLASS(FACILITY) ID(group) GEN
++
 +
 +
 + \ \ (press%ENTER+to continue) \ \

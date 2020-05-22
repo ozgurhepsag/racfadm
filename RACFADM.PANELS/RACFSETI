@@ -16,7 +16,7 @@
 +  Clist ......_SETDIBMC                                    +
 +
 %Note
-{  - Leave%blank,{if modules exits in allocated TSO/ISPF datasets, else,
+{  - Leave%blank,{if modules exist in allocated TSO/ISPF datasets, else,
 {    must supply all four datasets (messages, panels, skeletons and CLIST)
 {  - Single quotes are!not{required
 )INIT

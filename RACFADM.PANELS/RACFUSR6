@@ -156,9 +156,11 @@
   *EndRexx
 
   IF (&SETMIRRX = 'NO')
-    &RACFSMSG = 'LISTUSER...'
+     &RACFSMSG = 'LISTUSER...'
+     &RACFLMSG = 'RACF command LISTUSER used to extract data'
   ELSE
-    &RACFSMSG = 'RACF API...'
+     &RACFSMSG = 'RACF API...'
+     &RACFLMSG = 'RACF API IRRXUTIL used to extract data'
   .MSG = RACF011
 )PROC
   *REXX (PSWDFLD, PSWD)           /* Get password */

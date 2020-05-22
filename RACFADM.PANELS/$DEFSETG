@@ -1,9 +1,9 @@
 *---------------------------------------------------------------------*
-*                           Default Settings                          *
+*                           Default Settings
 *---------------------------------------------------------------------*
-*  This member initializes new user's default Settings (Option 0).    *
-*  The user's Settings are saved to their ISPF profile dataset in     *
-*  member RADMPROF.                                                   *
+*  This member initializes new user's default Settings (Option 0).
+*  The user's Settings are saved to their ISPF profile dataset in
+*  member RADMPROF.
 *---------------------------------------------------------------------*
 *  General
 *---------------------------------------------------------------------*

@@ -90,8 +90,6 @@
   VER (&SETMIRRX,NB,LIST,NO,YES)
   VER (&SETMIBMM,NB,LIST,NO,YES)
   VER (&SETMIBMD,NB,LIST,NO,YES)
-  IF (&SETMADMN = NO)
-      &SETMIRRX = NO
   VER (&SETMSHOW,NB,LIST,DISPLAY,LOG,BOTH,NO)
   VER (&SETMTRAC,NB,LIST,LABELS,PROGRAMS,RESULTS,NO)
 
@@ -118,10 +116,11 @@
 /*                                                                    */
 /*  2) Naming standards for variables:                                */
 /*     - Syntax                                                       */
-/*         SET#@@@@                                                   */
+/*         SET#????                                                   */
 /*     - Where                                                        */
 /*         SET  ... Settings (option 0)                               */
-/*         #    ... G=General, M=Management and T=Adding TSO Userid   */
-/*         @@@@ ... Field name                                        */
+/*         #    ... G=General, M=Management, T=Adding TSO Userid      */
+/*                  and D=Dataset                                     */
+/*         ???? ... Field name (any characters)                       */
 /*                                                                    */
 /*--------------------------------------------------------------------*/

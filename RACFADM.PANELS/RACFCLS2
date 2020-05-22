@@ -35,10 +35,17 @@ _Z+ Z                                      Z                               @z
         &SROW = .CSRROW
         IF (&SROW ^= 0)
            &OPTA = S
+
   IF (&SETMADMN = YES)
-     VER (&OPTA,LIST,S,L,P,C,A,R,M)
+     IF (&SETMIRRX = YES)
+        VER (&OPTA,LIST,S,L,P,C,A,R,M)
+     ELSE
+        VER (&OPTA,LIST,S,L,C,A,R,M)
   ELSE
-     VER (&OPTA,LIST,S,L)
+     IF (&SETMIRRX = YES)
+        VER (&OPTA,LIST,S,L,P)
+     ELSE
+        VER (&OPTA,LIST,S,L)
 )PNTS
   FIELD(ZPS00001) VAR(ZCMD) VAL('SORT PROFILE')
   FIELD(ZPS00002) VAR(ZCMD) VAL('SORT DESC')

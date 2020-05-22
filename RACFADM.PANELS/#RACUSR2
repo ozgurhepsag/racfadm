@@ -17,7 +17,7 @@
 %  S  !Show         +List of groups user is connected to
 %  SE !Search       +Analyze user access to general resource profiles
 %  L  !List         +Issue LISTUSER command
-%  P  !Profile      +List user profile using IRRXUTIL (admin)
+%  P  !Profile      +List user profile using IRRXUTIL (admin RACF API)
 %  D  !Dsn          +Display datasets
 %  C  !Change       +Change user attributes (admin)
 %  A  !Add          +Define a new user (admin)

@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CM  200520  RACFA    Display line cmd 'P'rofile, when 'Admin=N'   */
 /* @CL  200506  RACFA    Drop array immediately when done using       */
 /* @CK  200504  TRIDJK   Adding, place in order, prior was at bottom  */
 /* @CJ  200502  RACFA    Re-worked displaying tables, use DO FOREVER  */
@@ -137,8 +138,12 @@ ADDRESS ISPEXEC                                               /* @AO */
         SELCMDS = "ÝS¨Show,ÝL¨List,"||,                       /* @BS */
                   "ÝC¨Change,ÝA¨Add,"||,                      /* @BS */
                   "ÝR¨Remove"                                 /* @BS */
-  else
-      SELCMDS = "ÝS¨Show,ÝL¨list"                             /* @AJ */
+  else do                                                     /* @CM */
+     If (SETMIRRX = "YES") then                               /* @CM */
+        SELCMDS = "ÝS¨Show,ÝL¨list,ÝP¨Profile"                /* @CM */
+     else                                                     /* @CM */
+        SELCMDS = "ÝS¨Show,ÝL¨list"                           /* @AJ */
+  end                                                         /* @CM */
   rlv    = SYSVAR('SYSLRACF')
   called = SYSVAR('SYSNEST')
   If (called = 'YES') then "CONTROL NONDISPL ENTER"

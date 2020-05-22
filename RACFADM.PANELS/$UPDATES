@@ -2,6 +2,28 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  22 May 2020 - V25R2
+     - Settings (Option 0)
+       -- Corrected spelling/grammar in panels to define ALTLIB/LIBDEF
+          datasets for 'Showmvs data' and 'IBM RACF opts'
+       -- Allow someone to turn on/use 'Admin RACF API = Y' without
+          having to turn on 'Administration'
+          * Updated tutorials
+     - User (Option 1)
+       -- When 'A'dding or 'C'hanging a userid, display short/long
+          message informing user what method was used:
+            LISTUSR command or RACF API (IRXXUTIL)
+     - RACFData (Option 7)
+       -- Changed allocation of temporary file use to use UNIT(VIO),
+          was SYSVIO
+     - Standards (Option S)
+       -- Minor updates to $STNDARD member
+     - User, Group, Dataset and General Resources (Opt 1/2/3/4)
+       -- If Settings (opt 0) 'Admin RACF API = N', then do not allow
+          user to type in line command 'P'rofile
+     - Other Items
+       -- Minor changes to member $DEFSETG located in panel dataset
+
   21 May 2020 - V25R1
      - Settings (Option 0)
        -- Cosmetic changes to panel

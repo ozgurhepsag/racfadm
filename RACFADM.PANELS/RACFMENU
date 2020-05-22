@@ -7,7 +7,7 @@
    {  TYPE(OUTPUT)  PAS(ON)      CAPS(OFF)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V25R1+)\-\
++\-\(%RACFADM - RACF Administration - V25R2+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -62,8 +62,6 @@
       &SETMIBMM = 'NO'       /* RACF Menu opts 6/7/8       */
   IF (&SETMIBMD NE YES, NO)
       &SETMIBMD = 'NO'       /* RACF LIBEDEF/ALTLIB DSNs   */
-  IF (&SETMADMN = 'NO')      /* Must have Admin authority  */
-      &SETMIRRX = 'NO'       /* RACF API (IRRXUTIL) = NO   */
   IF (&SETMSHOW NE DISPLAY, LOG, BOTH, NO)
       &SETMSHOW = 'NO'       /* RACF commands       = NO   */
 
@@ -283,11 +281,12 @@
 /*     )INIT section of this panel and the naming standards for       */
 /*     the these variables are:                                       */
 /*     - Syntax                                                       */
-/*         SET#@@@@                                                   */
+/*         SET#????                                                   */
 /*     - Where                                                        */
 /*         SET  ... Settings (option 0)                               */
-/*         #    ... G=General, M=Management and T=Adding TSO Userid   */
-/*         @@@@ ... Field name                                        */
+/*         #    ... G=General, M=Management, T=Adding TSO Userid      */
+/*                  and D=Dataset                                     */
+/*         ???? ... Field name (any characters)                       */
 /*     - The variables contain the full word, no abbreviations, in    */
 /*       hopes of making it easier to understand/maintain code,       */
 /*       for example: YES, instead of Y                               */

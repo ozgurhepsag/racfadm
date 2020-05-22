@@ -4,7 +4,7 @@
    @  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(RED)
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
-%Tutorial+\-\(%RACFADM - IBM RACF options+)\-\%Tutorial
+%Tutorial+\-\(%RACFADM - IBM RACF Options+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
 +  To display and access the below IBM RACF options from the main menu:

@@ -11,6 +11,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @EH  200520  RACFA    Display line cmd 'P'rofile, when 'Admin=N'   */
 /* @EG  200517  LBD      Prevent user from deleting their own userid  */
 /* @EF  200504  TRIDJK   Adding, place in order, prior was at bottom  */
 /* @EE  200502  LBD      Re-worked displaying tables, use DO FOREVER  */
@@ -226,9 +227,16 @@ ADDRESS ISPEXEC                                               /* @BC */
      end                                                      /* @D7 */
   end
   else do
-      SELCMD2A = "ÝS¨Show,ÝSE¨Search,ÝL¨list,ÝD¨Dsn"          /* @DI */
-      SELCMD2B = ""                                           /* @DI */
-      SELCMDS3 = "ÝS¨Show,ÝL¨list"                            /* @B8 */
+     IF (SETMIRRX = "YES") then do                            /* @EH */
+        SELCMD2A = "ÝS¨Show,ÝSE¨Search,ÝL¨list,"||,           /* @EH */
+                   "ÝP¨Profile,ÝD¨Dsn"                        /* @EH */
+        SELCMDS3 = "ÝS¨Show,ÝL¨list,ÝP¨Profile"               /* @EH */
+     end
+     else do                                                  /* @EH */
+        SELCMD2A = "ÝS¨Show,ÝSE¨Search,ÝL¨list,ÝD¨Dsn"        /* @DI */
+        SELCMDS3 = "ÝS¨Show,ÝL¨list"                          /* @B8 */
+     end                                                      /* @EH */
+     SELCMD2B = ""                                            /* @DI */
   end
   rlv       = SYSVAR('SYSLRACF')
   called    = SYSVAR('SYSNEST')

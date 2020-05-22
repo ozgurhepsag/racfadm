@@ -12,7 +12,7 @@
          $??????? ... Data/informational ($CHANGES, $ISSUES, etc.)
          #??????? ... Tutorials
          RACF???? ... Menu, data entry and table panels
-       Where ? can be anything
+       Where ? can be any characters
      - Code
        -- At the bottom of the panel are comments documenting
           items of interest
@@ -24,11 +24,15 @@
        -- Alphabetic entries (A-Z) are used to assist in maintaining
           or documenting RACFADM
        -- The RACFMENU panel is a primary option menu so one can use
-          the jump function to go directly to any RACFMENU option
+          the jump function (=?) to go directly to any RACFMENU option
+          * For example, if one is accessing User (option 1) to
+            display userids, and would like to jump directly to
+            Dataset (Option 3) without having to press F3 (END),
+            just type in =3 on the primary command line
        -- All entries are point-n-shoot fields
      - Tables
        -- Panels displaying tables
-          * Primary commands SORT, LOCATE, ONLY and RESET are
+          * Primary commands FIND, SORT, LOCATE, ONLY and RESET are
             available and operate in the same manner
             o When possible the RESET command will allow changing
               the filter criteria, by passing it a text string as
@@ -47,6 +51,7 @@
      - Member names
          $$DIR ...... Directory of all members and description
          RACF???? ... REXX programs, where ???? can be anything
+       Where ? can be any characters
      - Code
        -- Changes are documented by commenting/using a flag character
           * '/* @?? */' in columns 62-71
@@ -81,5 +86,6 @@
             SET#????
        -- Where
             SET  ... Settings (Option 0)
-            #    ... G=General, M=Management and T=Adding TSO Userid
-            ???? ... Field name
+            #    ... G=General, M=Management, T=Adding TSO Userid and
+                     D=Dataset
+            ???? ... Field name, any characters

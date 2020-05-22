@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A6  200522  RACFA    Added DROP REC.                              */
 /* @A5  200519  RACFA    Validate SHOWMVS DSN exit/valid              */
 /* @A4  200512  RACFA    Validate IBM RACF DSNs exist/valid           */
 /* @A3  200512  RACFA    Moved chking/defining var W3 out of SELECT   */
@@ -133,7 +134,7 @@ ADDRESS ISPEXEC
   IF (SETDIBMM = "") & (SETDIBMP = ""),                       /* @A4 */
    & (SETDIBMS = "") & (SETDIBMC = "") THEN                   /* @A4 */
      NOP                                                      /* @A4 */
-  ELSE                                                        /* @A4 */
+  ELSE DO                                                     /* @A4 */
      IF (SETDIBMM <> "") & (SETDIBMP <> ""),                  /* @A4 */
       & (SETDIBMS <> "") & (SETDIBMC <> "") THEN              /* @A4 */
          NOP                                                  /* @A4 */
@@ -149,4 +150,6 @@ ADDRESS ISPEXEC
                     "dataset and re-invoke RACFADM."          /* @A4 */
          "SETMSG MSG(RACF011)"                                /* @A4 */
      END                                                      /* @A4 */
+  END                                                         /* @A4 */
+  DROP REC.                                                   /* @XX */
 RETURN

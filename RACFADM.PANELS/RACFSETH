@@ -13,7 +13,7 @@
 +  Linklib ...._SETDMVSL                                    +
 +
 %Note
-{  - Leave%blank,{if modules exits in LINKLIST, STEPLIB or ISPLLIB,
+{  - Leave%blank,{if modules exist in LINKLIST, STEPLIB or ISPLLIB,
 {    else, must supply dataset name containing executable
 {  - Single quotes are!not{required
 )INIT

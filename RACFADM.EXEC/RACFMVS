@@ -30,7 +30,7 @@ ADDRESS ISPEXEC
      "LIBDEF ISPLLIB DATASET ID('"SETDMVSL"') STACK"          /* @A1 */
   END                                                         /* @A1 */
 
-  ADDRESS TSO "ALLOC DD(SHOWMVS) UNIT(SYSVIO) NEW",
+  ADDRESS TSO "ALLOC DD(SHOWMVS) UNIT(VIO) NEW",
               "SPACE(10 10) CYLINDERS"
   ADDRESS LINKMVS "SHOWMVS"
   LASTRC = RC

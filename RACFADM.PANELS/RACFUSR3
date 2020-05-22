@@ -36,15 +36,23 @@ _Z+ Z         Z
       &ATTR = 'NONE'
 )PROC
   &SROW = &Z
+
   IF (&ZCMD = &Z)
      IF (&ZTDSELS = 0)
         &SROW = .CSRROW
         IF (&SROW ^= 0)
            &OPTB = S
   IF (&SETMADMN = YES)
-     VER (&OPTB,LIST,S,L,P,C,A,R)
+     IF (&SETMIRRX = YES)
+        VER (&OPTB,LIST,S,L,P,C,A,R)
+     ELSE
+        VER (&OPTB,LIST,S,L,C,A,R)
   ELSE
-     VER (&OPTB,LIST,S,L)
+     IF (&SETMIRRX = YES)
+        VER (&OPTB,LIST,S,L,P)
+     ELSE
+        VER (&OPTB,LIST,S,L)
+
   IF (&ATTR = 'NONE')
       &ATTR = ' '
 )PNTS
