@@ -2,6 +2,16 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  22 May 2020 - V25R3
+     - Enqueues (Option E)
+       -- If no ALTLIB/LIBDEF datasets, display enqueues on RACF
+          databases (primary/secondary), prior displayed error message
+     - ISPLog (Option L)
+       -- Fixed displaying message when user does not have ISPF logging
+          turned on, prior was abending
+     - Other Items
+       -- Fixed RFIND and TBCLOSE error when using $STUB
+
   22 May 2020 - V25R2
      - Settings (Option 0)
        -- Corrected spelling/grammar in panels to define ALTLIB/LIBDEF

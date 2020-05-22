@@ -7,12 +7,13 @@
 /*                 defines/adds the RFIND command                     */
 /*               - SETUP_RFIND2 updates the currently used table      */
 /*                 and modifies the RFIND command                     */
-/*            2) Currently this program is using SETUP_RFIND2 and     */
-/*               we left SETUP_RFIND1, just incase someone was        */
-/*               interested in another way of accomplishing this      */
+/*            2) Currently this program is using SETUP_RFIND1,        */
+/*               due to SETUP_RFIND2 was leaving entry in table       */
+/*               after exiting                                        */
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A9  200520  RACFA    Fixed RFIND, LIBDEF and TBCLOSE using $STUB  */
 /* @A8  200519  TRIDJK   Check user cmd table before site cmd table   */
 /* @A7  200519  RACFA    Use SETUP_RFIND1, RFIND2 left entry in table */
 /* @A6  200514  LBD      Add parmeter of NA to bypass allocations     */
@@ -31,10 +32,12 @@ ADDRESS ISPEXEC
   call Setup
   'Select cmd('REXXPGM1')  NewAppl(RADM) PassLib'             /* @A4 */
   'Select Panel('PANEL01') NewAppl(RADM) PassLib'             /* @A2 */
-  'libdef ispmlib'
-  'libdef ispplib'
+  if (RAOPT <> "NA") THEN DO                                  /* @A9 */
+     'libdef ispmlib'
+     'libdef ispplib'
+     Address TSO 'altlib deact app(exec)'
+  END                                                         /* @A9 */
   'tbclose radmcmds'                                          /* @A7 */
-  Address TSO 'altlib deact app(exec)'
 EXIT 0
 /*--------------------------------------------------------------------*/
 /*  Obtain dataset names and LIBDEF/ALTLIB them                       */
@@ -45,9 +48,8 @@ SETUP:
                        NameO Env Addr Token                   /* @A6 */
   cmd = name                                                  /* @A6 */
 
-  'vget (zapplid)'                                            /* @A3 */
-  if raopt = 'NA' then return                                 /* @A6 */
-  if (zapplid /= 'RADM') then call setup_rfind1               /* @A5 */
+  call setup_rfind1                                           /* @A9 */
+  if (raopt = 'NA') then return                               /* @A9 */
   if (DSName /= '?') then exec = "'"dsname"'"
   else do
      x      = listdsi(DDName 'FILE')
@@ -67,7 +69,6 @@ SETUP:
   if (x = 0) then panels = plib                               /* @A1 */
   x = listdsi(mlib)                                           /* @A1 */
   if (x = 0) then msgs = mlib                                 /* @A1 */
-  if raopt = 'NA' then exit                                   /* @A6 */
   Address TSO 'Altlib Act app(Exec) Dataset('exec')'
   'Libdef ISPMLIB dataset id('msgs') Stack'
   'Libdef ISPPLIB dataset id('panels') Stack'
