@@ -1,22 +1,21 @@
 /*%NOCOMMENT====================* REXX *==============================*/
-/*  PURPOSE:  RACFADM - Help - RACF commands (Menu option H)          */
+/*  PURPOSE:  RACFADM - Help - RACF commands - Menu option H          */
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @A2  200328  RACFA    Modified color/title                         */
-/* @A1  200320  TRIDJK   Modified to contain/display RACF commands    */
-/* @A0  200320  TRIDJK   Obtained code from CBT file 314 (ZTSOHELP)   */
+/* @A1  200520  RACFA    Added RACF cmds: OPERMIT, ORALTER and ORLIST */
+/* @A0  200328  RACFA    Modified color/title                         */
 /*====================================================================*/
 /* --------------------  REXX Program  ----------------------------- */
- ver = '3.8'
-/* ----------------------------------------------------------------- *
- | Name:       RACFHELP                                              |
+ ver = '3.10'
+/* ------------------ DO NOT NUMBER IN ISPF ------------------------ *
+ | Name:       zTSOHELP                                              |
  |                                                                   |
  | Function:   Present the user with a table of available            |
- |             RACF HELP pages from which the user may select        |
+ |             TSO HELP pages from which the user may select         |
  |             to browse.                                            |
  |                                                                   |
- | Syntax:     %RACFHELP help-command  /w  /t                        |
+ | Syntax:     %zTSOHELP help-command  /w  /t                        |
  |                                                                   |
  |             help-command is optional and will position the        |
  |             list at that command (or close to it)                 |
@@ -39,16 +38,32 @@
  |             is in the field. This is to support descriptions      |
  |             greater than 53 characters if they exist.             |
  |                                                                   |
- | Dependency: FSHelp (CBT Tape File 134) may be used (see *custom*) |
+ | Command Table:  It is recommended that an ISPF Command Table      |
+ |                 entry be created to make it faster to get to      |
+ |                 this application. This is a sample:               |
  |                                                                   |
- |             - July 2017 update:   fixes an issue with )I records  |
+ |                 Verb    TSOH                                      |
+ |                 Trunc:  0                                         |
+ |                 Action: SELECT CMD(%ZTSOHELP &ZPARM) NEWAPPL(ISR) |
+ |                 Desc:   TSO Help ISPF Application                 |
+ |                                                                   |
+ | Dependency: Optional the HELP Data member to be created           |
+ |             using the sample data provided (find *custom*)        |
+ |                                                                   |
+ |             FSHelp (CBT Tape File 134) may be used (see *custom*) |
+ |             - Get the July 2017 update which fixes an issue with  |
+ |               )I records                                          |
  |                                                                   |
  | Customizations:  Find *custom* below for site customizations      |
  |                                                                   |
  | Author:     John P. Kalinich and Lionel B. Dyck                   |
- |             The ISPF Cabal - Vive la révolution                   |
  |                                                                   |
  | History:                                                          |
+ |             05/23/20 - V3.10                                      |
+ |                      - Correct )X Syntax display                  |
+ |                      - Remove action bar from view panel          |
+ |             02/11/20 - V3.9                                       |
+ |                      - Add more help entries                      |
  |             12/20/19 - V3.8                                       |
  |                      - Highlight key sections                     |
  |             04/01/19 - V3.7                                       |
@@ -63,8 +78,6 @@
  |             10/30/17 - V3.3                                       |
  |                      - Change Include Help record to Noteline     |
  |                      - Add /t switch                              |
- |                      - Add BookMangler SHELF comp (PDS version)   |
- |                      - Add Xclude line command (PDS version)      |
  |             10/27/17 - V3.2                                       |
  |                      - Correction to eliminate blank lines after  |
  |                        )) records                                 |
@@ -96,7 +109,7 @@
  |                      - Added several additional help members      |
  |                      - Add LOCAL group of help entries            |
  |             07/20/17 - V2.1                                       |
- |                      - Minor Panel header changes for clarity     |
+ |                      - Minor Panel header chagnes for clarity     |
  |             07/20/17 - V2.0                                       |
  |                      - Several enhancements and expanded tutorial |
  |                      - Make the description field scrollable      |
@@ -135,12 +148,17 @@
  |             06/30/17 - Numerous changes (including name)          |
  |             06/22/17 - Creation                                   |
  | ----------------------------------------------------------------- |
- | Notes:  1. FSHELP is a full screen TSO command processor          |
+ | Notes:  1. Additions to the list of TSO Help members is easy by   |
+ |            just adding them to the table at the end of this       |
+ |            code.                                                  |
+ |         2. Use the /W switch when calling to see which TSO        |
+ |            Help members in the list don't exist in your           |
+ |            SYSHELP concatenation.                                 |
+ |         3. FSHELP is a full screen TSO command processor          |
  |             - Not an ISPF application                             |
- |         2. If ISPF Settings have Tab to Point and Shoot enabled   |
+ |         4. If ISPF Settings have Tab to Point and Shoot enabled   |
  |            then the user can tab to the PNS fields and press      |
  |            Enter (or double click) to activate                    |
- |            SYSHELP concatenation.                                 |
  | ----------------------------------------------------------------- |
  | Copyleft (c) All Wrongs Reserved                                  |
  * ----------------------------------------------------------------- */
@@ -174,18 +192,46 @@
  if pos('/T',helpcmd) > 0 then do
     wp = pos('/T',helpcmd)
     helpcmd = strip(substr(helpcmd,1,wp-1))
-    zractest = 1
+    ztsotest = 1
     end
- else zractest = 0
- Address ISPExec 'vput (zractest)'
+ else ztsotest = 0
+ Address ISPExec 'vput (ztsotest)'
 
 /* --------------- *
  | define defaults |
  * --------------- */
   parse value '' with null load_info sortcol srchtsoh
 
+/* ---------------------- *CUSTOM* -------------------------- *
+ | The TSO Help member data may be inline or may be in        |
+ | an external dataset.                                       |
+ |                                                            |
+ | If the helpds = * then it will be assumed to be            |
+ | inline at the end of all the rexx records starting         |
+ | with the >DATA record                                      |
+ |                                                            |
+ | If helpds is not * then it is assumed to be a              |
+ | dataset.                                                   |
+ |                                                            |
+ | The format for this file is:                               |
+ | ----+----1----+----2----+----3----+----4----+----5----+----|
+ | COMPONENT: <--- Once per group (TSO:, RACF:, et al)        |
+ | COMMAND    Description                                     |
+ | . . .      . . .                                           |
+ | LOCAL:                                                     |
+ | JCL        JCL Standards for the installation              |
+ | . . .      . . .                                           |
+ | FREE:                                                      |
+ | PDS        Swiss Army Knife of Utilities                   |
+ | ABEND      TSO help member for abend codes                 |
+ | . . .      . . .                                           |
+ | TSO:                                                       |
+ | ACCOUNT    Modify/add/delete user attributes in UADS       |
+ | ALLOCATE   Allocate a data set with or without DCB parms   |
+ | . . .      . . .                                           |
+ * ---------------------------------------------------------- */
   /* Comment Start
-  helpds = "'hlq.local.HELP(ZRACTOC)'"
+  helpds = "'hlq.local.HELP(ZTSOTOC)'"
      Comment End */
   helpds = '*'
 
@@ -199,7 +245,7 @@
  |                                                     |
  | Colors may be Blue, Turq, White, Green, Red, Yellow |
  * --------------------------------------------------- */
- clrn = 'green'                                               /* @A2 */
+ clrn = 'green'                                               /* @A0 */
  clrs = 'turq'
 
 /* ----------------------------------------------- *
@@ -222,7 +268,7 @@
  |            to 1 to enable notifications for missing  |
  |                 help members                         |
  * ---------------------------------------------------- */
- notify = 1
+ notify = 0
  if warn = 1 then notify = 1
 
 /* ---------------------------------------------------------- *
@@ -247,7 +293,7 @@
  zpns = 0    /* leave tab to point and shoot setting alone */
 
 /* ------------------------- *
- | Read in the ZRACHELP data |
+ | Read in the ZTSOHELP data |
  * ------------------------- */
   if helpds /= '*' then do
     Address TSO
@@ -286,7 +332,7 @@
   src = 0
   rowcrp = 0
   crp = 1
-  table_panel = 'zRACHELP'
+  table_panel = 'zTSOHELP'
   do forever
     parse value null with zcmd zsel zerrsm zerrlm
     if helpcmd /= null then do
@@ -305,13 +351,13 @@
         * ----------------------- */
         "select pgm(ispopt) parm(pstab(OFF))"
        end
-    if src = 4 then "TBDispl" zrachtbl
+    if src = 4 then "TBDispl" ztsohtbl
     else do
-      "TBTOP" zrachtbl
-      "TBSKIP" zrachtbl "NUMBER("crp")"
+      "TBTOP" ztsohtbl
+      "TBSKIP" ztsohtbl "NUMBER("crp")"
       if rowcrp = 0
-      then "TBDISPL" zrachtbl "PANEL("table_panel")"
-      else "TBDISPL" zrachtbl "PANEL("table_panel")",
+      then "TBDISPL" ztsohtbl "PANEL("table_panel")"
+      else "TBDISPL" ztsohtbl "PANEL("table_panel")",
         "CSRROW("rowcrp") AUTOSEL(NO)"
     end
     src = rc
@@ -325,20 +371,15 @@
         "select pgm(ispopt) parm(pstab(ON))"
         end
     if src > 4 then do
-       'tbclose' zrachtbl
+       'tbclose' ztsohtbl
        leave
        end
 
     if datatype(row) /= 'NUM' then row = 0
-    if zsel = 'X' then do
-      ssel = zsel
-      "TBDELETE" zrachtbl
-      zsel = ssel
-      end
     if row /= 0 then do
       ssel = zsel
-      "TBTOP" zrachtbl
-      "TBSKIP" zrachtbl "NUMBER("row")"
+      "TBTOP" ztsohtbl
+      "TBSKIP" ztsohtbl "NUMBER("row")"
       zsel = ssel
       end
     if zcmd /= null then do
@@ -348,48 +389,41 @@
                 smsg = 'Invalid'
                 lmsg = 'Repeat Locate (RL) must follow' ,
                        'a Locate command.'
-                'setmsg msg(zrac001)'
+                'setmsg msg(ztso001)'
                 end
              else call do_locate srchtsoh 'Next'
-             end
-        When abbrev('H',translate(word(zcmd,1)),1) = 1 then do
-             'Select pgm(isptutor) parm(#zrach1)'
              end
         When abbrev('S',translate(word(zcmd,1)),1) = 1 then do
              parse value zcmd with x tsocmd
              if tsocmd = null then do
                 smsg = 'Unknown'
                 lmsg = 'Select requires a TSO Help member name.'
-                'Setmsg msg(zrac001)'
+                'Setmsg msg(ztso001)'
                 end
-             else do
-                  tsocomp = ''
-                  call do_it
-                  end
+             else call do_it
              end
         When abbrev('LOCATE',translate(word(zcmd,1)),1) = 1 |,
           abbrev('FIND',translate(word(zcmd,1)),1) = 1 then
           call do_locate subword(zcmd,2)
-        When abbrev('ONLY',translate(word(zcmd,1)),1) = 1 |,
-          abbrev('ALL',translate(word(zcmd,1)),3) = 1 then do
+        When abbrev('ONLY',translate(word(zcmd,1)),1) = 1 then do
           parse value zcmd with x string
           string = translate(string)
-          'tbtop' zrachtbl
+          'tbtop' ztsohtbl
           do forever
-            'tbskip' zrachtbl
+            'tbskip' ztsohtbl
             if rc > 0 then leave
             if pos(string,translate(tsocmd tsocomp tsodesc)) = 0
-            then 'tbdelete' zrachtbl
+            then 'tbdelete' ztsohtbl
           end
-          'tbtop' zrachtbl
+          'tbtop' ztsohtbl
         end
         When abbrev('REFRESH',translate(word(zcmd,1)),1) = 1 then do
-          'tbclose' zrachtbl
+          'tbclose' ztsohtbl
           call build_list
           smsg = 'Refreshed'
           lmsg = 'Refresh completed and all TSO Help entries are' ,
                  'now displayed.'
-          Address ISPExec 'Setmsg msg(zrac001)'
+          Address ISPExec 'Setmsg msg(ztso001)'
         end
         When abbrev('SET',translate(word(zcmd,1)),2) = 1 then do
           if fshelp = 0 then do
@@ -404,7 +438,7 @@
                end
           smsg = 'Set FSHELP' fshelps
           lmsg = 'Set of FSHELP to' fshelps
-          Address ISPExec 'Setmsg msg(zrac001)'
+          Address ISPExec 'Setmsg msg(ztso001)'
         end
         When abbrev('SORT',translate(word(zcmd,1)),2) = 1 then do
           parse value zcmd with x cmd order
@@ -434,7 +468,7 @@
                       smsg = 'Unknown'
                       lmsg = cmd 'is not a valid sort field. Use one' ,
                              'of the column headers.'
-                      'setmsg msg(zrac001)'
+                      'setmsg msg(ztso001)'
                       end
           end
           if order = null then order = 'A'
@@ -442,20 +476,20 @@
           'vput (pclrn pclrc pclrd)'
           if cmds /= null then
           if cmds = 'tsocomp'
-             then 'tbsort' zrachtbl 'fields('cmds',c,'order',tsocmd,c,a)'
-             else 'tbsort' zrachtbl 'fields('cmds',c,'order')'
+             then 'tbsort' ztsohtbl 'fields('cmds',c,'order',tsocmd,c,a)'
+             else 'tbsort' ztsohtbl 'fields('cmds',c,'order')'
           sortcol = cmds
-          'tbtop' zrachtbl
+          'tbtop' ztsohtbl
           crp = 1
         end
         Otherwise do
           smsg = 'Unknown'
           lmsg = word(zcmd,1) 'is an unknown command.'
-          'Setmsg msg(zrac001)'
+          'Setmsg msg(ztso001)'
         end
       end
     end
-    if (zsel /= null) & (zsel /= 'X') then
+    if zsel /= null then
     call do_it
   end
 
@@ -490,54 +524,54 @@ Do_Locate:
   if srchtsoh = null then do
     smsg = 'Invalid'
     lmsg = 'No TSO Help command provided'
-    'Setmsg msg(zrac001)'
+    'Setmsg msg(ztso001)'
   end
   else do
     if next = null
-       then 'tbtop' zrachtbl
+       then 'tbtop' ztsohtbl
     else do
-      'tbtop' zrachtbl
-      'tbskip' zrachtbl 'Number('crp')'
+      'tbtop' ztsohtbl
+      'tbskip' ztsohtbl 'Number('crp')'
        end
     rlhit = 0
-    'tbvclear' zrachtbl
+    'tbvclear' ztsohtbl
     tsocmd = srchtsoh'*'
     if next /= null then next = 'NEXT'
-    'tbsarg' zrachtbl 'namecond(tsocmd,EQ)' next
+    'tbsarg' ztsohtbl 'namecond(tsocmd,EQ)' next
     newcrp = 0
-    'tbscan' zrachtbl 'position(newcrp)'
+    'tbscan' ztsohtbl 'position(newcrp)'
     if rc > 0 then do
        if rlhit = 0 then do
           rlhit = 1
-          'tbtop' zrachtbl
-          'tbvclear' zrachtbl
+          'tbtop' ztsohtbl
+          'tbvclear' ztsohtbl
           tsocmd = srchtsoh'*'
-         'tbsarg' zrachtbl 'namecond(tsocmd,EQ)'
+         'tbsarg' ztsohtbl 'namecond(tsocmd,EQ)'
           newcrp = 0
-          'tbscan' zrachtbl 'position(newcrp)'
+          'tbscan' ztsohtbl 'position(newcrp)'
           if rc = 0 then do
              crp = newcrp
              smsg = 'Wrapped'
              lmsg = srchtsoh 'found after wrapping the table.'
-             'setmsg msg(zrac001)'
+             'setmsg msg(ztso001)'
              end
           else do
                smsg = 'Not found'
                lmsg = srchtsoh 'not found.'
-               'setmsg msg(zrac001)'
+               'setmsg msg(ztso001)'
                end
           end
        else do
              smsg = 'Not found'
              lmsg = srchtsoh 'not found.'
-             'setmsg msg(zrac001)'
+             'setmsg msg(ztso001)'
              end
        end
     else do
          crp = newcrp
          smsg = 'Found'
          lmsg = srchtsoh 'found in row' crp
-         'setmsg msg(zrac001)'
+         'setmsg msg(ztso001)'
          end
     end
   Return
@@ -548,11 +582,11 @@ Do_Locate:
 build_list:
   Address ISPEXEC
   "LMInit Dataid(status) DDname(SYSHELP) ENQ(SHR)"
-  zracstat = status
-  'Vput (zracstat)'
+  ztsostat = status
+  'Vput (ztsostat)'
   "LMOpen Dataid("status") Option(INPUT)"
-  zrachtbl = 'man'random(999)
-  'tbcreate' zrachtbl 'keys(tsocmd) names(tsocomp tsodesc)' ,
+  ztsohtbl = 'man'random(999)
+  'tbcreate' ztsohtbl 'keys(tsocmd) names(tsocomp tsodesc)' ,
     'replace share nowrite'
   nohelp = null
   nofind = 0
@@ -565,26 +599,22 @@ build_list:
       tsocomp = substr(tsocmd,1,colonm1)
       iterate
     end
-    if tsocomp = 'SHELF' then do
-      'tbadd' zrachtbl 'order'
-      iterate
-      end
     'LMMFind Dataid('status') member('tsocmd')'
     if rc <> 0 then do
       nohelp = nohelp||left(tsocmd,9)
       nofind = nofind + 1
       iterate
     end
-    'tbadd' zrachtbl 'order'
+    'tbadd' ztsohtbl 'order'
   end
   if (nohelp <> null) & (helpcmd = null) & (notify = 1) then do
     smsg = nofind 'Members not found'
     lmsg = nohelp
-    'Setmsg msg(zrac001)'
+    'Setmsg msg(ztso001)'
   end
   Address ISPExec
-  'tbtop' zrachtbl
-  'tbsort' zrachtbl 'fields(tsocmd,c,a)'
+  'tbtop' ztsohtbl
+  'tbsort' ztsohtbl 'fields(tsocmd,c,a)'
   sortcol = 'tsocmd'
   pclrn = clrs
   pclrc = clrn
@@ -597,23 +627,18 @@ build_list:
  | Now display the Help page |
  * ------------------------ */
 Do_It:
-  if tsocomp = 'SHELF' then do
-    Address TSO
-    "%bookmgr shelf('eoybook."tsocmd".bkshelf')"
-    return
-    end
   Address ISPExec
   'Control Display Save'
   if fshelp = 0
      then do
           "LMOpen Dataid("status") Option(INPUT)"
-          zracstat = status
-          'Vput (zracstat)'
+          ztsostat = status
+          'Vput (ztsostat)'
           'LMMFind Dataid('status') member('tsocmd')'
           if rc <> 0 then do
              smsg = 'Not found'
              lmsg = 'TSO Help member 'tsocmd' not found.'
-             'Setmsg msg(zrac001)'
+             'Setmsg msg(ztso001)'
              end
           else call view_it
           end
@@ -629,10 +654,10 @@ View_it:
 
  'lminit dataid(thd) ddname('thdd')'
  'lmcopy fromid('status') todataid('thd') frommem('tsocmd')'
- zrachtit = 'TSO Help:' tsocmd
- 'vput (zrachtit)'
- 'view dataid('thd') member('tsocmd') macro('zrachm')' ,
-    'panel(zrached) ChgWarn(no)'
+ ztsohtit = 'TSO Help:' tsocmd
+ 'vput (ztsohtit)'
+ 'view dataid('thd') member('tsocmd') macro(ztsohm)' ,
+    'panel(ztsohed) ChgWarn(no)'
  'lmfree dataid('thd')'
  Address TSO 'Free f('thdd')'
  "LMInit Dataid(status) DDname(SYSHELP) ENQ(SHR)"
@@ -949,7 +974,7 @@ View_it:
  return
 /*
 >START
->Panel zRACHELP
+>Panel zTSOHELP
 )Attr Default(%+_)
    ! type( input) intens(high) caps(on ) just(left ) pad('_')
    ^ type(output) intens(low ) caps(off) just(asis ) pad(' ')
@@ -959,23 +984,24 @@ View_it:
    ? type(output) intens(low ) caps(off) just(asis ) color(white)
    $ type(text) intens(high) hilite(reverse)
    % type(text) intens(high) skip(on)
-   + type(text) intens(low) skip(on) color(green)             /* @A2 */
+   + type(text) intens(low) skip(on) color(green)             /* @A0 */
    # type(output) intens(high) caps(off) just(left)
      pas(on) skip(on) hilite(uscore)
    04 type(output) intens(high) caps(off) just(left)
-     pas(on) skip(on) hilite(uscore) color(White)             /* @A2 */
+     pas(on) skip(on) hilite(uscore) color(White)             /* @A0 */
    05 type(output) intens(high) caps(off) just(left)
-     pas(on) skip(on) hilite(uscore) color(White)             /* @A2 */
+     pas(on) skip(on) hilite(uscore) color(White)             /* @A0 */
    06 type(output) intens(high) caps(off) just(left)
-     pas(on) skip(on) hilite(uscore) color(White)             /* @A2 */
+     pas(on) skip(on) hilite(uscore) color(White)             /* @A0 */
 )Body  Expand(\\) Width(&zscreenw)
-%\-\ $RACF Commands?viewfs  $- &ver%\-\
+%\-\ $RACF Help Commands?viewfs  $- &ver%\-\
 %Command ===>_zcmd                                 \ \%Scroll ===>_amt +
 %
-+Command: %L cmd+- Locate #RL+- Repeat Locate %Only string +- Only #R+- Refresh
-+         %S cmd+- Select #SE+- Set Viewer    %SOrt col A/D+- Sort #H+- Help
++Command: %L cmd+- Locate #RL+- Repeat Locate %O str+- Only        #R+- Refresh
++         %S cmd+- Select #SE+- Set Viewer    %SOrt col A/D+- Sort
++Line:    %S+-Select+
 +
-%   +œt1     + 	t2       +†t3         +
+%Sel+œt1     + 	t2       +†t3         +
 )Model
 !z+  z          z       z
 )Init
@@ -983,12 +1009,11 @@ View_it:
   if (&amt = &z)
       &amt = csr
  .cursor = zcmd
- .help = #zrach1
+ .help = #ztsoh1
  &Refresh = 'Refresh'
  &RL      = 'RL'
  &R       = 'R'
  &SE      = 'SE'
- &H       = 'H'
  &t1      = 'Command'
  &t2      = 'Component'
  &T3      = 'Description'
@@ -996,7 +1021,7 @@ View_it:
 )Proc
 if (&zsel = _)
     &zsel = &z
-ver (&zsel,list,S,'=',X)
+ver (&zsel,list,S,'=')
 if (&ztdsels = 0000)
    &row = .csrrow
    if (&row ^= 0)
@@ -1038,13 +1063,12 @@ field(t3) var(zcmd) val(desc)
 field(r)  var(zcmd) val(Refresh)
 field(rl) var(zcmd) val(RL)
 field(se) var(zcmd) val(set)
-field(h)  var(zcmd) val(H)
 */
 )End
->Panel #zrach1
+>Panel #ztsoh1
 )ATTR DEFAULT(%+_)
    %   TYPE(TEXT)  INTENS(HIGH) SKIP(ON)
-   +   TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(GREEN)         /* @A2 */
+   +   TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(GREEN)         /* @A0 */
    !   TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(RED)
    @   TYPE(TEXT)  INTENS(HIGH) SKIP(ON) HILITE(USCORE) COLOR(BLUE)
    _   TYPE(INPUT) INTENS(HIGH) CAPS(ON) JUST(LEFT) HILITE(USCORE)
@@ -1052,34 +1076,32 @@ field(h)  var(zcmd) val(H)
 %Tutorial+\-\(%RACHELP+)\-\%Tutorial
 %Command ===>_ZCMD
 +
-+This table lists some of the documented RACF commands.
++ This table lists some of the documented TSO commands.
 +
-+Primary Commands:
-  %  Locate cmd next  +Locate the requested command in the table
-  %  Only string      +Remove all rows without string (ALL is alias)
-  %* Refresh          +Refresh the table after using ONLY
-  %* RL               +Repeat Locate
-  %  S cmd            +Select the command
-  %* SEt              +Toggles between using ISPF View and FSHELP
-  %  SOrt column order+Sort the table using the column name
-                       order is A or D (default is A)
-                      +Column headers are point and shoot to sort
-                      +1st use sort Ascending, 2nd use sort Descending
-
-  %*+Point and shoot commands. SET value saved in ISPF Profile.
++Commands:
+   % Locate cmd next  +Locate the requested command in the table
+   % Only string      +Remove all rows without string
+   %*Refresh          +Refresh the table after using ONLY
+   %*RL               +Repeat Locate
+   % S cmd            +Select the command
+   %*SEt              +Toggles between using ISPF View and FSHELP
+   % SOrt column order+Sort the table using the column name
+   +                   order is A or D (default is A)
 +
-+Line Commands:       !(point-and-shoot field)+
++Line Selections: !(point-and-shoot field)+
 %    S+               +Select a command to be browsed under View or FSHelp
-%    X+               +Exclude a command from the list
++
+%Note: +Column headers are point and shoot to sort. 1st use sort Ascending
++        and 2nd use sort Descending, etc.
 +
 + \ \ (press%ENTER+to continue) \ \
 )PROC
- &zcont = #zrach2
+ &zcont = #ztsoh2
 )End
->Panel #zrach2
+>Panel #ztsoh2
 )ATTR DEFAULT(%+_)
    %   TYPE(TEXT)  INTENS(HIGH) SKIP(ON)
-   +   TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(GREEN)         /* @A2 */
+   +   TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(GREEN)         /* @A0 */
    !   TYPE(TEXT)  INTENS(LOW)  SKIP(ON) COLOR(RED)
    @   TYPE(TEXT)  INTENS(HIGH) SKIP(ON) HILITE(USCORE) COLOR(BLUE)
    _   TYPE(INPUT) INTENS(HIGH) CAPS(ON) JUST(LEFT) HILITE(USCORE)
@@ -1087,33 +1109,32 @@ field(h)  var(zcmd) val(H)
 %Tutorial+\-\(%RACHELP+)\-\%Tutorial
 %Command ===>_ZCMD
 +
-%Notes:+To use Tab key to access Point and Shoot fields the
-+       Tab to Point and Shoot must be selected in the ISPF
-+       Settings (ISPF Option 0).
+%Notes:+To use Tab key to access Point and Shoot fields the Tab to Point
++       and Shoot must be selected in the ISPF Settings (ISPF Option 0).
 +
-+      +Use%Only+to limit the display to a specific string
-+       to more easily find the command you need.
++      +Use%Only+to limit the display to a specific string to more easily
++       find the command you need.
 +
-+       The description field is scrollable. Use Right and Left
-+       keys with the cursor in a description field.
++       The description field is scrollable. Use Right and Left keys with
++       the cursor in a description field.
 +
-+The list was generated by:
++     %*+Point and shoot commands. Set value saved in ISPF Profile.
 +
-%"The Project to Document RACF Commands".+
+ +The list was generated by: %"The Project to Document TSO Commands".
 +
    +  William J. Smith, Editor-in-chief
    +  John Kalinich, Copy Editor and Programmer
-   +  Lionel B. Dyck, Assistant Editor and Austin Powers Bureau Chief
+   +  Lionel B. Dyck, Assistant Editor and Austin Bureau Chief
    +  Tom Conley,@Make ISPF Great Again+Campaign Manager
 +
++ \ \ (press%ENTER+to continue) \ \
 )PROC
- &zcont = #zrach2
+ &zup = #ztsoh1
 )END
->Panel zrached
+>Panel ztsohed
 /*
 )PANEL KEYLIST(ISRSPEC,ISR)
 )ATTR DEFAULT(ˆ‰) FORMAT(MIX)            /* ISREDDE2 - ENGLISH - 7.1 */
- 15 TYPE(AB)
  2A TYPE(ABSL) GE(ON)
  2B TYPE(PT)
  2F TYPE(FP)
@@ -1159,137 +1180,7 @@ field(h)  var(zcmd) val(H)
  F  TYPE(CHAR) COLOR(&ZCF) HILITE(&ZHF)
  S  TYPE(CHAR) COLOR(&ZCS) HILITE(&ZHS)
  Ü  TYPE(NEF) CAPS(ON) PADC(USER)
-)ABC DESC('File') MNEM(1)
-PDC DESC('Save') UNAVAIL(ZEDF) MNEM(1) ACTION RUN(>SAVE)
-PDC DESC('Cancel') MNEM(1) ACTION RUN(CANCEL)
-PDC DESC('Exit') MNEM(1) ACTION RUN(END)
-)ABCINIT
-.ZVARS=EDITFILE
-   IF (&ZVMODET = 'VIEW') &zedf = 1
-   ELSE                   &zedf = 0
-)ABC DESC('Edit') MNEM(1)
-PDC DESC('Reset') MNEM(1) ACTION RUN(>RESET)
-PDC DESC('Undo') MNEM(1) ACTION RUN(>UNDO)
-PDC DESC('Hilite') UNAVAIL(ZEDE) MNEM(1) ACTION RUN(>HI)
-PDC DESC('Cut') MNEM(1) ACTION RUN(>CUT)
-PDC DESC('Paste') MNEM(1) ACTION RUN(>PASTE)
-)ABCINIT
-.ZVARS=EDITEDIT
-   IF (&ZEDHI ^= 'YES')  &zede = 1
-   ELSE &zede = 0
-)ABC DESC('Edit_Settings') MNEM(2)
-PDC DESC('Edit settings') MNEM(1) ACTION RUN(>EDSET)
-)ABCINIT
-.ZVARS=PDFCFM
-)ABC DESC('Menu') MNEM(1)
-PDC DESC('Settings') UNAVAIL(ZPM1) MNEM(1) ACC(CTRL+S)
- ACTION RUN(ISRROUTE) PARM('SET')
-PDC DESC('View') UNAVAIL(ZPM2) MNEM(1) ACC(CTRL+V)
- ACTION RUN(ISRROUTE) PARM('BR1')
-PDC DESC('Edit') UNAVAIL(ZPM3) MNEM(1) ACC(CTRL+E)
- ACTION RUN(ISRROUTE) PARM('ED1')
-PDC DESC('ISPF Command Shell') UNAVAIL(ZPM4) MNEM(6) ACC(CTRL+C)
- ACTION RUN(ISRROUTE) PARM('C1')
-PDC DESC('Dialog Test...') UNAVAIL(ZPM5) MNEM(8) ACC(CTRL+T)
- ACTION RUN(ISRROUTE) PARM('DAL')
-PDC DESC('Other IBM Products...') UNAVAIL(ZPM6) MNEM(1) ACC(CTRL+O)
- ACTION RUN(ISRROUTE) PARM('OIB')
-PDC DESC('SCLM') UNAVAIL(ZPM7) MNEM(3) ACC(CTRL+L)
- ACTION RUN(ISRROUTE) PARM('SCL')
-PDC DESC('ISPF Workplace') UNAVAIL(ZPM8) MNEM(6) ACC(CTRL+W)
- ACTION RUN(ISRROUTE) PARM('WRK')
-PDC DESC('Status Area...') UNAVAIL(ZPMS) MNEM(8) ACC(CTRL+A)
- ACTION RUN(ISRROUTE) PARM('SAM')
-PDC DESC('Exit') MNEM(2) PDSEP(ON) ACC(CTRL+X) ACTION RUN(EXIT)
-)ABCINIT
-.ZVARS=ISR@OPT
-)ABC DESC('Utilities') MNEM(1)
-PDC DESC('Library') UNAVAIL(ZUT1) MNEM(1) ACC(ALT+1)
- ACTION RUN(ISRROUTE) PARM('U1')
-PDC DESC('Data set') UNAVAIL(ZUT2) MNEM(1) ACC(ALT+2)
- ACTION RUN(ISRROUTE) PARM('U2')
-PDC DESC('Move/Copy') UNAVAIL(ZUT3) MNEM(1) ACC(ALT+3)
- ACTION RUN(ISRROUTE) PARM('U3')
-PDC DESC('Data Set List') UNAVAIL(ZUT4) MNEM(2) ACC(ALT+4)
- ACTION RUN(ISRROUTE) PARM('U4')
-PDC DESC('Reset Statistics') UNAVAIL(ZUT5) MNEM(5) ACC(ALT+5)
- ACTION RUN(ISRROUTE) PARM('U5')
-PDC DESC('Hardcopy') UNAVAIL(ZUT6) MNEM(1) ACC(ALT+6)
- ACTION RUN(ISRROUTE) PARM('U6')
-PDC DESC('Download...') UNAVAIL(ZUTDT) MNEM(2) ACC(ALT+7)
- ACTION RUN(ISRROUTE) PARM('UDT')
-PDC DESC('Outlist') UNAVAIL(ZUT7) MNEM(2) ACC(ALT+8)
- ACTION RUN(ISRROUTE) PARM('U8')
-PDC DESC('Commands...') UNAVAIL(ZUT8) MNEM(1) ACC(ALT+9)
- ACTION RUN(ISRROUTE) PARM('U9')
-PDC DESC('Reserved') UNAVAIL(ZUT9) MNEM(6) ACTION RUN(ISRROUTE) PARM('U10')
-PDC DESC('Format') UNAVAIL(ZUT10) MNEM(1) ACC(ALT+F1)
- ACTION RUN(ISRROUTE) PARM('U11')
-PDC DESC('SuperC') UNAVAIL(ZUT11) MNEM(1) PDSEP(ON) ACC(CTRL+F2)
- ACTION RUN(ISRROUTE) PARM('U12')
-PDC DESC('SuperCE') UNAVAIL(ZUT12) MNEM(3) ACC(CTRL+F3)
- ACTION RUN(ISRROUTE) PARM('U13')
-PDC DESC('Search-For') UNAVAIL(ZUT13) MNEM(2) ACC(CTRL+F4)
- ACTION RUN(ISRROUTE) PARM('U14')
-PDC DESC('Search-ForE') UNAVAIL(ZUT14) MNEM(4) ACC(CTRL+F5)
- ACTION RUN(ISRROUTE) PARM('U15')
-PDC DESC('Table Utility') UNAVAIL(ZUT15) MNEM(3) ACC(CTRL+F6)
- ACTION RUN(ISRROUTE) PARM('U16')
-PDC DESC('Directory List') UNAVAIL(ZUT16) MNEM(2) ACC(CTRL+F7)
- ACTION RUN(ISRROUTE) PARM('U17')
-)ABCINIT
-.ZVARS=PDFUTIL
-     &zut9 = '1'
-)ABC DESC('Compilers') MNEM(1)
-PDC DESC('Foreground Compilers') MNEM(1) ACTION RUN(ISRROUTE) PARM('FGD')
-PDC DESC('Background Compilers') MNEM(1) ACTION RUN(ISRROUTE) PARM('BKG')
-PDC DESC('ISPPREP Panel Utility...') MNEM(1) ACTION RUN(ISPPREP)
-PDC DESC('DTL Compiler...') MNEM(1) ACTION RUN(ISPDTLC)
-)ABCINIT
-.ZVARS=ISRLANG
-)ABC DESC('Test') MNEM(1)
-PDC DESC('Functions...') UNAVAIL(ZPM5) MNEM(1) ACTION RUN(ISRROUTE) PARM('DL1')
-PDC DESC('Panels...') UNAVAIL(ZPM5) MNEM(1) ACTION RUN(ISRROUTE) PARM('DL2')
-PDC DESC('Variables...') UNAVAIL(ZPM5) MNEM(1) ACTION RUN(ISRROUTE) PARM('DL3')
-PDC DESC('Tables...') UNAVAIL(ZPM5) MNEM(1) ACTION RUN(ISRROUTE) PARM('DL4')
-PDC DESC('Log') UNAVAIL(ZPM5) MNEM(1) ACTION RUN(ISRROUTE) PARM('DL5')
-PDC DESC('Services...') UNAVAIL(ZPM5) MNEM(1) ACTION RUN(ISRROUTE) PARM('DL6')
-PDC DESC('Traces...') UNAVAIL(ZPM5) MNEM(2) ACTION RUN(ISRROUTE) PARM('DL7')
-PDC DESC('Break Points...') UNAVAIL(ZPM5) MNEM(1)
- ACTION RUN(ISRROUTE) PARM('DL8')
-PDC DESC('Dialog Test...') UNAVAIL(ZPM5) MNEM(1)
- ACTION RUN(ISRROUTE) PARM('DAL')
-PDC DESC('Dialog Test appl ID...') MNEM(2) ACTION RUN(ISRROUTE) PARM('DAP')
-)ABCINIT
-.ZVARS=DIATEST
-)ABC DESC('Help') MNEM(1)
-PDC DESC('General') MNEM(1) ACTION RUN(TUTOR) PARM('ISR2A000')
-PDC DESC('Display screen format') MNEM(1) ACTION RUN(TUTOR) PARM('ISR2E000')
-PDC DESC('Scrolling data') MNEM(1) ACTION RUN(TUTOR) PARM('ISR2F000')
-PDC DESC('Sequence numbering') MNEM(2) ACTION RUN(TUTOR) PARM('ISR2G000')
-PDC DESC('Display modes') MNEM(2) ACTION RUN(TUTOR) PARM('ISR2H000')
-PDC DESC('Tabbing') MNEM(1) ACTION RUN(TUTOR) PARM('ISR2I000')
-PDC DESC('Automatic recovery') MNEM(1) ACTION RUN(TUTOR) PARM('ISR2J000')
-PDC DESC('Edit profiles') MNEM(6) ACTION RUN(TUTOR) PARM('ISR2K000')
-PDC DESC('Edit line commands') MNEM(6) ACTION RUN(TUTOR) PARM('ISR2L000')
-PDC DESC('Edit primary commands') MNEM(7) ACTION RUN(TUTOR) PARM('ISR2M000')
-PDC DESC('Labels and line ranges') MNEM(3) ACTION RUN(TUTOR) PARM('ISR2Q000')
-PDC DESC('Ending an edit session') MNEM(2) ACTION RUN(TUTOR) PARM('ISR2N000')
-PDC DESC('Appendices') MNEM(8) ACTION RUN(TUTOR) PARM('ISR00004')
-PDC DESC('Index') MNEM(5) ACTION RUN(TUTOR) PARM('ISR91000')
-)ABCINIT
-.ZVARS=EDMHELP
 )BODY  EXPAND(//) WIDTH(&ZWIDTH)  CMD(ZCMD)
-
- File
- Edit
- Edit_Settings
- Menu
- Utilities
- Compilers
- Test
- Help
-Š--/-/-------------------------------------------------------------------------
 Z         Z/ /                                           ColumnsZ    Z    
 Command ===>Z/ /                                            Scroll ===>ÜZ   
 ZDATA,ZSHADOW/ /                                                              
@@ -1303,8 +1194,8 @@ ELSE                   .HELP = ISR20000  /* DEFAULT TUTORIAL NAME */
 VGET (ZSCED) PROFILE        /* Fill Scroll Vars if       */
 IF (&ZSCED = ' ') &ZSCED = 'PAGE'  /* Blank with page    */
 &MIXED = TRANS(&ZPDMIX N,EBCDIC *,MIX) /* set mixed format */
-VGET (zrachtit)
-&ztitle = &zrachtit
+VGET (ztsohtit)
+&ztitle = &ztsohtit
 *REXX(* zdata zshadow zwidth)
   colorr = left('R',zwidth,'R')
   colorb = left('B',zwidth,'B')
@@ -1365,10 +1256,10 @@ FIELD(ZCMD) LEN(255)
 /* ISPDTLC Release: 7.1.  Level: PID                                  */
 /* z/OS 02.01.00.  Created - Date: 19 Nov 2014, Time: 18:25           */
 )END
->msg zrac00
-ZRAC001 '&SMSG'
+>msg ztso00
+ZTSO001 '&SMSG'
 '&LMSG'
->EXEC zrachm
+>EXEC ztsohm
   /* rexx */
   Address ISREdit
   'Macro (option)'
@@ -1378,12 +1269,12 @@ ZRAC001 '&SMSG'
   if last = 0 then do
      smsg = 'Not Found'
      lmsg = tsocmd 'is not a valid TSO Help member.'
-     Address ISPExec 'setmsg msg(zrac001)'
+     Address ISPExec 'setmsg msg(ztso001)'
      'Cancel'
      Exit 1
      end
-  "DEFINE zrachme MACRO CMD"
-  "DEFINE END ALIAS zrachme"
+  "DEFINE ztsohme MACRO CMD"
+  "DEFINE END ALIAS ztsohme"
   "exclude '*' 1 all"
   "delete x all"
   'caps off'
@@ -1393,7 +1284,7 @@ ZRAC001 '&SMSG'
   'delete 1' ff-1 'all'
   '(num) = number'
   if num = 'ON' then 'UnNum'
-  'zracfhlp'
+  'ztsofhlp'
   header = center('TSO Help:' tsocmd,80)
   'line_before 1 = (header)'
   dash = center('-',80,'-')
@@ -1401,21 +1292,21 @@ ZRAC001 '&SMSG'
   blanks = ' '
   'line_after 2 = (blanks)'
   'recovery off nowarn'
-  Address ISPExec 'vget (zractest)'
-  if zractest /= 1 then
+  Address ISPExec 'vget (ztsotest)'
+  if ztsotest /= 1 then
      'Reset'
   "Find 'TSO Help:" tsocmd"' first"
   Address ISPExec
-  'vget (zracstat)'
-  'LMFree dataid('zracstat')'
+  'vget (ztsostat)'
+  'LMFree dataid('ztsostat')'
   Exit 1
->EXEC zrachme
+>EXEC ztsohme
  /* rexx */
   Address ISREdit
   'Macro (option)'
   "DEFINE END    RESET"
   'Cancel'
->EXEC zrachcut
+>EXEC ztsohcut
 /* ------------------------------------------------------- *
  | Cut all data to the ISPF clipboard                      |
  * ------------------------------------------------------- */
@@ -1423,9 +1314,9 @@ ZRAC001 '&SMSG'
  'Macro (option)'
  'Cut'
  'End'
->EXEC zracfhlp
+>EXEC ztsofhlp
 /* --------------------  rexx procedure  -------------------- *
- | Name:      ZRACFHLP                                        |
+ | Name:      ZTSOFHLP                                        |
  |                                                            |
  | Function:  ISPF Edit Macro to reformat a TSO Help member   |
  |                                                            |
@@ -1435,7 +1326,7 @@ ZRAC001 '&SMSG'
  |            10/19/17 - Improve performance for )I processing|
  |            10/18/17 - Remove non-display chars             |
  |                     - Move messages )M to the end          |
- |            07/10/17 - Incorporated into ZRACHELP           |
+ |            07/10/17 - Incorporated into ZTSOHELP           |
  |            07/10/17 - Creation                             |
  * ---------------------------------------------------------- */
   Address ISREdit
@@ -1523,7 +1414,7 @@ ZRAC001 '&SMSG'
       end
       When left(data,2) = ')X' then do
         parse value data with ')X' record 73 x
-        record = 'Syntax:' record
+        record = 'Syntax:'
         call update
       end
       Otherwise nop
@@ -1555,7 +1446,7 @@ ZRAC001 '&SMSG'
  '(data) = line' i
  if strip(data) = '' then do
    j = i + 1
-   if j >= last then do
+   if j > last then do
      'locate 0'
      exit 1
      end
@@ -1579,10 +1470,10 @@ ZRAC001 '&SMSG'
     i = i - 1
     "line_before" i "= noteline (record)"
     Address ISPExec
-    'Vget (zracstat)'
-    'LMMFind Dataid('zracstat') member('member')'
+    'Vget (ztsostat)'
+    'LMMFind Dataid('ztsostat') member('member')'
     if rc = 0  then do
-      'View dataid('zracstat') member('member') macro(zrachcut)' ,
+      'View dataid('ztsostat') member('member') macro(ztsohcut)' ,
         'CHGWARN(NO)'
       Address ISREdit
       'Label ' i '= .PX'
@@ -1696,6 +1587,9 @@ DELUSER    Delete user profile
 LISTDSD    List data set profile
 LISTGRP    List group profile
 LISTUSER   List user profile
+OPERMIT    Unix Access Control List Management, like PERMIT
+ORALTER    Unix Security Attribute Management, like ALTER
+ORLIST     Unix File/Directory Security Info, like RLIST
 PASSWORD   Specify user password
 PERMIT     Maintain resource access lists
 RACDCERT   Manage RACF digital certificates

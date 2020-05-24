@@ -2,6 +2,12 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  23 May 2020 - V25R4
+     - Help (Option H)
+       -- Upgraded to V3.10, was V3.8
+          * This module is from CBT file 134 and modified to display
+            only RACF commands
+
   22 May 2020 - V25R3
      - Enqueues (Option E)
        -- If no ALTLIB/LIBDEF datasets, display enqueues on RACF
