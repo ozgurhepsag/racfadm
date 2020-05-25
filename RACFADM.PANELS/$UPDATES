@@ -2,6 +2,19 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  25 May 2020 - V25R5
+     - Other Items
+       -- Added the capability to create/use a site override member
+          called $DEFSITE in the panel dataset
+          * When RACFADM is invoked by a new user, it will first
+            read in $DEFSETG to obtain the default settings, and
+            and then read in $DEFSITE to obtain any overrides
+          * This prevents from having to update the $DEFSETG member
+            everytime a new version of RACFADM is installed
+          * Added comments in $DEFSETG
+          * Updated tutorial 'Installation Notes'
+          * Updated $DIR member located in the panels dataset
+
   23 May 2020 - V25R4
      - Help (Option H)
        -- Upgraded to V3.10, was V3.8

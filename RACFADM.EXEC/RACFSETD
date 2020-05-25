@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A7  200523  LBD      Allow a site override mbr, called $DEFSITE   */
 /* @A6  200522  RACFA    Added DROP REC.                              */
 /* @A5  200519  RACFA    Validate SHOWMVS DSN exit/valid              */
 /* @A4  200512  RACFA    Validate IBM RACF DSNs exist/valid           */
@@ -12,51 +13,71 @@
 /* @A0  200501  RACFA    Created REXX                                 */
 /*====================================================================*/
 MBRDSETG    = "$DEFSETG"   /* Default Settings member      */
+MBRDSITE    = "$DEFSITE"   /* Site Default Overrides       */ /* @A7 */
 DDNAME      = 'RACFA'RANDOM(0,999)  /* Unique ddname       */
 
 ADDRESS ISPEXEC
   'vget (SETMADMN) profile'
   if (SETMADMN <> '') then return  /* Not new user, return */
 
-  "QLIBDEF ISPPLIB TYPE(DATASET) ID(DSNAME)"
+  "QLIBDEF ISPPLIB TYPE(DATASET) ID(DSNAMEW)"                 /* @A7 */
   if (RC > 0) then
      call RACFMSGS ERR19
-  DSNAME = "'"STRIP(DSNAME,,"'")"("MBRDSETG")'"
+  DSNAME  = "'"STRIP(DSNAMEW,,"'")"("MBRDSETG")'"             /* @A7 */
+  SITEDSN = "'"STRIP(DSNAMEW,,"'")"("MBRDSITE")'"             /* @A7 */
 
 ADDRESS TSO
   "ALLOC FI("DDNAME") DA("DSNAME") SHR REUSE"
   "EXECIO * DISKR "DDNAME" (STEM REC. FINIS"
   "FREE FI("DDNAME")"
 
+/* ------------------------------- *                          /* @A7 */
+ | Check for Site Over-Ride Member |                          /* @A7 */
+ | And if so combine into REC. stem|                          /* @A7 */
+ * ------------------------------- */                         /* @A7 */
+ if (sysdsn(sitedsn) = 'OK') then do                          /* @A7 */
+    "ALLOC FI("DDNAME") DA("SITEDSN") SHR REUSE"              /* @A7 */
+    "EXECIO * DISKR "DDNAME" (STEM site. FINIS"               /* @A7 */
+    "FREE FI("DDNAME")"                                       /* @A7 */
+    oc = rec.0                                                /* @A7 */
+    do i = 1 to site.0                                        /* @A7 */
+       oc = oc + 1                                            /* @A7 */
+       rec.oc = site.i                                        /* @A7 */
+    end                                                       /* @A7 */
+    rec.0 = oc                                                /* @A7 */
+  end                                                         /* @A7 */
+  drop site.                                                  /* @A7 */
+
 ADDRESS ISPEXEC
   DO J = 1 TO REC.0
      IF (SUBSTR(REC.J,1,1) = "*") THEN ITERATE
-     PARSE UPPER VAR REC.J W1 W2 W3 W4 .
-     IF (W3 = "/*") THEN W3 = ""                              /* @A3 */
-     IF (W3 = "Y")  THEN W3 = "YES"                           /* @A3 */
-     IF (W3 = "N")  THEN W3 = "NO"                            /* @A3 */
-     W3 = STRIP(W3,,"'")                                      /* @A2 */
-     W3 = STRIP(W3,,'"')                                      /* @A2 */
+     PARSE VAR REC.J W1 W2 W3L W4 .                           /* @A7 */
+     w3 = translate(w3l)                                      /* @A7 */
+     IF (W3 = "/*") THEN W3L = ""                             /* @A3 */
+     IF (W3 = "Y")  THEN W3L = "YES"                          /* @A3 */
+     IF (W3 = "N")  THEN W3L = "NO"                           /* @A3 */
+     W3 = STRIP(W3L,,"'")                                     /* @A2 */
+     W3 = STRIP(W3L,,'"')                                     /* @A2 */
      SELECT
         WHEN (W1 = "SETGDISP") THEN
            SELECT
-              WHEN (W3 = "B")  THEN W3 = "BROWSE"
-              WHEN (W3 = "E")  THEN W3 = "EDIT"
-              WHEN (W3 = "V")  THEN W3 = "VIEW"
+              WHEN (W3 = "B")  THEN W3L = "BROWSE"            /* @A7 */
+              WHEN (W3 = "E")  THEN W3L = "EDIT"              /* @A7 */
+              WHEN (W3 = "V")  THEN W3L = "VIEW"              /* @A7 */
               OTHERWISE NOP
            END
         WHEN (W1 = "SETMSHOW") THEN
            SELECT
-              WHEN (W3 = "D")  THEN W3 = "DISPLAY"
-              WHEN (W3 = "L")  THEN W3 = "LOG"
-              WHEN (W3 = "B")  THEN W3 = "BOTH"
+              WHEN (W3 = "D")  THEN W3L = "DISPLAY"           /* @A7 */
+              WHEN (W3 = "L")  THEN W3L = "LOG"               /* @A7 */
+              WHEN (W3 = "B")  THEN W3L = "BOTH"              /* @A7 */
               OTHERWISE NOP
            END
         WHEN (W1 = "SETMTRAC") THEN
            SELECT
-              WHEN (W3 = "L")  THEN W3 = "LABELS"
-              WHEN (W3 = "P")  THEN W3 = "PROGRAMS"
-              WHEN (W3 = "R")  THEN W3 = "RESULTS"
+              WHEN (W3 = "L")  THEN W3L = "LABELS"            /* @A7 */
+              WHEN (W3 = "P")  THEN W3L = "PROGRAMS"          /* @A7 */
+              WHEN (W3 = "R")  THEN W3L = "RESULTS"           /* @A7 */
               OTHERWISE NOP
            END
         WHEN (W1 = "SETDMVSL") & (W3 <> "") THEN              /* @A5 */
@@ -127,7 +148,7 @@ ADDRESS ISPEXEC
         OTHERWISE NOP
      END
 
-     INTERPRET W1" = W3"
+     INTERPRET W1" = W3L"                                     /* @A7 */
      INTERPRET "'VPUT ("W1") PROFILE'"
   END
 

@@ -1,9 +1,13 @@
 *---------------------------------------------------------------------*
 *                           Default Settings                          *
 *---------------------------------------------------------------------*
-*  This member initializes new user's default Settings (Option 0).    *
-*  The user's Settings are saved to their ISPF profile dataset in     *
-*  member RADMPROF.                                                   *
+*  1) This member initializes new user's default Settings (Option 0)  *
+*  2) To override this member, create a new member called $DEFSITE    *
+*     and define/set any of the variables                             *
+*     - This will prevent from having to update the $DEFSETG member   *
+*       everytime a new version of RACFADM is installed               *
+*  3) The user's Settings are saved to their ISPF profile dataset in  *
+*     member RADMPROF                                                 *
 *---------------------------------------------------------------------*
 *  General                                                            *
 *---------------------------------------------------------------------*

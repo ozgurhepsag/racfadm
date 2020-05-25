@@ -30,8 +30,9 @@
  #RACLOG   Tutorial       ISPF log file
  #RACMVS   Tutorial       RACF data (Showmvs)
  #RACMENU  Tutorial       Main menu, menu option T
- #RACNOT1  Tutorial       Installation notes (1 of 2)
- #RACNOT2  Tutorial       Installation notes (2 of 2)
+ #RACNOT1  Tutorial       Installation notes (1 of 3)
+ #RACNOT2  Tutorial       Installation notes (2 of 3)
+ #RACNOT3  Tutorial       Installation notes (4 of 3)
  #RACPRMS  Tutorial       RACF parameters
  #RACPSWD  Tutorial       Password reset
  #RACPUB1  Tutorial       RACF publications and downloads (1 of 2)
