@@ -2,6 +2,21 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  25 May 2020 - V25R6
+     - Settings (Option 0)
+       -- Allow changing the executable program name to invoke
+          Showmvs, when selecting 'Define DSN'
+          * Defined the default program name to be SHOWZOS
+          * Updated $STNDARD, $UPDATES, RACFMENU and RACFSETG to
+            include the new standard for defining program names
+            (SETP????) as a default setting
+     - Other Items
+       -- Updated members $DEFSETG, $STNDARD and #RACNOT1 in panel
+          dataset to include more information on member $DEFSITE
+       -- Added comments at the top of RACFSETD to provide information
+          on how it reads in/uses members $DEFSETG and $DEFSITE
+       -- Added more comments at top of REXX program RACFADM
+
   25 May 2020 - V25R5
      - Other Items
        -- Added the capability to create/use a site override member
@@ -11,6 +26,8 @@
             and then read in $DEFSITE to obtain any overrides
           * This prevents from having to update the $DEFSETG member
             everytime a new version of RACFADM is installed
+          * Fixed defining 'Default password in $DEFSETG and $DEFSITE
+            o Was not honoring lower case characters
           * Added comments in $DEFSETG
           * Updated tutorial 'Installation Notes'
           * Updated $DIR member located in the panels dataset

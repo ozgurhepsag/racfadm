@@ -19,12 +19,12 @@
 !  3)+The default%Settings+(Option 0) for new users is defined in member
 +    %$DEFSETG+in the panel dataset.  To override these settings, create a
 +     member called%$DEFSITE+and define/set any of the variables
-!     *+This will prevent from having to update the $DEFSETG member everytime
-*       a new version of RACFADM is installed
+!     *+The%$DEFSITE+member is optional, but if it exists, it will be read and
++       override any settings defined in member%$DEFSETG+
+!     *+This will prevent from having to update the%$DEFSETG+member everytime
++       a new version of%RACFADM+is installed
 !     *+The user's%Settings+are saved in their!ISPF+profile dataset in member
 +      %RADMPROF+
-+
-+
 +
 + \ \ (press%ENTER+to continue) \ \
 )PROC

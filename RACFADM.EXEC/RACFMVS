@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A2  200525  RACFA    Allow defining pgm name in Settings  (Opt 0) */
 /* @A1  200519  RACFA    Obtain DSN from $DEVSETG or Settings (Opt 0) */
 /* @A0  200516  RACFA    Developed REXX                               */
 /*====================================================================*/
@@ -13,7 +14,8 @@ REXXPGM     = LEFT(REXXPGM,8)
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */
 
 ADDRESS ISPEXEC
-  "VGET (SETGDISP SETDMVSL SETMSHOW SETMTRAC) PROFILE"        /* @A1 */
+  "VGET (SETGDISP SETMSHOW SETMTRAC",                         /* @A2 */
+        "SETPMVSL SETDMVSL) PROFILE"                          /* @A2 */
   If (SETMTRAC <> 'NO') then do
      Say "*"COPIES("-",70)"*"
      Say "*"Center("Begin Program = "REXXPGM,70)"*"
@@ -21,6 +23,8 @@ ADDRESS ISPEXEC
      if (SETMTRAC <> 'PROGRAMS') THEN
         interpret "Trace "SUBSTR(SETMTRAC,1,1)
   end
+  IF (SETPMVSL = "") THEN                                     /* @A2 */
+     SETPMVSL = "SHOWZOS"                                     /* @A2 */
   racflmsg = "Retrieving data - Please be patient"
   "control display lock"
   "display msg(RACF011)"
@@ -32,7 +36,7 @@ ADDRESS ISPEXEC
 
   ADDRESS TSO "ALLOC DD(SHOWMVS) UNIT(VIO) NEW",
               "SPACE(10 10) CYLINDERS"
-  ADDRESS LINKMVS "SHOWMVS"
+  ADDRESS LINKMVS SETPMVSL                                    /* @A2 */
   LASTRC = RC
   IF (SETDMVSL <> "") THEN                                    /* @A1 */
      "LIBDEF ISPLLIB"                                         /* @A1 */

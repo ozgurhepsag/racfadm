@@ -7,42 +7,60 @@
 +\-\(%RACFADM - Settings+)\-\
 %Command ===>_ZCMD                                                             +
 %
-{Specify the dataset to!LIBDEF{to invoke!Showmvs
+{Specify the!program name{and dataset to!LIBDEF:
++
+%Program
++  Name ......_SETPMVSL+
 +
 %Dataset
-+  Linklib ...._SETDMVSL                                    +
++  Linklib ..._SETDMVSL                                    +
 +
 %Note
-{  - Leave%blank,{if modules exist in LINKLIST, STEPLIB or ISPLLIB,
-{    else, must supply dataset name containing executable
-{  - Single quotes are!not{required
+{  - Leave linklib dataset%blank,{if module exist in LINKLIST, STEPLIB,
+{    or ISPLLIB, else, must supply dataset name containing executable,
+{    single quotes are!not{required
 )INIT
-  VGET (SETDMVSL) PROFILE
+  VGET (SETPMVSL SETDMVSL) PROFILE
+  IF (&SETPMVSL = &Z)
+     &SETPMVSL = SHOWZOS
   .HELP   = #RACSET1
   .CURSOR = SETDMVSL
 )PROC
   &RACFSMSG = &Z
   &RACFLMSG = &Z
 
+  VER (&SETPMVSL,NAME)
   VER (&SETDMVSL,DSNAME)
 
-  &BADDSNL = N
-  *REXX (SETDMVSL BADDSNL)
+  &BADMBR = N
+  &BADDSN = N
+  *REXX (SETPMVSL SETDMVSL BADMBR BADDSN)
      SETDMVSL = STRIP(SETDMVSL,,"'")
-     IF (SETDMVSL <> "") THEN
+     IF (SETDMVSL <> "") THEN DO
         IF (SYSDSN("'"SETDMVSL"'") <> "OK") THEN DO
            RACFSMSG = 'DSN does not exist'
            RACFLMSG = 'The dataset does not reside in the catalog +
                        or on a disk pack, please investigate.'
-           BADDSNL = "Y"
+           BADDSN = "Y"
            return
         END
+        IF (SYSDSN("'"SETDMVSL"("SETPMVSL")'") <> "OK") THEN DO
+           RACFSMSG = 'Member does not exist'
+           RACFLMSG = 'The member does not reside in the dataset +
+                       name, please investigate.'
+           BADMBR = "Y"
+           return
+        END
+     END
   *ENDREXX
 
-  IF (&BADDSNL = Y)
+  IF (&BADMBR = Y)
+     .CURSOR = SETPMVSL
+     .MSG    = RACF011
+  IF (&BADDSN = Y)
      .CURSOR = SETDMVSL
      .MSG    = RACF011
 
   IF (.MSG = &Z)
-     VPUT (SETDMVSL) PROFILE
+     VPUT (SETPMVSL SETDMVSL) PROFILE
 )END

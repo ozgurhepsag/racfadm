@@ -9,6 +9,13 @@
      - Member names
          $$DIR ...... Directory of all members and description
          $DEFSETG ... Define site wide defaults for new users
+         $DEFSITE ... Define site wide defaults overrides for new users
+                      * This member is optional, but if it exists, it
+                        will be read and override any settings defined
+                        in member $DEFSETG
+                      * This will prevent from having to update the
+                        $DEFSETG member everytime a new version of
+                        RACFADM is installed
          $??????? ... Data/informational ($CHANGES, $ISSUES, etc.)
          #??????? ... Tutorials
          RACF???? ... Menu, data entry and table panels
@@ -86,6 +93,6 @@
             SET#????
        -- Where
             SET  ... Settings (Option 0)
-            #    ... G=General, M=Management, T=Adding TSO Userid and
-                     D=Dataset
+            #    ... G=General, M=Management, T=Adding TSO Userid,
+                     P=Program and D=Dataset
             ???? ... Field name, any characters

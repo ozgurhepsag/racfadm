@@ -1,6 +1,17 @@
 /*%NOCOMMENT====================* REXX *==============================*/
 /*  PURPOSE:  RACFADM - Settings - Get defualt settings for new users */
 /*--------------------------------------------------------------------*/
+/*  NOTES:    1) This member will read in $DEFSETG to obtain the      */
+/*               default Settings (Option 0) for new users            */
+/*            2) To override these settings, create a member called   */
+/*               $DEFSITE and define/set any variables                */
+/*               - The $DEFSITE member is optional, but if it exists, */
+/*                 it will be read and override any settings defined  */
+/*                 in member $DEFSETG                                 */
+/*               - This will prevent from having to update the        */
+/*                 $DEFSETG member everytime a new version of         */
+/*                 RACFADM is installed                               */
+/*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
 /* @A7  200523  LBD      Allow a site override mbr, called $DEFSITE   */

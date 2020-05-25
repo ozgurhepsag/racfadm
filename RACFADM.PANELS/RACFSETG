@@ -119,8 +119,8 @@
 /*         SET#????                                                   */
 /*     - Where                                                        */
 /*         SET  ... Settings (option 0)                               */
-/*         #    ... G=General, M=Management, T=Adding TSO Userid      */
-/*                  and D=Dataset                                     */
+/*         #    ... G=General, M=Management, T=Adding TSO Userid,     */
+/*                  P=Program and D=Dataset                           */
 /*         ???? ... Field name (any characters)                       */
 /*                                                                    */
 /*--------------------------------------------------------------------*/

@@ -7,9 +7,11 @@
 /*                 defines/adds the RFIND command                     */
 /*               - SETUP_RFIND2 updates the currently used table      */
 /*                 and modifies the RFIND command                     */
-/*            2) Currently this program is using SETUP_RFIND1,        */
-/*               due to SETUP_RFIND2 was leaving entry in table       */
-/*               after exiting                                        */
+/*               - Currently this program is using SETUP_RFIND1,      */
+/*                 due to SETUP_RFIND2 was leaving entry in table     */
+/*                 after exiting                                      */
+/*            2) For new users, this REXX program will call RACFSETG  */
+/*               to define default Settings (Option 0)                */
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */

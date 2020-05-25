@@ -35,7 +35,7 @@ ADDRESS ISPEXEC                                               /* @A2 */
      "Display Panel("PANEL16")"
      IF (RC = 8) THEN LEAVE                                   /* @AA */
 
-     "VGET (SETGMVSD) PROFILE"       /* Showmvs dataset  */   /* @A9 */
+     "VGET (SETGMVSD) PROFILE"       /* Showmvs pgm/dsn  */   /* @A9 */
      IF (SETGMVSD = "YES") THEN DO                            /* @A9 */
         "Display Panel("PANEL17")"                            /* @A9 */
         SETGMVSD  = "NO"                                      /* @A9 */

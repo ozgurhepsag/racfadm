@@ -4,7 +4,9 @@
 *  1) This member initializes new user's default Settings (Option 0)  *
 *  2) To override this member, create a new member called $DEFSITE    *
 *     and define/set any of the variables                             *
-*     - This will prevent from having to update the $DEFSETG member   *
+*     - The $DEFSITE member is optional, but if it exists, it will be *
+*       read and override any settings defined in member $DEFSETG     *
+*     - This will prevent from having to update the member $DEFSETG   *
 *       everytime a new version of RACFADM is installed               *
 *  3) The user's Settings are saved to their ISPF profile dataset in  *
 *     member RADMPROF                                                 *
@@ -35,8 +37,9 @@ SETTCTLG =                                  /* User catalog          */
 SETTPROF =                                  /* ISPPROF dataset       */
 SETTUDSN =                                  /* User dataset          */
 *---------------------------------------------------------------------*
-*  LIBDEF Showmvs dataset (no quotes)                                 *
+*  Showmvs program name and LIBDEF dataset (no quotes)                *
 *---------------------------------------------------------------------*
+SETPMVSL = SHOWZOS                          /* Program name          */
 SETDMVSL =                                  /* Showmvs Linklib dsn   */
 *---------------------------------------------------------------------*
 *  ALTLIB/LIBDEF IBM's RACF DSNs for menu options (no quotes).  The   *
