@@ -7,7 +7,7 @@
    {  TYPE(OUTPUT)  PAS(ON)      CAPS(OFF)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V25R6+)\-\
++\-\(%RACFADM - RACF Administration - V25R7+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -285,7 +285,8 @@
 /*     - Where                                                        */
 /*         SET  ... Settings (option 0)                               */
 /*         #    ... G=General, M=Management, T=Adding TSO Userid      */
-/*                  P=Program and D=Dataset                           */
+/*                  P=Program/Panel (Load, REXX or CLIST member),     */
+/*                  and D=Dataset                                     */
 /*         ???? ... Field name (any characters)                       */
 /*     - The variables contain the full word, no abbreviations, in    */
 /*       hopes of making it easier to understand/maintain code,       */

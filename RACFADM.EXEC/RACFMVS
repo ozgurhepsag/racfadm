@@ -15,7 +15,7 @@ EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */
 
 ADDRESS ISPEXEC
   "VGET (SETGDISP SETMSHOW SETMTRAC",                         /* @A2 */
-        "SETPMVSL SETDMVSL) PROFILE"                          /* @A2 */
+        "SETPMVS SETDMVSL) PROFILE"                           /* @A2 */
   If (SETMTRAC <> 'NO') then do
      Say "*"COPIES("-",70)"*"
      Say "*"Center("Begin Program = "REXXPGM,70)"*"
@@ -23,8 +23,8 @@ ADDRESS ISPEXEC
      if (SETMTRAC <> 'PROGRAMS') THEN
         interpret "Trace "SUBSTR(SETMTRAC,1,1)
   end
-  IF (SETPMVSL = "") THEN                                     /* @A2 */
-     SETPMVSL = "SHOWZOS"                                     /* @A2 */
+  IF (SETPMVS = "") THEN                                      /* @A2 */
+     SETPMVS = "SHOWZOS"                                      /* @A2 */
   racflmsg = "Retrieving data - Please be patient"
   "control display lock"
   "display msg(RACF011)"
@@ -36,7 +36,7 @@ ADDRESS ISPEXEC
 
   ADDRESS TSO "ALLOC DD(SHOWMVS) UNIT(VIO) NEW",
               "SPACE(10 10) CYLINDERS"
-  ADDRESS LINKMVS SETPMVSL                                    /* @A2 */
+  ADDRESS LINKMVS SETPMVS                                     /* @A2 */
   LASTRC = RC
   IF (SETDMVSL <> "") THEN                                    /* @A1 */
      "LIBDEF ISPLLIB"                                         /* @A1 */

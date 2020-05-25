@@ -10,7 +10,7 @@
 {Specify the!program name{and dataset to!LIBDEF:
 +
 %Program
-+  Name ......_SETPMVSL+
++  Name ......_SETPMVS +
 +
 %Dataset
 +  Linklib ..._SETDMVSL                                    +
@@ -20,34 +20,34 @@
 {    or ISPLLIB, else, must supply dataset name containing executable,
 {    single quotes are!not{required
 )INIT
-  VGET (SETPMVSL SETDMVSL) PROFILE
-  IF (&SETPMVSL = &Z)
-     &SETPMVSL = SHOWZOS
+  VGET (SETPMVS SETDMVSL) PROFILE
+  IF (&SETPMVS = &Z)
+     &SETPMVS = SHOWZOS
   .HELP   = #RACSET1
-  .CURSOR = SETDMVSL
+  .CURSOR = SETPMVS
 )PROC
   &RACFSMSG = &Z
   &RACFLMSG = &Z
 
-  VER (&SETPMVSL,NAME)
+  VER (&SETPMVS,NB,NAME)
   VER (&SETDMVSL,DSNAME)
 
   &BADMBR = N
   &BADDSN = N
-  *REXX (SETPMVSL SETDMVSL BADMBR BADDSN)
+  *REXX (SETPMVS SETDMVSL BADMBR BADDSN RACFSMSG RACFLMSG)
      SETDMVSL = STRIP(SETDMVSL,,"'")
      IF (SETDMVSL <> "") THEN DO
         IF (SYSDSN("'"SETDMVSL"'") <> "OK") THEN DO
            RACFSMSG = 'DSN does not exist'
-           RACFLMSG = 'The dataset does not reside in the catalog +
-                       or on a disk pack, please investigate.'
+           RACFLMSG = 'The dataset does not reside in the catalog',
+                      'or on a disk pack, please investigate.'
            BADDSN = "Y"
            return
         END
-        IF (SYSDSN("'"SETDMVSL"("SETPMVSL")'") <> "OK") THEN DO
-           RACFSMSG = 'Member does not exist'
-           RACFLMSG = 'The member does not reside in the dataset +
-                       name, please investigate.'
+        IF (SYSDSN("'"SETDMVSL"("SETPMVS")'") <> "OK") THEN DO
+           RACFSMSG = 'Program does not exist'
+           RACFLMSG = 'The program name does not reside in the',
+                      'linklib dataset, please investigate.'
            BADMBR = "Y"
            return
         END
@@ -55,12 +55,12 @@
   *ENDREXX
 
   IF (&BADMBR = Y)
-     .CURSOR = SETPMVSL
+     .CURSOR = SETPMVS
      .MSG    = RACF011
   IF (&BADDSN = Y)
      .CURSOR = SETDMVSL
      .MSG    = RACF011
 
   IF (.MSG = &Z)
-     VPUT (SETPMVSL SETDMVSL) PROFILE
+     VPUT (SETPMVS SETDMVSL) PROFILE
 )END

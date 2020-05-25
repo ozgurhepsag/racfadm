@@ -2,6 +2,23 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  25 May 2020 - V25R7
+     - Settings (Option 0)
+       -- Updated when selecting Showmvs 'Define DSN'
+          * Updated error messages, where not displaying correctly
+          * Changed default settings variable name to SETPMVS, was
+            SETPMVSL
+          * Updated variable name in $DEFSETG member in panel dataset
+       -- Updated when selecting IBM RACF opts 'Define DSNs'
+          * Added field to change the IBM RACF main menu panel name,
+            default settings variable name is SETPIBM
+          * Updated error messages, where not displaying correctly
+          * Updated 'Settings' tutorial
+     - Other Items
+       -- Updated comments in $DEFSETG, $STNDARD, RACFMENU and
+          RACFSETG members in panel dataset concerning the
+          variables used to define user Settings (Option 0)
+
   25 May 2020 - V25R6
      - Settings (Option 0)
        -- Allow changing the executable program name to invoke
@@ -9,7 +26,7 @@
           * Defined the default program name to be SHOWZOS
           * Updated $STNDARD, $UPDATES, RACFMENU and RACFSETG to
             include the new standard for defining program names
-            (SETP????) as a default setting
+            (SETP????) as a default setting variable
      - Other Items
        -- Updated members $DEFSETG, $STNDARD and #RACNOT1 in panel
           dataset to include more information on member $DEFSITE

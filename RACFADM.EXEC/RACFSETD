@@ -183,5 +183,5 @@ ADDRESS ISPEXEC
          "SETMSG MSG(RACF011)"                                /* @A4 */
      END                                                      /* @A4 */
   END                                                         /* @A4 */
-  DROP REC.                                                   /* @XX */
+  DROP REC.                                                   /* @A6 */
 RETURN

@@ -8,7 +8,17 @@
 *       read and override any settings defined in member $DEFSETG     *
 *     - This will prevent from having to update the member $DEFSETG   *
 *       everytime a new version of RACFADM is installed               *
-*  3) The user's Settings are saved to their ISPF profile dataset in  *
+*  3) The following are the naming standard for variables used to     *
+*     save the user's Settings (Option 0)                             *
+*       - Syntax                                                      *
+*           SET#????                                                  *
+*       - Where                                                       *
+*           SET  ... Settings (Option 0)                              *
+*           #    ... G=General, M=Management, T=Adding TSO Userid,    *
+*                    P=Program/Panel (Load, REXX or CLIST member),    *
+*                    and D=Dataset                                    *
+*           ???? ... Field name, any characters                       *
+*  4) The user's Settings are saved to their ISPF profile dataset in  *
 *     member RADMPROF                                                 *
 *---------------------------------------------------------------------*
 *  General                                                            *
@@ -39,17 +49,18 @@ SETTUDSN =                                  /* User dataset          */
 *---------------------------------------------------------------------*
 *  Showmvs program name and LIBDEF dataset (no quotes)                *
 *---------------------------------------------------------------------*
-SETPMVSL = SHOWZOS                          /* Program name          */
+SETPMVS  = SHOWZOS                          /* Showmvs program name  */
 SETDMVSL =                                  /* Showmvs Linklib dsn   */
 *---------------------------------------------------------------------*
-*  ALTLIB/LIBDEF IBM's RACF DSNs for menu options (no quotes).  The   *
-*  default IBM RACF dataset names are:                                *
+*  IBM RACF's main menu panel and ALTLIB/LIBDEF datasets (no quotes). *
+*  IBM's default RACF dataset names are:                              *
 *---------------------------------------------------------------------*
 *    SETDIBMC = SYS1.HRFCLST                /* IBM RACF Clist dsn    */
 *    SETDIBMM = SYS1.HRFMSG                 /* IBM RACF Message dsn  */
 *    SETDIBMP = SYS1.HRFPANL                /* IBM RACF Panel dsn    */
 *    SETDIBMS = SYS1.HRFSKEL                /* IBM RACF Skeleton dsn */
 *---------------------------------------------------------------------*
+SETPIBM  = ICHP00                           /* IBM RACF menu/panel   */
 SETDIBMC =                                  /* IBM RACF Clist dsn    */
 SETDIBMM =                                  /* IBM RACF Message dsn  */
 SETDIBMP =                                  /* IBM RACF Panel dsn    */

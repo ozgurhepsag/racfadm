@@ -94,5 +94,6 @@
        -- Where
             SET  ... Settings (Option 0)
             #    ... G=General, M=Management, T=Adding TSO Userid,
-                     P=Program and D=Dataset
+                     P=Program/Panel (Load, REXX or CLIST member),
+                     and D=Dataset
             ???? ... Field name, any characters

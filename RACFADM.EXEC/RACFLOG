@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AK  200524  TRIDJK   Fixed displaying error message               */
 /* @AJ  200519  TRIDJK   Support ISPLOG SYSOUT datasets - SDSF/(E)JES */
 /* @AI  200511  RACFA    Place most current records at top of file    */
 /* @AH  200506  RACFA    Display headers in a different color         */
@@ -76,14 +77,14 @@ RETURN                                                        /* @AA */
 /*  Display the ISPLog file                                      @AF  */
 /*--------------------------------------------------------------------*/
 ISPLOG_FILE:                                                  /* @AF */
-  RECIN.0 = 0                                                 /* @XX */
+  RECIN.0 = 0                                                 /* @AK */
   "VGET (ZLOGNAME)"                                           /* @AJ */
   If right(zlogname,2) = '.?' then        /* SYSOUT? */       /* @AJ */
      Call DO_ISFCALLS                                         /* @AJ */
   else                                                        /* @AJ */
      Call ISPLOG_ISPF                                         /* @AJ */
                                                               /* @AI */
-  IF (RECIN.0 = 0) THEN DO                                    /* @XX */
+  IF (RECIN.0 = 0) THEN DO                                    /* @AK */
      RACFSMSG = ""                                            /* @AF */
      RACFLMSG = "The ISPF Log file is not allocated or",      /* @AF */
                 "may not have been written to.  Verify",      /* @AF */
@@ -94,8 +95,8 @@ ISPLOG_FILE:                                                  /* @AF */
                 "'Secondary pages = 10', then",               /* @AG */
                 "terminate and re-invoke ISPF."               /* @AG */
      'setmsg msg(RACF011)'                                    /* @AF */
-     RETURN                                                   /* @XX */
-  END                                                         /* @XX */
+     RETURN                                                   /* @AK */
+  END                                                         /* @AK */
 
   K = 0                                                       /* @AI */
   DO J = RECIN.0 To 1 by -1                                   /* @AI */

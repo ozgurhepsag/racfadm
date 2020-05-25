@@ -6,6 +6,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A3  200525  RACFA    Allow defining pgm name in Settings (Opt 0)  */
 /* @A2  200519  RACFA    Remove single quotes from datasets           */
 /* @A1  200511  RACFA    Chk ISPF variables for dataset names         */
 /* @A0  200510  LBD      Created REXX                                 */
@@ -13,7 +14,11 @@
 ADDRESS ISPEXEC
   arg racfopt
   if racfopt = '' then return 8
-  'VGet (SETDIBMM SETDIBMP SETDIBMS SETDIBMC) Profile'        /* @A1 */
+  'VGet (SETDIBMM SETDIBMP SETDIBMS SETDIBMC',                /* @A3 */
+        'SETPIBM) Profile'                                    /* @A3 */
+  IF (SETPIBM = "") THEN                                      /* @A3 */
+     SETPIBM = "ICHP00"                                       /* @A3 */
+
   IF (SETDIBMM = "") | (SETDIBMP = ""),                       /* @A1 */
    | (CETDIBMS = "") | (SETDIBMC = "") THEN                   /* @A1 */
      CALL PROCESS_MENU_OPT                                    /* @A1 */
@@ -88,9 +93,9 @@ EXIT
 /*--------------------------------------------------------------------*/
 PROCESS_MENU_OPT:
   Select
-    When racfopt = 5 then 'Select Panel(ichp00) Opt(5)'
-    When racfopt = 6 then 'Select Panel(ichp00) Opt(6)'
-    When racfopt = 7 then 'Select Panel(ichp00) Opt(7)'
+    When racfopt = 5 then 'Select Panel('SETPIBM') Opt(5)'    /* @A3 */
+    When racfopt = 6 then 'Select Panel('SETPIBM') Opt(6)'    /* @A3 */
+    When racfopt = 7 then 'Select Panel('SETPIBM') Opt(7)'    /* @A3 */
     Otherwise nop
   end
 RETURN
