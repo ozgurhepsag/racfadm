@@ -9,17 +9,17 @@
 +Adding TSO userid
 !  User catalog     +The TSO user catalog to define all new TSO user aliases
 +
-!  ISPPROF dataset  +The name of the TSO profile
+!  ISPPROF dataset  +The ISPF profile dataset name to be created for new TSO
++                    users.  This field allows specifying the qualifiers to
++                    append to the userid being created.  For example, if this
++                    field contains%ISPF.PROFILE,+the dataset name allocated
++                    will be%userid.ISPF.PROFILE+
 +
 !  User dataset     +The PDS dataset to be allocated for a new TSO user
-+                    (optional)
-+
-+
-+
-+
-+
-+
-+
++                    (optional).  This field allows specifying the qualifiers
++                    to append to the userid being created.  For example, if
++                    this field contains%JCL.CNTL,+the dataset name allocated
++                    will be%userid.JCL.CNTL
 +
 +
 +

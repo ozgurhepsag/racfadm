@@ -2,6 +2,13 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  25 May 2020 - V25R8
+     - Settings (Option 0)
+       -- Changed the field names as follows:
+          * Showmvs data 'Define DSN' to 'Pgm/DSN'
+          * IBM RACF opts 'Define DSNs' to 'Panel/DSNs'
+          * Updated tutorials
+
   25 May 2020 - V25R7
      - Settings (Option 0)
        -- Updated when selecting Showmvs 'Define DSN'

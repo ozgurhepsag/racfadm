@@ -14,20 +14,20 @@
 +  Status interval{..._Z   ~(0-9999){or_Z ~% (0-99)    {Progress message number
 +  Display files{....._Z~ (B=Browse, E=Edit, V=View)   {Display reports/files
 +  Confirm panel{....._Z~ (Y=Yes, N=No)                {Confirm command request
-+  Showmvs data{......_Z~ (Y=Yes, N=No)+Define DSN_Z{  {Showmvs RACF data
++  Showmvs data{......_Z~ (Y=Yes, N=No)+Pgm/DSN_Z{     {Showmvs RACF data
 +
 ^Management
 +  Administrator{....._Z~ (Y=Yes, N=No)                {Line cmds add/chg/etc.
 +  Admin RACF API{...._Z~ (Y=Yes, N=No)                {IRRXUTIL to add/chg/prof
-+  IBM RACF opts{....._Z~ (Y=Yes, N=No)+Define DSNs_Z{  RACF Systems/RRSF/Certs
++  IBM RACF opts{....._Z~ (Y=Yes, N=No)+Panel/DSNs_Z{   RACF Systems/RRSF/Certs
 +  RACF commands{....._Z~ (D=Display, L=Log, B=Both, N=No)     {View  RACF cmds
 +  REXX trace{........_Z~ (L=Labels, P=Pgms, R=Results, N=No)  {Trace REXX pgms
 +
 ^Adding TSO userids
 +  Default password{..@Z       ~ (Blank=Random pswd)  { New/chg user's password
 +  User catalog{......_Z                              { z/OS alias catalog
-+  ISPPROF dataset{..._Z                              { ISPF profile dataset
-+  User dataset{......_Z                              { User's PDS dataset (opt)
++  ISPPROF dataset{..._Z                              { Append qualifiers to id
++  User dataset{......_Z                              { Append qualifiers to id
 )INIT
   VGET (SETGFLTR SETGSTA  SETGSTAP SETGDISP  SETGCONF SETGMVS SETGMVSD +
         SETMADMN SETMIRRX SETMIBMM SETMIBMD  SETMSHOW SETMTRAC +

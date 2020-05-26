@@ -22,7 +22,7 @@
 !  Showmvs data     %Yes+to display the below menu options,%Yes+is the default
 +                     %7  !RACFdata +RACF data (Showmvs)
 +                    To specify SHOWMVS program name and executable dataset to
-+                    LIBDEF, type in%Yes+in!Define DSN+field,%No+is the default
++                    LIBDEF, type in%Yes+in!Pgm/DSN+field,%No+is the default
 +
 +
 + \ \ (press%ENTER+to continue) \ \
