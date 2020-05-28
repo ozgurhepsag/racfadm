@@ -8,7 +8,9 @@
   1) Panels
      - Member names
          $$DIR ...... Directory of all members and description
-         $DEFSETG ... Define site wide defaults for new users
+         $DEFSETG ... Define site wide defaults for new users and
+                      if need be, force a refresh of certain variables
+                      for existing users (SETR??? = Y)
          $DEFSITE ... Define site wide defaults overrides for new users
                       * This member is optional, but if it exists, it
                         will be read and override any settings defined

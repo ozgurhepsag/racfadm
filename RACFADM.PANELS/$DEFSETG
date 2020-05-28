@@ -2,6 +2,8 @@
 *                           Default Settings                          *
 *---------------------------------------------------------------------*
 *  1) This member initializes new user's default Settings (Option 0)  *
+*     and can refresh specific Settings for existing users by         *
+*     defining the variable 'SETR??? = Y'                             *
 *  2) To override this member, create a new member called $DEFSITE    *
 *     and define/set any of the variables                             *
 *     - The $DEFSITE member is optional, but if it exists, it will be *
@@ -23,6 +25,7 @@
 *---------------------------------------------------------------------*
 *  General                                                            *
 *---------------------------------------------------------------------*
+SETRGEN  = N /* Force refresh of 'General' variables (Y=Yes, N=No)   */
 SETGFLTR =                                  /* Default filter        */
 SETGSTA  = 100     /* Status interval    (0-9999)                    */
 SETGSTAP =         /* Status percent     (0-99)                      */
@@ -33,6 +36,7 @@ SETGMVSD = N       /* Showmvs LIBDEF DSN (Y=Yes, N=No)               */
 *---------------------------------------------------------------------*
 *  Management                                                         *
 *---------------------------------------------------------------------*
+SETRMGT  = N /* Force refresh of 'Management' variables (Y=Yes,N=No) */
 SETMADMN = N       /* Administrator  (Y=Yes, N=No)                   */
 SETMIRRX = N       /* Admin RACF API (Y=Yes, N=No)                   */
 SETMIBMM = N       /* IBM RACF menu options 6, 7 and 8 (Y=Yes, N=No) */
@@ -42,13 +46,15 @@ SETMTRAC = N       /* REXX trace (L=Labels, P=Pgms, R=Results, N=No) */
 *---------------------------------------------------------------------*
 *  Adding TSO userids                                                 *
 *---------------------------------------------------------------------*
-SETTPWSD =                                  /* Default password      */
+SETRTSO  = N /* Force refresh of 'Adding TSO userids' (Y=Yes, N=No)  */
+SETTPSWD =                                  /* Default password      */
 SETTCTLG =                                  /* User catalog          */
 SETTPROF =                                  /* ISPPROF dataset       */
 SETTUDSN =                                  /* User dataset          */
 *---------------------------------------------------------------------*
 *  Showmvs program name and LIBDEF dataset (no quotes)                *
 *---------------------------------------------------------------------*
+SETRMVS  = N /* Force refresh of 'Showmvs' variables (Y=Yes, N=No)   */
 SETPMVS  = SHOWZOS                          /* Showmvs program name  */
 SETDMVSL =                                  /* Showmvs Linklib dsn   */
 *---------------------------------------------------------------------*
@@ -61,6 +67,7 @@ SETDMVSL =                                  /* Showmvs Linklib dsn   */
 *    SETDIBMP = SYS1.HRFPANL                /* IBM RACF Panel dsn    */
 *    SETDIBMS = SYS1.HRFSKEL                /* IBM RACF Skeleton dsn */
 *---------------------------------------------------------------------*
+SETRIBM  = N /* Force refresh of 'IBM RACF' variables (Y=Yes, N=No)  */
 SETPIBM  = ICHP00                           /* IBM RACF menu/panel   */
 SETDIBMC =                                  /* IBM RACF Clist dsn    */
 SETDIBMM =                                  /* IBM RACF Message dsn  */

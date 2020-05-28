@@ -2,7 +2,10 @@
 /*  PURPOSE:  RACFADM - Settings - Get defualt settings for new users */
 /*--------------------------------------------------------------------*/
 /*  NOTES:    1) This member will read in $DEFSETG to obtain the      */
-/*               default Settings (Option 0) for new users            */
+/*               default Settings (Option 0) for new users and if     */
+/*               necessary, force a refresh of a sections variables   */
+/*               (General, Management, etc.) by setting the variable  */
+/*               'SETR??? = Y'                                        */
 /*            2) To override these settings, create a member called   */
 /*               $DEFSITE and define/set any variables                */
 /*               - The $DEFSITE member is optional, but if it exists, */
@@ -14,6 +17,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A8  200528  RACFA    Allow forcing redefining a sections variables*/
 /* @A7  200523  LBD      Allow a site override mbr, called $DEFSITE   */
 /* @A6  200522  RACFA    Added DROP REC.                              */
 /* @A5  200519  RACFA    Validate SHOWMVS DSN exit/valid              */
@@ -26,10 +30,12 @@
 MBRDSETG    = "$DEFSETG"   /* Default Settings member      */
 MBRDSITE    = "$DEFSITE"   /* Site Default Overrides       */ /* @A7 */
 DDNAME      = 'RACFA'RANDOM(0,999) /* Unique ddname        */
+NEWUSER     = 'N'                  /* New user?            */ /* @A8 */
 
 ADDRESS ISPEXEC
   'vget (SETMADMN) profile'
-  if (SETMADMN <> '') then return  /* Not new user, return */
+  if (setmadmn = "") then                                     /* @A8 */
+     newuser = 'Y'                                            /* @A8 */
 
   "QLIBDEF ISPPLIB TYPE(DATASET) ID(DSNAMEW)"                 /* @A7 */
   if (RC > 0) then
@@ -160,7 +166,43 @@ ADDRESS ISPEXEC
      END
 
      INTERPRET W1" = W3L"                                     /* @A7 */
-     INTERPRET "'VPUT ("W1") PROFILE'"
+
+     CKCHR1TO4 = SUBSTR(W1,1,4)                               /* @A8 */
+     CKCHR4TO8 = SUBSTR(W1,4,4)                               /* @A8 */
+     SELECT                                                   /* @A8 */
+        /* Is this a variable used to Refresh?    */          /* @A8 */
+        WHEN (CKCHR1TO4 = "SETR") THEN                        /* @A8 */
+             NOP                                              /* @A8 */
+        /* Refresh 'General' variables?           */          /* @A8 */
+        WHEN (SETRGEN = "YES") THEN                           /* @A8 */
+             IF (CKCHR1TO4 = "SETG") THEN                     /* @A8 */
+                INTERPRET "'VPUT ("W1") PROFILE'"             /* @A8 */
+        /* Refresh 'Management' variables?        */          /* @A8 */
+        WHEN (SETRMGT = "YES") THEN                           /* @A8 */
+             IF (CKCHR1TO4 = "SETM") THEN                     /* @A8 */
+                INTERPRET "'VPUT ("W1") PROFILE'"             /* @A8 */
+        /* Refresh 'Adding TSO Userid' variables? */          /* @A8 */
+        WHEN (SETRTSO = "YES") THEN DO                        /* @A8 */
+             IF (CKCHR1TO4 = "SETT") THEN                     /* @A8 */
+                INTERPRET "'VPUT ("W1") PROFILE'"             /* @A8 */
+        END                                                   /* @A8 */
+        /* Refresh SHOWMVS program and dataset?   */          /* @A8 */
+        WHEN (SETRMVS = "YES") THEN                           /* @A8 */
+             IF (CKCHRS4TO8 = "PMVS"),                        /* @A8 */
+              | (CKCHRS4TO8 = "DMVS") THEN                    /* @A8 */
+                INTERPRET "'VPUT ("W1") PROFILE'"             /* @A8 */
+        /* Refresh IBM RACF panel and datasets?   */          /* @A8 */
+        WHEN (SETRIBM = "YES") THEN                           /* @A8 */
+             IF (CKCHRS4TO8 = "PIBM"),                        /* @A8 */
+              | (CKCHRS4TO8 = "DIBM") THEN                    /* @A8 */
+                INTERPRET "'VPUT ("W1") PROFILE'"             /* @A8 */
+        /* Not a new user?                        */          /* @A8 */
+        WHEN (NEWUSER = 'N') then                             /* @A8 */
+             NOP                                              /* @A8 */
+        /* Must be a new user then                */          /* @A8 */
+        OTHERWISE                                             /* @A8 */
+             INTERPRET "'VPUT ("W1") PROFILE'"                /* @A8 */
+     END                                                      /* @A8 */
   END
 
   IF (SETDIBMM = "") & (SETDIBMP = ""),                       /* @A4 */
