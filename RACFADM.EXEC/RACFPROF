@@ -4,8 +4,10 @@
 /*  SYNTAX:   CALL RACFPROF 'USER/GROUP' userid/group                 */
 /*--------------------------------------------------------------------*/
 /*  NOTES:    1) Executes RACF administration API (IRRXUTIL)          */
+/*                                                                    */
 /*            2) Must have Settings (Opt 0) 'Administrator=Y' in      */
 /*               order to display/use the line command 'P-Profile'    */
+/*                                                                    */
 /*            3) The user must have READ access to                    */
 /*               'IRR.RADMIN.LIST_/RLIST' in FACILITY, plus           */
 /*               authority to list the profile                        */

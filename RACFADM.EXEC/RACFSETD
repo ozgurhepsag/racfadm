@@ -6,6 +6,7 @@
 /*               necessary, force a refresh of a sections variables   */
 /*               (General, Management, etc.) by setting the variable  */
 /*               'SETR??? = Y'                                        */
+/*                                                                    */
 /*            2) To override these settings, create a member called   */
 /*               $DEFSITE and define/set any variables                */
 /*               - The $DEFSITE member is optional, but if it exists, */
@@ -14,6 +15,17 @@
 /*               - This will prevent from having to update the        */
 /*                 $DEFSETG member everytime a new version of         */
 /*                 RACFADM is installed                               */
+/*                                                                    */
+/*            3) The following are the naming standard for variables  */
+/*               used to save the user's Settings (Option 0)          */
+/*               - Syntax                                             */
+/*                   SET#????                                         */
+/*               - Where                                              */
+/*                   SET .... Settings (Option 0)                     */
+/*                   # ...... G=General, M=Management, T=Adding TSO   */
+/*                            Userid, P=Program/Panel (Load, REXX or  */
+/*                            CLIST member), D=Dataset and R=Refresh  */
+/*                   ???? ... Field name, any characters              */
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */

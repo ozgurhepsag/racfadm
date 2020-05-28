@@ -3,9 +3,11 @@
 /*--------------------------------------------------------------------*/
 /*  NOTES:    1) This user line command XR, Cross Reference Report,   */
 /*               is not displayed as a line command                   */
+/*                                                                    */
 /*            2) Reason for this is sites with a large RACF database, */
 /*               the time for IRRUT100 to read/obtain the data is     */
 /*               significant                                          */
+/*                                                                    */
 /*            3) To access/use this command, turn on the Settings     */
 /*               (Option 0):                                          */
 /*                 Administrator ..... Y                              */

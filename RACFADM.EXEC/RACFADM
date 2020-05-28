@@ -10,6 +10,7 @@
 /*               - Currently this program is using SETUP_RFIND1,      */
 /*                 due to SETUP_RFIND2 was leaving entry in table     */
 /*                 after exiting                                      */
+/*                                                                    */
 /*            2) For new users, this REXX program will call RACFSETD  */
 /*               to define default Settings (Option 0)                */
 /*--------------------------------------------------------------------*/

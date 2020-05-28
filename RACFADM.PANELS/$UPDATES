@@ -2,6 +2,11 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  28 May 2020 - V26R1
+     - Other Items
+       -- Updated comments/documentation in several members, concerning
+          the naming standards of Setting (Option 0) variables
+
   28 May 2020 - V26R0
      - Other Items
        -- Allow changing an existing user's Settings (option 0)
@@ -11,7 +16,7 @@
             setting the variable 'SETR??? = Y', default is N
           * This will eliminate having to communicate to existing
             users and have them change their Settings (option 0)
-            becuase a module or dataset name changed
+            because a module or dataset name changed
         -- Fixed the 'Default password' variable name in $DEFSETG,
            it was mis-spelled (SETTPWSD) and needed to be SETTPSWD
 
