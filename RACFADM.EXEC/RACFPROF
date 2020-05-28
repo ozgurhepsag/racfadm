@@ -50,8 +50,8 @@
 /*====================================================================*/
 PANELM2     = "RACFMSG2"   /* Display RACF command and RC  */ /* @A9 */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @AL */
-DDNAME      = 'RACFA'RANDOM(0,999)  /* Unique ddname       */
-parse source . . REXXPGM .                                    /* @AY */
+DDNAME      = 'RACFA'RANDOM(0,999) /* Unique ddname        */
+parse source . . REXXPGM .         /* Obtain REXX pgm name */ /* @AY */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @AY */
 
 arg class profile

@@ -29,8 +29,8 @@
 /* @A0  011229  NICORIZ  Created REXX, V2.1, www.rizzuto.it           */
 /*====================================================================*/
 PANEL19     = "RACFPRMS"   /* RACF parameters, menu opt 7  */ /* @A5 */
-TABLEA      = 'TA'RANDOM(0,99999)   /* Unique table name A */ /* @AK */
-parse source . . REXXPGM .                                    /* @AB */
+TABLEA      = 'TA'RANDOM(0,99999)  /* Unique table name A  */ /* @AK */
+parse source . . REXXPGM .         /* Obtain REXX pgm name */ /* @AB */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @AB */
 parse value '' with null                                      /* @AE */
 
@@ -292,28 +292,28 @@ RETURN
 /*  RACF setropt options                                              */
 /*--------------------------------------------------------------------*/
 RACF_SETROPT_OPTIONS:
-  rc= Setbool(rcvtsegn,53,'01','NO','YES')  /* egn                    */
-  rc= Setbool(rcvtplc,633,'40','NO','YES')  /* lower case pswd    @AC */
-  rc= Setbool(rcvtpsc,633,'08','NO','YES')  /* special char pswd  @AC */
-  rc= Setbool(rcvtxpwd,633,'04','NO','YES') /* extended pswd spt  @AC */
-  rc= Setbool(rcvtmfa,633,'02','NO','YES')  /* mfa                @A2 */
-  rc= Setbool(rcvtsads,53,'02','YES','NO')  /* adsp                   */
-  rc= Setbool(rcvtscat,628,'40','NO','YES') /* catdsns                */
-  rc= Setbool(rcvtseos,393,'20','NO','YES') /* erase on scratch       */
-  rc= Setbool(rcvtsapl,764,'08','NO','YES') /* applaudit              */
-  rc= Setbool(rcvtsaus,764,'10','YES','NO') /* audit special          */
-  rc= Setbool(rcvtsauo,151,'01','NO','YES') /* audit operations       */
-  rc= Setbool(rcvtsgrc,329,'80','NO','YES') /* listofgroupschecking   */
-  rc= Setbool(rcvtsgno,628,'02','NO','YES') /* generic owner          */
-  rc= Setbool(rcvtsmla,628,'04','NO','YES') /* mlactive               */
-  rc= Setbool(rcvtsmlq,628,'20','NO','YES') /* mlquiet                */
-  rc= Setbool(rcvtsmls,628,'08','NO','YES') /* mls                    */
-  rc= Setbool(rcvtsmlt,628,'10','NO','YES') /* mlstable               */
-  rc= Setbool(rcvtsslc,628,'80','NO','YES') /* seclabel control       */
-  rc= Setbool(rcvtssla,628,'01','NO','YES') /* seclabel audit         */
-  rc= Setbool(rcvtswhe,394,'80','NO','YES') /* when program           */
-  rc= Setbool(rcvtspra,393,'80','NO','YES') /* protect all            */
-  rc= Setvalue(rcvtsrpe,396,2)              /* retention period       */
+  rc = Setbool(rcvtsegn,53,'01','NO','YES')  /* egn                   */
+  rc = Setbool(rcvtplc,633,'40','NO','YES')  /* lower case pswd   @AC */
+  rc = Setbool(rcvtpsc,633,'08','NO','YES')  /* special chr pswd  @AC */
+  rc = Setbool(rcvtxpwd,633,'04','NO','YES') /* extend pswd spt   @AC */
+  rc = Setbool(rcvtmfa,633,'02','NO','YES')  /* mfa               @A2 */
+  rc = Setbool(rcvtsads,53,'02','YES','NO')  /* adsp                  */
+  rc = Setbool(rcvtscat,628,'40','NO','YES') /* catdsns               */
+  rc = Setbool(rcvtseos,393,'20','NO','YES') /* erase on scratch      */
+  rc = Setbool(rcvtsapl,764,'08','NO','YES') /* applaudit             */
+  rc = Setbool(rcvtsaus,764,'10','YES','NO') /* audit special         */
+  rc = Setbool(rcvtsauo,151,'01','NO','YES') /* audit operations      */
+  rc = Setbool(rcvtsgrc,329,'80','NO','YES') /* listofgroupschecking  */
+  rc = Setbool(rcvtsgno,628,'02','NO','YES') /* generic owner         */
+  rc = Setbool(rcvtsmla,628,'04','NO','YES') /* mlactive              */
+  rc = Setbool(rcvtsmlq,628,'20','NO','YES') /* mlquiet               */
+  rc = Setbool(rcvtsmls,628,'08','NO','YES') /* mls                   */
+  rc = Setbool(rcvtsmlt,628,'10','NO','YES') /* mlstable              */
+  rc = Setbool(rcvtsslc,628,'80','NO','YES') /* seclabel control      */
+  rc = Setbool(rcvtssla,628,'01','NO','YES') /* seclabel audit        */
+  rc = Setbool(rcvtswhe,394,'80','NO','YES') /* when program          */
+  rc = Setbool(rcvtspra,393,'80','NO','YES') /* protect all           */
+  rc = Setvalue(rcvtsrpe,396,2)              /* retention period      */
 
   rcvtsta$ = d2x((x2d(cvtrac))+630)         /* rcvtsta      $         */
   x        = storage(rcvtsta$,2)
@@ -333,7 +333,7 @@ SETBOOL:
   interpret  "rcvtsta$= d2x((x2d("cvtrac"))+"offset")"
   x        = storage(rcvtsta$,1)
   interpret  variable '= 'status1
-  interpret  "x=bitand(x,'"value"'x)"        /* remove unwanted bits   */
+  interpret  "x=bitand(x,'"value"'x)"       /* remove unwanted bits   */
   interpret  "if (x= '"value"'x) then "variable"="status2
 RETURN 0000
 /*--------------------------------------------------------------------*/
@@ -377,55 +377,55 @@ RETURN
 /*  RACF terminal options                                             */
 /*--------------------------------------------------------------------*/
 RACF_TERMINAL_OPTIONS:
-  rc= Setbool(rcvttaut,154,'80','NO','YES') /* terminal auth checking */
-  rc= Setbool(rcvttuac,154,'40','NO','YES') /* terminal uacc          */
+  rc = Setbool(rcvttaut,154,'80','NO','YES') /* terminal auth chking  */
+  rc = Setbool(rcvttuac,154,'40','NO','YES') /* terminal uacc         */
 RETURN
 /*--------------------------------------------------------------------*/
 /*  RACF statistics                                                   */
 /*--------------------------------------------------------------------*/
 RACF_STATISTICS:
-  rc= Setbool(rcvtnls ,53,'40','Yes','No')          /* racinit        */
-  rc= Setbool(rcvtndss,53,'20','Yes','No')          /* data set       */
-  rc= Setbool(rcvtntvs,53,'10','Yes','No')          /* tape           */
-  rc= Setbool(rcvtndvs,53,'08','Yes','No')          /* dasd           */
-  rc= Setbool(rcvtntms,53,'04','Yes','No')          /* terminal       */
+  rc = Setbool(rcvtnls ,53,'40','Yes','No')         /* racinit        */
+  rc = Setbool(rcvtndss,53,'20','Yes','No')         /* data set       */
+  rc = Setbool(rcvtntvs,53,'10','Yes','No')         /* tape           */
+  rc = Setbool(rcvtndvs,53,'08','Yes','No')         /* dasd           */
+  rc = Setbool(rcvtntms,53,'04','Yes','No')         /* terminal       */
 RETURN
 /*--------------------------------------------------------------------*/
 /*  RACF tape options                                                 */
 /*--------------------------------------------------------------------*/
 RACF_TAPE_OPTIONS:
-  rc= Setbool(rcvttvpr,150,'80','NO','YES') /* tape volume protection */
-  rc= Setbool(rcvttdpr,392,'40','NO','YES') /* tape dataset protection*/
+  rc = Setbool(rcvttvpr,150,'80','NO','YES')   /* tape vol protection */
+  rc = Setbool(rcvttdpr,392,'40','NO','YES')   /* tape dsn protection */
 RETURN
 /*--------------------------------------------------------------------*/
 /*  RACF audit options                                                */
 /*--------------------------------------------------------------------*/
 RACF_AUDIT_OPTIONS:
-  rcvtauop$=   d2x((x2d(cvtrac))+151)       /* rcvtauop     $         */
+  rcvtauop$ = d2x((x2d(cvtrac))+151)        /* rcvtauop     $         */
 
-  x       =    storage(rcvtauop$,1)         /* rcvtauop               */
-  rcvtagro='No'                             /* default                */
-  x       =    bitand(x,'40'x)              /* remove unwanted bits   */
+  x         = storage(rcvtauop$,1)          /* rcvtauop               */
+  rcvtagro  = 'No'                          /* default                */
+  x         = bitand(x,'40'x)               /* remove unwanted bits   */
   if (x = '40'x) then                       /* audit group class?     */
-     rcvtagro='Yes'                         /* yes                    */
+     rcvtagro = 'Yes'                       /* yes                    */
 
-  x       =    storage(rcvtauop$,1)         /* rcvtauop               */
+  x         = storage(rcvtauop$,1)          /* rcvtauop               */
   rcvtause='No'                             /* default                */
-  x       =    bitand(x,'20'x)              /* remove unwanted bits   */
+  x         = bitand(x,'20'x)               /* remove unwanted bits   */
   if (x = '20'x) then                       /* audit user class ?     */
-     rcvtause='Yes'                         /* yes                    */
+     rcvtause = 'Yes'                       /* yes                    */
 
-  x       =    storage(rcvtauop$,1)         /* rcvtauop               */
+  x         = storage(rcvtauop$,1)          /* rcvtauop               */
   rcvtadat='No'                             /* default                */
-  x       =    bitand(x,'10'x)              /* remove unwanted bits   */
+  x         = bitand(x,'10'x)               /* remove unwanted bits   */
   if (x = '10'x) then                       /* audit dataset class?   */
-     rcvtadat='Yes'                         /* yes                    */
+     rcvtadat ='Yes'                        /* yes                    */
 
-  x       =    storage(rcvtauop$,1)         /* rcvtauop               */
+  x         = storage(rcvtauop$,1)          /* rcvtauop               */
   rcvtadas='No'                             /* default                */
-  x       =    bitand(x,'08'x)              /* remove unwanted bits   */
+  x         = bitand(x,'08'x)               /* remove unwanted bits   */
   if (x = '08'x) then                       /* audit DASDVOL class?   */
-     rcvtadas='Yes'                         /* yes                    */
+     rcvtadas ='Yes'                        /* yes                    */
 RETURN
 /*--------------------------------------------------------------------*/
 /*  Get RACF backup database name                                @A9  */

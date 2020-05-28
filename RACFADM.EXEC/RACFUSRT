@@ -48,8 +48,8 @@
 X           = MSG("OFF")   /* No informational messages    */ /* @AD */
 PANEL29     = "RACFUSRT"   /* Add, chg and del TSO userid  */ /* @A9 */
 PANELM2     = "RACFMSG2"   /* Display RACF command and RC  */ /* @AW */
-DDNAME      = 'RACFA'RANDOM(0,999)  /* Unique ddname       */ /* @AW */
-parse source . . REXXPGM .                                    /* @B2 */
+DDNAME      = 'RACFA'RANDOM(0,999) /* Unique ddname        */ /* @AW */
+parse source . . REXXPGM .         /* Obtain REXX pgm name */ /* @B2 */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @B2 */
 
 ADDRESS ISPEXEC                                               /* @AF */

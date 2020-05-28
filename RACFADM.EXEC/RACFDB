@@ -91,6 +91,7 @@
 /* (5) SYSPLEX COMMUNICATIONS ENABLED AND                            */
 /* (6) IN DATASHARING MODE                                           */
 /* ---------------------END OF COMMAND OUTPUT------------------------*/
+/*                                                                   */
 /*  NOTES:                                                           */
 /*  (1) DISPLAYS THE SMF ID AS DEFINED IN THE PARMLIB MEMBER         */
 /*        SMFPRMXX USING THE SID(NAME) STATEMENT.                    */
@@ -144,17 +145,16 @@
 /*              THE "RVARY LIST" COMMAND TO GET THIS TYPE OF         */
 /*              INFORMATION.                                         */
 /*                                                                   */
-/*                                                                   */
 /*  ENVIRONMENT:                                                     */
 /*           THIS CODE HAS BEEN TESTED ON OS/390 V2R10 AND           */
 /*           Z/OS V1R4 ON SINGLE AND SPLIT DATABASES.                */
 /*                                                                   */
 /*********************************************************************/
-PANEL01     = "RACFRPTS"   /* Display with colors          */ /* @AE */
+PANEL01     = "RACFRPTS"   /* Display report with colors   */ /* @AE */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @A4 */
-DDNAME      = 'RACFA'RANDOM(0,999)  /* Unique ddname       */ /* @AC */
+DDNAME      = 'RACFA'RANDOM(0,999) /* Unique ddname        */ /* @AC */
 parse source . . REXXPGM .                                    /* @AB */
-REXXPGM   = LEFT(REXXPGM,8)                                   /* @AB */
+REXXPGM     = LEFT(REXXPGM,8)      /* Obtain REXX pgm name */ /* @AB */
 
 ADDRESS ISPEXEC                                               /* @AG */
   "VGET (SETGDISP SETMTRAC)"                                  /* @A5 */
@@ -171,26 +171,26 @@ ADDRESS ISPEXEC                                               /* @AG */
   ADDRESS ISPEXEC "display msg(RACF011)"                      /* @AG */
   NUMERIC DIGITS 10     /* DEFINE DIGIT SIZE FOR 31 BIT ADDRESSING   */
   RACFVRMN = ''
-  LINE = ''
-  CVT  = C2X( STORAGE(10,4) )          /* POINTER TO CVT             */
-  RCVT = D2X(X2D(CVT) +X2D(3E0) )      /* POINTER TO RCVT POINTER    */
-  RCVT = C2X(STORAGE(RCVT,4))          /* POINTER TO RCVT            */
-  /*SAY "RCVT ACRONYM: "STORAGE(RCVT,4)  */
-  DSDT = D2X(X2D(RCVT) + X2D(E0) )     /* POINTER TO DSDT POINTER    */
-  DSDT = C2X(STORAGE(DSDT,4))          /* POINTER TO DSDT            */
-  /*SAY "DSDT ACRONYM: "STORAGE(DSDT,4) */
-  DSDTNUM = D2X(X2D(DSDT) + X2D(4))    /* ADDRESS OF DSDTNUM         */
-  DSDTNUM = C2D(STORAGE(DSDTNUM,4))    /* DSDTNUM                    */
+  LINE     = ''
+  CVT      = C2X( STORAGE(10,4) )      /* POINTER TO CVT             */
+  RCVT     = D2X(X2D(CVT) +X2D(3E0))   /* POINTER TO RCVT POINTER    */
+  RCVT     = C2X(STORAGE(RCVT,4))      /* POINTER TO RCVT            */
+  /* SAY "RCVT ACRONYM: "STORAGE(RCVT,4) */
+  DSDT     = D2X(X2D(RCVT) + X2D(E0) ) /* POINTER TO DSDT POINTER    */
+  DSDT     = C2X(STORAGE(DSDT,4))      /* POINTER TO DSDT            */
+  /* SAY "DSDT ACRONYM: "STORAGE(DSDT,4) */
+  DSDTNUM  = D2X(X2D(DSDT) + X2D(4))   /* ADDRESS OF DSDTNUM         */
+  DSDTNUM  = C2D(STORAGE(DSDTNUM,4))   /* DSDTNUM                    */
   DSDTPRIM = D2X(X2D(DSDT) + X2D(90))  /* ADDRESS OF FIRST PRIM DS   */
   DSDTBACK = D2X(X2D(DSDT) + X2D(140)) /* ADDRESS OF FIRST BKUP DS   */
   DSDTDSRQ = D2X(X2D(DSDT) + X2D(88))  /* DATASHARE FLAG ONE         */
-  DSDTDSRQ= STORAGE(DSDTDSRQ,1)        /* GET CMD COMMUNICATIONS FLG */
-  IF BITAND(DSDTDSRQ,'80'X) = '80'X THEN
+  DSDTDSRQ = STORAGE(DSDTDSRQ,1)       /* GET CMD COMMUNICATIONS FLG */
+  IF (BITAND(DSDTDSRQ,'80'X) = '80'X) THEN
      SYSCOM = "Sysplex communications ENABLED and"            /* @A1 */
   ELSE                                                        /* @A1 */
      SYSCOM = "Sysplex communications DISABLED and"           /* @A1 */
   DSDTDSMO = D2X(X2D(DSDT) + X2D(89))  /* DATASHARE FLAG TWO         */
-  DSDTDSMO= C2D(STORAGE(DSDTDSMO,1))   /* GET DATASHARE STATUS FLAG  */
+  DSDTDSMO = C2D(STORAGE(DSDTDSMO,1))  /* GET DATASHARE STATUS FLAG  */
   SELECT
      WHEN (DSDTDSMO = 0) THEN
           SYSDS = "in NON-DATA SHARING mode"                  /* @A1 */
@@ -254,8 +254,8 @@ ADDRESS ISPEXEC                                               /* @AG */
      DSDTBACK = D2X(X2D(DSDTBACK) + 352) /* BUMP TO NEXT SLOT        */
   END                                    /* END OF II DO LOOP        */
 
-  CVDX = D2X(X2D(RCVT) + X2D(258) )    /* ADDR OF RCDX POINTER       */
-  CVDX = C2X(STORAGE(CVDX,4))          /* POINTER TO CVDX            */
+  CVDX  = D2X(X2D(RCVT) + X2D(258) )   /* ADDR OF RCDX POINTER       */
+  CVDX  = C2X(STORAGE(CVDX,4))         /* POINTER TO CVDX            */
   PVERA = D2X(X2D(CVDX) + X2D(1DC))    /* ADDRESS OF TMPLATE VERSION */
   DPVER = STORAGE(PVERA,7)             /* DYNAMIC PARSE VERSION      */
 
@@ -328,7 +328,7 @@ FINDSIZE:
 
      BLKC = C2D(BLK_CNT)                   /* EACH SEGMENT=256 BYTES */
      X = $GET_BAM_COUNT(BAM_DATA,BLKC)     /* GET ALLOC. DATA IN BAM */
-     IF C2D(NEXT_BAM_BLOCK) = 0 THEN       /* NO MORE BAMS?          */
+     IF (C2D(NEXT_BAM_BLOCK) = 0) THEN     /* NO MORE BAMS?          */
         LEAVE
      ELSE
         BAM_ADDR = NEXT_BAM_BLOCK          /* Yes CONTINUE           */

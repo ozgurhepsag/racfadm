@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @C1  200527  RACFA    Fix, allow typing 'S' on multiple rows       */
 /* @BZ  200520  RACFA    Display line cmd 'P'rofile, when 'Admin=N'   */
 /* @BY  200506  RACFA    Drop array immediately when done using       */
 /* @BX  200504  TRIDJK   Adding, place in order, prior was at bottom  */
@@ -85,10 +86,10 @@ PANEL13     = "RACFCLSC"   /* Add class                    */ /* @AM */
 PANELM1     = "RACFMSG1"   /* Confirm Request (pop-up)     */ /* @AM */
 PANELM2     = "RACFMSG2"   /* Display RACF command and RC  */ /* @AM */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @BD */
-TABLEA      = 'TA'RANDOM(0,99999)   /* Unique table name A */ /* @BT */
-TABLEB      = 'TB'RANDOM(0,99999)   /* Unique table name B */ /* @BU */
-DDNAME      = 'RACFA'RANDOM(0,999)  /* Unique ddname       */ /* @BP */
-parse source . . REXXPGM .                                    /* @BO */
+TABLEA      = 'TA'RANDOM(0,99999)  /* Unique table name A  */ /* @BT */
+TABLEB      = 'TB'RANDOM(0,99999)  /* Unique table name B  */ /* @BU */
+DDNAME      = 'RACFA'RANDOM(0,999) /* Unique ddname        */ /* @BP */
+parse source . . REXXPGM .         /* Obtain REXX pgm name */ /* @BO */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @BO */
 NULL        = ''                                              /* @BV */
 
@@ -575,7 +576,8 @@ RETURN
 DISD:
   if (profile = 'NONE') then
      return
-  tmpsort = sort                                              /* @B9 */
+  tmpsort  = sort                                             /* @B9 */
+  tmprsels = rsels                                            /* @C1 */
   Do until (RB='NO')     /* allow rebuild option */
      call create_TABLEB                                       /* @B9 */
      Real_profile = profile||rclass
@@ -689,7 +691,8 @@ DISD:
      end  /* Do forever) */                                   /* @BW */
      "TBEND" TABLEB
   end  /* Do until */
-  sort = tmpsort                                              /* @B9 */
+  sort  = tmpsort                                             /* @B9 */
+  rsels = tmprsels                                            /* @C1 */
 RETURN
 /*--------------------------------------------------------------------*/
 /*  Process primary command FIND for TABLEB                      @BV  */

@@ -22,7 +22,7 @@
 PANELPW     = "RACFPSWD"   /* Password reset               */
 PANELPE     = "RACFPSWE"   /* Password reset and revoke    */ /* @AD */
 PANELM2     = "RACFMSG2"   /* Display RACF command and RC  */
-parse source . . REXXPGM .                                    /* @A8 */
+parse source . . REXXPGM .         /* Obtain REXX pgm name */ /* @A8 */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @A8 */
 
 parse arg userid

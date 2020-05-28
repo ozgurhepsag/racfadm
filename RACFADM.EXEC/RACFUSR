@@ -11,6 +11,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @EI  200527  RACFA    Fix, allow typing 'S' on multiple rows       */
 /* @EH  200520  RACFA    Display line cmd 'P'rofile, when 'Admin=N'   */
 /* @EG  200517  LBD      Prevent user from deleting their own userid  */
 /* @EF  200504  TRIDJK   Adding, place in order, prior was at bottom  */
@@ -178,10 +179,10 @@ PANEL08     = "RACFUSR8"    /* Alter TSO segment           */ /* @BL */
 PANELM2     = "RACFMSG2"    /* Display RACF command and RC */ /* @BL */
 PANELM3     = "RACFMSG3"    /* Display RACF IRXXUTIL Cmd   */ /* @D4 */
 EDITMACR    = "RACFEMAC"    /* Edit Macro, turn HILITE off */ /* @CZ */
-TABLEA      = 'TA'RANDOM(0,99999)   /* Unique table name A */ /* @EB */
-TABLEB      = 'TB'RANDOM(0,99999)   /* Unique table name B */ /* @EC */
-DDNAME      = 'RACFA'RANDOM(0,999)  /* Unique ddname       */ /* @E2 */
-parse source . . REXXPGM .                                    /* @DZ */
+TABLEA      = 'TA'RANDOM(0,99999)  /* Unique table name A  */ /* @EB */
+TABLEB      = 'TB'RANDOM(0,99999)  /* Unique table name B  */ /* @EC */
+DDNAME      = 'RACFA'RANDOM(0,999) /* Unique ddname        */ /* @E2 */
+parse source . . REXXPGM .         /* Obtain REXX pgm name */ /* @DZ */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @DZ */
 NULL        = ''                                              /* @ED */
 
@@ -722,7 +723,8 @@ DISD:
   "TBMOD" TABLEA
   if (USER = 'NONE') then
      return
-  tmpsort = sort                                              /* @CY */
+  tmpsort  = sort                                             /* @CY */
+  tmprsels = rsels                                            /* @EI */
   Do until (RB='NO')   /* allow rebuild option to loop */
      call CREATE_TABLEB                                       /* @CY */
      rb     = 'NO'
@@ -830,7 +832,8 @@ DISD:
      end  /* Do forever) */                                   /* @EE */
      "TBEND" TABLEB
   end  /* Do until */
-  sort = tmpsort                                              /* @CY */
+  sort  = tmpsort                                             /* @CY */
+  rsels = tmprsels                                            /* @EI */
 RETURN
 /*--------------------------------------------------------------------*/
 /*  Process primary command FIND for TABLEB                      @ED  */

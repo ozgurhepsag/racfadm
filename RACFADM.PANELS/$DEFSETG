@@ -53,8 +53,9 @@ SETPMVS  = SHOWZOS                          /* Showmvs program name  */
 SETDMVSL =                                  /* Showmvs Linklib dsn   */
 *---------------------------------------------------------------------*
 *  IBM RACF's main menu panel and ALTLIB/LIBDEF datasets (no quotes). *
-*  IBM's default RACF dataset names are:                              *
 *---------------------------------------------------------------------*
+*  IBM's default RACF panel and dataset names are:                    *
+*    SETPIBM  = ICHP00                      /* IBM RACF menu/panel   */
 *    SETDIBMC = SYS1.HRFCLST                /* IBM RACF Clist dsn    */
 *    SETDIBMM = SYS1.HRFMSG                 /* IBM RACF Message dsn  */
 *    SETDIBMP = SYS1.HRFPANL                /* IBM RACF Panel dsn    */

@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CN  200527  RACFA    Fix, allow typing 'S' on multiple rows       */
 /* @CM  200520  RACFA    Display line cmd 'P'rofile, when 'Admin=N'   */
 /* @CL  200506  RACFA    Drop array immediately when done using       */
 /* @CK  200504  TRIDJK   Adding, place in order, prior was at bottom  */
@@ -105,10 +106,10 @@ PANEL08     = "RACFGRP8"   /* List groups and descriptions */ /* @AW */
 PANELM1     = "RACFMSG1"   /* Confirm Request (pop-up)     */ /* @AW */
 PANELM2     = "RACFMSG2"   /* Display RACF command and RC  */ /* @AW */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @BO */
-TABLEA      = 'TA'RANDOM(0,99999)   /* Unique table name A */ /* @CF */
-TABLEB      = 'TB'RANDOM(0,99999)   /* Unique table name B */ /* @CG */
-DDNAME      = 'RACFA'RANDOM(0,999)  /* Unique ddname       */ /* @C9 */
-parse source . . REXXPGM .                                    /* @C8 */
+TABLEA      = 'TA'RANDOM(0,99999)  /* Unique table name A  */ /* @CF */
+TABLEB      = 'TB'RANDOM(0,99999)  /* Unique table name B  */ /* @CG */
+DDNAME      = 'RACFA'RANDOM(0,999) /* Unique ddname        */ /* @C9 */
+parse source . . REXXPGM .         /* Obtain REXX pgm name */ /* @C8 */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @C8 */
 NULL        = ''                                              /* @CH */
 
@@ -425,7 +426,8 @@ RETURN
 DISD:
   if (group = 'NONE') then
      return
-  tmpsort = sort                                              /* @BM */
+  tmpsort  = sort                                             /* @BM */
+  tmprsels = rsels                                            /* @CN */
   Do until (RB = 'NO')   /* allow rebuild option to loop */
      call create_TABLEB                                       /* @BM */
      rb   = 'NO'
@@ -544,7 +546,8 @@ DISD:
      end  /* Do forever) */                                   /* @CJ */
      "TBEND" TABLEB
   end /* Do until */
-  sort = tmpsort                                              /* @BM */
+  sort  = tmpsort                                             /* @BM */
+  rsels = tmprsels                                            /* @CN */
 RETURN
 /*--------------------------------------------------------------------*/
 /*  Process primary command FIND for TABLEB                      @CH  */

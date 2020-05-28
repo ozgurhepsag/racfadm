@@ -25,9 +25,9 @@
 /* @A1  200220  RACFA    Added capability to browse/edit/view file    */
 /* @A0  200218  RACFA    Created REXX                                 */
 /*====================================================================*/
-PANEL01     = "RACFRPTS"   /* Display with colors          */ /* @AG */
+PANEL01     = "RACFRPTS"   /* Display report with colors   */ /* @AG */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @A8 */
-parse source . . REXXPGM .                                    /* @AE */
+parse source . . REXXPGM .         /* Obtain REXX pgm name */ /* @AE */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @AE */
 
 ADDRESS ISPEXEC                                               /* @A3 */

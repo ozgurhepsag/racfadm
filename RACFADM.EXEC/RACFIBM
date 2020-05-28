@@ -16,7 +16,7 @@ ADDRESS ISPEXEC
   if racfopt = '' then return 8
   'VGet (SETDIBMM SETDIBMP SETDIBMS SETDIBMC',                /* @A3 */
         'SETPIBM) Profile'                                    /* @A3 */
-  IF (SETPIBM = "") THEN                                      /* @A3 */
+  IF (SETPIBM = "") THEN    /* IBM Main Menu Panel */         /* @A3 */
      SETPIBM = "ICHP00"                                       /* @A3 */
 
   IF (SETDIBMM = "") | (SETDIBMP = ""),                       /* @A1 */

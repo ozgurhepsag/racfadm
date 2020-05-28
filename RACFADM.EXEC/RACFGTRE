@@ -22,10 +22,10 @@
 /* @A1  200416  RACFA    Increased size of SYSPRINT                   */
 /* @A0  200416  TRIDJK   Created REXX program                         */
 /*====================================================================*/
-PANEL01     = "RACFRPTS"   /* Display with colors          */ /* @AG */
+PANEL01     = "RACFRPTS"   /* Display report with colors   */ /* @AG */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn hilite off  */ /* @A5 */
-DDNAME      = "RACFA"RANDOM(0,999)                            /* @A5 */
-parse source . . REXXPGM .                                    /* @AD */
+DDNAME      = "RACFA"RANDOM(0,999) /* Unique ddname        */ /* @A5 */
+parse source . . REXXPGM .         /* Obtain REXX pgm name */ /* @AD */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @AD */
 
 ADDRESS ISPEXEC

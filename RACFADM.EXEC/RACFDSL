@@ -16,7 +16,7 @@
 /* @A1  200420  RACFA    Removed single quote of REXX/CLIST dsname    */
 /* @A0  200419  RACFA    Created REXX                                 */
 /*====================================================================*/
-parse source . . REXXPGM .                                    /* @A4 */
+parse source . . REXXPGM .         /* Obtain REXX pgm name */ /* @A4 */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @A4 */
 
 ADDRESS ISPEXEC

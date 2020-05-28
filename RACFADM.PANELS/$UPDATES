@@ -2,6 +2,13 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  27 May 2020 - V25R9
+     - Other Items
+       -- Fixed tabbing down to a row and pressing enter to select
+          a row
+       -- Minor changes to tutorials and code in panels/REXXs, in
+          hopes of standardizing and making it easier to maintain
+
   25 May 2020 - V25R8
      - Settings (Option 0)
        -- Changed the field names as follows:

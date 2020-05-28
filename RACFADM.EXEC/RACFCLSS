@@ -63,10 +63,10 @@ PANEL08     = "RACFCLS8"   /* List classes and profiles    */ /* @AI */
 PANEL13     = "RACFCLSD"   /* Add class                    */ /* @AG */
 PANELM2     = "RACFMSG2"   /* Display RACF command and R   */ /* @AG */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @AZ */
-TABLEA      = 'TA'RANDOM(0,99999)   /* Unique table name A */ /* @BF */
-TABLEB      = 'TB'RANDOM(0,99999)   /* Unique table name B */ /* @BG */
-DDNAME      = 'RACFA'RANDOM(0,999)  /* Unique ddname       */ /* @BB */
-parse source . . REXXPGM .                                    /* @BA */
+TABLEA      = 'TA'RANDOM(0,99999)  /* Unique table name A  */ /* @BF */
+TABLEB      = 'TB'RANDOM(0,99999)  /* Unique table name B  */ /* @BG */
+DDNAME      = 'RACFA'RANDOM(0,999) /* Unique ddname        */ /* @BB */
+parse source . . REXXPGM .         /* Obtain REXX pgm name */ /* @BA */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @BA */
 NULL        = ''                                              /* @BH */
 

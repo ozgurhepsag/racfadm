@@ -7,7 +7,7 @@
    {  TYPE(OUTPUT)  PAS(ON)      CAPS(OFF)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V25R8+)\-\
++\-\(%RACFADM - RACF Administration - V25R9+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -119,18 +119,18 @@
     if (BKPDBASE = "") THEN
         BKPDBASE = "N/A"
     parse var zosver . "z/OS" ZOSVER .          /* Get z/OS version  */
-    ascb     = c2x(storage(224,4))      /* PSAAOLD  (My ASCB)        */
-    asxb$    = d2x((x2d(ascb))+108)     /* ASCB + 108                */
-    asxb     = c2x(storage(asxb$,4))    /* ASCBASXB (My ASXB)        */
-    acee$    = d2x((x2d(asxb))+200)     /* ASXB + 200                */
-    acee     = c2x(storage(acee$,4))    /* ASXBSENV (My ACEE)        */
-    group$   = d2x((x2d(acee))+30)      /* ACEE + 30                 */
-    name$    = d2x((x2d(acee))+100)     /* ACEE + 100                */
-    name$    = c2x(storage(name$,4))    /* ACEEUNAM Ptr              */
-    name$    = d2x((x2d(name$))+1)      /* ACEEUNAM Ptr +1           */
-    RACFGRP  = storage(group$,8)        /* ACEEGRPN (RACF group name)*/
-    RACFNAM  = storage(name$,20)        /* ACEEUNAM (RACF user name) */
-    USADATE  = DATE('U')
+    ascb      = c2x(storage(224,4))     /* PSAAOLD  (My ASCB)        */
+    asxb$     = d2x((x2d(ascb))+108)    /* ASCB + 108                */
+    asxb      = c2x(storage(asxb$,4))   /* ASCBASXB (My ASXB)        */
+    acee$     = d2x((x2d(asxb))+200)    /* ASXB + 200                */
+    acee      = c2x(storage(acee$,4))   /* ASXBSENV (My ACEE)        */
+    group$    = d2x((x2d(acee))+30)     /* ACEE + 30                 */
+    name$     = d2x((x2d(acee))+100)    /* ACEE + 100                */
+    name$     = c2x(storage(name$,4))   /* ACEEUNAM Ptr              */
+    name$     = d2x((x2d(name$))+1)     /* ACEEUNAM Ptr +1           */
+    RACFGRP   = storage(group$,8)       /* ACEEGRPN (RACF group name)*/
+    RACFNAM   = storage(name$,20)       /* ACEEUNAM (RACF user name) */
+    USADATE   = DATE('U')
 
     if (setmadmn = 'YES') then          /* Display User or Admn?     */
        utype = 'Admn:'
@@ -142,49 +142,49 @@
      .MSG  = RACF011
 
   IF (&SETGMVS EQ YES)                     /* Add menu options when  */
-     &OPT1 = 7                             /* Settings (Opt 0) has   */
-     &OPT2 = 8                             /* 'Showmvs data = Y'     */
-     &OPT3 = 9
+     &OPT1     = 7                         /* Settings (Opt 0) has   */
+     &OPT2     = 8                         /* 'Showmvs data = Y'     */
+     &OPT3     = 9
      &OPT1DESC = RACFData
      &OPT2DESC = RACFDB
      &OPT3DESC = RACFPrms
      &OPT1INFO = 'RACF data (Showmvs)'
      &OPT2INFO = 'RACF databases'
      &OPT3INFO = 'RACF parameters'
-     &OPT1CMD = 'CMD(%RACFMVS)'
-     &OPT2CMD = 'CMD(%RACFDB)'
-     &OPT3CMD = 'CMD(%RACFPRMS)'
+     &OPT1CMD  = 'CMD(%RACFMVS)'
+     &OPT2CMD  = 'CMD(%RACFDB)'
+     &OPT3CMD  = 'CMD(%RACFPRMS)'
   IF (&SETGMVS EQ NO)                      /* Add menu options when  */
-     &OPT1 = 7                             /* Settings (Opt 0) has   */
-     &OPT2 = 8                             /* 'Showmvs data = N'     */
-     &OPT3 = &Z
+     &OPT1     = 7                         /* Settings (Opt 0) has   */
+     &OPT2     = 8                         /* 'Showmvs data = N'     */
+     &OPT3     = &Z
      &OPT1DESC = RACFDB
      &OPT2DESC = RACFPrms
      &OPT3DESC = &Z
      &OPT1INFO = 'RACF databases'
      &OPT2INFO = 'RACF parameters'
      &OPT3INFO = &Z
-     &OPT1CMD = 'CMD(%RACFDB)'
-     &OPT2CMD = 'CMD(%RACFPRMS)'
-     &OPT3CMD = &Z
+     &OPT1CMD  = 'CMD(%RACFDB)'
+     &OPT2CMD  = 'CMD(%RACFPRMS)'
+     &OPT3CMD  = &Z
   IF (&SETMIBMM EQ YES & &SETGMVS = YES)   /* Add menu options when  */
-     &OPT4 = 10                            /* Settings (Opt 0) has   */
-     &OPT5 = 11                            /* 'Showmvs data  = Y'    */
-     &OPT6 = 12                            /* 'IBM RACF data = Y'    */
+     &OPT4     = 10                        /* Settings (Opt 0) has   */
+     &OPT5     = 11                        /* 'Showmvs data  = Y'    */
+     &OPT6     = 12                        /* 'IBM RACF data = Y'    */
      &OPT4DESC = IBMSys
      &OPT5DESC = IBMRRSF
      &OPT6DESC = IBMCert
      &OPT4INFO = 'RACF system options'
      &OPT5INFO = 'RACF remote services'
      &OPT6INFO = 'RACF certificates'
-     &OPT4CMD = 'cmd(%racfIBM 5)'
-     &OPT5CMD = 'cmd(%racfIBM 6)'
-     &OPT6CMD = 'cmd(%racfIBM 7)'
+     &OPT4CMD  = 'cmd(%racfIBM 5)'
+     &OPT5CMD  = 'cmd(%racfIBM 6)'
+     &OPT6CMD  = 'cmd(%racfIBM 7)'
   IF (&SETMIBMM EQ YES & &SETGMVS = NO)    /* Add menu options when  */
-     &OPT3 = 9                             /* Settings (Opt 0) has   */
-     &OPT4 = 10                            /* 'Showmvs data  = N'    */
-     &OPT5 = 11                            /* 'IBM RACF data = Y'    */
-     &OPT6 = &Z
+     &OPT3     = 9                         /* Settings (Opt 0) has   */
+     &OPT4     = 10                        /* 'Showmvs data  = N'    */
+     &OPT5     = 11                        /* 'IBM RACF data = Y'    */
+     &OPT6     = &Z
      &OPT3DESC = IBMSys
      &OPT4DESC = IBMRRSF
      &OPT5DESC = IBMCert
@@ -193,23 +193,23 @@
      &OPT4INFO = 'RACF remote services'
      &OPT5INFO = 'RACF certificates'
      &OPT6INFO = &Z
-     &OPT3CMD = 'cmd(%racfIBM 5)'
-     &OPT4CMD = 'cmd(%racfIBM 6)'
-     &OPT5CMD = 'cmd(%racfIBM 7)'
-     &OPT6CMD = &Z
+     &OPT3CMD  = 'cmd(%racfIBM 5)'
+     &OPT4CMD  = 'cmd(%racfIBM 6)'
+     &OPT5CMD  = 'cmd(%racfIBM 7)'
+     &OPT6CMD  = &Z
   IF (&SETMIBMM NE YES)                    /* When Settings (Opt 0)  */
-     &OPT4 = &z                            /* is 'IBM RACF data = N' */
-     &OPT5 = &z
-     &OPT6 = &z
+     &OPT4     = &z                        /* is 'IBM RACF data = N' */
+     &OPT5     = &z
+     &OPT6     = &z
      &OPT4DESC = &z
      &OPT5DESC = &z
      &OPT6DESC = &z
      &OPT4INFO = &z
      &OPT5INFO = &z
      &OPT6INFO = &z
-     &OPT4CMD = &z
-     &OPT5CMD = &z
-     &OPT6CMD = &z
+     &OPT4CMD  = &z
+     &OPT5CMD  = &z
+     &OPT6CMD  = &z
 )PROC
   &ZSEL=TRANS(TRUNC(&ZCMD,'.')
       0,'CMD(%RACFSETG)'

@@ -27,7 +27,7 @@
 /* @A0  200120  LBD      Created REXX                                 */
 /*====================================================================*/
 PANEL01     = "RACFMENU"  /* RACF Main Menu                */ /* @A2 */
-REXXPGM1    = "RACFSETD"  /* Get def settings for new user */ /* @A4 */
+REXXPGM1    = "RACFSETD"  /* Obtain settings for new user  */ /* @A4 */
 Arg RAOPT                 /* Invoked using $STUB mbr       */ /* @A6 */
 
 ADDRESS ISPEXEC
@@ -87,10 +87,10 @@ SETUP_RFIND1:                                                 /* @A3 */
   if (rc = 0) then return                                     /* @A3 */
   "TBCreate radmcmds names(zctverb zcttrunc zctact" ,         /* @A3 */
                      "zctdesc) replace share nowrite"         /* @A3 */
-  zctverb = "RFIND"                                           /* @A3 */
+  zctverb  = "RFIND"                                          /* @A3 */
   zcttrunc = 0                                                /* @A3 */
-  zctact = "&RADMRFND"                                        /* @A3 */
-  zctdesc = "RADM User controlled Repeat Find (RFIND)"        /* @A3 */
+  zctact   = "&RADMRFND"                                      /* @A3 */
+  zctdesc  = "RADM User controlled Repeat Find (RFIND)"       /* @A3 */
   "TBAdd radmcmds"                                            /* @A3 */
 RETURN                                                        /* @A3 */
 /*--------------------------------------------------------------------*/
@@ -111,25 +111,25 @@ RETURN                                                        /* @A3 */
 /*    7) Prime the variable to null                              @A5  */
 /*--------------------------------------------------------------------*/
 SETUP_RFIND2:                                                 /* @A5 */
-  zctverb = "RFIND"                                           /* @A5 */
+  zctverb  = "RFIND"                                          /* @A5 */
   zcttrunc = 0                                                /* @A5 */
-  zctact = "&RADMRFND"                                        /* @A5 */
-  zctdesc = "RACFADM User controlled Repeat Find (RFIND)"     /* @A5 */
+  zctact   = "&RADMRFND"                                      /* @A5 */
+  zctdesc  = "RACFADM User controlled Repeat Find (RFIND)"    /* @A5 */
   'vget (zsctpref zuctpref)'                                  /* @A8 */
   select                                                      /* @A8 */
-     when zuctpref <> '' then                                 /* @A8 */
+     when (zuctpref <> '') then                               /* @A8 */
           ctab = zuctpref'cmds'                               /* @A8 */
-     when zsctpref <> '' then                                 /* @A8 */
+     when (zsctpref <> '') then                               /* @A8 */
           ctab = zsctpref'cmds'                               /* @A8 */
      otherwise                                                /* @A8 */
           ctab = 'ISPcmds'                                    /* @A8 */
   end                                                         /* @A8 */
   'vget (zsctpref)'                                           /* @A5 */
-  if zsctpref = '' then zsctpref = 'ISP'                      /* @A5 */
+  if (zsctpref = '') then zsctpref = 'ISP'                    /* @A5 */
   ctab = zsctpref'cmds'                                       /* @A5 */
-  'tbtop' ctab                                                /* @A5 */
-  'tbscan' ctab 'arglist(zctact)  condlist(EQ) Next'          /* @A5 */
-  if rc > 0 then 'tbadd' ctab                                 /* @A5 */
+  'tbtop'  ctab                                               /* @A5 */
+  'tbscan' ctab 'arglist(zctact) condlist(EQ) Next'           /* @A5 */
+  if (rc > 0) then 'tbadd' ctab                               /* @A5 */
   radmrfnd = null                                             /* @A5 */
   'vput (radmrfnd)'                                           /* @A5 */
 RETURN                                                        /* @A5 */

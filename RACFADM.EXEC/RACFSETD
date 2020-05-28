@@ -25,7 +25,7 @@
 /*====================================================================*/
 MBRDSETG    = "$DEFSETG"   /* Default Settings member      */
 MBRDSITE    = "$DEFSITE"   /* Site Default Overrides       */ /* @A7 */
-DDNAME      = 'RACFA'RANDOM(0,999)  /* Unique ddname       */
+DDNAME      = 'RACFA'RANDOM(0,999) /* Unique ddname        */
 
 ADDRESS ISPEXEC
   'vget (SETMADMN) profile'

@@ -41,14 +41,14 @@
            RACFSMSG = 'DSN does not exist'
            RACFLMSG = 'The dataset does not reside in the catalog',
                       'or on a disk pack, please investigate.'
-           BADDSN = "Y"
+           BADDSN   = "Y"
            return
         END
         IF (SYSDSN("'"SETDMVSL"("SETPMVS")'") <> "OK") THEN DO
            RACFSMSG = 'Program does not exist'
            RACFLMSG = 'The program name does not reside in the',
                       'linklib dataset, please investigate.'
-           BADMBR = "Y"
+           BADMBR   = "Y"
            return
         END
      END

@@ -72,14 +72,14 @@
      if racf.base.rest.1    = 'TRUE' then attr = attr || 'RESTRICTED '
      if racf.base.adsp.1    = 'TRUE' then attr = attr || 'ADSP '
 
-     bowner  = racf.base.owner.1
-     defgrp  = racf.base.dfltgrp.1
-     name    = racf.base.name.1
+     bowner   = racf.base.owner.1
+     defgrp   = racf.base.dfltgrp.1
+     name     = racf.base.name.1
 
-     tsoproc = racf.tso.proc.1
-     tsoacct = racf.tso.acctnum.1
-     tsosize = racf.tso.size.1
-     tsounit = racf.tso.unit.1
+     tsoproc  = racf.tso.proc.1
+     tsoacct  = racf.tso.acctnum.1
+     tsosize  = racf.tso.size.1
+     tsounit  = racf.tso.unit.1
 
      ohome    = racf.omvs.home.1
      oprogram = racf.omvs.program.1
@@ -97,10 +97,10 @@
 
      listuser:
        attr = ''
-       cmd = 'LISTUSER 'user' TSO CICS OMVS DFP'
-       x = outtrap('lu.')
+       cmd  = 'LISTUSER 'user' TSO CICS OMVS DFP'
+       x    = outtrap('lu.')
        Address TSO cmd
-       x = outtrap('off')
+       x    = outtrap('off')
        parse var value '' with bowner defgrp name attr ohome,
                     tsoproc tsoacct tsosize tsounit oprogram,
                     copclass copident copprty ctimeout,
@@ -109,47 +109,47 @@
        parse var lu.1 'NAME='name
        parse var lu.1 'OWNER='bowner
        do i = 1 to lu.0
-          if substr(lu.i,2,14) = 'DEFAULT-GROUP=' then
+          if (substr(lu.i,2,14) = 'DEFAULT-GROUP=') then
              defgrp = substr(lu.i,2+14,8)
-          if substr(lu.i,2,11) = 'ATTRIBUTES=' then do
-             if pos('PROTECTED',lu.i,2+11) > 0 then
+          if (substr(lu.i,2,11) = 'ATTRIBUTES=') then do
+             if (pos('PROTECTED',lu.i,2+11) > 0) then
                 lu.i = delstr(lu.i,pos('PROTECTED',lu.i,2+11),9)
-             if pos('REVOKED',lu.i,2+11) > 0 then
+             if (pos('REVOKED',lu.i,2+11) > 0) then
                 lu.i = delstr(lu.i,pos('REVOKED',lu.i,2+11),7)
-             if pos('NONE',lu.i,2+11) > 0 then
+             if (pos('NONE',lu.i,2+11) > 0) then
                 lu.i = delstr(lu.i,pos('NONE',lu.i,2+11),4)
              attr = strip(substr(lu.i,2+11,60))' 'attr
           end
 
-          if substr(lu.i,1,6) = 'PROC= ' then
+          if (substr(lu.i,1,6) = 'PROC= ') then
              tsoproc = substr(lu.i,1+6,8)
-          if substr(lu.i,1,9) = 'ACCTNUM= ' then
+          if (substr(lu.i,1,9) = 'ACCTNUM= ') then
              tsoacct = substr(lu.i,1+9,8)
-          if substr(lu.i,1,6) = 'SIZE= ' then
+          if (substr(lu.i,1,6) = 'SIZE= ') then
              tsosize = substr(lu.i,2+6,8)
-          if substr(lu.i,1,6) = 'UNIT= ' then
+          if (substr(lu.i,1,6) = 'UNIT= ') then
              tsounit = substr(lu.i,1+6,8)
 
-          if substr(lu.i,2,9) = 'OPCLASS= ' then
+          if (substr(lu.i,2,9) = 'OPCLASS= ') then
              copclass = substr(lu.i,1+2+9,2)
-          if substr(lu.i,2,9) = 'OPIDENT= ' then
+          if (substr(lu.i,2,9) = 'OPIDENT= ') then
              copident = substr(lu.i,2+9,3)
-          if substr(lu.i,2,8) = 'OPPRTY= ' then
+          if (substr(lu.i,2,8) = 'OPPRTY= ') then
              copprty = substr(lu.i,2+2+8,3)
-          if substr(lu.i,2,9) = 'TIMEOUT= ' then do
+          if (substr(lu.i,2,9) = 'TIMEOUT= ') then do
              ctimeout = c2d(substr(lu.i,2+9,2),4)
              ctimeout = right(ctimeout,4,'0')
           end
-          if substr(lu.i,1,6) = 'HOME= ' then
+          if (substr(lu.i,1,6) = 'HOME= ') then
              ohome = substr(lu.i,1+6,50)
-          if substr(lu.i,1,9) = 'PROGRAM= ' then
+          if (substr(lu.i,1,9) = 'PROGRAM= ') then
              oprogram = substr(lu.i,1+9,50)
 
-          if substr(lu.i,1,10) = 'DATACLAS= ' then
+          if (substr(lu.i,1,10) = 'DATACLAS= ') then
              ddatacls = substr(lu.i,1+10,8)
-          if substr(lu.i,1,10) = 'STORCLAS= ' then
+          if (substr(lu.i,1,10) = 'STORCLAS= ') then
              dstorcls = substr(lu.i,1+10,8)
-          if substr(lu.i,1,10) = 'MGMTCLAS= ' then
+          if (substr(lu.i,1,10) = 'MGMTCLAS= ') then
              dmgmtcls = substr(lu.i,1+10,8)
        end
      return

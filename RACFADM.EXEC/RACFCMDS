@@ -19,7 +19,7 @@
 PANEL01     = "RACFCMDS"   /* Execute RACF command         */ /* @A1 */
 PANELM2     = "RACFMSG2"   /* Display RACF command and RC  */ /* @A7 */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @A1 */
-DDNAME      = 'RACFA'RANDOM(0,999)  /* Unique ddname       */
+DDNAME      = 'RACFA'RANDOM(0,999) /* Unique ddname        */
 TABLE       = "RACFACMD"   /* Permanent table in ISPPROF   */ /* @A5 */
 RACFCMDS.   = ""                                              /* @A6 */
 RACFCMDS.0  = 7            /* Populate table w/ RACF cmds  */ /* @A6 */
@@ -33,7 +33,7 @@ RACFCMDS.4  = "RL ?        * ALL"                             /* @A6 */
 RACFCMDS.5  = "RL ?        ?        AUTH"                     /* @A6 */
 RACFCMDS.6  = "SEARCH CLASS(?       ) USER(?       )"         /* @A6 */
 RACFCMDS.7  = "SETROPTS LIST"                                 /* @A6 */
-parse source . . REXXPGM .                                    /* @A3 */
+parse source . . REXXPGM .         /* Obtain REXX pgm name */ /* @A3 */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @A3 */
 
 ADDRESS ISPEXEC

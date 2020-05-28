@@ -20,7 +20,7 @@
 /* @A1  200119  RACFA    Standardized/reduced lines of code           */
 /* @A0  011229  NICORIZ  Created REXX, V2.1, www.rizzuto.it           */
 /*====================================================================*/
-parse source . . REXXPGM .                                    /* @AF */
+parse source . . REXXPGM .         /* Obtain REXX pgm name */ /* @AF */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @AF */
 
 ADDRESS ISPEXEC                                               /* @A4 */

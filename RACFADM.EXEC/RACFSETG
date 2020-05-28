@@ -18,7 +18,7 @@
 PANEL16     = "RACFSETG"   /* Settings, menu option 0      */ /* @A3 */
 PANEL17     = "RACFSETH"   /* Showmvs  dataset             */ /* @A9 */
 PANEL18     = "RACFSETI"   /* IBM RACF datasets            */ /* @A8 */
-parse source . . REXXPGM .                                    /* @A7 */
+parse source . . REXXPGM .         /* Obtain REXX pgm name */ /* @A7 */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @A7 */
 
 ADDRESS ISPEXEC                                               /* @A2 */

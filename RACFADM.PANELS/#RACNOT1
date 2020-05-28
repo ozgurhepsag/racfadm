@@ -21,7 +21,7 @@
 +     member called%$DEFSITE+and define/set any of the variables
 !     *+The%$DEFSITE+member is optional, but if it exists, it will be read and
 +       override any settings defined in member%$DEFSETG+
-!     *+This will prevent from having to update the%$DEFSETG+member everytime
+!     *+This will prevent from having to update the%$DEFSETG+member every time
 +       a new version of%RACFADM+is installed
 !     *+The user's%Settings+are saved in their!ISPF+profile dataset in member
 +      %RADMPROF+

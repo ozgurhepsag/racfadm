@@ -33,9 +33,9 @@
 PANEL14     = "RACFCLSE"   /* Enter profile/class/user     */ /* @AL */
 PANEL15     = "RACFCLSF"   /* List group/ids and access    */ /* @AL */
 PANELM2     = "RACFMSG2"   /* Display RACF command and RC  */ /* @A8 */
-TABLEA      = 'TA'RANDOM(0,99999)   /* Unique table name A */ /* @AP */
-parse source . . REXXPGM .                                    /* @AO */
-REXXPGM   = LEFT(REXXPGM,8)                                   /* @AO */
+TABLEA      = 'TA'RANDOM(0,99999)  /* Unique table name A  */ /* @AP */
+parse source . . REXXPGM .         /* Obtain REXX pgm name */ /* @AO */
+REXXPGM     = LEFT(REXXPGM,8)                                 /* @AO */
 
 ADDRESS ISPEXEC                                               /* @A6 */
   Arg rclass profile user

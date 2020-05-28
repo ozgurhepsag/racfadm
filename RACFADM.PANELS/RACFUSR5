@@ -67,7 +67,7 @@
       if (notso <> '') then do
          notso = 'NOTSO'
          call addnos notso
-         end
+      end
       else do
          if (notso1  /= '') then notso  = 'NOPROC'
          if (notso2  /= '') then notso  = notso 'NOACCT'
@@ -76,13 +76,13 @@
          if (notso   /= '') then do
             notso = 'TSO('strip(notso)')'
             call addnos notso
-            end
          end
+      end
 
       if (nocics <> '') then do
          nocics = 'NOCICS'
          call addnos nocics
-         end
+      end
       else do
          if (nocics1 /= '') then nocics = 'NOOPCLASS'
          if (nocics2 /= '') then nocics = nocics 'NOOPIDENT'
@@ -91,13 +91,13 @@
          if (nocics  /= '') then do
             nocics = 'CICS('strip(nocics)')'
             call addnos nocics
-            end
          end
+      end
 
       if (nodfp <> '') then do
          nodfp = 'NODFP'
          call addnos nodfp
-         end
+      end
       else do
          if (nodfp1  /= '') then nodfp  = 'NODATACLAS'
          if (nodfp2  /= '') then nodfp  = nodfp 'NOSTORCLAS'
@@ -105,21 +105,21 @@
          if (nodfp   /= '') then do
             nodfp = 'DFP('strip(nodfp)')'
             call addnos nodfp
-            end
          end
+      end
 
       if (noomvs <> '') then do
          noomvs = 'NOOMVS'
          call addnos noomvs
-         end
+      end
       else do
          if (noomvs1 /= '') then noomvs = 'NOHOME'
          if (noomvs2 /= '') then noomvs = noomvs 'NOPROGRAM'
          if (noomvs  /= '') then do
             noomvs = 'OMVS('strip(noomvs)')'
             call addnos noomvs
-            end
          end
+      end
 
       if (nospec  /= '') then call addnos 'NOSPECIAL'
       if (noop    /= '') then call addnos 'NOOPERATIONS'
