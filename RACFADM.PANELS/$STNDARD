@@ -98,4 +98,10 @@
             # ...... G=General, M=Management, T=Adding TSO Userid,
                      P=Program/Panel (Load, REXX or CLIST member),
                      D=Dataset and R=Refresh
-            ???? ... Field name, any characters
+            ???? ... Field name, any characters and for Refresh
+                     variables (4th chr = R) the section name
+                     (GEN, MGT, TSO, MVS and IBM)
+       -- The REXX programs and panels will translate the abbreviated
+          contents to its full word, in hopes of making it easier to
+          understand/maintain the code, for example: Y, will be
+          translated to YES

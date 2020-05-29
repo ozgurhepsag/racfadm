@@ -11,7 +11,7 @@
 /*                 due to SETUP_RFIND2 was leaving entry in table     */
 /*                 after exiting                                      */
 /*                                                                    */
-/*            2) For new users, this REXX program will call RACFSETD  */
+/*            2) For all users, this REXX program will call RACFSETD  */
 /*               to define default Settings (Option 0)                */
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */

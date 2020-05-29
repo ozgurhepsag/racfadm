@@ -7,7 +7,7 @@
    {  TYPE(OUTPUT)  PAS(ON)      CAPS(OFF)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V26R1+)\-\
++\-\(%RACFADM - RACF Administration - V26R2+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -287,10 +287,13 @@
 /*         # ...... G=General, M=Management, T=Adding TSO Userid      */
 /*                  P=Program/Panel (Load, REXX or CLIST member),     */
 /*                  D=Dataset and R=Refresh                           */
-/*         ???? ... Field name (any characters)                       */
-/*     - The variables contain the full word, no abbreviations, in    */
-/*       hopes of making it easier to understand/maintain code,       */
-/*       for example: YES, instead of Y                               */
+/*          ???? ... Field name, any characters and for Refresh       */
+/*                   variables (4th chr = R) the section name         */
+/*                   (GEN, MGT, TSO, MVS and IBM)                     */
+/*     - The REXX programs and panels will translate the abbreviated  */
+/*       contents to its full word, in hopes of making it easier to   */
+/*       understand/maintain the code, for example: Y, will be        */
+/*       translated to YES                                            */
 /*                                                                    */
 /*  4) The following are the menu entry standards:                    */
 /*     - Number entries (1-99) are designated for obtaining,          */
