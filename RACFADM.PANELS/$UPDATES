@@ -2,6 +2,14 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  03 Jun 2020 - V26R3
+     - Tutorials
+       -- Updated below entries, fixed grammar/etc.
+            7  RACF data (Showmvs)
+            13 Dataset enqueues
+            19 Installation notes
+            20 Acknowledgements
+
   29 May 2020 - V26R2
      - Other Items
        -- Updated comments/documentation in several members

@@ -13,7 +13,7 @@
 +  related to the current address space.
 +
 + !Showmvs+can be can be obtained from!CBT File 492:
-@    Https://cbttape.org
+@    https://cbttape.org
 +
 +  To use%RACFData,+the following entry needs to be displayed on the main menu:
 !    7  RACFData  RACF data (Showmvs)

@@ -11,10 +11,11 @@
 +     dialog.  It allocates the necessary files using!ISPF LIBDEF+and
 +    !TSO ALTLIB+commands
 +
-!  2)+Installing a new version of%RACFADM,+suggest!backing up+current datasets,
-+    !deleting+the members and!copying+in the new version, due to:
+!  2)+When installing a new version of%RACFADM,+the best practice may be
++    !backing up+the datasets,!deleting+the members, and then!copying+in
++     the new version, becuase:
 !       -+Members may be renamed or deleted
-!       -+Prevents from having dead/unused members
+!       -+This prevents having dead/unused members
 +
 !  3)+The default%Settings+(Option 0) for new users is defined in member
 +    %$DEFSETG+in the panel dataset.  To override these settings, create a
