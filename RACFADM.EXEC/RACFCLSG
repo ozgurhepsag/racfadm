@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @C2  200604  RACFA    Fix, prevent from going to top of table      */
 /* @C1  200527  RACFA    Fix, allow typing 'S' on multiple rows       */
 /* @BZ  200520  RACFA    Display line cmd 'P'rofile, when 'Admin=N'   */
 /* @BY  200506  RACFA    Drop array immediately when done using       */
@@ -576,8 +577,9 @@ RETURN
 DISD:
   if (profile = 'NONE') then
      return
-  tmpsort  = sort                                             /* @B9 */
-  tmprsels = rsels                                            /* @C1 */
+  tmpsort   = sort                                            /* @B9 */
+  tmprsels  = rsels                                           /* @C1 */
+  tmpxtdtop = xtdtop                                          /* @C2 */
   Do until (RB='NO')     /* allow rebuild option */
      call create_TABLEB                                       /* @B9 */
      Real_profile = profile||rclass
@@ -691,8 +693,9 @@ DISD:
      end  /* Do forever) */                                   /* @BW */
      "TBEND" TABLEB
   end  /* Do until */
-  sort  = tmpsort                                             /* @B9 */
-  rsels = tmprsels                                            /* @C1 */
+  sort   = tmpsort                                            /* @B9 */
+  rsels  = tmprsels                                           /* @C1 */
+  xtdtop = tmpxtdtop                                          /* @C2 */
 RETURN
 /*--------------------------------------------------------------------*/
 /*  Process primary command FIND for TABLEB                      @BV  */

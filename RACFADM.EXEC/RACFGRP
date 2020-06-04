@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CO  200604  RACFA    Fix, prevent from going to top of table      */
 /* @CN  200527  RACFA    Fix, allow typing 'S' on multiple rows       */
 /* @CM  200520  RACFA    Display line cmd 'P'rofile, when 'Admin=N'   */
 /* @CL  200506  RACFA    Drop array immediately when done using       */
@@ -426,8 +427,9 @@ RETURN
 DISD:
   if (group = 'NONE') then
      return
-  tmpsort  = sort                                             /* @BM */
-  tmprsels = rsels                                            /* @CN */
+  tmpsort   = sort                                            /* @BM */
+  tmprsels  = rsels                                           /* @CN */
+  tmpxtdtop = xtdtop                                          /* @CO */
   Do until (RB = 'NO')   /* allow rebuild option to loop */
      call create_TABLEB                                       /* @BM */
      rb   = 'NO'
@@ -546,8 +548,9 @@ DISD:
      end  /* Do forever) */                                   /* @CJ */
      "TBEND" TABLEB
   end /* Do until */
-  sort  = tmpsort                                             /* @BM */
-  rsels = tmprsels                                            /* @CN */
+  sort   = tmpsort                                            /* @BM */
+  rsels  = tmprsels                                           /* @CN */
+  xtdtop = tmpxtdtop                                          /* @CO */
 RETURN
 /*--------------------------------------------------------------------*/
 /*  Process primary command FIND for TABLEB                      @CH  */

@@ -2,7 +2,13 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
-  03 Jun 2020 - V26R3
+  04 June 2020 - V26R4
+     - User, Group, Dataset and General Resource (Opt 1/2/3/4)
+       -- Fixed re-displaying table when selecting/displaying
+          another table, was inadvertently placing the user at the
+          top the table
+
+  03 June 2020 - V26R3
      - Tutorials
        -- Updated below entries, fixed grammar/etc.
             7  RACF data (Showmvs)

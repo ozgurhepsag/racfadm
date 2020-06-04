@@ -11,6 +11,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @EJ  200604  RACFA    Fix, prevent from going to top of table      */
 /* @EI  200527  RACFA    Fix, allow typing 'S' on multiple rows       */
 /* @EH  200520  RACFA    Display line cmd 'P'rofile, when 'Admin=N'   */
 /* @EG  200517  LBD      Prevent user from deleting their own userid  */
@@ -723,8 +724,9 @@ DISD:
   "TBMOD" TABLEA
   if (USER = 'NONE') then
      return
-  tmpsort  = sort                                             /* @CY */
-  tmprsels = rsels                                            /* @EI */
+  tmpsort   = sort                                            /* @CY */
+  tmprsels  = rsels                                           /* @EI */
+  tmpxtdtop = xtdtop                                          /* @EJ */
   Do until (RB='NO')   /* allow rebuild option to loop */
      call CREATE_TABLEB                                       /* @CY */
      rb     = 'NO'
@@ -832,8 +834,9 @@ DISD:
      end  /* Do forever) */                                   /* @EE */
      "TBEND" TABLEB
   end  /* Do until */
-  sort  = tmpsort                                             /* @CY */
-  rsels = tmprsels                                            /* @EI */
+  sort   = tmpsort                                            /* @CY */
+  rsels  = tmprsels                                           /* @EI */
+  xtdtop = tmpxtdtop                                          /* @EJ */
 RETURN
 /*--------------------------------------------------------------------*/
 /*  Process primary command FIND for TABLEB                      @ED  */

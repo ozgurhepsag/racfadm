@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CD  200604  RACFA    Fix, prevent from going to top of table      */
 /* @CE  200527  RACFA    Fix, allow typing 'S' on multiple rows       */
 /* @CD  200520  RACFA    Display line cmd 'P'rofile, when 'Admin=N'   */
 /* @CC  200506  RACFA    Drop array immediately when done using       */
@@ -479,8 +480,9 @@ DISD:
      call racfmsgs ERR21                                      /* @BU */
      return
   end                                                         /* @BU */
-  tmpsort  = sort                                             /* @BM */
-  tmprsels = rsels                                            /* @CE */
+  tmpsort   = sort                                            /* @BM */
+  tmprsels  = rsels                                           /* @CE */
+  tmpxtdtop = xtdtop                                          /* @CD */
   Do until (RB = 'NO')      /* allow rebuild option */
      call create_TABLEB                                       /* @BM */
      rb     = 'NO'
@@ -586,8 +588,9 @@ DISD:
         'control display restore'                             /* @CA */
      end  /* Do forever) */                                   /* @CA */
   end  /* Do until */
-  sort  = tmpsort                                             /* @BM */
-  rsels = tmprsels                                            /* @CE */
+  sort   = tmpsort                                            /* @BM */
+  rsels  = tmprsels                                           /* @CE */
+  xtdtop = tmpxtdtop                                          /* @CD */
 RETURN
 /*--------------------------------------------------------------------*/
 /*  Process primary command FIND for TABLEA                      @C9  */
