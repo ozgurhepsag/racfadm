@@ -33,6 +33,14 @@
  #RACNOT1  Tutorial       Installation notes (1 of 3)
  #RACNOT2  Tutorial       Installation notes (2 of 3)
  #RACNOT3  Tutorial       Installation notes (4 of 3)
+ #RACOMA1  Tutorial       OMVS RAlter (1 of 2)
+ #RACOMA2  Tutorial       OMVS RAlter (2 of 2)
+ #RACOML1  Tutorial       OMVS RList  (1 of 2)
+ #RACOML2  Tutorial       OMVS RList  (2 of 2)
+ #RACOMP1  Tutorial       OMVS Permit (1 of 2)
+ #RACOMP2  Tutorial       OMVS Permit (2 of 2)
+ #RACOMU1  Tutorial       OMVS UList description and examples
+ #RACOMVS  Tutorial       OMVS Permit, RAlter, RList and UList
  #RACPRMS  Tutorial       RACF parameters
  #RACPSWD  Tutorial       Password reset
  #RACPUB1  Tutorial       RACF publications and downloads (1 of 2)

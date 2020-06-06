@@ -8,12 +8,12 @@
 %Command ===>_ZCMD
 %
 +IBM has developed/distributed three REXX programs to assist in managing
-+the Unix enviromment%(OPERMIT, ORALTER and ORLIST)
++the Unix environment%(OPERMIT, ORALTER+and%ORLIST)
 +
 +The following topics are presented in sequence, or may be selected by number:
 +
 %  1 ~OPERMIT +Unix Access Control List (ACL) Management, like PERMIT
-%  2 ~ORALTER +Unix Security Attribute Management, like ALTER
+%  2 ~ORALTER +Unix Security Attribute Management, like RALTER
 %  3 ~ORLIST  +Unix File/Directory Security Information, like RLIST
 %  4 ~ULIST   +Unix User/Group Identifier Information
 )PROC

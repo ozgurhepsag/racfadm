@@ -19,14 +19,14 @@
 +
 +The following topics are presented in sequence, or may be selected by number:
 +
-+ %0 ~Settings            % 8~RACF databases       %16~OMVS RACF commands
-+ %1 ~User profiles       % 9~RACF parameters      %17~DSN access authority
-+ %2 ~Group profiles      %10~RACF IBM options     %18~Res access authority
-+ %3 ~Dataset profiles    %11~Execute RACF cmds    %19~Publications
-+ %4 ~General resources   %12~Dataset list         %20~Installation notes
-+ %5 ~Password reset      %13~Dataset enqueues     %21~Acknowledgements
-+ %6 ~Group tree report   %14~RACF help commands
-+ %7 ~RACF data (Showmvs) %15~ISPF log file
++ %0 ~Settings              % 8~RACF databases       %16~OMVS RACF commands
++ %1 ~User profiles         % 9~RACF parameters      %17~DSN access authority
++ %2 ~Group profiles        %10~RACF IBM options     %18~Res access authority
++ %3 ~Dataset profiles      %11~Execute RACF cmds    %19~Publications
++ %4 ~General resources     %12~Dataset list         %20~Installation notes
++ %5 ~Password reset        %13~Dataset enqueues     %21~Acknowledgements
++ %6 ~Group tree report     %14~RACF help commands
++ %7 ~RACF data (Showmvs)   %15~ISPF log file
 )PROC
 &ZSEL = TRANS(&ZCMD 0,#RACSET1  1,#RACUSR2  2,#RACGRP8  3,#RACDSN2
                     4,#RACCLSR  5,#RACPSWD  6,#RACGTRE  7,#RACMVS

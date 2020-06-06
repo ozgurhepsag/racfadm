@@ -2,6 +2,16 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  06 June 2020 - V26R9
+     - Tutorials (Option T)
+       -- Modified/fixed tutorial and OMVSCmds menu
+
+  06 June 2020 - V26R8
+     - Tutorials (Option T)
+       -- Fixed highlighting/grammar in help screens
+     - Other Items
+       -- Updated member $DIR in the panel dataset
+
   06 June 2020 - V26R7
      - OMVSCmds (Option O)
        -- Added ULIST Command, display UID/GID information
