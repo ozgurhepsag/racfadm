@@ -7,7 +7,7 @@
    {  TYPE(OUTPUT)  PAS(ON)      CAPS(OFF)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V26R4+)\-\
++\-\(%RACFADM - RACF Administration - V26R7+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -16,11 +16,11 @@
 %   3 ~Dataset  +Dataset profiles       %H ~Help      +RACF help commands
 %   4 ~General  +General resources      %I ~Issues    +Known issues
 %   5 ~Password +Password reset         %L ~ISPLog    +ISPF log file
-%   6 ~GrpTree  +Group tree report      %S ~Standards +Coding/design
-%  ¨z {OPT1DESC ÝOPT1INFO               %T ~Tutorial  +Help
-%  ¨z {OPT2DESC ÝOPT2INFO               %U ~Updates   +Version/updates
-%  ¨z {OPT3DESC ÝOPT3INFO               %X ~Exit      +Terminate
-+  ¨z {OPT4DESC ÝOPT4INFO
+%   6 ~GrpTree  +Group tree report      %O ~OMVSCmds  +OMVS RACF commands
+%  ¨z {OPT1DESC ÝOPT1INFO               %S ~Standards +Coding/design
+%  ¨z {OPT2DESC ÝOPT2INFO               %T ~Tutorial  +Help
+%  ¨z {OPT3DESC ÝOPT3INFO               %U ~Updates   +Version/updates
++  ¨z {OPT4DESC ÝOPT4INFO               %X ~Exit      +Terminate
 +  ¨z {OPT5DESC ÝOPT5INFO
 +  ¨z {OPT6DESC ÝOPT6INFO
 +
@@ -233,6 +233,7 @@
       H,'CMD(%RACFHELP)'
       I,'CMD(%RACFLOG $ISSUES)'
       L,'CMD(%RACFLOG ISPLOG)'
+      O,'CMD(%RACFOMVS)'
       S,'CMD(%RACFLOG $STNDARD)'
       T,'PGM(ISPTUTOR) PARM(#RACMENU)'
       U,'CMD(%RACFLOG $UPDATES)'
@@ -253,14 +254,15 @@
   FIELD(ZPS00011) VAR(ZCMD) VAL('5')
   FIELD(ZPS00012) VAR(ZCMD) VAL('L')
   FIELD(ZPS00013) VAR(ZCMD) VAL('6')
-  FIELD(ZPS00014) VAR(ZCMD) VAL('S')
+  FIELD(ZPS00014) VAR(ZCMD) VAL('O')
   FIELD(OPT1DESC) VAR(ZCMD) VAL('7')
-  FIELD(ZPS00015) VAR(ZCMD) VAL('T')
+  FIELD(ZPS00015) VAR(ZCMD) VAL('A')
   FIELD(OPT2DESC) VAR(ZCMD) VAL('8')
-  FIELD(ZPS00016) VAR(ZCMD) VAL('U')
+  FIELD(ZPS00016) VAR(ZCMD) VAL('T')
   FIELD(OPT3DESC) VAR(ZCMD) VAL('9')
-  FIELD(ZPS00017) VAR(ZCMD) VAL('X')
+  FIELD(ZPS00017) VAR(ZCMD) VAL('U')
   FIELD(OPT4DESC) VAR(ZCMD) VAL('10')
+  FIELD(ZPS00018) VAR(ZCMD) VAL('X')
   FIELD(OPT5DESC) VAR(ZCMD) VAL('11')
   FIELD(OPT6DESC) VAR(ZCMD) VAL('12')
 )END

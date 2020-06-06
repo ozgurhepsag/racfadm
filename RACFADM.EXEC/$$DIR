@@ -5,6 +5,9 @@
   Member      Subject                   Description
  --------  -------------  --------------------------------------------
  $$DIR     Directory      Document members
+ OPERMIT   IBM TSO Cmd    Unix Access Control List, like PERMIT
+ ORALTER   IBM TSO Cmd    Unix Security Attribute, like ALTER
+ ORLIST    IBM TSO Cmd    Unix Dir/File Security, like RLIST
  RACFADM   Software       Dynamically allocate and invoke software
  RACFCLSA  Authorization  Display authorization on profile, menu opt 9
  RACFCLSG  Class          Extract generic class profiles
@@ -12,7 +15,7 @@
  RACFCLSS  Class          Search and display classes
  RACFCMDS  Commands       Execute/save/display TSO RACF commands
  RACFDB    Database       Display RACF database info, menu option 8
- RACFDSL   Dslist         Invoke DSLIST on ALTLIB/LIBDEF DSNs, opt D
+ RACFDSL   DSList         Invoke DSLIST on ALTLIB/LIBDEF DSNs, opt D
  RACFDSN   Dataset        Display dataset profiles
  RACFEMAC  Edit Macro     View/edit, turn off highlighting
  RACFENQS  Enqueues       Display enqueues on ALTLIB/LIBDEF dsns, opt E
@@ -24,10 +27,11 @@
  RACFMVS   Showmvs        Execute/display Showmvs RACF data, menu opt 7
  RACFMSGC  Message        Display 'Confirm Request' panel
  RACFMSGS  Message        Display error message
+ RACFOMVS  OMVS Commands  Exec RACF OMVS cmds (OPERMIT/ORALTER/ORLIST)
  RACFPRMS  Parameter      Display RACF parameters, menu option 7
  RACFPROF  Profile        Execute line cmd 'P', extract/display profile
  RACFPSWD  Password       Reset userid password (menu opt 5/linecmd PW)
- RACFSETD  Settings       Set default settings (opt 0) for new users
+ RACFSETD  Settings       Set default settings (0) when RACFADM invoked
  RACFSETG  Settings       Customize settings, menu option 0
  RACFUSR   User           Display userid profiles, menu option 1
  RACFUSRT  User           Add, delete and change TSO userid

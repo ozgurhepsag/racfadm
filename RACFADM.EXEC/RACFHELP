@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A2  200605  RACFA    Concatenate panel dsn to TSOHELP             */
 /* @A1  200520  RACFA    Added RACF cmds: OPERMIT, ORALTER and ORLIST */
 /* @A0  200328  RACFA    Modified color/title                         */
 /*====================================================================*/
@@ -165,6 +166,7 @@
 
  arg helpcmd
 
+
 /* ----------------------------------------------- *
  | Check for APPLID of ISR and if not then recurse |
  * ----------------------------------------------- */
@@ -176,6 +178,16 @@
          "Passlib"
     exit 0
     end
+
+ /*-------------------------------------------------------*/  /* @A2 */
+ /* Concatenate LIBDEFed RACFADM panel dataset to TSOHELP */  /* @A2 */
+ /*-------------------------------------------------------*/  /* @A2 */
+ "QLIBDEF ISPPLIB TYPE(DATASET) ID(DSNAME)"                   /* @A2 */
+ QLIBRC = RC                                                  /* @A2 */
+ IF (QLIBRC = 0) THEN DO                                      /* @A2 */
+    Address TSO "alloc f(rachelp) da("dsname") shr reuse"     /* @A2 */
+    call bpxwdyn "concat ddlist(syshelp,rachelp) msg(wtp)"    /* @A2 */
+ END                                                          /* @A2 */
 
 /* --------------------- *
  | Check for Warn switch |
@@ -514,6 +526,14 @@
   * Close *
   * ----- */
   "LMFree  Dataid("status")"
+
+ /*----------------------------------------------------*/     /* @A2 */
+ /* Remove LIBDEFed RACFADM panel dataset from TSOHELP */     /* @A2 */
+ /*----------------------------------------------------*/     /* @A2 */
+ IF (QLIBRC = 0) THEN DO                                      /* @A2 */
+    call bpxwdyn "deconcat dd(syshelp) msg(wtp)"              /* @A2 */
+    address tso "free f(rachelp)"                             /* @A2 */
+ END                                                          /* @A2 */
   exit
 
 /* -------------- *
@@ -1589,7 +1609,7 @@ LISTGRP    List group profile
 LISTUSER   List user profile
 OPERMIT    Unix Access Control List Management, like PERMIT
 ORALTER    Unix Security Attribute Management, like ALTER
-ORLIST     Unix File/Directory Security Info, like RLIST
+ORLIST     Unix Directory/File Security Information, like RLIST
 PASSWORD   Specify user password
 PERMIT     Maintain resource access lists
 RACDCERT   Manage RACF digital certificates

@@ -2,6 +2,32 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  06 June 2020 - V26R7
+     - OMVSCmds (Option O)
+       -- Added ULIST Command, display UID/GID information
+       -- Modified data entry panel
+       -- Added tutorials
+     - Tutorials (Option T)
+       -- Added entry for OMVSCmds
+     - Other Items
+       -- Corrected grammar/syntax in both REXX commands and TSO HELP
+          for OPERMIT, ORALTER and ORLIST
+
+  05 June 2020 - V26R6
+     - Updated RACFHELP (Option H)
+       -- Added TSO commands OPERMIT, ORALTER and ORLIST
+     - Other Items
+       -- Updated member $DIR in panel/REXX datasets
+
+  05 June 2020 - V26R5
+     - Main Menu
+       -- Added below menu option:
+            O  OMVSCmds   OMVS RACF commands
+     - Tutorial
+       -- Update 'Installation Notes'
+     - Other Items
+       -- Updated member $DIR in panel/REXX datasets
+
   04 June 2020 - V26R4
      - User, Group, Dataset and General Resource (Opt 1/2/3/4)
        -- Fixed re-displaying table when selecting/displaying

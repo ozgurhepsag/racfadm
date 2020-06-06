@@ -14,7 +14,7 @@
 +Notes
 +    To use the tab key to access!point and shoot+fields the
 +   !'Tab to point-and-shoot fields'+must be selected (turned on)
-+    from the!ISPF Settings (Option 0).
++    from the!ISPF Settings+(Option 0).
 +
 +    Use%Only+to display rows with a specific text string, making
 +    it easier/quicker to find a command.

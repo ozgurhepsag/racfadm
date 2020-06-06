@@ -10,7 +10,7 @@
 +  an individual's password and/or!RESUME+their userid.
 +
 +  This utility will use the!'Initial Password'+defined in%Settings
-+ %(Option 0)+and if the field is!blank,+it will generate a!random+
++  (Option 0) and if the field is!blank,+it will generate a!random+
 +  password in upper and lower case characters.
 )PROC
   &ZUP     = #RACPSWD

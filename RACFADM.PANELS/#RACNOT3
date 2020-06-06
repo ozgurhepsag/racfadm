@@ -1,7 +1,6 @@
 )ATTR DEFAULT(%+_)
    _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON) JUST(LEFT)   HILITE(USCORE)
    !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
-   @  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(RED)
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
 %Tutorial+\-\(%RACFADM - Installation Notes - 3 of 3+)\-\%Tutorial
@@ -13,11 +12,11 @@
 !       -+To access/use this command, turn on the%Settings+(Option 0):
 +          !Administrator ..... Y
 +
-+
-+
-+
-+
-+
+!  8)+The%RACFCmds+(Option O) executes the following IBM REXX programs,
++     which are included in the%RACFADM+REXX dataset
++      %OPERMIT!...+Unix Access Control List (ACL) Management, like PERMIT
++      %ORALTER!...+Unix Security Attribute Management, like ALTER
++      %ORLIST!....+Unix Directory/File Security Information, like RLIST
 +
 +
 +

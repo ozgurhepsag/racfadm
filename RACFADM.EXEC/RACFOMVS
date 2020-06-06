@@ -1,0 +1,140 @@
+/*%NOCOMMENT====================* REXX *==============================*/
+/*  PURPOSE:  RACFADM - OMVSCmd - OMVS RACF Commands (Menu option O)  */
+/*--------------------------------------------------------------------*/
+/*  NOTES:    1) Allows executing the IBM REXX programs:              */
+/*                 OPERMIT ... Unix Access Control List, like PERMIT  */
+/*                 ORALTER ... Unix Security Attribute, like ALTER    */
+/*                 ORLIST .... Unix Dir/File Security, like RLIST     */
+/*            2) And one internal command                             */
+/*                 ULIST...... Unix User/Group Identifier (UID/GID)   */
+/*--------------------------------------------------------------------*/
+/* FLG  YYMMDD  USERID   DESCRIPTION                                  */
+/* ---  ------  -------  -------------------------------------------- */
+/* @A1  200606  RACFA    Added ULIST command                          */
+/* @A0  200605  TRIDJK   Created REXX                                 */
+/*====================================================================*/
+PANEL01     = "RACFOMVS"    /* Obtain cmd, path and options*/
+EDITMACR    = "RACFEMAC"    /* Edit Macro, turn HILITE off */
+parse source . . REXXPGM .         /* Obtain REXX pgm name */
+REXXPGM     = LEFT(REXXPGM,8)
+
+ADDRESS ISPEXEC
+  PARSE ARG MEMBER
+  "VGET (SETGDISP SETMTRAC) PROFILE"
+  If (SETMTRAC <> 'NO') then do
+     Say "*"COPIES("-",70)"*"
+     Say "*"Center("Begin Program = "REXXPGM,70)"*"
+     Say "*"COPIES("-",70)"*"
+     if (SETMTRAC <> 'PROGRAMS') THEN
+        interpret "Trace "SUBSTR(SETMTRAC,1,1)
+  end
+
+  Do Forever
+     "DISPLAY PANEL("PANEL01")" /* get utility command options*/
+     If rc = 8 then exit
+     SELECT                                                   /* @A1 */
+        WHEN (OMVSCMD = "ULIST") then                         /* @A1 */
+             call ulist
+        WHEN (OMVSCMD = "PERMIT") then do
+             X = OUTTRAP("CMDREC.")                           /* @A1 */
+             Address TSO 'O'OMVSCMD OMVSPATH OMVSOPTS
+             X = OUTTRAP("OFF")                               /* @A1 */
+        end
+        OTHERWISE DO                                          /* @A1 */
+             X = OUTTRAP("CMDREC.")                           /* @A1 */
+             parse var OMVSOPTS w1 w2
+             if (w1 = "FSSEC") | (w1 = "fssec") then
+                Address TSO 'O'OMVSCMD w1 OMVSPATH w2
+             else
+                Address TSO 'O'OMVSCMD OMVSPATH OMVSOPTS
+             X = OUTTRAP("OFF")                               /* @A1 */
+        END                                                   /* @A1 */
+     end
+
+     ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",
+                 "LRECL(132) BLKSIZE(0) RECFM(F B)",
+                 "UNIT(VIO) SPACE(1 5) CYLINDERS"
+     ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM CMDREC. FINIS"
+     DROP CMDREC.
+
+     "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"
+     SELECT
+        WHEN (SETGDISP = "VIEW") THEN
+             "VIEW DATAID("CMDDATID") MACRO("EDITMACR")"
+        WHEN (SETGDISP = "EDIT") THEN
+             "EDIT DATAID("CMDDATID") MACRO("EDITMACR")"
+        OTHERWISE
+             "BROWSE DATAID("CMDDATID")"
+     END
+     ADDRESS TSO "FREE FI("DDNAME")"
+  End
+
+  If (SETMTRAC <> 'NO') then do
+     Say "*"COPIES("-",70)"*"
+     Say "*"Center("End Program = "REXXPGM,70)"*"
+     Say "*"COPIES("-",70)"*"
+  end
+EXIT
+/*--------------------------------------------------------------------*/
+/*  ULIST command - Obtain UID/GID information                   @A1  */
+/*--------------------------------------------------------------------*/
+ULIST:                                                        /* @A1 */
+  cmdrec.  = ""                                               /* @A1 */
+  SELECT                                                      /* @A1 */
+     WHEN (OMVSPATH <> "") THEN                               /* @A1 */
+          CHKID = STRIP(OMVSPATH)                             /* @A1 */
+     WHEN (OMVSOPST <> "") THEN                               /* @A1 */
+          CHKID = STRIP(OMVSOPTS)                             /* @A1 */
+     OTHERWISE                                                /* @A1 */
+          CHKID = ""                                          /* @A1 */
+  END                                                         /* @A1 */
+  UPPER CHKID                                                 /* @A1 */
+  IF (LENGTH(CHKID) > 8) THEN DO                              /* @A1 */
+     CMDREC.1 = 'The userid ('chkid') is larger than 8',      /* @A1 */
+                'characters in length.'                       /* @A1 */
+     CMDREC.0 = 1                                             /* @A1 */
+     return                                                   /* @A1 */
+  END                                                         /* @A1 */
+                                                              /* @A1 */
+  if (syscalls('ON') > 3) then do                             /* @A1 */
+     CMDREC.1 = 'Unable to establish the SYSCALL',            /* @A1 */
+                'environment.'                                /* @A1 */
+     CMDREC.0 = 1                                             /* @A1 */
+     return                                                   /* @A1 */
+  end                                                         /* @A1 */
+                                                              /* @A1 */
+  racflmsg = "Retrieving data - Please be patient"            /* @A1 */
+  "control display lock"                                      /* @A1 */
+  "display msg(RACF011)"                                      /* @A1 */
+                                                              /* @A1 */
+  cmdrec.1 = " Userid     UID       GID    Shell   ",         /* @A1 */
+             "Home-Directory"                                 /* @A1 */
+  cmdrec.2 = "-------- ---------- ------- --------",          /* @A1 */
+             "----------------"                               /* @A1 */
+  j = 2                                                       /* @A1 */
+  address syscall "getpwent pw."                              /* @A1 */
+  firstid = pw.1                                              /* @A1 */
+  do forever                                                  /* @A1 */
+     if (pw.1 <> previd) then do                              /* @A1 */
+        IF (CHKID = "") THEN do                               /* @A1 */
+           J = J + 1                                          /* @A1 */
+           cmdrec.J = pw.1 left(pw.2,10) left(pw.3,7),        /* @A1 */
+                           left(pw.5,8)  left(pw.4,50)        /* @A1 */
+        end                                                   /* @A1 */
+        ELSE DO                                               /* @A1 */
+           IF (CHKID = pw.1) THEN DO                          /* @A1 */
+              J = J + 1                                       /* @A1 */
+              cmdrec.J = pw.1 left(pw.2,10) left(pw.3,7),     /* @A1 */
+                              left(pw.5,8)  left(pw.4,50)     /* @A1 */
+           END                                                /* @A1 */
+        end                                                   /* @A1 */
+     end                                                      /* @A1 */
+     previd = pw.1                                            /* @A1 */
+     address syscall "getpwent pw."                           /* @A1 */
+     if (retval = -1) then                                    /* @A1 */
+        leave                                                 /* @A1 */
+     if (pw.1 = firstid) then                                 /* @A1 */
+        leave                                                 /* @A1 */
+  end                                                         /* @A1 */
+  cmdrec.0 = J                                                /* @A1 */
+RETURN                                                        /* @A1 */

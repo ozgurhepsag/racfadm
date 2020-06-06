@@ -1,0 +1,37 @@
+)ATTR DEFAULT(%+_)
+   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON) JUST(LEFT)   HILITE(USCORE)
+   !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
+   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
+   ~  TYPE(PS)
+)BODY EXPAND(\\)
+%Tutorial+\-\(%RACFADM - OMVS RACF Commands+)\-\%Tutorial
+%Command ===>_ZCMD
+%
++IBM has developed/distributed three REXX programs to assist in managing
++the Unix enviromment%(OPERMIT, ORALTER and ORLIST)
++
++The following topics are presented in sequence, or may be selected by number:
++
+%  1 ~OPERMIT +Unix Access Control List (ACL) Management, like PERMIT
+%  2 ~ORALTER +Unix Security Attribute Management, like ALTER
+%  3 ~ORLIST  +Unix File/Directory Security Information, like RLIST
+%  4 ~ULIST   +Unix User/Group Identifier Information
+)PROC
+&ZSEL = TRANS(&ZCMD 1,#RACOMP1  2,#RACOMA1
+                    3,#RACOML1  4,#RACOMU1 *,'?')
+&ZUP  = #RACOMVS
+)PNTS
+  FIELD(ZPS00001) VAR(ZCMD) VAL('1')
+  FIELD(ZPS00002) VAR(ZCMD) VAL('2')
+  FIELD(ZPS00003) VAR(ZCMD) VAL('3')
+  FIELD(ZPS00004) VAR(ZCMD) VAL('4')
+)END
+/*--------------------------------------------------------------------*/
+/*                             Comments                               */
+/*--------------------------------------------------------------------*/
+/*                                                                    */
+/*                                                                    */
+/*  1) The tutorial entries (Settings, User profiles, etc) are        */
+/*     point-n-shoot fields                                           */
+/*                                                                    */
+/*--------------------------------------------------------------------*/

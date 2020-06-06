@@ -8,10 +8,10 @@
 /* @A0  200516  RACFA    Developed REXX                               */
 /*====================================================================*/
 X           = MSG("OFF")
-DDNAME      = 'RACFA'RANDOM(0,999) /* Unique ddname        */
-parse source . . REXXPGM . /* Obtain REXX pgm name */
-REXXPGM     = LEFT(REXXPGM,8)
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */
+DDNAME      = 'RACFA'RANDOM(0,999) /* Unique ddname        */
+parse source . . REXXPGM .         /* Obtain REXX pgm name */
+REXXPGM     = LEFT(REXXPGM,8)
 
 ADDRESS ISPEXEC
   "VGET (SETGDISP SETMSHOW SETMTRAC",                         /* @A2 */

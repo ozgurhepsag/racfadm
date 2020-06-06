@@ -8,9 +8,9 @@
 %Command ===>_ZCMD                                                             +
 %
 +  To display and access the below IBM RACF options from the main menu:
-!    10 IBMSys    RACF system options
-!    11 IBMRRSF   RACF remote services
-!    12 IBMCert   RACF certificates
+%    10!IBMSys   +RACF system options
+%    11!IBMRRSF  +RACF remote services
+%    12!IBMCert  +RACF certificates
 +
 +  Invoke%Settings+(Option 0) and turn on:
 !    IBM RACF opt ...... Y

@@ -16,7 +16,7 @@
 @    https://cbttape.org
 +
 +  To use%RACFData,+the following entry needs to be displayed on the main menu:
-!    7  RACFData  RACF data (Showmvs)
+%    7 !RACFData +RACF data (Showmvs)
 +
 +  Invoke%Settings+(Option 0) and turn on:
 !    Showmvs data ...... Y

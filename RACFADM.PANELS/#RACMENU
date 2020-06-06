@@ -15,48 +15,49 @@
 +user authorization searching across classes, and displaying the group from
 +which an authorization is granted.
 +
-+Adding a new TSO user will create the alias and necessary datasets.  Also,
-+the RACF system parameters can be displayed.
++Adding a new TSO user will create the alias and necessary datasets.
 +
 +The following topics are presented in sequence, or may be selected by number:
 +
-+ %0 ~Settings            % 7~RACF data (Showmvs)  %14~RACF help commands
-+ %1 ~User profiles       % 8~RACF databases       %15~ISPF log file
-+ %2 ~Group profiles      % 9~RACF parameters      %16~DSN access authority
-+ %3 ~Dataset profiles    %10~RACF IBM options     %17~Res access authority
-+ %4 ~General resources   %11~Execute RACF cmds    %18~Publications
-+ %5 ~Password reset      %12~Dataset list         %19~Installation notes
-+ %6 ~Group tree report   %13~Dataset enqueues     %20~Acknowledgements
++ %0 ~Settings            % 8~RACF databases       %16~OMVS RACF commands
++ %1 ~User profiles       % 9~RACF parameters      %17~DSN access authority
++ %2 ~Group profiles      %10~RACF IBM options     %18~Res access authority
++ %3 ~Dataset profiles    %11~Execute RACF cmds    %19~Publications
++ %4 ~General resources   %12~Dataset list         %20~Installation notes
++ %5 ~Password reset      %13~Dataset enqueues     %21~Acknowledgements
++ %6 ~Group tree report   %14~RACF help commands
++ %7 ~RACF data (Showmvs) %15~ISPF log file
 )PROC
 &ZSEL = TRANS(&ZCMD 0,#RACSET1  1,#RACUSR2  2,#RACGRP8  3,#RACDSN2
                     4,#RACCLSR  5,#RACPSWD  6,#RACGTRE  7,#RACMVS
                     8,#RACDB    9,#RACPRMS 10,#RACIBM  11,#RACCMDS
                    12,#RACDSL  13,#RACENQ  14,#RACHEL1 15,#RACLOG
-                   16,#RACDSNA 17,#RACCLSA 18,#RACPUB1 19,#RACNOT1
-                   20,#RACACKN  *,'?')
+                   16,#RACOMVS 17,#RACDSNA 18,#RACCLSA 19,#RACPUB1
+                   20,#RACNOT1 21,#RACACKN  *,'?')
 &ZUP  = #RACMENU
 )PNTS
   FIELD(ZPS00001) VAR(ZCMD) VAL('0')
-  FIELD(ZPS00002) VAR(ZCMD) VAL('7')
-  FIELD(ZPS00003) VAR(ZCMD) VAL('14')
+  FIELD(ZPS00002) VAR(ZCMD) VAL('8')
+  FIELD(ZPS00003) VAR(ZCMD) VAL('16')
   FIELD(ZPS00004) VAR(ZCMD) VAL('1')
-  FIELD(ZPS00005) VAR(ZCMD) VAL('8')
-  FIELD(ZPS00006) VAR(ZCMD) VAL('15')
+  FIELD(ZPS00005) VAR(ZCMD) VAL('9')
+  FIELD(ZPS00006) VAR(ZCMD) VAL('17')
   FIELD(ZPS00007) VAR(ZCMD) VAL('2')
-  FIELD(ZPS00008) VAR(ZCMD) VAL('9')
-  FIELD(ZPS00009) VAR(ZCMD) VAL('16')
+  FIELD(ZPS00008) VAR(ZCMD) VAL('10')
+  FIELD(ZPS00009) VAR(ZCMD) VAL('18')
   FIELD(ZPS00010) VAR(ZCMD) VAL('3')
-  FIELD(ZPS00011) VAR(ZCMD) VAL('10')
-  FIELD(ZPS00012) VAR(ZCMD) VAL('17')
+  FIELD(ZPS00011) VAR(ZCMD) VAL('11')
+  FIELD(ZPS00012) VAR(ZCMD) VAL('19')
   FIELD(ZPS00013) VAR(ZCMD) VAL('4')
-  FIELD(ZPS00014) VAR(ZCMD) VAL('11')
-  FIELD(ZPS00015) VAR(ZCMD) VAL('18')
+  FIELD(ZPS00014) VAR(ZCMD) VAL('12')
+  FIELD(ZPS00015) VAR(ZCMD) VAL('20')
   FIELD(ZPS00016) VAR(ZCMD) VAL('5')
-  FIELD(ZPS00017) VAR(ZCMD) VAL('12')
-  FIELD(ZPS00018) VAR(ZCMD) VAL('19')
+  FIELD(ZPS00017) VAR(ZCMD) VAL('13')
+  FIELD(ZPS00018) VAR(ZCMD) VAL('21')
   FIELD(ZPS00019) VAR(ZCMD) VAL('6')
-  FIELD(ZPS00020) VAR(ZCMD) VAL('13')
-  FIELD(ZPS00021) VAR(ZCMD) VAL('20')
+  FIELD(ZPS00020) VAR(ZCMD) VAL('14')
+  FIELD(ZPS00021) VAR(ZCMD) VAL('7')
+  FIELD(ZPS00022) VAR(ZCMD) VAL('15')
 )END
 /*--------------------------------------------------------------------*/
 /*                             Comments                               */

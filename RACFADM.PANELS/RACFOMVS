@@ -1,0 +1,32 @@
+)ATTR DEFAULT(%+_)
+   _  TYPE(INPUT)   INTENS(HIGH) CAPS(OFF) JUST(LEFT)   HILITE(USCORE)
+   ~  TYPE(INPUT)   INTENS(HIGH) CAPS(ON)  JUST(LEFT)   HILITE(USCORE)
+   !  TYPE(TEXT)    INTENS(HIGH) SKIP(ON)  COLOR(TURQ)  CAPS(OFF)
+   {  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(BLUE)
+   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(GREEN)
+)BODY EXPAND(\\)
++\-\(%RACFADM - OMVS RACF Commands+)\-\
+%Command ===>_ZCMD                                                             +
++
++Enter%OMVS RACF+command options:+
++
++Command %===>~z     { (PERMIT, RALTER, RLIST or ULIST)
++
++Path    %===>_z
++Operands%===>_z
+
+
++
+!PERMIT  {Unix Access Control List (ACL) Management
++
+!RALTER  {Unix Security Attribute Management
++
+!RLIST   {Unix Directory/File Security Information
++
+!ULIST   {Unix User/Group Identifier Information
+)INIT
+  .HELP = #RACOMVS
+  .ZVARS   = '(OMVSCMD OMVSPATH OMVSOPTS)'
+)PROC
+  VER (&OMVSCMD,NB,LIST,PERMIT,RALTER,RLIST,ULIST)
+)END
