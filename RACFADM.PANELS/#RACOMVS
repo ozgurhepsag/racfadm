@@ -13,20 +13,25 @@
 +The following topics are presented in sequence, or may be selected by number:
 +
 %  1 ~FLIST   +Unix ZFS/HFS File Usage and Attribute Information
-%  2 ~OPERMIT +Unix Access Control List (ACL) Management, like PERMIT
-%  3 ~ORALTER +Unix Security Attribute Management, like RALTER
-%  4 ~ORLIST  +Unix File/Directory Security Information, like RLIST
-%  5 ~ULIST   +Unix User/Group Identifier Information
+%  2 ~GLIST   +Unix Group Identifiers (GID) List
+%  3 ~OPERMIT +Unix Access Control List (ACL) Management, like PERMIT
+%  4 ~ORALTER +Unix Security Attribute Management, like RALTER
+%  5 ~ORLIST  +Unix File/Directory Security Information, like RLIST
+%  6 ~ULIST   +Unix User/Group Identifier (UID/GID) Information
++
++The%Command+field allows for abbreviating the commands, for example:
+%  F+FLIST,%G+GLIST,%P+PERMIT,%RA+ALTER,%RL+RLIST and%U+ULIST
 )PROC
-&ZSEL = TRANS(&ZCMD 1,#RACOMF1, 2,#RACOMP1  3,#RACOMA1
-                    4,#RACOML1  5,#RACOMU1 *,'?')
-&ZUP  = #RACOMVS
+  &ZSEL = TRANS(&ZCMD 1,#RACOMF1, 2,#RACOMG1  3,#RACOMP1
+                      4,#RACOMA1, 5,#RACOML1  6,#RACOMU1 *,'?')
+  &ZUP  = #RACOMVS
 )PNTS
   FIELD(ZPS00001) VAR(ZCMD) VAL('1')
   FIELD(ZPS00002) VAR(ZCMD) VAL('2')
   FIELD(ZPS00003) VAR(ZCMD) VAL('3')
   FIELD(ZPS00004) VAR(ZCMD) VAL('4')
   FIELD(ZPS00005) VAR(ZCMD) VAL('5')
+  FIELD(ZPS00006) VAR(ZCMD) VAL('6')
 )END
 /*--------------------------------------------------------------------*/
 /*                             Comments                               */

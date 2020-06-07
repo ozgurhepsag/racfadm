@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
    $  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN) hilite(uscore)
 )BODY EXPAND(\\)
-%Tutorial+\-\(%RACFADM - OMVS Permit - 1 of 2+)\-\%Tutorial
+%Tutorial+\-\(%RACFADM - OMVS OPERMIT - 1 of 2+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
 %OPERMIT+provides UNIX Access Control List (ACL) management using a syntax

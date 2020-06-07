@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
    $  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN) hilite(uscore)
 )BODY EXPAND(\\)
-%Tutorial+\-\(%RACFADM - OMVS RAlter - 2 of 2+)\-\%Tutorial
+%Tutorial+\-\(%RACFADM - OMVS ORALTER - 2 of 2+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
 %Examples:

@@ -32,16 +32,20 @@
  #RACMENU  Tutorial       Main menu, menu option T
  #RACNOT1  Tutorial       Installation notes (1 of 3)
  #RACNOT2  Tutorial       Installation notes (2 of 3)
- #RACNOT3  Tutorial       Installation notes (4 of 3)
- #RACOMA1  Tutorial       OMVS RAlter (1 of 2)
- #RACOMA2  Tutorial       OMVS RAlter (2 of 2)
- #RACOML1  Tutorial       OMVS RList  (1 of 2)
- #RACOML2  Tutorial       OMVS RList  (2 of 2)
- #RACOMP1  Tutorial       OMVS Permit (1 of 2)
- #RACOMP2  Tutorial       OMVS Permit (2 of 2)
- #RACOMU1  Tutorial       OMVS UList  (1 of 2)
- #RACOMU2  Tutorial       OMVS UList  (2 of 2)
- #RACOMVS  Tutorial       OMVS Permit, RAlter, RList and UList
+ #RACNOT3  Tutorial       Installation notes (3 of 3)
+ #RACOMA1  Tutorial       OMVS ORALTER (1 of 2)
+ #RACOMA2  Tutorial       OMVS ORALTER (2 of 2)
+ #RACOMF1  Tutorial       OMVS FLIST   (1 of 2)
+ #RACOMF2  Tutorial       OMVS FLIST   (2 of 2)
+ #RACOMG1  Tutorial       OMVS GLIST   (1 of 2)
+ #RACOMG2  Tutorial       OMVS GLIST   (2 of 2)
+ #RACOML1  Tutorial       OMVS ORLIST  (1 of 2)
+ #RACOML2  Tutorial       OMVS ORLIST  (2 of 2)
+ #RACOMP1  Tutorial       OMVS OPERMIT (1 of 2)
+ #RACOMP2  Tutorial       OMVS OPERMIT (2 of 2)
+ #RACOMU1  Tutorial       OMVS ULIST   (1 of 2)
+ #RACOMU2  Tutorial       OMVS ULIST   (2 of 2)
+ #RACOMVS  Tutorial       OMVS commands
  #RACPRMS  Tutorial       RACF parameters
  #RACPSWD  Tutorial       Password reset
  #RACPUB1  Tutorial       RACF publications and downloads (1 of 2)

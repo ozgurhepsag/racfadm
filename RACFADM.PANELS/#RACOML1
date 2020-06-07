@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
    $  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN) hilite(uscore)
 )BODY EXPAND(\\)
-%Tutorial+\-\(%RACFADM - OMVS RList - 1 or 2+)\-\%Tutorial
+%Tutorial+\-\(%RACFADM - OMVS ORLIST - 1 or 2+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
 %ORLIST+displays security information for a Unix directory or file using a

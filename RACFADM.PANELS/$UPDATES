@@ -2,6 +2,22 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  07 June 2020 - V27R5
+     - OMVSCmds (Option O)
+       -- Minor updates to panel and tutorials to reflect
+       -- Minor fixes/tweaks to line commands F/G/ULIST
+
+  07 June 2020 - V27R4
+     - OMVSCmds (Option O)
+       -- Added command 'GLIST', Group Identifier (GID) List
+          * Display group identifiers and associated members
+       -- Allowing abbreviating the 'Command' field
+          * F=FLIST, G=GLIST,P=PERMIT,RA=RALTER,RL=RLIST and U=ULIST
+       -- Updated FLIST when specifying a pathname
+          * Highlights the report totals when in VIEW or EDIT mode
+       -- Updated panel and tutorials to reflect these changes
+       -- Updated member $DIR in panel dataset
+
   06 June 2020 - V27R3
      - OMVSCmds (Option O)
        -- Cleaned up code for FLIST and ULIST commands, reduced

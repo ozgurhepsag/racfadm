@@ -10,25 +10,30 @@
 +
 +Enter%OMVS RACF+command options:+
 +
-+Command %===>~z     { (FLIST, PERMIT, RALTER, RLIST or ULIST)
++Command %===>~z     { (Flist, Glist, Permit, RAlter, RList or Ulist)
 +
 +Path    %===>_z
 +Operands%===>_z
 
 
 +
-!FLIST   {Unix ZFS/HFS File Usage and Attribute Information
 +
-!PERMIT  {Unix Access Control List (ACL) Management
-+
-!RALTER  {Unix Security Attribute Management
-+
-!RLIST   {Unix Directory/File Security Information
-+
-!ULIST   {Unix User/Group Identifier Information
+%Command                               Description
+%-------  -\-\-
+!Flist   {Unix ZFS/HFS File Usage and Attribute Information
+!Glist   {Unix Group Identifier (GID) List
+!Permit  {Unix Access Control List (ACL) Management
+!RAlter  {Unix Security Attribute Management
+!RList   {Unix Directory/File Security Information
+!Ulist   {Unix User/Group Identifier (UID/GID) Information
 )INIT
   .HELP = #RACOMVS
   .ZVARS   = '(OMVSCMD OMVSPATH OMVSOPTS)'
 )PROC
-  VER (&OMVSCMD,NB,LIST,FLIST,PERMIT,RALTER,RLIST,ULIST)
+  VER (&OMVSCMD,NB,LIST,F,FL,FLI,FLIS,FLIST,
+                        G,GL,GLI,GLIS,GLIST,
+                        P,PE,PER,PERM,PERMI,PERMIT,
+                        RA,RAL,RALT,RALTE,RALTER,
+                        RL,RLI,RLIS,RLIST,
+                        U,UL,ULI,ULIS,ULIST)
 )END
