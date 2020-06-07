@@ -2,9 +2,30 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
-  06 June 2020 - V26R9
-     - Tutorials (Option T)
-       -- Modified/fixed tutorial and OMVSCmds menu
+  06 June 2020 - V27R3
+     - OMVSCmds (Option O)
+       -- Cleaned up code for FLIST and ULIST commands, reduced
+          number of subroutines, added comments, etc.
+       -- Updated tutorials
+
+  06 June 2020 - V27R2
+     - OMVSCmds (Option O)
+       -- Updated FLIST when specifing a pathname, highlights the
+          report header when in VIEW or EDIT mode
+       -- Updated ULIST, allow searching and displaying specific
+          UID, GID, Shell and Home path
+
+  06 June 2020 - V27R1
+     - OMVSCmds (Option O)
+       -- Enhanced FLIST command to except a pathname and display
+          pathname's permissions, ownership and node names
+
+  06 June 2020 - V27R0
+     - OMVSCmds (Option O)
+       -- Added command:
+            FLIST ... Unix ZFS/HFS File Usage and Attribute Information
+       -- Highlight FLIST and ULIST rpt headers when in VIEW/EDIT mode
+       -- Updated tutorial
 
   06 June 2020 - V26R8
      - Tutorials (Option T)

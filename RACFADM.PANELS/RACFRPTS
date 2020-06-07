@@ -77,7 +77,7 @@
                nop
           When substr(zdata,i+8,10) = 'RACF DATA ' then /* GrpTre 1st*/
                zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
-          When substr(zdata,i+8,5) = '-----' then    /* GrpTree - 4rd*/
+          When substr(zdata,i+8,3) = '---'   then    /* GrpTree - 4rd*/
                zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
           When substr(zdata,i+8,7) = 'R A C F' then  /* GrpTree - 2nd*/
                zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
@@ -88,6 +88,16 @@
           When substr(zdata,i+8,5) = '*    ' then    /* Chgs/Iss/etc */
                zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
           When substr(zdata,i+8,5) = '*----' then    /* Chgs/Iss/etc */
+               zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
+          When substr(zdata,i+8,6) = '%InUse' then   /* OMVS FLIST   */
+               zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
+          When substr(zdata,i+8,7) = ' Userid ' then /* OMVS ULIST   */
+               zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
+          When substr(zdata,i+8,9) = 'Specified' then /* OMVS FLIST  */
+               zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
+          When substr(zdata,i+8,8) = 'Resolved'  then /* OMVS FLIST  */
+               zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
+          When substr(zdata,i+8,3) = 'UGO'       then /* OMVS FLIST  */
                zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
           When substr(zdata,i+8,11) = '1      Time' then
                zshadow = overlay(titlec,zshadow,i+8,zwidth-8)

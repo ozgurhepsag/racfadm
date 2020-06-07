@@ -3,19 +3,30 @@
    !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
-%Tutorial+\-\(%RACFADM - OMVS UList+)\-\%Tutorial
+%Tutorial+\-\(%RACFADM - OMVS UList - 1 of 2+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
 %ULIST+displays userid's User and Group Identifier (UID/GID) information
 +
-+To display a specific userid, type in the!userid+in the!Path+or!Operands+field
+%Optional:+Can specify a userid, UID, GID, shell and/or home directory
 +
-%Examples:
-%  1)+To list all userid's UID/GID information
-!       ULIST
+%Operands:!userid
+!          UID(##########)
+!          GID(#######)
+!          SHELL(shell)
+!          HOME(home-directory)
 +
-%  2)+To list a specific userid's UID/GID information
-!       ULIST SAMGOL
++
++
++
++
++
++
++
++
++
++ \ \ (press%ENTER+to continue) \ \
 )PROC
   &ZUP     = #RACOMU1
+  &ZCONT   = #RACOMU2
 )END
