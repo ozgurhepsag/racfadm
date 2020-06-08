@@ -7,8 +7,9 @@
 %Tutorial+\-\(%RACFADM - Installation Notes - 2 of 3+)\-\%Tutorial
 %Command ===>_ZCMD                                                             +
 %
-!  4)+May want to add/display the two hidden menu entries in panel%RACFMENU
-%       99 !Analyze  +Verify ACL             %B !Bookmgr  +RACF Manuals
+!  4)+May want to add/display the below hidden menu options in panel%RACFMENU
+%       99 !Analyze  +Verify ACL             %B !Bookmgr  +RACF manuals
+%                                            %I !Issues   +Known issues
 +
 !  5)+The menu option%Command+(Option C), saves the commands into the user's
 +     dataset allocated to!ISPTABLE+or!ISPPROF+in member%RACFCMDS
@@ -23,7 +24,6 @@
 +          @        AUDIT(FAILURES(READ)) DATA('RACF ADMINISTRATION API')
 +          @        WARNING
 +          @PERMIT IRR.RADMIN.* CLASS(FACILITY) ID(group) GEN
-+
 +
 +
 + \ \ (press%ENTER+to continue) \ \

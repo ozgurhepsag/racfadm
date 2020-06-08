@@ -15,7 +15,7 @@
 !          PERC(##)
 !          TEXT(search-string)
 +
-+
+%Note:    +Operands can be mixed case, for example:!Perc(90)+or!PeRc(90)
 +
 +
 +

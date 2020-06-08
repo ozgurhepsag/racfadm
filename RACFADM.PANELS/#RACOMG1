@@ -9,12 +9,12 @@
 %
 %GLIST+displays Group Identifiers (GID) and members associated with them
 +
-%Optional:+Can specify a name or GID
+%Optional:+Can specify a group name or identifer (GID)
 +
-%Operands:!NAME(group-name)
+%Operands:!GROUP(group-name)
 !          GID(##########)
 +
-+
+%Note:    +Operands can be mixed case, for example:!Gid(101)+or!gID(101)
 +
 +
 +

@@ -11,7 +11,7 @@
 @  1)+Display all files
 !       FLIST
 +
-@  2)+Display a pathname's permissions, ownership and node names
+@  2)+Display a path name's permissions, ownership and node names
 !       FLIST /u/samgob
 +
 @  3)+Display only files with space utilization equal to or greater than 50%

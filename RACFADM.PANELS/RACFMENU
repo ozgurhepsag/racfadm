@@ -7,20 +7,20 @@
    {  TYPE(OUTPUT)  PAS(ON)      CAPS(OFF)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V27R6+)\-\
++\-\(%RACFADM - RACF Administration - V27R8+)\-\
 %Option ===>_ZCMD                                                              +
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
 %   1 ~User     +User profiles          %D ~DSList    +Dataset list
 %   2 ~Group    +Group profiles         %E ~Enqueues  +Dataset enqueues
 %   3 ~Dataset  +Dataset profiles       %H ~Help      +RACF help commands
-%   4 ~General  +General resources      %I ~Issues    +Known issues
-%   5 ~Password +Password reset         %L ~ISPLog    +ISPF log file
-%   6 ~GrpTree  +Group tree report      %O ~OMVSCmds  +OMVS RACF commands
-%  ¨z {OPT1DESC ÝOPT1INFO               %S ~Standards +Coding/design
-%  ¨z {OPT2DESC ÝOPT2INFO               %T ~Tutorial  +Help
-%  ¨z {OPT3DESC ÝOPT3INFO               %U ~Updates   +Version/updates
-+  ¨z {OPT4DESC ÝOPT4INFO               %X ~Exit      +Terminate
+%   4 ~General  +General resources      %L ~ISPLog    +ISPF log file
+%   5 ~Password +Password reset         %O ~OMVSCmds  +OMVS RACF commands
+%   6 ~GrpTree  +Group tree report      %S ~Standards +Coding/design
+%  ¨z {OPT1DESC ÝOPT1INFO               %T ~Tutorial  +Help
+%  ¨z {OPT2DESC ÝOPT2INFO               %U ~Updates   +Version/updates
+%  ¨z {OPT3DESC ÝOPT3INFO               %X ~Exit      +Terminate
++  ¨z {OPT4DESC ÝOPT4INFO
 +  ¨z {OPT5DESC ÝOPT5INFO
 +  ¨z {OPT6DESC ÝOPT6INFO
 +
@@ -231,7 +231,7 @@
       D,'CMD(%RACFDSL)'
       E,'CMD(%RACFENQS)'
       H,'CMD(%RACFHELP)'
-      I,'CMD(%RACFLOG $ISSUES)'
+      I,'CMD(%RACFLOG $ISSUES)' /* Known issues (PMRs)  */  /* Hidden */
       L,'CMD(%RACFLOG ISPLOG)'
       O,'CMD(%RACFOMVS)'
       S,'CMD(%RACFLOG $STNDARD)'
@@ -250,19 +250,18 @@
   FIELD(ZPS00007) VAR(ZCMD) VAL('3')
   FIELD(ZPS00008) VAR(ZCMD) VAL('H')
   FIELD(ZPS00009) VAR(ZCMD) VAL('4')
-  FIELD(ZPS00010) VAR(ZCMD) VAL('I')
+  FIELD(ZPS00010) VAR(ZCMD) VAL('L')
   FIELD(ZPS00011) VAR(ZCMD) VAL('5')
-  FIELD(ZPS00012) VAR(ZCMD) VAL('L')
+  FIELD(ZPS00012) VAR(ZCMD) VAL('O')
   FIELD(ZPS00013) VAR(ZCMD) VAL('6')
-  FIELD(ZPS00014) VAR(ZCMD) VAL('O')
+  FIELD(ZPS00014) VAR(ZCMD) VAL('S')
   FIELD(OPT1DESC) VAR(ZCMD) VAL('7')
-  FIELD(ZPS00015) VAR(ZCMD) VAL('A')
+  FIELD(ZPS00015) VAR(ZCMD) VAL('T')
   FIELD(OPT2DESC) VAR(ZCMD) VAL('8')
-  FIELD(ZPS00016) VAR(ZCMD) VAL('T')
+  FIELD(ZPS00016) VAR(ZCMD) VAL('U')
   FIELD(OPT3DESC) VAR(ZCMD) VAL('9')
-  FIELD(ZPS00017) VAR(ZCMD) VAL('U')
+  FIELD(ZPS00017) VAR(ZCMD) VAL('X')
   FIELD(OPT4DESC) VAR(ZCMD) VAL('10')
-  FIELD(ZPS00018) VAR(ZCMD) VAL('X')
   FIELD(OPT5DESC) VAR(ZCMD) VAL('11')
   FIELD(OPT6DESC) VAR(ZCMD) VAL('12')
 )END
@@ -304,8 +303,9 @@
 /*     - Alphabetic entries (A-Z) are used to assist in maintaining   */
 /*       or documenting RACFADM                                       */
 /*                                                                    */
-/*  5) Below menu options are hidden, not displayed:                  */
+/*  5) Below hidden menu options (not displayed):                     */
 /*       99  Analyze   Verify ACL                                     */
+/*        I  Issues    Known problems                                 */
 /*        B  BookMgr   RACF manuals                                   */
 /*                                                                    */
 /*  6) The menu entries (Settings, User, etc.) are point-n-shoot      */

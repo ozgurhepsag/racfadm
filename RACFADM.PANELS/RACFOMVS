@@ -30,10 +30,23 @@
   .HELP = #RACOMVS
   .ZVARS   = '(OMVSCMD OMVSPATH OMVSOPTS)'
 )PROC
-  VER (&OMVSCMD,NB,LIST,F,FL,FLI,FLIS,FLIST,
-                        G,GL,GLI,GLIS,GLIST,
-                        P,PE,PER,PERM,PERMI,PERMIT,
-                        RA,RAL,RALT,RALTE,RALTER,
-                        RL,RLI,RLIS,RLIST,
-                        U,UL,ULI,ULIS,ULIST)
+  *REXX (OMVSCMD)
+     SELECT
+        WHEN (abbrev("FLIST",OMVSCMD,1)  = 1) THEN
+             OMVSCMD = "FLIST"
+        WHEN (abbrev("GLIST",OMVSCMD,1)  = 1) THEN
+             OMVSCMD = "GLIST"
+        WHEN (abbrev("PERMIT",OMVSCMD,1) = 1) THEN
+             OMVSCMD = "PERMIT"
+        WHEN (abbrev("RALTER",OMVSCMD,2) = 1) THEN
+             OMVSCMD = "RALTER"
+        WHEN (abbrev("RLIST",OMVSCMD,2)  = 1) THEN
+             OMVSCMD = "RLIST"
+        WHEN (abbrev("ULIST",OMVSCMD,1)  = 1) THEN
+             OMVSCMD = "ULIST"
+        OTHERWISE
+             NOP
+     END
+  *ENDREXX
+  VER (&OMVSCMD,NB,LIST,FLIST,GLIST,PERMIT,RALTER,RLIST,ULIST)
 )END

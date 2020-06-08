@@ -12,6 +12,18 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AM  200608  RACFA    F/G/ULIST, trans parm keywords to uppercase  */
+/* @AL  200608  RACFA    GLIST, changed parm 'Name' to 'Group'        */
+/* @AK  200608  RACFA    FLIST path, was disp 'no met srch criteria'  */
+/* @AJ  200608  RACFA    Move translating abbreviation to panel       */
+/* @AI  200608  TRIDJK   PERMIT/RALTER/RLIST, del TMPCMD, use OMVSCMD */
+/* @AH  200608  RACFA    Fix init var OMVSCMDS due to a abbreviation  */
+/* @AG  200608  RACFA    Upd F, upd verify parms, reduce code         */
+/* @AF  200608  RACFA    Upd F/G/U, fix abbreviating commands         */
+/* @AE  200608  RACFA    Upd F/G/U, move 'Numeric Digits' to top pgm  */
+/* @AD  200608  RACFA    Upd F/G/U, move CHKPRM to init subroutine    */
+/* @AC  200608  RACFA    Removed unnecessary 'TRACE O' left in code   */
+/* @AB  200608  RACFA    Fix F/G/U, display error msg, for no entries */
 /* @AA  200607  RACFA    If no recs found, display message            */
 /* @A9  200607  RACFA    GLIST cmd, add verification of GID           */
 /* @A8  200607  RACFA    UID/GID limit is 0 to 2,147,483,647          */
@@ -30,6 +42,7 @@ EDITMACR    = "RACFEMAC"    /* Edit Macro, turn HILITE off */
 UIDGIDLIMIT = 2417483647    /* Limit = 0 - 2,147,483,647   */ /* @A8 */
 parse source . . REXXPGM .         /* Obtain REXX pgm name */
 REXXPGM     = LEFT(REXXPGM,8)
+numeric digits 12                                             /* @A2 */
 
 ADDRESS ISPEXEC
   PARSE ARG MEMBER
@@ -45,47 +58,32 @@ ADDRESS ISPEXEC
   Do Forever
      "DISPLAY PANEL("PANEL01")" /* get utility cmd options*/
      If (rc = 8) then exit
-     CMDREC.  = ""; NO = 0                                    /* @A6 */
-     CMDREC.0 = 0                                             /* @A6 */
-     IF (abbrev("FLIST",OMVSCMD,1) = 1),                      /* @A6 */
-      | (abbrev("GLIST",OMVSCMD,1) = 1),                      /* @A6 */
-      | (abbrev("ULIST",OMVSCMD,1) = 1) THEN                  /* @A6 */
+     CMDREC.  = ""                                            /* @A6 */
+     CMDREC.0 = 0; NO = 0                                     /* @A6 */
+     IF (OMVSCMD = "FLIST"),                                  /* @AJ */
+      | (OMVSCMD = "GLIST"),                                  /* @AJ */
+      | (OMVSCMD = "ULIST") THEN                              /* @AJ */
         CALL FLIST_GLIST_ULIST_INIT                           /* @A6 */
      IF (CMDREC.0 = 0) THEN DO                                /* @A6 */
         SELECT                                                /* @A1 */
-           WHEN (abbrev("FLIST",OMVSCMD,1) = 1) then          /* @A5 */
+           WHEN (OMVSCMD = "FLIST") THEN                      /* @AJ */
                 call flist                                    /* @A2 */
-           WHEN (abbrev("GLIST",OMVSCMD,1) = 1) then          /* @A6 */
-                call glist                                    /* @A6 */
-           WHEN (abbrev("ULIST",OMVSCMD,1) = 1) then          /* @A5 */
+           WHEN (OMVSCMD = "GLIST") THEN                      /* @AJ */
+                call glist                                    /* @AH */
+           WHEN (OMVSCMD = "ULIST") THEN                      /* @AJ */
                 call ulist                                    /* @A1 */
-           WHEN (abbrev("PERMIT",OMVSCMD,1) = 1) then do      /* @A5 */
-                TMPCMD = "OPERMIT"                            /* @X1 */
+           WHEN (OMVSCMD = "PERMIT") THEN DO                  /* @AJ */
                 X = OUTTRAP("CMDREC.")                        /* @A1 */
-                Address TSO TMPCMD OMVSPATH OMVSOPTS          /* @X1 */
+                Address TSO "O"OMVSCMD OMVSPATH OMVSOPTS      /* @AJ */
                 X = OUTTRAP("OFF")                            /* @A1 */
-           end
+           end                                                /* @A1 */
            OTHERWISE DO                                       /* @A1 */
-                SELECT                                        /* @X1 */
-                   WHEN (abbrev("RALTER",OMVSCMD,2) = 1) THEN /* @X1 */
-                        TMPCMD = "ORALTER"                    /* @X1 */
-                   WHEN (abbrev("RLIST",OMVSCMD,2) = 1) THEN  /* @X1 */
-                        TMPCMD = "ORALTER"                    /* @X1 */
-                   OTHERWISE DO                               /* @X1 */
-                        RACFSMSG = "Invalid Command"          /* @X1 */
-                        RACFLMSG = "Valid commands are:",     /* @X1 */
-                           "FLIST, GLIST, PERMIT, RALTER",    /* @X1 */
-                           "RLIST and ULIST."                 /* @X1 */
-                        "SETMSG MSG(RACF011)"                 /* @X1 */
-                        ITERATE                               /* @X1 */
-                   END                                        /* @X1 */
-                END /* Select */                              /* @X1 */
                 X = OUTTRAP("CMDREC.")                        /* @A1 */
                 parse var OMVSOPTS w1 w2
                 if (w1 = "FSSEC") | (w1 = "fssec") then
-                   Address TSO TMPCMD w1 OMVSPATH w2
+                   Address TSO "O"OMVSCMD w1 OMVSPATH w2      /* @AI */
                 else
-                   Address TSO TMPCMDS OMVSPATH OMVSOPTS
+                   Address TSO "O"OMVSCMD OMVSPATH OMVSOPTS   /* @AI */
                 X = OUTTRAP("OFF")                            /* @A1 */
            END /* Select */                                   /* @A1 */
         END /* If CMDREC */                                   /* @A6 */
@@ -141,15 +139,10 @@ EXIT
 /*  ULIST - Unix User/Group Identifier (UID/GID)                 @A6  */
 /*--------------------------------------------------------------------*/
 ULIST:                                                        /* @A1 */
-  CHKPRM  = STRIP(OMVSPATH)STRIP(OMVSOPTS)                    /* @A5 */
-  PARSE UPPER VAR CHKPRM "UID("UID")" .                       /* @A5 */
-  PARSE UPPER VAR CHKPRM "GID("GID")" .                       /* @A5 */
+  PARSE VAR CHKPRM "UID("UID")" .                             /* @A5 */
+  PARSE VAR CHKPRM "GID("GID")" .                             /* @A5 */
   PARSE VAR CHKPRM "SHELL("SHELL")" .                         /* @A5 */
-  if (SHELL = "") THEN                                        /* @A5 */
-     PARSE VAR CHKPRM "shell("SHELL")" .                      /* @A5 */
   PARSE VAR CHKPRM "HOME("HOME")" .                           /* @A5 */
-  if (HOME = "") THEN                                         /* @A5 */
-     PARSE VAR CHKPRM "home("HOME")" .                        /* @A5 */
   PARSE UPPER VAR CHKPRM W1 .                                 /* @A5 */
   IF (POS("(",W1) = 0) THEN                                   /* @A5 */
      ID = W1                                                  /* @A5 */
@@ -179,7 +172,6 @@ ULIST:                                                        /* @A1 */
         CMDREC.0 = 1                                          /* @A1 */
         return                                                /* @A1 */
      END                                                      /* @A1 */
-     TRACE O
                                                               /* @A1 */
   cmdrec.1 = " Userid     UID       GID    Shell   ",         /* @A1 */
              "Home-Directory"                                 /* @A1 */
@@ -214,12 +206,12 @@ ULIST:                                                        /* @A1 */
      if (pw.1 = firstid) then                                 /* @A1 */
         leave                                                 /* @A1 */
   end /* Do Forever */                                        /* @A1 */
+                                                              /* @AB */
   cmdrec.0 = NO                                               /* @A1 */
-  IF (CMDREC.0 = 2) THEN DO                                   /* @A6 */
-     CMDREC.  = ""                                            /* @A6 */
-     CMDREC.1 = ID" is not a valid userid."                   /* @A6 */
-     CMDREC.0 = 1                                             /* @A6 */
-  END                                                         /* @A6 */
+  IF (NO = 2) THEN DO   /* Just rpt hdr? */                   /* @AB */
+     CMDREC.  = ""                                            /* @AB */
+     CMDREC.0 = 0                                             /* @AB */
+  END                                                         /* @AB */
 RETURN                                                        /* @A1 */
 /*--------------------------------------------------------------------*/
 /*  FLIST - Unix ZFS/HFS File Usage/Attribute Information        @A6  */
@@ -245,46 +237,19 @@ FLIST:                                                        /* @A2 */
   percent = -1                                                /* @A2 */
   string  = ''                                                /* @A2 */
                                                               /* @A2 */
-  CHKPRM = STRIP(OMVSPATH)STRIP(OMVSOPTS)                     /* @A5 */
-  parse upper var CHKPRM "PERC("P1")" .                       /* @A2 */
-  parse upper var CHKPRM "TEXT("P2")" .                       /* @A2 */
-  if (p1 = '') & (P2 = '') & (CHKPRM <> '') THEN do           /* @A4 */
+  parse var CHKPRM "PERC("percent")" .                        /* @A2 */
+  parse upper var CHKPRM "TEXT("string")" .                   /* @A2 */
+  if (percent = '') & (string = '') & (CHKPRM <> '') THEN do  /* @A4 */
      call flist_resolve_path_name                             /* @A4 */
      return                                                   /* @A4 */
   end                                                         /* @A4 */
                                                               /* @A2 */
-  p1type = datatype(p1)                                       /* @A2 */
-  p2type = datatype(p2)                                       /* @A2 */
-  if (p1 = '') then p1type = 'NULL'                           /* @A2 */
-  if (p2 = '') then p2type = 'NULL'                           /* @A2 */
-                                                              /* @A2 */
-  Select                         /* Chk for percentage    */  /* @A2 */
-     when (p1type='NULL') then nop                            /* @A2 */
-     when (p1type='NUM') then percent=p1                      /* @A2 */
-     when (p1type='CHAR') then string=p1                      /* @A2 */
-     otherwise do                                             /* @A2 */
-          RACFSMSG = "Invalid parameter"                      /* @A2 */
-          RACFLMSG = "An invalid parameter was entered,",     /* @A2 */
-                     "the syntax is: ZFSUSE Ýpercent¨",       /* @A2 */
-                     "Ýstring¨"                               /* @A2 */
-          "SETMSG MSG(RACF011)"                               /* @A2 */
-          RETURN                                              /* @A2 */
-     end                                                      /* @A2 */
-  end /* Select */                                            /* @A2 */
-                                                              /* @A2 */
-  Select                         /* Chk for search string */  /* @A2 */
-     when (p2type='NULL') then nop                            /* @A2 */
-     when (p2type='NUM')  then percent = p2                   /* @A2 */
-     when (p2type='CHAR') then string  = p2                   /* @A2 */
-     otherwise do                                             /* @A2 */
-         RACFSMSG = "Invalid parameter"                       /* @A2 */
-         RACFLMSG = "An invalid parameter was entered,",      /* @A2 */
-                    "the syntax is: ZFSUSE Ýpercent¨",        /* @A2 */
-                    "Ýstring¨"                                /* @A2 */
-         "SETMSG MSG(RACF011)"                                /* @A2 */
-         RETURN                                               /* @A2 */
-     end                                                      /* @A2 */
-  end /* Select */                                            /* @A2 */
+  if (percent <> '') & (datatype(percent) <> 'NUM') then do   /* @AG */
+     CMDREC.1 = "The percentage must be numeric,",            /* @AG */
+                "PERC("percent")."                            /* @AG */
+     CMDREC.0 = 1                                             /* @AG */
+     RETURN                                                   /* @A2 */
+  end                                                         /* @A2 */
                                                               /* @A2 */
   address syscall "getmntent m."                              /* @A2 */
                                                               /* @A2 */
@@ -292,6 +257,7 @@ FLIST:                                                        /* @A2 */
              '(Mount-attributes)'                             /* @A2 */
   CMDREC.2 = '------ -----' copies('-',64)                    /* @A2 */
   NO = 2                                                      /* @A2 */
+                                                              /* @A2 */
   l  = 0                                                      /* @A2 */
   do i = 1 to m.0                                             /* @A2 */
      sysname = strip(m.mnte_sysname.i)                        /* @A2 */
@@ -329,13 +295,20 @@ FLIST:                                                        /* @A2 */
      else                                                     /* @A2 */
         Call FLIST_Get_Usage                                  /* @A2 */
   end /* Do Forever */                                        /* @A2 */
-  NO = NO + 1                                                 /* @A2 */
-  CMDREC.NO = COPIES("-",72)                                  /* @A2 */
-  NO = NO + 1                                                 /* @A2 */
-  CMDREC.NO = 'Total Filesystems Mounted =' m.0               /* @A2 */
-  NO = NO + 1                                                 /* @A2 */
-  CMDREC.NO = 'Total Filesystems Listed  =' l                 /* @A2 */
-  CMDREC.0  = NO                                              /* @A2 */
+                                                              /* @AB */
+  IF (NO = 2) THEN DO   /* Just rpt hdr? */                   /* @AB */
+     CMDREC.  = ""                                            /* @AB */
+     CMDREC.0 = 0                                             /* @AB */
+  END                                                         /* @AB */
+  ELSE DO                                                     /* @AB */
+     NO = NO + 1                                              /* @A2 */
+     CMDREC.NO = COPIES("-",72)                               /* @A2 */
+     NO = NO + 1                                              /* @A2 */
+     CMDREC.NO = 'Total Filesystems Mounted =' m.0            /* @A2 */
+     NO = NO + 1                                              /* @A2 */
+     CMDREC.NO = 'Total Filesystems Listed  =' l              /* @A2 */
+     CMDREC.0  = NO                                           /* @A2 */
+  END                                                         /* @AB */
 RETURN                                                        /* @A2 */
 /*--------------------------------------------------------------------*/
 /*  FLIST - Get usage                                            @A2  */
@@ -347,6 +320,7 @@ FLIST_GET_USAGE:                                              /* @A2 */
      k = s.stfs_inuse * s.stfs_blocksize                      /* @A2 */
      p = trunc(k/j*100,2)                                     /* @A2 */
   END                                                         /* @A2 */
+                                                              /* @A2 */
   if (p > percent) then do                                    /* @A2 */
      l  = l + 1                                               /* @A2 */
      NO = NO + 1                                              /* @A2 */
@@ -432,6 +406,12 @@ FLIST_RESOLVE_PATH_NAME:                                      /* @A4 */
      end                                                      /* @A4 */
      if (pp = '/') then pp = ''                               /* @A4 */
   end /* Do While */                                          /* @A4 */
+                                                              /* @AB */
+  cmdrec.0 = NO                                               /* @AK */
+  IF (NO = 6) THEN DO   /* Just rpt hdr? */                   /* @AB */
+     CMDREC.  = ""                                            /* @AB */
+     CMDREC.0 = 0                                             /* @AB */
+  END                                                         /* @AB */
 RETURN                                                        /* @A4 */
 /*--------------------------------------------------------------------*/
 /*  FLIST - Check mount point                                    @A6  */
@@ -446,11 +426,8 @@ RETURN 0                                                      /* @A4 */
 /*  GLIST - Group Identifier (GID) List                          @A7  */
 /*--------------------------------------------------------------------*/
 GLIST:                                                        /* @A7 */
-  CHKPRM = STRIP(OMVSPATH)STRIP(OMVSOPTS)                     /* @A7 */
-  PARSE UPPER VAR CHKPRM "NAME("NAME")" .                     /* @A7 */
-  PARSE UPPER VAR CHKPRM "GID("TMPGID")" .                    /* @A7 */
-  IF (NAME = "") & (TMPGID = "") THEN                         /* @A6 */
-     CHKPRM = ""                                              /* @A6 */
+  PARSE VAR CHKPRM "GROUP("GROUP")" .                         /* @AL */
+  PARSE VAR CHKPRM "GID("TMPGID")" .                          /* @A7 */
                                                               /* @A7 */
   IF (TMPGID <> "") THEN                                      /* @A9 */
      IF (DATATYPE(TMPGID) <> "NUM"),                          /* @A9 */
@@ -466,10 +443,15 @@ GLIST:                                                        /* @A7 */
      if (retval = 0) | (retval = -1) then                     /* @A7 */
         leave                                                 /* @A7 */
      gid = left(gr.2,8)                                       /* @A7 */
-     if (CHKPRM <> ""),                                       /* @A7 */
-      & (((NAME <> "") & (NAME <> gr.1)),                     /* @A7 */
-      | ((GID <> "") & (TMPGID <> gid))) THEN                 /* @A7 */
-        ITERATE                                               /* @A7 */
+     if (CHKPRM <> "") THEN                                   /* @A7 */
+        SELECT                                                /* @AL */
+           WHEN ((GROUP <> "") & (GROUP = gr.1)) THEN         /* @AL */
+                NOP                                           /* @AL */
+           WHEN ((GID <> "") & (TMPGID = gid)) THEN           /* @A7 */
+                NOP                                           /* @A7 */
+           OTHERWISE                                          /* @AL */
+                ITERATE                                       /* @AL */
+        END                                                   /* @AL */
      NO  = NO + 1                                             /* @A7 */
      CMDREC.NO = "Group-Name="gr.1 "GID="gid "#members="gr.3  /* @A7 */
      #m = gr.3                                                /* @A7 */
@@ -483,13 +465,41 @@ GLIST:                                                        /* @A7 */
         CMDREC.NO = "    "gr.i gr.l gr.m gr.n gr.o gr.p gr.q  /* @A7 */
      end /* Do I */                                           /* @A7 */
   end /* Do Forever */                                        /* @A7 */
+                                                              /* @AL */
+  CMDREC.0 = NO                                               /* @AL */
 RETURN                                                        /* @A7 */
 /*--------------------------------------------------------------------*/
 /*  F/G/ULIST - Verify environment and display 'Patients' msg    @A6  */
 /*--------------------------------------------------------------------*/
 FLIST_GLIST_ULIST_INIT:                                       /* @A6 */
-  NO = 0                                                      /* @A6 */
-  numeric digits 12                                           /* @A2 */
+  NO     = 0                                                  /* @A6 */
+  CHKPRM = STRIP(OMVSPATH)STRIP(OMVSOPTS)                     /* @AD */
+                                                              /* @AM */
+  UPPPRM = TRANSLATE(CHKPRM)            /* Translate parms */ /* @AM */
+  colpos = pos('GID(',UPPPRM)           /* to uppercase    */ /* @AM */
+  If (colpos > 0) then                                        /* @AM */
+     CHKPRM = overlay('GID',CHKPRM,colpos,3)                  /* @AM */
+  colpos = pos('GROUP(',UPPPRM)                               /* @AM */
+  If (colpos > 0) then                                        /* @AM */
+     CHKPRM = overlay('GROUP',CHKPRM,colpos,5)                /* @AM */
+  colpos = pos('HOME(',UPPPRM)                                /* @AM */
+  If (colpos > 0) then                                        /* @AM */
+     CHKPRM = overlay('HOME',CHKPRM,colpos,4)                 /* @AM */
+  colpos = pos('PATH(',UPPPRM)                                /* @AM */
+  If (colpos > 0) then                                        /* @AM */
+     CHKPRM = overlay('PATH',CHKPRM,colpos,4)                 /* @AM */
+  colpos = pos('PERC(',UPPPRM)                                /* @AM */
+  If (colpos > 0) then                                        /* @AM */
+     CHKPRM = overlay('PERC',CHKPRM,colpos,4)                 /* @AM */
+  colpos = pos('SHELL(',UPPPRM)                               /* @AM */
+  If (colpos > 0) then                                        /* @AM */
+     CHKPRM = overlay('SHELL',CHKPRM,colpos,4)                /* @AM */
+  colpos = pos('TEXT(',UPPPRM)                                /* @AM */
+  If (colpos > 0) then                                        /* @AM */
+     CHKPRM = overlay('TEXT',CHKPRM,colpos,4)                 /* @AM */
+  colpos = pos('UID(',UPPPRM)                                 /* @AM */
+  If (colpos > 0) then                                        /* @AM */
+     CHKPRM = overlay('UID',CHKPRM,colpos,3)                  /* @AM */
                                                               /* @A6 */
   if (syscalls('ON') > 3) then do                             /* @A1 */
      CMDREC.1 = 'Unable to establish the SYSCALL',            /* @A1 */

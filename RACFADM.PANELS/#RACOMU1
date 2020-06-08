@@ -8,7 +8,7 @@
 %
 %ULIST+displays userid's User and Group Identifier (UID/GID) information
 +
-%Optional:+Can specify a userid, UID, GID, shell and/or home directory
+%Optional:+Can specify a userid, UID, GID, shell name and/or home directory
 +
 %Operands:!userid
 !          UID(##########)
@@ -16,7 +16,7 @@
 !          SHELL(shell-name)
 !          HOME(home-directory)
 +
-+
+%Note:    +Operands can be mixed case, for example:!Gid(101)+or!gID(101)
 +
 +
 +

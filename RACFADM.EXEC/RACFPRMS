@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AO  200608  TRIDJK   Add 'Password minimum change interval'       */
 /* @AN  200502  RACFA    Del line 170, 'call table_create', not used  */
 /* @AM  200501  RACFA    Commented 'JES early verify', obsolete parm  */
 /* @AL  200501  LBD      Add primary commands FIND/RFIND              */
@@ -314,6 +315,7 @@ RACF_SETROPT_OPTIONS:
   rc = Setbool(rcvtswhe,394,'80','NO','YES') /* when program          */
   rc = Setbool(rcvtspra,393,'80','NO','YES') /* protect all           */
   rc = Setvalue(rcvtsrpe,396,2)              /* retention period      */
+  rc = Setvalue(rcvtpmin,634,1)              /* pswd min chg intv @AO */
 
   rcvtsta$ = d2x((x2d(cvtrac))+630)         /* rcvtsta      $         */
   x        = storage(rcvtsta$,2)
@@ -469,13 +471,12 @@ RETURN                                                        /* @AE */
 /*--------------------------------------------------------------------*/
 CREATE_TABLEA:                                                /* @AE */
   'tbcreate' TABLEA 'names(desc,descu,value) nowrite'         /* @AE */
-  call add_t  'Version                          'RCVTGRNM     /* @AE */
-  call add_t  'Data Base Primary                'RCVTPDSN     /* @AE */
-  call add_t  'Data Base Backup                 'RCVTBDSN     /* @AE */
-  call add_t  'Audit APPC transactions          'RCVTSAPL     /* @AJ */
   call add_t  'Audit operations                 'RCVTSAUO     /* @AE */
   call add_t  'Audit special                    'RCVTSAUS     /* @AE */
+  call add_t  'Audit APPC transactions          'RCVTSAPL     /* @AJ */
   call add_t  'Catalogued datasets only         'RCVTSCAT     /* @AE */
+  call add_t  'Data Base Backup                 'RCVTBDSN     /* @AE */
+  call add_t  'Data Base Primary                'RCVTPDSN     /* @AE */
   call add_t  'Dataset protection               'RCVTSADS     /* @AE */
   call add_t  'Duplicate datasets               'RCVTNDUP     /* @AE */
   call add_t  'DASD volume protection           'RCVTDVPR     /* @AE */
@@ -494,16 +495,17 @@ CREATE_TABLEA:                                                /* @AE */
   call add_t  'Model users                      'RCVTMUSR     /* @AE */
   call add_t  'Model GDG                        'RCVTMGDG     /* @AE */
   call add_t  'Multi factor authentication      'RCVTMFA      /* @AH */
+  call add_t  'Multi level active               'RCVTSMLA     /* @AJ */
   call add_t  'Multi level quiet                'RCVTSMLQ     /* @AE */
   call add_t  'Multi level secure               'RCVTSMLT     /* @AE */
   call add_t  'Multi level stable               'RCVTSMLS     /* @AE */
-  call add_t  'Multi level active               'RCVTSMLA     /* @AJ */
   call add_t  'Password attempts                'RCVTPRVK     /* @AE */
   call add_t  'Password extended support        'RCVTXPWD     /* @AE */
   call add_t  'Password history                 'RCVTPHIS     /* @AE */
   call add_t  'Password interval                'RCVTPINV     /* @AE */
   call add_t  'Password lower case allowed      'RCVTPLC      /* @AH */
   call add_t  'Password maximum length          'RCVTELEN     /* @AE */
+  call add_t  'Password minimum change interval 'RCVTPMIN     /* @AO */
   call add_t  'Password minimum length          'RCVTSLEN     /* @AE */
   call add_t  'Password phrase                  'PPHRASE      /* @AF */
   call add_t  'Password rules                   'RCVTRULS     /* @AE */
@@ -521,6 +523,7 @@ CREATE_TABLEA:                                                /* @AE */
   call add_t  'Userid inactive                  'RCVTPINA     /* @AE */
   call add_t  'UADS dataset                     'RCVTUADS     /* @AI */
   call add_t  'UADS volume                      'RCVTUVOL     /* @AE */
+  call add_t  'Version                          'RCVTGRNM     /* @AE */
   call add_t  'When program                     'RCVTSWHE     /* @AE */
   CLRDESC = "TURQ" ; CLRVALU = "GREEN"  /* COL COLORS */      /* @AG */
   'TBSort' TABLEA 'Fields('sort')'                            /* @AG */

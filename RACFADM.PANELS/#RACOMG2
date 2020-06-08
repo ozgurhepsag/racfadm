@@ -12,7 +12,7 @@
 !       GLIST
 +
 @  2)+Display a specific group name
-!       FLIST NAME(G0000100)
+!       FLIST GROUP(G0000100)
 +
 @  3)+Display a specific Group Identifier (GID)
 !       FLIST GID(1000001)

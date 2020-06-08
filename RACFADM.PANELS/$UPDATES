@@ -2,6 +2,39 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  08 June 2020 - V27R8
+     - Main Menu
+       -- Menu option 'I', Issues, is now hidden
+     - OMVSCmds (Option O)
+       -- Updated F/G/ULIST commands
+          * Allow keyword parameters to be mixed case, for ex. 'Gid(1)'
+            or 'HOme(/u/samcob), prior they had to be all uppercase
+          * Relocated code to convert/translate the abbreviated Command
+            to panel, prior was in REXX, reducing code/more efficient
+          * Fixed PERMIT, RALTER and RLIST, receiving 'Command not
+            found', variable name containing the command was mis-typed
+          * GLIST, fixed displaying 'No search criteria met' msg from
+            being displayed, when in fact, items were found/displayed
+          * GLIST, changed parameter 'Name' to 'Group'
+          * Updated tutorial for ULIST
+
+  08 June 2020 - V27R7
+     - RACFPrms (Option 9)
+       -- Added 'Password minimum change interval'
+     - OMVSCmds (Option O)
+       -- Update F/G/ULIST commands
+          * Moved 'Numeric Digits' to top of program, elliminates
+            executing multiple times
+          * Moved initialization of variable CHKPRM to init subroutine,
+            was redundant in several subroutines
+          * Removed unnecessary 'TRACE O' left in code when debugging
+          * Changed/reduced code when verifying parmeters
+          * Fixed displaying error message, when no entries met search
+            criteria
+          * Fixed highlighting report header/totals, variable OMVSCMDS
+            needed to be initialized to full text of command, due to
+            adding the capability to abbreviate command
+
   07 June 2020 - V27R6
      - OMVSCmds (Option O)
        -- Commands G/ULIST, verify the UID/GID are with the allowable
