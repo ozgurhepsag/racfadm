@@ -12,8 +12,8 @@
 +
 %Operands:!userid
 !          UID(##########)
-!          GID(#######)
-!          SHELL(shell)
+!          GID(##########)
+!          SHELL(shell-name)
 !          HOME(home-directory)
 +
 +

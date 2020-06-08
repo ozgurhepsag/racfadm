@@ -12,6 +12,9 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AA  200607  RACFA    If no recs found, display message            */
+/* @A9  200607  RACFA    GLIST cmd, add verification of GID           */
+/* @A8  200607  RACFA    UID/GID limit is 0 to 2,147,483,647          */
 /* @A7  200607  RACFA    Added GLIST command                          */
 /* @A6  200607  RACFA    Clean up code, reduce no. of subroutines     */
 /* @A5  200606  RACFA    Enhanced ULIST to allow passing more parms   */
@@ -24,6 +27,7 @@
 PANEL01     = "RACFOMVS"    /* Obtain cmd, path and options*/
 PANEL02     = "RACFRPTS"    /* Display report with colors  */ /* @A3 */
 EDITMACR    = "RACFEMAC"    /* Edit Macro, turn HILITE off */
+UIDGIDLIMIT = 2417483647    /* Limit = 0 - 2,147,483,647   */ /* @A8 */
 parse source . . REXXPGM .         /* Obtain REXX pgm name */
 REXXPGM     = LEFT(REXXPGM,8)
 
@@ -86,6 +90,11 @@ ADDRESS ISPEXEC
            END /* Select */                                   /* @A1 */
         END /* If CMDREC */                                   /* @A6 */
      end /*Do Forever */
+
+     IF (CMDREC.0 = 0) THEN DO                                /* @AA */
+        CMDREC.1 = "No records met the search criteria."      /* @AA */
+        CMDREC.0 = 1                                          /* @AA */
+     END                                                      /* @AA */
 
      ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",
                  "LRECL(132) BLKSIZE(0) RECFM(F B)",
@@ -155,19 +164,22 @@ ULIST:                                                        /* @A1 */
         return                                                /* @A1 */
      END                                                      /* @A1 */
   IF (UID <> "") THEN                                         /* @A5 */
-     IF (LENGTH(UID) > 10) | (DATATYPE(UID) <> "NUM") THEN DO /* @A1 */
-        CMDREC.1 = 'The UID ('uid') is larger than 10',       /* @A1 */
-                   'characters in length or not numeric.'     /* @A1 */
+     IF (DATATYPE(UID) <> "NUM"),                             /* @A8 */
+      | (UID > UIDGIDLIMIT) THEN DO                           /* @A8 */
+        CMDREC.1 = "The UID ("uid") is either not numeric",   /* @A8 */
+                   "or greater than "UIDGIDLIMIT              /* @A8 */
         CMDREC.0 = 1                                          /* @A1 */
         return                                                /* @A1 */
      END                                                      /* @A1 */
   IF (GID <> "") THEN                                         /* @A5 */
-     IF (LENGTH(GID) > 7) | (DATATYPE(GID) <> "NUM") THEN DO  /* @A1 */
-        CMDREC.1 = 'The UID ('gid') is larger than 7',        /* @A1 */
-                   'characters in length or not numeric.'     /* @A1 */
+     IF (DATATYPE(GID) <> "NUM"),                             /* @A8 */
+      | (GID > UIDGIDLIMIT) THEN DO                           /* @A8 */
+        CMDREC.1 = "The GID ("gid") is either not numeric",   /* @A8 */
+                   "or greater than "UIDGIDLIMIT              /* @A8 */
         CMDREC.0 = 1                                          /* @A1 */
         return                                                /* @A1 */
      END                                                      /* @A1 */
+     TRACE O
                                                               /* @A1 */
   cmdrec.1 = " Userid     UID       GID    Shell   ",         /* @A1 */
              "Home-Directory"                                 /* @A1 */
@@ -440,6 +452,15 @@ GLIST:                                                        /* @A7 */
   IF (NAME = "") & (TMPGID = "") THEN                         /* @A6 */
      CHKPRM = ""                                              /* @A6 */
                                                               /* @A7 */
+  IF (TMPGID <> "") THEN                                      /* @A9 */
+     IF (DATATYPE(TMPGID) <> "NUM"),                          /* @A9 */
+      | (TMPGID > UIDGIDLIMIT) THEN DO                        /* @A9 */
+        CMDREC.1 = "The GID ("tmpgid") is either not",        /* @A9 */
+                   "numeric or greater than "UIDGIDLIMIT      /* @A9 */
+        CMDREC.0 = 1                                          /* @A9 */
+        return                                                /* @A9 */
+     END                                                      /* @A9 */
+                                                              /* @A9 */
   do forever                                                  /* @A7 */
      address syscall "getgrent gr."                           /* @A7 */
      if (retval = 0) | (retval = -1) then                     /* @A7 */

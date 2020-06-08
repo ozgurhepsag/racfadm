@@ -19,7 +19,7 @@
 %  4)+To list userids with a specific GID
 !       ULIST GID(30344)
 +
-%  5)+To list all useruds with a specific shell
+%  5)+To list all userids with a specific shell name
 !       ULIST SHELL(/bin/sh)
 +
 %  6)+To list all userids with a specific home path
