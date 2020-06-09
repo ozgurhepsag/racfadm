@@ -112,6 +112,7 @@ ADDRESS ISPEXEC                                               /* @AJ */
   "CONTROL ERRORS RETURN"                                     /* @B1 */
   "VGET (SETGFLTR SETGSTA  SETGSTAP SETGDISP",                /* @C6 */
         "SETMADMN SETMIRRX SETMSHOW SETMTRAC) PROFILE"        /* @C6 */
+
   If (SETMTRAC <> 'NO') then do                               /* @BV */
      Say "*"COPIES("-",70)"*"                                 /* @BV */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @BV */
@@ -119,6 +120,7 @@ ADDRESS ISPEXEC                                               /* @AJ */
      if (SETMTRAC <> 'PROGRAMS') THEN                         /* @BW */
         interpret "Trace "SUBSTR(SETMTRAC,1,1)                /* @BV */
   end                                                         /* @BV */
+
   If (SETMADMN = "YES") then do                               /* @B2 */
      SELCMDS2 = "ÝS¨Show,ÝL¨List,ÝD¨Dsn,ÝC¨Change,"||,        /* @B9 */
                 "ÝA¨Add,ÝR¨Remove"                            /* @B4 */
@@ -136,14 +138,17 @@ ADDRESS ISPEXEC                                               /* @AJ */
      ELSE                                                     /* @CD */
         SELCMDS5 = "ÝS¨Show,ÝL¨list"                          /* @B9 */
   end
-  Rfilter = SETGFLTR                                          /* @AC */
-  rlv = SYSVAR('SYSLRACF')
+
+  Rfilter  = SETGFLTR                                         /* @AC */
+  rlv      = SYSVAR('SYSLRACF')
   chgsmade = 'N'                                              /* @A3 */
+
   "DISPLAY PANEL("PANEL01")"                                  /* @AU */
   Do while (rc = 0)
      call Profl
      "DISPLAY PANEL("PANEL01")"                               /* @AU */
   End
+
   If (chgsmade = "Y") then Do                                 /* @A3 */
      msg='You are about to refresh the generic class: 'rclass /* @A3 */
      Sure_? = Confirm_request(msg)                            /* @A3 */

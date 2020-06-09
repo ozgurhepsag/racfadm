@@ -2,6 +2,13 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  09 June 2020 - V27R9
+     - User, Group, Dataset and General Resource (Option 1/2/3/4)
+       -- Standardized looping through code, until user presses F3 (END)
+       -- Minor code cleanup
+     - OMVSCmds (Option O)
+       -- Minor code/panel updates
+
   08 June 2020 - V27R8
      - Main Menu
        -- Menu option 'I', Issues, is now hidden
@@ -16,19 +23,19 @@
           * GLIST, fixed displaying 'No search criteria met' msg from
             being displayed, when in fact, items were found/displayed
           * GLIST, changed parameter 'Name' to 'Group'
-          * Updated tutorial for ULIST
+          * Updated tutorials
 
   08 June 2020 - V27R7
      - RACFPrms (Option 9)
        -- Added 'Password minimum change interval'
      - OMVSCmds (Option O)
        -- Update F/G/ULIST commands
-          * Moved 'Numeric Digits' to top of program, eliminates
+          * Moved 'Numeric Digits' to top of program, elliminates
             executing multiple times
           * Moved initialization of variable CHKPRM to init subroutine,
             was redundant in several subroutines
           * Removed unnecessary 'TRACE O' left in code when debugging
-          * Changed/reduced code when verifying parameters
+          * Changed/reduced code when verifying parmeters
           * Fixed displaying error message, when no entries met search
             criteria
           * Fixed highlighting report header/totals, variable OMVSCMDS
@@ -67,7 +74,7 @@
 
   06 June 2020 - V27R2
      - OMVSCmds (Option O)
-       -- Updated FLIST when specifying a pathname, highlights the
+       -- Updated FLIST when specifing a pathname, highlights the
           report header when in VIEW or EDIT mode
        -- Updated ULIST, allow searching and displaying specific
           UID, GID, Shell and Home path

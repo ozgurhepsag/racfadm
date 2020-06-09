@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CP  200608  RACFA    Fix, F3 (END) out of search panel            */
 /* @CO  200604  RACFA    Fix, prevent from going to top of table      */
 /* @CN  200527  RACFA    Fix, allow typing 'S' on multiple rows       */
 /* @CM  200520  RACFA    Display line cmd 'P'rofile, when 'Admin=N'   */
@@ -121,9 +122,11 @@ ADDRESS ISPEXEC                                               /* @AO */
      "VGET (SETGFLTR) PROFILE"                                /* @AB */
      Rfilter = SETGFLTR                                       /* @AB */
   end                                                         /* @AB */
+
   "CONTROL ERRORS RETURN"                                     /* @B1 */
   "VGET (SETGSTA  SETGSTAP SETGDISP SETMADMN",                /* @CE */
         "SETMIRRX SETMSHOW SETMTRAC) PROFILE"                 /* @CE */
+
   If (SETMTRAC <> 'NO') then do                               /* @BZ */
      Say "*"COPIES("-",70)"*"                                 /* @BZ */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @BZ */
@@ -131,6 +134,7 @@ ADDRESS ISPEXEC                                               /* @AO */
      if (SETMTRAC <> 'PROGRAMS') THEN                         /* @C1 */
         interpret "Trace "SUBSTR(SETMTRAC,1,1)                /* @BZ */
   end
+
   If (SETMADMN = "YES") then                                  /* @B2 */
      If (SETMIRRX = "YES") then                               /* @BS */
         SELCMDS = "ÝS¨Show,ÝL¨List,ÝP¨Profile,"||,            /* @BH */
@@ -146,16 +150,16 @@ ADDRESS ISPEXEC                                               /* @AO */
      else                                                     /* @CM */
         SELCMDS = "ÝS¨Show,ÝL¨list"                           /* @AJ */
   end                                                         /* @CM */
+
   rlv    = SYSVAR('SYSLRACF')
   called = SYSVAR('SYSNEST')
   If (called = 'YES') then "CONTROL NONDISPL ENTER"
+
   "DISPLAY PANEL("PANEL01")" /* get profile filter */         /* @AW */
-  reta = rc                                                   /* @CI */
-  Do while (reta < 8)                                         /* @CI */
+  Do while (rc < 8)                                           /* @CI */
      call Profl
-     If (called <> 'YES') then do
+     If (called <> 'YES') then
         "DISPLAY PANEL("PANEL01")"                            /* @AW */
-     end
   end
 
   If (SETMTRAC <> 'NO') then do                               /* @BZ */
@@ -189,8 +193,7 @@ PROFL:
         "TBDISPL" TABLEA "PANEL("PANEL08")"                   /* @CJ */
      end                                                      /* @CJ */
      else 'tbdispl' tablea                                    /* @CJ */
-     reta = rc                                                /* @CJ */
-     if (reta > 4) then leave                                 /* @CJ */
+     if (rc > 4) then leave                                   /* @CP */
      xtdtop   = ztdtop                                        /* @CJ */
      rsels    = ztdsels                                       /* @CJ */
      radmrfnd = null                                          /* @CJ */

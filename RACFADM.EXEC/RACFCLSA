@@ -41,6 +41,7 @@ ADDRESS ISPEXEC                                               /* @A6 */
   Arg rclass profile user
   "CONTROL ERRORS RETURN"                                     /* @AC */
   "VGET (SETMSHOW SETMTRAC) PROFILE"                          /* @A3 */
+
   If (SETMTRAC <> 'NO') then do                               /* @AI */
      Say "*"COPIES("-",70)"*"                                 /* @AI */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AI */
@@ -51,8 +52,8 @@ ADDRESS ISPEXEC                                               /* @A6 */
 
   rlv    = SYSVAR('SYSLRACF')
   called = SYSVAR('SYSNEST')
-  If (called = 'YES') then
-     "CONTROL NONDISPL ENTER"
+  If (called = 'YES') then "CONTROL NONDISPL ENTER"
+
   "DISPLAY PANEL("PANEL14")" /* get prof */                   /* @A8 */
   ret_code = rc
   Do while (ret_code = 0) /* While not end on panel   */
@@ -65,6 +66,7 @@ ADDRESS ISPEXEC                                               /* @A6 */
         ret_code = rc
      end
   end
+
   If (SETMTRAC <> 'NO') then do                               /* @AI */
      Say "*"COPIES("-",70)"*"                                 /* @AI */
      Say "*"Center("End Program = "REXXPGM,70)"*"             /* @AI */

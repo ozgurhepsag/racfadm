@@ -100,12 +100,15 @@ ADDRESS ISPEXEC                                               /* @AG */
      "VGET (SETGFLTR) PROFILE"                                /* @A9 */
      Rfilter = SETGFLTR                                       /* @A9 */
   end                                                         /* @A9 */
+
   Raclist       = 'NO'
   Pnl_list_prof = PANEL02                                     /* @AP */
   Rclass        = strip(rclass)
+
   "CONTROL ERRORS RETURN"                                     /* @AS */
   "VGET (SETGSTA  SETGSTAP SETGDISP SETGCONF",                /* @BS */
         "SETMADMN SETMIRRX SETMSHOW SETMTRAC"                 /* @BS */
+
   If (SETMTRAC <> 'NO') then do                               /* @BJ */
      Say "*"COPIES("-",70)"*"                                 /* @BJ */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @BJ */
@@ -113,6 +116,7 @@ ADDRESS ISPEXEC                                               /* @AG */
      if (SETMTRAC <> 'PROGRAMS') THEN                         /* @BK */
         interpret "Trace "SUBSTR(SETMTRAC,1,1)                /* @BJ */
   end
+
   If (SETMADMN = "YES") then do                               /* @B5 */
      IF (SETMIRRX = "YES") THEN                               /* @BH */
         SELCMDS = "ÝS¨Show,ÝL¨List,ÝP¨Profile,"||,            /* @BB */
@@ -127,21 +131,22 @@ ADDRESS ISPEXEC                                               /* @AG */
      ELSE                                                     /* @BZ */
         SELCMDS = "ÝS¨Show,ÝL¨list"                           /* @AB */
   end                                                         /* @BZ */
+
   rlv    = SYSVAR('SYSLRACF')
   called = SYSVAR('SYSNEST')
   If (called = 'YES') & (rdisp <> 'YES') then
      "CONTROL NONDISPL ENTER"
+
   "DISPLAY PANEL("PANEL01")"                                  /* @AM */
   Do while (rc = 0)
-     Call CREATE_TABLEA
      call Profl
-     if (called <> 'YES') | (rdisp = 'YES') then do
+     if (called <> 'YES') | (rdisp = 'YES') then
         "DISPLAY PANEL("PANEL01")"                            /* @AM */
-        ret_code = rc
-     end
   end
+
   If (raclist = 'YES') then do
-     msg    = 'You are about to refresh class' rclass 'in RACLIST'
+     msg    = 'You are about to refresh class',
+               rclass 'in RACLIST'
      Sure_? = Confirm_request(msg)
      if (sure_? = 'YES') then do
         cmd = "SETROPTS RACLIST("rclass") REFRESH"            /* @AF */
@@ -151,6 +156,7 @@ ADDRESS ISPEXEC                                               /* @AG */
            call SHOWCMD                                       /* @AF */
      end
   end
+
   If (SETMTRAC <> 'NO') then do                               /* @BJ */
      Say "*"COPIES("-",70)"*"                                 /* @BJ */
      Say "*"Center("End Program = "REXXPGM,70)"*"             /* @BJ */
@@ -161,6 +167,7 @@ RETURN 0
 /*  Show all profiles for a filter                                    */
 /*--------------------------------------------------------------------*/
 PROFL:
+  Call CREATE_TABLEA
   opta   = ' '
   xtdtop = 0                                                  /* @BW */
   rsels  = 0                                                  /* @BW */

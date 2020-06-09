@@ -50,3 +50,11 @@
   *ENDREXX
   VER (&OMVSCMD,NB,LIST,FLIST,GLIST,PERMIT,RALTER,RLIST,ULIST)
 )END
+/*--------------------------------------------------------------------*/
+/*                             Comments                               */
+/*--------------------------------------------------------------------*/
+/*                                                                    */
+/*  1) The )PROC section executes a REXX code to:                     */
+/*     - Translate the abbreviated command                            */
+/*                                                                    */
+/*--------------------------------------------------------------------*/

@@ -73,9 +73,11 @@ NULL        = ''                                              /* @BH */
 ADDRESS ISPEXEC                                               /* @A6 */
   Arg user
   selection = 0  /* something selected */
+
   "CONTROL ERRORS RETURN"                                     /* @AL */
   "VGET (SETGSTA SETGSTAP SETGDISP SETMSHOW",                 /* @BE */
         "SETMTRAC) PROFILE"                                   /* @BE */
+
   If (SETMTRAC <> 'NO') then do                               /* @B2 */
      Say "*"COPIES("-",70)"*"                                 /* @B2 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @B2 */
@@ -83,8 +85,8 @@ ADDRESS ISPEXEC                                               /* @A6 */
      if (SETMTRAC <> 'PROGRAMS') THEN                         /* @B4 */
         interpret "Trace "SUBSTR(SETMTRAC,1,1)                /* @B2 */
   end                                                         /* @B2 */
-  rlv = SYSVAR('SYSLRACF')
 
+  rlv = SYSVAR('SYSLRACF')
   seconds = time('S')
   call Select_class
   if selection then rc = display_table_permit()

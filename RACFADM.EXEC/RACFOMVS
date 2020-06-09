@@ -7,7 +7,7 @@
 /*                 ORLIST .... Unix Dir/File Security, like RLIST     */
 /*            2) And one internal command                             */
 /*                 FLIST...... Unix ZFS/HFS File Usage/Attribute Info */
-/*                 GLIST...... Unix Group Identifier List             */
+/*                 GLIST...... Unix Group Identifier (GID) List       */
 /*                 ULIST...... Unix User/Group Identifier (UID/GID)   */
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
@@ -178,6 +178,7 @@ ULIST:                                                        /* @A1 */
   cmdrec.2 = "-------- ---------- ------- --------",          /* @A1 */
              "----------------"                               /* @A1 */
   NO = 2                                                      /* @A1 */
+                                                              /* @A1 */
   address syscall "getpwent pw."                              /* @A1 */
   firstid = pw.1                                              /* @A1 */
   do forever                                                  /* @A1 */
@@ -379,6 +380,7 @@ FLIST_RESOLVE_PATH_NAME:                                      /* @A4 */
   cmdrec.6 = '--- ------------------ ------------------',     /* @A4 */
              '--------->'                                     /* @A4 */
   no = 6                                                      /* @A4 */
+                                                              /* @A4 */
   pp = ''                                                     /* @A4 */
   do while path <> ''                                         /* @A4 */
      parse var path p '/' path                                /* @A4 */

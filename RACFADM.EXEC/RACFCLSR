@@ -60,6 +60,7 @@ ADDRESS ISPEXEC                                               /* @A7 */
   Arg class
   "CONTROL ERRORS RETURN"                                     /* @AJ */
   "VGET (SETGDISP SETMADMN SETMSHOW SETMTRAC) PROFILE"        /* @B3 */
+
   If (SETMTRAC <> 'NO') then do                               /* @AW */
      Say "*"COPIES("-",70)"*"                                 /* @AW */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @AW */
@@ -67,6 +68,7 @@ ADDRESS ISPEXEC                                               /* @A7 */
      if (SETMTRAC <> 'PROGRAMS') THEN                         /* @AX */
         interpret "Trace "SUBSTR(SETMTRAC,1,1)                /* @AW */
   end                                                         /* @AW */
+
   If (SETMADMN = "YES") then                                  /* @AC */
       SELCMDS = "ÝS¨Show,ÝL¨List,ÝR¨Refresh"                  /* @AL */
   else                                                        /* @AC */

@@ -195,10 +195,12 @@ ADDRESS ISPEXEC                                               /* @BC */
   end                                                         /* @AM */
   Call Digital_Certs                                          /* @AP */
   Rclass = 'USER'
+
   "CONTROL ERRORS RETURN"                                     /* @B1 */
   "VGET (SETGSTA  SETGSTAP SETGDISP SETMADMN",                /* @EA */
         "SETMIRRX SETMSHOW SETMTRAC SETTPSWD",                /* @EA */
         "SETTPROF SETTUDSN) PROFILE"                          /* @EA */
+
   If (SETMTRAC <> 'NO') then do                               /* @DK */
      Say "*"COPIES("-",70)"*"                                 /* @DK */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @DK */
@@ -206,10 +208,12 @@ ADDRESS ISPEXEC                                               /* @BC */
      if (SETMTRAC <> 'PROGRAMS') THEN                         /* @DM */
         interpret "Trace "SUBSTR(SETMTRAC,1,1)                /* @DK */
   end                                                         /* @DK */
+
   If (SETTUDSN <> "") then                                    /* @CP */
      TSOLIB = 'Y'                                             /* @CP */
   else                                                        /* @CP */
      TSOLIB = 'N'                                             /* @CP */
+
   If (SETMADMN = "YES") then do                               /* @B2 */
      IF (SETMIRRX = "YES") then do                            /* @D7 */
         SELCMD2A = "›S®Show›SE®Srch›L®List›P®Prof"||,         /* @DI */
@@ -240,10 +244,11 @@ ADDRESS ISPEXEC                                               /* @BC */
      end                                                      /* @EH */
      SELCMD2B = ""                                            /* @DI */
   end
+
   rlv       = SYSVAR('SYSLRACF')
   called    = SYSVAR('SYSNEST')
-  if (called = 'YES') then
-     "CONTROL NONDISPL ENTER"
+  if (called = 'YES') then "CONTROL NONDISPL ENTER"
+
   "DISPLAY PANEL("PANEL01")" /* get profile */                /* @BL */
   Do while (rc = 0)
      call Profl
