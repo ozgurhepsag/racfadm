@@ -2,6 +2,34 @@
 Simplified RACF Administration ISPF Dialog
 
 *---------------------------------------------------------------------*
+*                            Installation                             *
+*---------------------------------------------------------------------*
+There are three installation options depending upon how the repository
+was cloned.
+
+Clone via ZIGI
+--------------
+The z/OS datasets will have been created by ZIGI during
+the clone process. The installation at this point proceeds with the next
+step - making the dialog available for use.
+
+Clone using Git on a workstation
+--------------------------------
+The repositories files need to be uploaded to an OMVS directory. Then
+proceed as if the Clone occured under OMVS using Git.
+
+Clone using Git under OMVS
+--------------------------
+This option requires that the Git client be installed under OMVS.
+Once the clone completes, enter OMVS and change to the repositories
+OMVS directory. Execute the zinstall script:
+
+   /u/racfadm>./zinstall.rex
+
+When the zinstall script ends there will be instructions on how to
+apply the ISPF statistics to the partitioned dataset members.
+
+*---------------------------------------------------------------------*
 *                            Introduction                             *
 *---------------------------------------------------------------------*
 RACF Administration (RACFADM) makes many security tasks simple.  It lists
