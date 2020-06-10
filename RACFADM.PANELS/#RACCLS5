@@ -15,11 +15,11 @@
 %  Reset text       +Redisplay rows and pass a new search filter (optional)
 +
 +Line Commands
-%  S  !Show         +List of permits defined for this profile
-%  L  !List         +Issue RLIST command
-%  C  !Change       +Change profile attributes (admin)
-%  A  !Add          +Add profile to RACF (admin)
-%  R  !Remove       +Remove profile from RACF (admin)
+%  S  !Show         +List user/group with permits for this profile
+%  L  !List         +Issue LISTUSER/LISTGRP command
+%  C  !Change       +Change access list attributes with PERMIT (admin)
+%  A  !Add          +Add access list attributes with PERMIT (admin)
+%  R  !Remove       +Remove access list with PERMIT (admin)
 )PROC
-  &ZUP     = #RACCLS2
+  &ZUP     = #RACCLS5
 )END

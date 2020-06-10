@@ -29,7 +29,7 @@ _Z+ Z           Z
 )INIT
   .ZVARS   = '(OPTB ID ACC)'
   .CURSOR  = OPTB
-  .HELP    = #RACGRP8
+  .HELP    = #RACCLS5
   &ZCMD    = ' '
   IF (&SAMT = ' ')
       &SAMT = &ZSCED

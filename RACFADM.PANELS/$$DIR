@@ -13,6 +13,7 @@
  #RACCLSA  Tutorial       Add/Change class profile
  #RACCLSR  Tutorial       List classes (show, refresh)
  #RACCLS2  Tutorial       List classes
+ #RACCLS5  Tutorial       List classes
  #RACCLS8  Tutorial       List classes
  #RACCMDS  Tutorial       Execute, save and delete TSO commands
  #RACDB    Tutorial       RACF database information

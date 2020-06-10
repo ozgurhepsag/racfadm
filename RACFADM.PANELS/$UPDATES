@@ -2,6 +2,14 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  09 June 2020 - V28R0
+     - General Resources (Option 4)
+       -- Created help panel #RACCLS5 for RACFCLS5 panel
+     - Tutorials (Option T)
+       -- Updated panels #RACCLS2 and #RACDSN5
+     - Other Items
+       -- Updated member $DIR in panel dataset
+
   09 June 2020 - V27R9
      - User, Group, Dataset and General Resource (Option 1/2/3/4)
        -- Standardized looping through code, until user presses F3 (END)
