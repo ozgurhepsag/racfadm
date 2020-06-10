@@ -16,7 +16,7 @@ step - making the dialog available for use.
 Clone using Git on a workstation
 --------------------------------
 The repositories files need to be uploaded to an OMVS directory. Then
-proceed as if the Clone occured under OMVS using Git.
+proceed as if the Clone occurred under OMVS using Git.
 
 Clone using Git under OMVS
 --------------------------
@@ -28,6 +28,14 @@ OMVS directory. Execute the zinstall script:
 
 When the zinstall script ends there will be instructions on how to
 apply the ISPF statistics to the partitioned dataset members.
+
+Making the Dialog Available
+---------------------------
+To invoke this application execute the RACFADM exec:
+
+           EX 'hlq.RACFADM.EXEC(RACFADM)' EX
+
+The intended users must have access to these datasets.
 
 *---------------------------------------------------------------------*
 *                            Introduction                             *
