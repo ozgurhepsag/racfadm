@@ -24,7 +24,7 @@ This option requires that the Git client be installed under OMVS.
 Once the clone completes, enter OMVS and change to the repositories
 OMVS directory. Execute the zinstall script:
 
-   /u/racfadm>./zinstall.rex
+   /u/racfadm>./zginstall.rex
 
 When the zinstall script ends there will be instructions on how to
 apply the ISPF statistics to the partitioned dataset members.
