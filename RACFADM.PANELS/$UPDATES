@@ -2,6 +2,15 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  12 June 2020 - V28R2
+     - Other Items
+       -- Added $DIR member to skeleton dataset
+       -- Updated $INSTALL in CNTL file, removed editing mbr RACFSITE
+       -- Fixed tutorial #RACCLS2, typo in description of line cmd 'P'
+       -- Deleted member  $CONTRIB n CNTL file, redundant/not needed
+       -- Documented line cmd 'P' in tutorial member #RACCLS5/DSN5
+       -- Fixed REXX program RACFPRMS, was missing edit macro variable
+
   11 June 2020 - V28R1
      - User (Option 1)
        -- Fixed panel RACFUSR6, issue with PARSEing NAME= and OWNER=

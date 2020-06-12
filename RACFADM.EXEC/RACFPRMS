@@ -33,6 +33,7 @@
 PANEL19     = "RACFPRMS"   /* RACF parameters, menu opt 7  */ /* @A5 */
 PANELS1     = "RACFSAVE"   /* Obtain DSName to SAVE        */ /* @AP */
 SKELETON1   = "RACFPRMS"   /* Save tablea to dataset       */ /* @AP */
+EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @AP */
 TABLEA      = 'TA'RANDOM(0,99999)  /* Unique table name A  */ /* @AK */
 parse source . . REXXPGM .         /* Obtain REXX pgm name */ /* @AB */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @AB */

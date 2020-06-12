@@ -4,7 +4,7 @@
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
 /* @AR  200611  RACFA    Moved database enqueues to top of list       */
-/* @AQ  200611  RACFA    Addded ISPSLIB enqueues                      */
+/* @AQ  200611  RACFA    Added ISPSLIB enqueues                       */
 /* @AP  200520  RACFA    If no ALT/LIBDEF dsns, display RACFDB enques */
 /* @AO  200506  RACFA    Standardize all headers                      */
 /* @AN  200506  RACFA    Display headers in a different color         */

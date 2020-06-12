@@ -1,0 +1,25 @@
+*---------------------------------------------------------------------*
+*                          RACFADM - Skeletons                        *
+*---------------------------------------------------------------------*
+
+  Member      Subject                   Description
+ --------  -------------  --------------------------------------------
+ $$DIR     Directory      Document members
+ RACFCLSR  Class          List classes (show, refresh), menu option 4
+ RACFCLS2  Class          List profiles and descriptions
+ RACFCLS5  Class          List group/ids and access
+ RACFCLS8  Class          List classes and profiles
+ RACFDSN2  Dataset        List profiles and types
+ RACFDSN5  Dataset        Show groups and access
+ RACFGRP5  Group          List userids and access
+ RACFGRP8  Group          List groups and descriptions
+ RACFPRMS  Parameter      RACF parameters, menu option 6
+ RACFUSR2  User           List userids (admin/user)
+ RACFUSR3  User           Show groups and access
+
+ Notes:
+   - Class is 'General Resources'
+   - (admin) = Administrator
+     -- Line cmds: Show, Srch, List, Prof, Chg, Add, Remove, Reset, etc.
+   - (user)  = General user
+     -- Line cmds: Show, Search, List
