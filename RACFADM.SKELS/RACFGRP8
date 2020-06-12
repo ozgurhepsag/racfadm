@@ -1,0 +1,22 @@
+)CM*------------------------------------------------------------------*
+)CM*  Purpose:  RACFADM - Group Profile - SAve command
+)CM*------------------------------------------------------------------*
+)CM*  FLG  YYMMDD  USERID   DESCRIPTION
+)CM*  ---  ------  -------  ------------------------------------------
+)CM*  @A0  200611  RACFA    Created skeleton
+)CM*------------------------------------------------------------------*
+ &ZDATE --------------( RACFADM - Group Profiles )------------- &ZTIME
+)BLANK
+)TB 2 11
+!FILTER:!&RFILTER
+)BLANK
+ Group    SupGrp   Owner    Description
+ ---------------------------------------------------------------------
+)TB 2 11 20 29
+)DOT &TABLEA
+)SETF GROUP   = &LEFT(&GROUP,8, )
+)SETF SUPGRP  = &LEFT(&SUPGRP,8, )
+)SETF OWNER   = &LEFT(&OWNER,8, )
+)SETF DATA    = &LEFT(&DATA,44, )
+!&GROUP!&SUPGRP!&OWNER!&DATA
+)ENDDOT

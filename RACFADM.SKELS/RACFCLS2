@@ -1,0 +1,21 @@
+)CM*------------------------------------------------------------------*
+)CM*  Purpose:  RACFADM - General Resources - SAve command
+)CM*------------------------------------------------------------------*
+)CM*  FLG  YYMMDD  USERID   DESCRIPTION
+)CM*  ---  ------  -------  ------------------------------------------
+)CM*  @A0  200611  RACFA    Created skeleton
+)CM*------------------------------------------------------------------*
+ &ZDATE ------------( RACFADM - General Resources )------------ &ZTIME
+)BLANK
+)TB 2 11
+!CLASS:!&RCLASS
+!FILTER:!&RFILTER
+)BLANK
+ Profile                                Description
+ ---------------------------------------------------------------------
+)TB 2 41
+)DOT &TABLEA
+)SETF PROFILE = &LEFT(&PROFILE,38, )
+)SETF DATA    = &LEFT(&DATA,32, )
+!&PROFILE!&DATA
+)ENDDOT

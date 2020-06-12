@@ -1,0 +1,20 @@
+)CM*------------------------------------------------------------------*
+)CM*  Purpose:  RACFADM - Dataset Profile - SAve command
+)CM*------------------------------------------------------------------*
+)CM*  FLG  YYMMDD  USERID   DESCRIPTION
+)CM*  ---  ------  -------  ------------------------------------------
+)CM*  @A0  200611  RACFA    Created skeleton
+)CM*------------------------------------------------------------------*
+ &ZDATE -------------( RACFADM - Dataset Profiles )------------ &ZTIME
+)BLANK
+)TB 2 11
+!FILTER:!&RFILTER
+)BLANK
+ Profile                                Type
+ ---------------------------------------------------------------------
+)TB 2 41
+)DOT &TABLEA
+)SETF DATASET = &LEFT(&DATASET,38, )
+)SETF TYPE    = &LEFT(&TYPE,30, )
+!&DATASET!&TYPE
+)ENDDOT
