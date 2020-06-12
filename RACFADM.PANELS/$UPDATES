@@ -2,6 +2,33 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  11 June 2020 - V28R1
+     - User (Option 1)
+       -- Fixed panel RACFUSR6, issue with PARSEing NAME= and OWNER=
+          when obtaining data from 'LISTUSER' command
+     - User, Group, Dataset, General Resource and RACF Parameters
+       -- Added primary command:
+            SAve ... Save the data displayed to a dataset
+     - Enqueues (Option E)
+       -- Moved displaying RACF database enqueues to the top
+       -- Added displaying enqueues on RACFADM's LIBDEFed ISPSLIB
+     - OMVSCmds (Option O)
+       -- If Settings (Option 0) 'Showmvs data = Y' then display/allow
+          executing command:
+            SLIST ... Unix System Services (USS) Information (Showmvs)
+       -- Fixed FLIST, was displaying duplicate ZFS file parameters
+     - Other Items
+       -- REXX Program RACFADM was updated to libdef a skeleton dataset
+          * Contains members to save the display/screen to a dataset
+       -- Updated all REXX programs, modified comments/flower box,
+          to be more accurate/meaningful
+       -- Updated tutorials to reflect enhancements
+       -- Updated member $DIR in panel dataset
+       -- Fixed RACF012 message, had unnecessary single quote and
+          continuation, in cols 72 to 80
+       -- Removed unnecessary attribute character (+) at the end of the
+          Command line on all panels
+
   09 June 2020 - V28R0
      - General Resources (Option 4)
        -- Created help panel #RACCLS5 for RACFCLS5 panel

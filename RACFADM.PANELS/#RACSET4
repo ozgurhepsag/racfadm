@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
 %Tutorial+\-\(%RACFADM - Settings - 4 of 4+)\-\%Tutorial
-%Command ===>_ZCMD                                                             +
+%Command ===>_ZCMD
 %
 +Adding TSO userid
 !  User catalog     +The TSO user catalog to define all new TSO user aliases

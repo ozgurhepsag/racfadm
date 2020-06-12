@@ -44,6 +44,8 @@
  #RACOML2  Tutorial       OMVS ORLIST  (2 of 2)
  #RACOMP1  Tutorial       OMVS OPERMIT (1 of 2)
  #RACOMP2  Tutorial       OMVS OPERMIT (2 of 2)
+ #RACOMS1  Tutorial       OMVS SLIST   (1 of 2)
+ #RACOMS2  Tutorial       OMVS SLIST   (2 of 2)
  #RACOMU1  Tutorial       OMVS ULIST   (1 of 2)
  #RACOMU2  Tutorial       OMVS ULIST   (2 of 2)
  #RACOMVS  Tutorial       OMVS commands
@@ -97,6 +99,7 @@
  RACFPRMS  Parameter      RACF parameters, menu option 6
  RACFPSWD  Password       Reset userid password, opt 5 and line cmd PW
  RACFPSWE  Password       Reset userid password with expire keyword
+ RACFSAVE  Save Cmd       Save display to dataset (primary command)
  RACFSETG  Settings       Settings, customize options, menu option 0
  RACFSETH  Settings       Define Showmvs dataset to LIBDEF
  RACFSETI  Settings       Define IBM RACF datasets to ALTLIB/LIBDEF

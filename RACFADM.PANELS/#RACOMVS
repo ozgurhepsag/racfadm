@@ -17,13 +17,15 @@
 %  3 ~OPERMIT +Unix Access Control List (ACL) Management, like PERMIT
 %  4 ~ORALTER +Unix Security Attribute Management, like RALTER
 %  5 ~ORLIST  +Unix File/Directory Security Information, like RLIST
-%  6 ~ULIST   +Unix User/Group Identifier (UID/GID) Information
+%  6 ~SLIST   +Unix System Services (USS) Information (Showmvs)
+%  7 ~ULIST   +Unix User/Group Identifier (UID/GID) Information
 +
 +The%Command+field allows for abbreviating the commands, for example:
 %  F+FLIST,%G+GLIST,%P+PERMIT,%RA+ALTER,%RL+RLIST and%U+ULIST
 )PROC
   &ZSEL = TRANS(&ZCMD 1,#RACOMF1, 2,#RACOMG1  3,#RACOMP1
-                      4,#RACOMA1, 5,#RACOML1  6,#RACOMU1 *,'?')
+                      4,#RACOMA1, 5,#RACOML1  6,#RACOMS1
+                      7,#RACOMU1 *,'?')
   &ZUP  = #RACOMVS
 )PNTS
   FIELD(ZPS00001) VAR(ZCMD) VAL('1')
@@ -32,11 +34,11 @@
   FIELD(ZPS00004) VAR(ZCMD) VAL('4')
   FIELD(ZPS00005) VAR(ZCMD) VAL('5')
   FIELD(ZPS00006) VAR(ZCMD) VAL('6')
+  FIELD(ZPS00007) VAR(ZCMD) VAL('7')
 )END
 /*--------------------------------------------------------------------*/
 /*                             Comments                               */
 /*--------------------------------------------------------------------*/
-/*                                                                    */
 /*                                                                    */
 /*  1) The tutorial entries (Settings, User profiles, etc) are        */
 /*     point-n-shoot fields                                           */

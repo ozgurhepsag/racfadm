@@ -5,7 +5,7 @@
    $  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN) hilite(uscore)
 )BODY EXPAND(\\)
 %Tutorial+\-\(%RACFADM - OMVS ORLIST - 1 or 2+)\-\%Tutorial
-%Command ===>_ZCMD                                                             +
+%Command ===>_ZCMD
 %
 %ORLIST+displays security information for a Unix directory or file using a
 +syntax and output format similar to the RACF!RLIST+command

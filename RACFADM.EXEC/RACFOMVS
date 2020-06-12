@@ -1,5 +1,5 @@
 /*%NOCOMMENT====================* REXX *==============================*/
-/*  PURPOSE:  RACFADM - OMVSCmd - OMVS RACF Commands (Menu option O)  */
+/*  PURPOSE:  RACFADM - OMVS RACF Commands - Menu option O            */
 /*--------------------------------------------------------------------*/
 /*  NOTES:    1) Allows executing the IBM REXX programs:              */
 /*                 OPERMIT ... Unix Access Control List, like PERMIT  */
@@ -8,10 +8,14 @@
 /*            2) And one internal command                             */
 /*                 FLIST...... Unix ZFS/HFS File Usage/Attribute Info */
 /*                 GLIST...... Unix Group Identifier (GID) List       */
+/*                 SLIST...... Showmvs UNIX System Services           */
 /*                 ULIST...... Unix User/Group Identifier (UID/GID)   */
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AP  200611  RACFA    Fix, duplicate entries, was MODE||RESULT     */
+/* @AO  200611  RACFA    Expanded dashes                              */
+/* @AN  200611  RACFA    Added SLIST, display Showmvs Unix info.      */
 /* @AM  200608  RACFA    F/G/ULIST, trans parm keywords to uppercase  */
 /* @AL  200608  RACFA    GLIST, changed parm 'Name' to 'Group'        */
 /* @AK  200608  RACFA    FLIST path, was disp 'no met srch criteria'  */
@@ -46,7 +50,23 @@ numeric digits 12                                             /* @A2 */
 
 ADDRESS ISPEXEC
   PARSE ARG MEMBER
-  "VGET (SETGDISP SETMTRAC) PROFILE"
+  "VGET (SETGDISP SETGMVS SETMTRAC) PROFILE"                  /* @AN */
+  If (SETGMVS = "YES") THEN DO                                /* @AN */
+     OMVSCMDS = "¨(Flist, Glist, Permit, RAlter,",            /* @AN */
+                "RList, Slist or Ulist)"                      /* @AN */
+     OMVSDES1 = "ÝSList¨   Unix System Services (USS)",       /* @AN */
+                "Information (Showmvs)"                       /* @AN */
+     OMVSDES2 = "ÝUlist¨   Unix User/Group Identifier",       /* @AN */
+                "(UID/GID) Information"                       /* @AN */
+  END                                                         /* @AN */
+  Else DO                                                     /* @AN */
+     OMVSCMDS = "¨(Flist, Glist, Permit, RAlter,",            /* @AN */
+                "RList or Ulist)"                             /* @AN */
+     OMVSDES1 = "ÝUlist¨   Unix User/Group Identifier",       /* @AN */
+                "(UID/GID) Information"                       /* @AN */
+     OMVSDES2 = ""                                            /* @AN */
+  END                                                         /* @AN */
+
   If (SETMTRAC <> 'NO') then do
      Say "*"COPIES("-",70)"*"
      Say "*"Center("Begin Program = "REXXPGM,70)"*"
@@ -62,6 +82,7 @@ ADDRESS ISPEXEC
      CMDREC.0 = 0; NO = 0                                     /* @A6 */
      IF (OMVSCMD = "FLIST"),                                  /* @AJ */
       | (OMVSCMD = "GLIST"),                                  /* @AJ */
+      | (OMVSCMD = "SLIST"),                                  /* @AN */
       | (OMVSCMD = "ULIST") THEN                              /* @AJ */
         CALL FLIST_GLIST_ULIST_INIT                           /* @A6 */
      IF (CMDREC.0 = 0) THEN DO                                /* @A6 */
@@ -70,6 +91,14 @@ ADDRESS ISPEXEC
                 call flist                                    /* @A2 */
            WHEN (OMVSCMD = "GLIST") THEN                      /* @AJ */
                 call glist                                    /* @AH */
+           WHEN (OMVSCMD = "SLIST") THEN DO                   /* @AN */
+                IF (CHKPRM = "USERS") THEN                    /* @AN */
+                   MVSPRM = "USS"                             /* @AN */
+                ELSE                                          /* @AN */
+                   MVSPRM = "UNIX"                            /* @AN */
+                call RACFMVS MVSPRM                           /* @AN */
+                ITERATE                                       /* @AN */
+           END                                                /* @AN */
            WHEN (OMVSCMD = "ULIST") THEN                      /* @AJ */
                 call ulist                                    /* @A1 */
            WHEN (OMVSCMD = "PERMIT") THEN DO                  /* @AJ */
@@ -256,7 +285,7 @@ FLIST:                                                        /* @A2 */
                                                               /* @A2 */
   CMDREC.1 = '%InUse Owner Filesystem / Mountpoint /',        /* @A2 */
              '(Mount-attributes)'                             /* @A2 */
-  CMDREC.2 = '------ -----' copies('-',64)                    /* @A2 */
+  CMDREC.2 = '------ -----' copies('-',100)                   /* @AO */
   NO = 2                                                      /* @A2 */
                                                               /* @A2 */
   l  = 0                                                      /* @A2 */
@@ -272,7 +301,7 @@ FLIST:                                                        /* @A2 */
      if (m.mnte_mode.i > 255) then                            /* @A2 */
         m.mnte_mode.i = m.mnte_mode.i - 256                   /* @A2 */
      Call FLIST_Translate_Mode_Settings m.mnte_mode.i         /* @A2 */
-     mode = mode||result                                      /* @A2 */
+     mode = result                                            /* @AP */
      if (string <> '') then do                                /* @A2 */
         if (substr(string,1,1) = '^'),                        /* @A2 */
          & (length(string) > 1) then do                       /* @A2 */
@@ -502,8 +531,11 @@ FLIST_GLIST_ULIST_INIT:                                       /* @A6 */
   colpos = pos('UID(',UPPPRM)                                 /* @AM */
   If (colpos > 0) then                                        /* @AM */
      CHKPRM = overlay('UID',CHKPRM,colpos,3)                  /* @AM */
+  colpos = pos('USERS',UPPPRM)                                /* @AN */
+  If (colpos > 0) then                                        /* @AN */
+     CHKPRM = overlay('USERS',CHKPRM,colpos,5)                /* @AN */
                                                               /* @A6 */
-  if (syscalls('ON') > 3) then do                             /* @A1 */
+  if (OMVSCMD <> "SLIST") & (syscalls('ON') > 3) then do      /* @AN */
      CMDREC.1 = 'Unable to establish the SYSCALL',            /* @A1 */
                 'environment.'                                /* @A1 */
      CMDREC.0 = 1                                             /* @A1 */

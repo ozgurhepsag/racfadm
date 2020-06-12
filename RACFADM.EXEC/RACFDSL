@@ -1,5 +1,5 @@
 /*%NOCOMMENT====================* REXX *==============================*/
-/*  PURPOSE:  RACFADM - DSLIST - ISPF 3.4 Dataset List (Menu Opt D)   */
+/*  PURPOSE:  RACFADM - Dataset List - Menu option D                  */
 /*--------------------------------------------------------------------*/
 /*  NOTES:    1) This utility will obtain the LIBDEF/ALTLIB dataset   */
 /*               names and if the high level qualifiers are identical */

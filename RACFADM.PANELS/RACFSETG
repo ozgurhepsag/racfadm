@@ -7,7 +7,7 @@
    ~  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(TURQ)
 )BODY EXPAND(\\)
 +\-\(^RACFADM - Settings+)\-\
-^Command ===>_ZCMD                                                             +
+^Command ===>_ZCMD
 ^
 ^General
 +  Default filter{...._Z                              { Search string (optional)

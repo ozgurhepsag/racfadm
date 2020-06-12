@@ -5,7 +5,7 @@
    !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(TURQ)
 )BODY EXPAND(\\)
 +\-\(%RACFADM - Settings+)\-\
-%Command ===>_ZCMD                                                             +
+%Command ===>_ZCMD
 %
 {Specify the!program name{and dataset to!LIBDEF:
 +

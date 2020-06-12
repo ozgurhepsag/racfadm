@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
 %Tutorial+\-\(%RACFADM - RACF Parameters+)\-\%Tutorial
-%Command ===>_ZCMD                                                             +
+%Command ===>_ZCMD
 %
 + %RACFprms+reads the!Access Control Communication Vector Table (CVTRAC)
 +  in memory and displays the following RACF parameters:
@@ -20,6 +20,7 @@
 %    Locate text      +Locate text in the sorted column
 %    Only text        +Only display rows with text string
 %    Reset            +Redisplay all rows and sort first column
+%    SAve             +Save display to a dataset
 )PROC
   &ZUP     = #RACPRMS
 )END

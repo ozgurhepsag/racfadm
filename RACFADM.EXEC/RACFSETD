@@ -1,5 +1,5 @@
 /*%NOCOMMENT====================* REXX *==============================*/
-/*  PURPOSE:  RACFADM - Settings - Get defualt settings for new users */
+/*  PURPOSE:  RACFADM - Settings - Executes when RACFADM is invoked   */
 /*--------------------------------------------------------------------*/
 /*  NOTES:    1) This member will read in $DEFSETG to obtain the      */
 /*               default Settings (Option 0) for new users and if     */

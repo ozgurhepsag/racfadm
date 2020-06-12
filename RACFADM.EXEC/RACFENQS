@@ -1,8 +1,10 @@
 /*%NOCOMMENT====================* REXX *==============================*/
-/*  PURPOSE:  RACFADM - Enqueues - Menu option E (hidden)             */
+/*  PURPOSE:  RACFADM - Enqueues - Menu option E                      */
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AR  200611  RACFA    Moved database enqueues to top of list       */
+/* @AQ  200611  RACFA    Addded ISPSLIB enqueues                      */
 /* @AP  200520  RACFA    If no ALT/LIBDEF dsns, display RACFDB enques */
 /* @AO  200506  RACFA    Standardize all headers                      */
 /* @AN  200506  RACFA    Display headers in a different color         */
@@ -48,12 +50,13 @@ ADDRESS ISPEXEC
         interpret "Trace "SUBSTR(SETMTRAC,1,1)                /* @A6 */
   end                                                         /* @A6 */
 
+  call GET_RACF_DBNAMES                                       /* @AR */
+  call Get_enqs "RACFPRM"                                     /* @AR */
+  call Get_enqs "RACFBKP"                                     /* @AR */
   call Get_enqs "CLIST"                                       /* @A7 */
   call Get_enqs "ISPPLIB"                                     /* @A7 */
+  call Get_enqs "ISPSLIB"                                     /* @AQ */
   call Get_enqs "ISPMLIB"                                     /* @A7 */
-  call GET_RACF_DBNAMES                                       /* @AF */
-  call Get_enqs "RACFPRM"                                     /* @AF */
-  call Get_enqs "RACFBKP"                                     /* @AF */
   QUEUE ""
 
   ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",

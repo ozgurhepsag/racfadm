@@ -5,7 +5,7 @@
    $  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN) hilite(uscore)
 )BODY EXPAND(\\)
 %Tutorial+\-\(%RACFADM - OMVS ORALTER - 1 of 2+)\-\%Tutorial
-%Command ===>_ZCMD                                                             +
+%Command ===>_ZCMD
 %
 %ORALTER+provides UNIX Security Attribute Management using a syntax similiar
 +to the RACF!RALTER+command

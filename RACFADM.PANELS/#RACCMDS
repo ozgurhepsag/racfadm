@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
 %Tutorial+\-\(%RACFADM - Execute RACF Commands+)\-\%Tutorial
-%Command ===>_ZCMD                                                             +
+%Command ===>_ZCMD
 %
 + %Command+is an alternative to the!ISPF Command Shell (=6).+ It provides
 +  several features to make it easier to execute, recall and view TSO

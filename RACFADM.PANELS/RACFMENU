@@ -7,8 +7,8 @@
    {  TYPE(OUTPUT)  PAS(ON)      CAPS(OFF)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V28R0+)\-\
-%Option ===>_ZCMD                                                              +
++\-\(%RACFADM - RACF Administration - V28R1+)\-\
+%Option ===>_ZCMD
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
 %   1 ~User     +User profiles          %D ~DSList    +Dataset list

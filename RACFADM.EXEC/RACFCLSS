@@ -1,8 +1,9 @@
 /*%NOCOMMENT====================* REXX *==============================*/
-/*  PURPOSE:  RACFADM - General resources - Search classes            */
+/*  PURPOSE:  RACFADM - General Resources - Search classes            */
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BK  200610  RACFA    Added primary command 'SAVE'                 */
 /* @BJ  200506  RACFA    Drop array immediately when done using       */
 /* @BI  200502  RACFA    Re-worked displaying tables, use DO FOREVER  */
 /* @BH  200501  LBD      Add primary commands FIND/RFIND              */
@@ -62,6 +63,8 @@
 PANEL08     = "RACFCLS8"   /* List classes and profiles    */ /* @AI */
 PANEL13     = "RACFCLSD"   /* Add class                    */ /* @AG */
 PANELM2     = "RACFMSG2"   /* Display RACF command and R   */ /* @AG */
+PANELS1     = "RACFSAVE"   /* Obtain DSName to SAVE        */ /* @BK */
+SKELETON1   = "RACFCLS8"   /* Save tablea to dataset       */ /* @BK */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @AZ */
 TABLEA      = 'TA'RANDOM(0,99999)  /* Unique table name A  */ /* @BF */
 TABLEB      = 'TB'RANDOM(0,99999)  /* Unique table name B  */ /* @BG */
@@ -181,11 +184,6 @@ DISPLAY_TABLE_PERMIT:
      Select
         When (abbrev("FIND",zcmd,1) = 1) then                 /* @BH */
              call do_findb                                    /* @BH */
-        WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN DO              /* @BI */
-             call sortseq 'PROFILE'                           /* @AW */
-             "TBSORT "TABLEB" FIELDS("SORT")"                 /* @BI */
-             "TBTOP  "TABLEB                                  /* @BI */
-        END                                                   /* @BI */
         WHEN (ABBREV("LOCATE",ZCMD,1) = 1) THEN do            /* @BI */
              if (parm <> '') then do                          /* @BI */
                 locarg = parm'*'                              /* @BI */
@@ -224,6 +222,15 @@ DISPLAY_TABLE_PERMIT:
              xtdtop   = 1                                     /* @AO */
              rc = get_permits(class,user) /*get permits*/     /* @AO */
         END                                                   /* @AO */
+        When (abbrev("SAVE",zcmd,2) = 1) then DO              /* @BK */
+             TMPSKELT = SKELETON1                             /* @BK */
+             call do_SAVE                                     /* @BK */
+        END                                                   /* @BK */
+        WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN DO              /* @BI */
+             call sortseq 'PROFILE'                           /* @AW */
+             "TBSORT "TABLEB" FIELDS("SORT")"                 /* @BI */
+             "TBTOP  "TABLEB                                  /* @BI */
+        END                                                   /* @BI */
         otherwise locvar=''
      End
      ZCMD = ""; PARM = ""                                     /* @BI */
@@ -450,11 +457,6 @@ DISPLAY_TABLE:
      Select                                                   /* @AB */
         When (abbrev("FIND",zcmd,1) = 1) then                 /* @BH */
              call do_finda                                    /* @BH */
-        WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN DO              /* @BI */
-             call sortseq 'CLASS'                             /* @AW */
-             "TBSORT" TABLEA "FIELDS("sort")"                 /* @BI */
-             "TBTOP " TABLEA                                  /* @BI */
-        END                                                   /* @BI */
         WHEN (ABBREV("LOCATE",ZCMD,1) = 1) THEN do            /* @BI */
              if (parm <> '') then do                          /* @BI */
                 locarg = parm'*'                              /* @BI */
@@ -493,6 +495,11 @@ DISPLAY_TABLE:
              sortclas = 'A'                                   /* @AW */
              xtdtop   = 1                                     /* @AB */
         END                                                   /* @AB */
+        WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN DO              /* @BI */
+             call sortseq 'CLASS'                             /* @AW */
+             "TBSORT" TABLEA "FIELDS("sort")"                 /* @BI */
+             "TBTOP " TABLEA                                  /* @BI */
+        END                                                   /* @BI */
         otherwise NOP                                         /* @AB */
      END /* Select */                                         /* @AB */
      ZCMD = ""; PARM = ""                                     /* @BI */
@@ -596,3 +603,110 @@ SHOWCMD:                                                      /* @AV */
      'log msg(isrz003)'                                       /* @AU */
   END                                                         /* @AU */
 RETURN                                                        /* @AV */
+/*--------------------------------------------------------------------*/
+/*  Save table to dataset                                        @BK  */
+/*--------------------------------------------------------------------*/
+DO_SAVE:                                                      /* @BK */
+  X = MSG("OFF")                                              /* @BK */
+  "ADDPOP COLUMN(40)"                                         /* @BK */
+  "VGET (RACFSDSN RACFSMBR RACFSREP) PROFILE"                 /* @BK */
+  IF (RACFSDSN = "") THEN                                     /* @BK */
+     RACFSDSN = USERID()".RACFADM.REPORTS"                    /* @BK */
+  IF (RACFSREP = "") THEN                                     /* @BK */
+     RACFSREP = "N"                                           /* @BK */
+                                                              /* @BK */
+  DO FOREVER                                                  /* @BK */
+     "DISPLAY PANEL("PANELS1")"                               /* @BK */
+     IF (RC = 08) THEN DO                                     /* @BK */
+        "REMPOP"                                              /* @BK */
+        RETURN                                                /* @BK */
+     END                                                      /* @BK */
+     RACFSDSN = STRIP(RACFSDSN,,"'")                          /* @BK */
+     RACFSDSN = STRIP(RACFSDSN,,'"')                          /* @BK */
+     RACFSDSN = STRIP(RACFSDSN)                               /* @BK */
+     SYSDSORG = ""                                            /* @BK */
+     X = LISTDSI("'"RACFSDSN"'")                              /* @BK */
+     IF (SYSDSORG = "") | (SYSDSORG = "PS"),                  /* @BK */
+      | (SYSDSORG = "PO") THEN                                /* @BK */
+        NOP                                                   /* @BK */
+     ELSE DO                                                  /* @BK */
+        RACFSMSG = "Not PDS/Seq File"                         /* @BK */
+        RACFLMSG = "The dataset specified is not",            /* @BK */
+                  "a partitioned or sequential",              /* @BK */
+                  "dataset, please enter a valid",            /* @BK */
+                  "dataset name."                             /* @BK */
+       "SETMSG MSG(RACF011)"                                  /* @BK */
+       ITERATE                                                /* @BK */
+     END                                                      /* @BK */
+     IF (SYSDSORG = "PS") & (RACFSMBR <> "") THEN DO          /* @BK */
+        RACFSMSG = "Seq File - No mbr"                        /* @BK */
+        RACFLMSG = "This dataset is a sequential",            /* @BK */
+                  "file, please remove the",                  /* @BK */
+                  "member name."                              /* @BK */
+       "SETMSG MSG(RACF011)"                                  /* @BK */
+       ITERATE                                                /* @BK */
+     END                                                      /* @BK */
+     IF (SYSDSORG = "PO") & (RACFSMBR = "") THEN DO           /* @BK */
+        RACFSMSG = "PDS File - Need Mbr"                      /* @BK */
+        RACFLMSG = "This dataset is a partitioned",           /* @BK */
+                  "dataset, please include a member",         /* @BK */
+                  "name."                                     /* @BK */
+       "SETMSG MSG(RACF011)"                                  /* @BK */
+       ITERATE                                                /* @BK */
+     END                                                      /* @BK */
+                                                              /* @BK */
+     IF (RACFSMBR = "") THEN                                  /* @BK */
+        TMPDSN = RACFSDSN                                     /* @BK */
+     ELSE                                                     /* @BK */
+        TMPDSN = RACFSDSN"("RACFSMBR")"                       /* @BK */
+     DSNCHK = SYSDSN("'"TMPDSN"'")                            /* @BK */
+     IF (DSNCHK = "OK" & RACFSREP = "N") THEN DO              /* @BK */
+        RACFSMSG = "DSN/MBR Exists"                           /* @BK */
+        RACFLMSG = "Dataset/member already exists. ",         /* @BK */
+                  "Please type in "Y" to replace file."       /* @BK */
+        "SETMSG MSG(RACF011)"                                 /* @BK */
+        ITERATE                                               /* @BK */
+     END                                                      /* @BK */
+     LEAVE                                                    /* @BK */
+  END                                                         /* @BK */
+  "REMPOP"                                                    /* @BK */
+  "VPUT (RACFSDSN RACFSMBR RACFSREP) PROFILE"                 /* @BK */
+                                                              /* @BK */
+ADDRESS TSO                                                   /* @BK */
+  IF (RACFSREP = "Y" & RACFSMBR = "") |,                      /* @BK */
+     (DSNCHK <> "OK" & DSNCHK <> "MEMBER NOT FOUND"),         /* @BK */
+     THEN DO                                                  /* @BK */
+     "DELETE '"RACFSDSN"'"                                    /* @BK */
+     IF (RACFSMBR = "") THEN                                  /* @BK */
+        "ALLOC  FI(ISPFILE) DA('"RACFSDSN"') NEW",            /* @BK */
+            "REUSE SP(1 1) CYLINDER UNIT(SYSDA)",             /* @BK */
+            "LRECL(80) RECFM(F B)"                            /* @BK */
+     ELSE                                                     /* @BK */
+        "ALLOC  FI(ISPFILE) DA('"RACFSDSN"') NEW",            /* @BK */
+            "REUSE SP(1 1) CYLINDER UNIT(SYSDA)",             /* @BK */
+            "LRECL(80) RECFM(F B)",                           /* @BK */
+            "DSORG(PO) DSNTYPE(LIBRARY,2)"                    /* @BK */
+  END                                                         /* @BK */
+  ELSE                                                        /* @BK */
+     "ALLOC  FI(ISPFILE) DA('"RACFSDSN"') SHR REUSE"          /* @BK */
+                                                              /* @BK */
+ADDRESS ISPEXEC                                               /* @BK */
+  "FTOPEN"                                                    /* @BK */
+  "FTINCL "TMPSKELT                                           /* @BK */
+  IF (RACFSMBR = "") THEN                                     /* @BK */
+     "FTCLOSE"                                                /* @BK */
+  ELSE                                                        /* @BK */
+     "FTCLOSE NAME("RACFSMBR")"                               /* @BK */
+  ADDRESS TSO "FREE FI(ISPFILE)"                              /* @BK */
+                                                              /* @BK */
+  SELECT                                                      /* @BK */
+     WHEN (SETGDISP = "VIEW") THEN                            /* @BK */
+          "VIEW DATASET('"RACFSDSN"') MACRO("EDITMACR")"      /* @BK */
+     WHEN (SETGDISP = "EDIT") THEN                            /* @BK */
+          "EDIT DATASET('"RACFSDSN"') MACRO("EDITMACR")"      /* @BK */
+     OTHERWISE                                                /* @BK */
+          "BROWSE DATASET('"RACFSDSN"')"                      /* @BK */
+  END                                                         /* @BK */
+  X = MSG("ON")                                               /* @BK */
+                                                              /* @BK */
+RETURN                                                        /* @BK */

@@ -1,5 +1,5 @@
 /*%NOCOMMENT====================* REXX *==============================*/
-/*  PURPOSE:  RACFADM - User (Option 1) - Cross Ref. Rpt (linecmd XR) */
+/*  PURPOSE:  RACFADM - User Profile - Opt 1, Cross Ref. Rpt (cmd XR) */
 /*--------------------------------------------------------------------*/
 /*  NOTES:    1) This user line command XR, Cross Reference Report,   */
 /*               is not displayed as a line command                   */

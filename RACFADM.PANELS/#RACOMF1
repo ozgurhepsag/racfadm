@@ -5,7 +5,7 @@
    $  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN) hilite(uscore)
 )BODY EXPAND(\\)
 %Tutorial+\-\(%RACFADM - OMVS FLIST - 1 or 2+)\-\%Tutorial
-%Command ===>_ZCMD                                                             +
+%Command ===>_ZCMD
 %
 %FLIST+displays ZFS/HFS file usage, mount point and attribute information
 +

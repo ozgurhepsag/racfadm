@@ -1,6 +1,8 @@
 /*%NOCOMMENT====================* REXX *==============================*/
 /*  PURPOSE:  RACFADM - Display error message                         */
 /*--------------------------------------------------------------------*/
+/*  NOTES:    1) This REXX program is used by all REXX programs       */
+/*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
 /* @AF  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */

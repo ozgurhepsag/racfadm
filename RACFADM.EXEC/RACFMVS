@@ -1,8 +1,9 @@
 /*%NOCOMMENT====================* REXX *==============================*/
-/*  PURPOSE:  RACFADM - SHOWMVS - Display 'RACF Data' (Menu option 9) */
+/*  PURPOSE:  RACFADM - RACF Data (Showmvs) - Menu option 7 and O     */
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A3  200611  RACFA    Add capability to display USS info   (Opt O) */
 /* @A2  200525  RACFA    Allow defining pgm name in Settings  (Opt 0) */
 /* @A1  200519  RACFA    Obtain DSN from $DEVSETG or Settings (Opt 0) */
 /* @A0  200516  RACFA    Developed REXX                               */
@@ -14,6 +15,7 @@ parse source . . REXXPGM .         /* Obtain REXX pgm name */
 REXXPGM     = LEFT(REXXPGM,8)
 
 ADDRESS ISPEXEC
+  PARSE ARG PARM                                              /* @A3 */
   "VGET (SETGDISP SETMSHOW SETMTRAC",                         /* @A2 */
         "SETPMVS SETDMVSL) PROFILE"                           /* @A2 */
   If (SETMTRAC <> 'NO') then do
@@ -55,8 +57,14 @@ ADDRESS ISPEXEC
   FOUND = "N"
   DO J = 1 TO ZOSREC.0
      PARSE VAR ZOSREC.J V1 2 V2 3 V3 V4 .
-     IF (V2 = ">") & (V3 = "RACF") THEN
-        FOUND = "Y"
+     IF (V2 = ">") THEN DO                                    /* @A3 */
+        IF (PARM = "") & (V3 = "RACF") THEN                   /* @A3 */
+           FOUND = "Y"                                        /* @A3 */
+        IF (PARM = "UNIX") & (V3 = "UNIX") THEN               /* @A3 */
+           FOUND = "Y"                                        /* @A3 */
+        IF (PARM = "USS") & (V3 = "USS") THEN                 /* @A3 */
+           FOUND = "Y"                                        /* @A3 */
+     END                                                      /* @A3 */
      IF (FOUND = "Y") THEN DO
         IF (K > 0) & (V2 = ">") THEN
            LEAVE

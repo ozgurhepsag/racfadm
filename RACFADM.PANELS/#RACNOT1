@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
 %Tutorial+\-\(%RACFADM - Installation Notes - 1 of 3+)\-\%Tutorial
-%Command ===>_ZCMD                                                             +
+%Command ===>_ZCMD
 %
 !  1)+The REXX program%RACFADM+is used to invoke the RACF Administration
 +     dialog.  It allocates the necessary files using!ISPF LIBDEF+and

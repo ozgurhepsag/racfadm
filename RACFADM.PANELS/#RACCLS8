@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
 %Tutorial+\-\(%RACFADM - General Resources+)\-\%Tutorial
-%Command ===>_ZCMD                                                             +
+%Command ===>_ZCMD
 %
 +Primary Commands
 %  Find text        +Find a text string
@@ -13,6 +13,7 @@
 %  Locate text      +Locate text in the sorted column
 %  Only text        +Only display rows with text string
 %  Reset text       +Redisplay rows and pass a new search filter (optional)
+%  SAve             +Save display to a dataset
 +
 +Line Commands
 %  S  !Show         +Analyze user access to this profile

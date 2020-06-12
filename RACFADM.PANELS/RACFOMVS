@@ -4,13 +4,16 @@
    !  TYPE(TEXT)    INTENS(HIGH) SKIP(ON)  COLOR(TURQ)  CAPS(OFF)
    {  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(BLUE)
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(GREEN)
+   ¬  AREA(DYNAMIC) EXTEND(OFF)
+   Ý  TYPE(DATAOUT) INTENS(LOW)  COLOR(TURQ)
+   ¨  TYPE(DATAOUT) INTENS(LOW)  COLOR(BLUE)
 )BODY EXPAND(\\)
 +\-\(%RACFADM - OMVS RACF Commands+)\-\
-%Command ===>_ZCMD                                                             +
+%Command ===>_ZCMD
 +
 +Enter%OMVS RACF+command options:+
 +
-+Command %===>~z     { (Flist, Glist, Permit, RAlter, RList or Ulist)
++Command %===>~z     {¬OMVSCMDS                                                ¬
 +
 +Path    %===>_z
 +Operands%===>_z
@@ -25,7 +28,8 @@
 !Permit  {Unix Access Control List (ACL) Management
 !RAlter  {Unix Security Attribute Management
 !RList   {Unix Directory/File Security Information
-!Ulist   {Unix User/Group Identifier (UID/GID) Information
+¬OMVSDES1                                                                      ¬
+¬OMVSDES2                                                                      ¬
 )INIT
   .HELP = #RACOMVS
   .ZVARS   = '(OMVSCMD OMVSPATH OMVSOPTS)'
@@ -42,13 +46,19 @@
              OMVSCMD = "RALTER"
         WHEN (abbrev("RLIST",OMVSCMD,2)  = 1) THEN
              OMVSCMD = "RLIST"
+        WHEN (abbrev("SLIST",OMVSCMD,1)  = 1) THEN
+             OMVSCMD = "SLIST"
         WHEN (abbrev("ULIST",OMVSCMD,1)  = 1) THEN
              OMVSCMD = "ULIST"
         OTHERWISE
              NOP
      END
   *ENDREXX
-  VER (&OMVSCMD,NB,LIST,FLIST,GLIST,PERMIT,RALTER,RLIST,ULIST)
+  VGET (SETGMVS) PROFILE
+  IF (&SETGMVS = YES)
+     VER (&OMVSCMD,NB,LIST,FLIST,GLIST,PERMIT,RALTER,RLIST,SLIST,ULIST)
+  ELSE
+     VER (&OMVSCMD,NB,LIST,FLIST,GLIST,PERMIT,RALTER,RLIST,ULIST)
 )END
 /*--------------------------------------------------------------------*/
 /*                             Comments                               */

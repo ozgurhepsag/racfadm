@@ -5,7 +5,7 @@
    $  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN) hilite(uscore)
 )BODY EXPAND(\\)
 @Tutorial+\-\(@RACFADM - OMVS GLIST - 2 of 2+)\-\@Tutorial
-@Command ===>_ZCMD                                                             +
+@Command ===>_ZCMD
 @
 @Examples:
 @  1)+Display all Group Identifiers (GID)

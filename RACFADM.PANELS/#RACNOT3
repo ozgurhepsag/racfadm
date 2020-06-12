@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
 %Tutorial+\-\(%RACFADM - Installation Notes - 3 of 3+)\-\%Tutorial
-%Command ===>_ZCMD                                                             +
+%Command ===>_ZCMD
 %
 !  7)+The%User+line command%XR,+Cross Reference Report, is not displayed
 !       -+Reason for this is sites with a large RACF database, the time

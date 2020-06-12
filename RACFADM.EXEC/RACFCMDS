@@ -1,5 +1,5 @@
 /*%NOCOMMENT====================* REXX *==============================*/
-/*  PURPOSE:  Execute/save/display RACF commands                      */
+/*  PURPOSE:  RACFADM - Execute RACF Commands - Menu option C         */
 /*--------------------------------------------------------------------*/
 /*  NOTES:    1) This REXX program will save the commands entered     */
 /*               into the user's dataset allocated to ISPTABLE or     */

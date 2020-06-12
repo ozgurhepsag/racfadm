@@ -16,6 +16,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AA  200610  RACFA    Added skeleton dataset                       */
 /* @A9  200520  RACFA    Fixed RFIND, LIBDEF and TBCLOSE using $STUB  */
 /* @A8  200519  TRIDJK   Check user cmd table before site cmd table   */
 /* @A7  200519  RACFA    Use SETUP_RFIND1, RFIND2 left entry in table */
@@ -38,6 +39,7 @@ ADDRESS ISPEXEC
   if (RAOPT <> "NA") THEN DO                                  /* @A9 */
      'libdef ispmlib'
      'libdef ispplib'
+     'libdef ispslib'                                         /* @AA */
      Address TSO 'altlib deact app(exec)'
   END                                                         /* @A9 */
   'tbclose radmcmds'                                          /* @A7 */
@@ -63,18 +65,23 @@ SETUP:
   panels = "'"subword(dsname,1,words(dsname)-1)" PANELS'"
   msgs   = "'"subword(dsname,1,words(dsname)-1)" MSGS'"
   plib   = "'"subword(dsname,1,words(dsname)-1)" ISPPLIB'"    /* @A1 */
+  slib   = "'"subword(dsname,1,words(dsname)-1)" ISPSLIB'"    /* @AA */
   mlib   = "'"subword(dsname,1,words(dsname)-1)" ISPMLIB'"    /* @A1 */
   panels = translate(panels,'.',' ')
   msgs   = translate(msgs,'.',' ')
   plib   = translate(plib,'.',' ')                            /* @A1 */
+  slib   = translate(slib,'.',' ')                            /* @AA */
   mlib   = translate(mlib,'.',' ')                            /* @A1 */
   x = listdsi(plib)                                           /* @A1 */
   if (x = 0) then panels = plib                               /* @A1 */
+  x = listdsi(slib)                                           /* @AA */
+  if (x = 0) then skeletons = slib                            /* @AA */
   x = listdsi(mlib)                                           /* @A1 */
   if (x = 0) then msgs = mlib                                 /* @A1 */
   Address TSO 'Altlib Act app(Exec) Dataset('exec')'
   'Libdef ISPMLIB dataset id('msgs') Stack'
   'Libdef ISPPLIB dataset id('panels') Stack'
+  'Libdef ISPSLIB dataset id('skeletons') Stack'              /* @AA */
 RETURN
 /*--------------------------------------------------------------------*/
 /*  Define the ISPF Command Table to enable RFIND                @A3  */
