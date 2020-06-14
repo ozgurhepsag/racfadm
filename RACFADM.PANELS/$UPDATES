@@ -2,6 +2,13 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  14 June 2020 - V28R3
+     - Tutorials
+       -- Updated 'OMVS RACF Commands'
+          * Corrected title/examples
+       -- Updated 'Publications'
+          * Corrected links
+
   12 June 2020 - V28R2
      - Other Items
        -- Added $DIR member to skeleton dataset
@@ -27,7 +34,7 @@
             SLIST ... Unix System Services (USS) Information (Showmvs)
        -- Fixed FLIST, was displaying duplicate ZFS file parameters
      - Other Items
-       -- REXX Program RACFADM was updated to libdef a skeleton dataset
+       -- REXX program RACFADM was updated to libdef a skeleton dataset
           * Contains members to save the display/screen to a dataset
        -- Updated all REXX programs, modified comments/flower box,
           to be more accurate/meaningful

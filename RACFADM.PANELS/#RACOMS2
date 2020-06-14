@@ -3,7 +3,7 @@
    !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
-%Tutorial+\-\(%RACFADM - OMVS ULIST - 2 of 2+)\-\%Tutorial
+%Tutorial+\-\(%RACFADM - OMVS SLIST - 2 of 2+)\-\%Tutorial
 %Command ===>_ZCMD
 %
 %Examples:
@@ -11,7 +11,7 @@
 !       SLIST
 +
 %  2)+To display active USS users
-!       ULIST USERS
+!       SLIST USERS
 +
 +
 +
