@@ -1,31 +1,99 @@
+Simplified RACF Administration ISPF Dialog
+
+*---------------------------------------------------------------------*
+*                            Installation                             *
+*---------------------------------------------------------------------*
+There are three installation options depending upon how the repository
+was cloned.
+
+Clone via ZIGI
+--------------
+The z/OS datasets will have been created by ZIGI during
+the clone process. The installation at this point proceeds with the next
+step - making the dialog available for use.
+
+Clone using Git on a workstation
+--------------------------------
+The repositories files need to be uploaded to an OMVS directory. Then
+proceed as if the Clone occurred under OMVS using Git.
+
+Clone using Git under OMVS
+--------------------------
+This option requires that the Git client be installed under OMVS.
+Once the clone completes, enter OMVS and change to the repositories
+OMVS directory. Execute the zinstall script:
+
+   /u/racfadm>./zginstall.rex
+
+When the zinstall script ends there will be instructions on how to
+apply the ISPF statistics to the partitioned dataset members.
+
+Making the Dialog Available
+---------------------------
+To invoke this application execute the RACFADM exec:
+
+           EX 'hlq.RACFADM.EXEC(RACFADM)' EX
+       or  See the Sample Stub at the end of this file
+
+The intended users must have access to these datasets.
+
 *---------------------------------------------------------------------*
 *                            Introduction                             *
 *---------------------------------------------------------------------*
-RACF Administration (RACFADM) makes many security tasks simple.  It
-lists user, group, data set, and general resource profiles by means of a
-user-friendly, menu-driven interface; it provides interactive
-modification of most fields.
+RACF Administration (RACFADM) makes many security tasks simple.  It lists
+user, group, data set, and general resource profiles by means of a
+user-friendly, menu-driven interface; it provides interactive modification
+of most fields.
 
 Among its features are: connecting groups to a user, adding permissions,
-user authorization searching across classes, and displaying the group
-from which an authorization is granted.
+user authorization searching across classes, and displaying the group from
+which an authorization is granted.
 
-Written in customizable Rexx, RACFADM includes an exec to automate
-creation of aliases or data sets when creating a new TSO user and can
-browse all RACF system options from a single, scrollable display.
+Written in customizable Rexx, RACFADM includes an exec to automate creation
+of aliases or data sets when creating a new TSO user and can browse all RACF
+system options from a single, scrollable display.
 
 To begin using execute the RACFADM member found in the EXEC library.
+
+*---------------------------------------------------------------------*
+*                        Sample Invocation Stub                       *
+*---------------------------------------------------------------------*
+  /* --------------------  rexx procedure  -------------------- *
+  | Name:      RACFADM Stub                                    |
+  |                                                            |
+  | Function:  Allocate the RACFADM Libraries and then         |
+  |            invoke the RACFADM application.                 |
+  |                                                            |
+  | Syntax:    %racfadm                                        |
+  |                                                            |
+  | Usage Notes: 1. Copy into a library in the standard        |
+  |                 SYSEXEC (or SYSPROC) allocations for the   |
+  |                 intended users.                            |
+  |              2. Tailor the HLQ variable for the RACFADM    |
+  |                 high-level-qualifier.                      |
+  |                                                            |
+  * ---------------------------------------------------------- */
+  hlq = 'radmhlq'   /* <=== Change this variable */
+
+  Address TSO
+  "Altlib Act App(Exec) Dataset('"hlq".racfadm.exec')"
+  Address ISPExec
+  "Libdef ISPMLIB Dataset ID('"hlq".racfadm.msgs') stack"
+  "Libdef ISPPLIB Dataset ID('"hlq".racfadm.panels') stack"
+  "Libdef ISPSLIB Dataset ID('"hlq".racfadm.skels') stack"
+  "Select Cmd(%RacfADM NA) NewAppl(RADM) Passlib"
+  "Libdef ISPMLIB"
+  "Libdef ISPPLIB"
+  "Libdef ISPSLIB"
+  Address TSO
+  "Altlib DeAct App(Exec)"
 
 *---------------------------------------------------------------------*
 *                            Contributors                             *
 *---------------------------------------------------------------------*
 
-             Name                              Website
-  ---------------------------  ---------------------------------------
-  Nico Rizzuto (Creator)       http://www.rizzuto.it
-  Lionel B. Dyck               http://www.lbdsoftware.com/
-                               http://github.com/lbdyck
-                               http://www.cbttape.org/
-  John Kalinich
-  Bill Smith
-  Bruce Koss
+* Nico Rizzuto (Creator)      [http://www.rizzuto.it](http://www.rizzuto.it)
+* Lionel B. Dyck              [https://www.lbdsoftware.com/](https://www.lbdsoft
+* Bruce Koss
+* John Kalinich
+* Bill Smith
