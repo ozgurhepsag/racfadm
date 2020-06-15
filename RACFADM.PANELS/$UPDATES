@@ -6,7 +6,7 @@
      - Standards (Option S)
        -- Added documentation for skeletons
      - Other Items
-       -- $STUB memnber
+       -- $STUB member
           * Moved member from CNTL file to REXX dataset
           * Added LIBDEF statements for skeleton dataset
 
