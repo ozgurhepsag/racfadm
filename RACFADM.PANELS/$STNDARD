@@ -59,9 +59,16 @@
   2) REXX
      - Member names
          $$DIR ...... Directory of all members and description
-         RACF???? ... REXX programs, where ???? can be anything
-       Where ? can be any characters
+         RACF???? ... REXX programs, where ???? can be characters
      - Code
+       -- A comment box is coded at the top of each REXX program,
+          the purpose of the code and changes made:
+              /*------------------------------------------------------*
+              /* FLG  YYMMDD  USERID   DESCRIPTION                    *
+              /* ---  ------  -------  -------------------------------*
+              /* @A1  200615  RACFA    Fixed date/time                *
+              /* @A0  200605  RACFA    Created skeleton               *
+              /*======================================================*
        -- Changes are documented by commenting/using a flag character
           * '/* @?? */' in columns 62-71
             o Where ??, 1st character is A-Z, and 2nd character is
@@ -69,12 +76,6 @@
             o Also, the flag character is documented in the comment
               box at the top of the program, most current at the top
           * Example:
-              /*------------------------------------------------------*
-              /* FLG  YYMMDD  USERID   DESCRIPTION                    *
-              /* ---  ------  -------  -------------------------------*
-              /* @A1  200420  RACFA    Obtain REXX pgm name           *
-              /* @A0  200419  RACFA    Created REXX                   *
-              /*======================================================*
               parse source . . REXXPGM .                     /* @A1 */
               REXXPGM  = LEFT(REXXPGM,8)                     /* @A1 */
        -- A comment box is coded above each subroutine, documenting
@@ -87,6 +88,20 @@
           * The capability to have the user control how they want
             to display any files/reports by changing the Settings
             (Option 0) 'Display files' field to Browse, Edit or View
+
+  3) Skeletons
+     - Member names
+         $$DIR ...... Directory of all members and description
+         RACF???? ... Skeleton, where ???? can be any characters
+     - Code
+       -- A comment box is coded at the top of each skeleton,
+          documenting the purpose of the code and changes made:
+              /*------------------------------------------------------*
+              /* FLG  YYMMDD  USERID   DESCRIPTION                    *
+              /* ---  ------  -------  -------------------------------*
+              /* @A1  200615  RACFA    Fixed date/time                *
+              /* @A0  200605  RACFA    Created skeleton               *
+              /*======================================================*
 
   3) Settings
      - The following are the naming standard for variables used to

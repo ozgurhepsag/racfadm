@@ -2,6 +2,14 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  15 June 2020 - V28R4
+     - Standards (Option S)
+       -- Added documentation for skeletons
+     - Other Items
+       -- $STUB memnber
+          * Moved member from CNTL file to REXX dataset
+          * Added LIBDEF statements for skeleton dataset
+
   14 June 2020 - V28R3
      - Tutorials
        -- Updated 'OMVS RACF Commands'

@@ -3,22 +3,44 @@ Simplified RACF Administration ISPF Dialog
 *---------------------------------------------------------------------*
 *                            Installation                             *
 *---------------------------------------------------------------------*
-There are three installation options depending upon how the repository
-was cloned.
+There are four installation options depending upon how the repository
+was acquired.
 
-Clone via ZIGI
---------------
+1. Downloaded from the CBTTape.Org site
+---------------------------------------
+Unzip the file, then binary FTP the XMIT file to z/OS using RECFM=FB
+LRECL=80:
+
+    ftp zos.host
+    > enter your userid and password when prompted
+    >bin
+    >quote site recfm=fb lrecl=80 pri=150 tr
+    >put cbt.file417.xmit upload.dsn.xmit
+    >quit
+
+Then under TSO/ISPF issue TSO RECEIVE inds(upload.dsn.xmit)
+and follow the prompts (taking the default by pressing enter works).
+
+Next, using ISPF 3.4, browse/edit/view the dataset. Using 3.4 will
+open using the enhanced member list service that supports a 9 character
+member selection command field.
+
+Then enter EX next to the $INSTALL member and follow the prompts to
+complete the installation.
+
+2. Clone via ZIGI
+-----------------
 The z/OS datasets will have been created by ZIGI during
 the clone process. The installation at this point proceeds with the next
 step - making the dialog available for use.
 
-Clone using Git on a workstation
---------------------------------
+3. Clone using Git on a workstation
+-----------------------------------
 The repositories files need to be uploaded to an OMVS directory. Then
 proceed as if the Clone occurred under OMVS using Git.
 
-Clone using Git under OMVS
---------------------------
+4. Clone using Git under OMVS
+-----------------------------
 This option requires that the Git client be installed under OMVS.
 Once the clone completes, enter OMVS and change to the repositories
 OMVS directory. Execute the zinstall script:
@@ -28,12 +50,13 @@ OMVS directory. Execute the zinstall script:
 When the zinstall script ends there will be instructions on how to
 apply the ISPF statistics to the partitioned dataset members.
 
-Making the Dialog Available
----------------------------
+*---------------------------------------------------------------------*
+*                     Making the Dialog Available                     *
+*---------------------------------------------------------------------*
 To invoke this application execute the RACFADM exec:
 
            EX 'hlq.RACFADM.EXEC(RACFADM)' EX
-       or  See the Sample Stub at the end of this file
+       or  See the Sample Stub in 'hlq.RACFADM.EXEC($STUB)'
 
 The intended users must have access to these datasets.
 
@@ -54,39 +77,6 @@ of aliases or data sets when creating a new TSO user and can browse all RACF
 system options from a single, scrollable display.
 
 To begin using execute the RACFADM member found in the EXEC library.
-
-*---------------------------------------------------------------------*
-*                        Sample Invocation Stub                       *
-*---------------------------------------------------------------------*
-  /* --------------------  rexx procedure  -------------------- *
-  | Name:      RACFADM Stub                                    |
-  |                                                            |
-  | Function:  Allocate the RACFADM Libraries and then         |
-  |            invoke the RACFADM application.                 |
-  |                                                            |
-  | Syntax:    %racfadm                                        |
-  |                                                            |
-  | Usage Notes: 1. Copy into a library in the standard        |
-  |                 SYSEXEC (or SYSPROC) allocations for the   |
-  |                 intended users.                            |
-  |              2. Tailor the HLQ variable for the RACFADM    |
-  |                 high-level-qualifier.                      |
-  |                                                            |
-  * ---------------------------------------------------------- */
-  hlq = 'radmhlq'   /* <=== Change this variable */
-
-  Address TSO
-  "Altlib Act App(Exec) Dataset('"hlq".racfadm.exec')"
-  Address ISPExec
-  "Libdef ISPMLIB Dataset ID('"hlq".racfadm.msgs') stack"
-  "Libdef ISPPLIB Dataset ID('"hlq".racfadm.panels') stack"
-  "Libdef ISPSLIB Dataset ID('"hlq".racfadm.skels') stack"
-  "Select Cmd(%RacfADM NA) NewAppl(RADM) Passlib"
-  "Libdef ISPMLIB"
-  "Libdef ISPPLIB"
-  "Libdef ISPSLIB"
-  Address TSO
-  "Altlib DeAct App(Exec)"
 
 *---------------------------------------------------------------------*
 *                            Contributors                             *

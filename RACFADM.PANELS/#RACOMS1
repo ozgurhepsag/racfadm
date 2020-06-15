@@ -12,9 +12,9 @@
 +
 %Operands:!USERS
 +
-%Notes:   !+1)+To use this feature, invoke Settings (Option 0) and turn on:
-+               !Showmvs data ... Y
-+         !+2)+Operands can be mixed case, for example:!Users+or!uSErs
+%Notes:   %1)+To use this feature, invoke Settings (Option 0) and turn on:
++              !Showmvs data ... Y
++         %2)+Operands can be mixed case, for example:!Users+or!uSErs
 +
 +
 +
