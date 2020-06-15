@@ -2,6 +2,16 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  15 June 2020 - V28R5
+     - Main Menu
+       -- Verify user has the necessary security to display profiles
+          and general resources, if not, display message upon invocation
+       -- The characters A, O, R and S will be displayed to the right
+          of the userid when it has the attributes: AUDITOR, OPERATIONS,
+          ROAUDIT and SPECIAL respectively
+     - Tutorial (Option T)
+       -- Added tutorial 'Menu'
+
   15 June 2020 - V28R4
      - Standards (Option S)
        -- Added documentation for skeletons

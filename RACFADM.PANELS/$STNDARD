@@ -27,7 +27,7 @@
           items of interest
        -- All panels allow invocation of a tutorial panel
      - Main menu
-       -- Number entries (1-99) are designated for obtaining,
+       -- Numbered entries (1-99) are designated for obtaining,
           displaying/changing the RACF database (Userids,
           Groups, etc.) and customizing the utility (Settings)
        -- Alphabetic entries (A-Z) are used to assist in maintaining

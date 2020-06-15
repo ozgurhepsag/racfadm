@@ -7,7 +7,7 @@
    {  TYPE(OUTPUT)  PAS(ON)      CAPS(OFF)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V28R4+)\-\
++\-\(%RACFADM - RACF Administration - V28R5+)\-\
 %Option ===>_ZCMD
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -29,7 +29,7 @@
 +   FMID:!RACFFMID       +BkpDB:!BKPDBASE
 +   z/OS:!ZOSVER         +Plex: !ZSYSPLEX       +Lpar:!ZSYSID
 +   Date:!USADATE        +JDate:!ZJDATE         +Time:!ZTIME
-+  Ýz    !ZUSER          +Group:!RACFGRP        +Name:!RACFNAM
++  Ýz    !ZUSER    ¨UATT +Group:!RACFGRP        +Name:!RACFNAM
 + ---------------------------------------------------------------------------
 )INIT
   .CURSOR = ZCMD
@@ -83,10 +83,15 @@
   &SECSOFT  = &Z
   &RACFFMID = &Z
   &USADATE  = &Z
+  &UATT     = &Z
   &UTYPE    = 'User'
 
-  *REXX (RACFVER PRMDBASE BKPDBASE ZOSVER RACFGRP RACFNAM RACFLMSG
-         SECSOFT RACFFMID USADATE UTYPE SETMADMN)
+  VGET (RACFMCNT)                     /* No. of times menu displayed */
+  if (&RACFMCNT = &Z)
+     &RACFMCNT = 0
+
+  *REXX (RACFVER PRMDBASE BKPDBASE ZOSVER RACFGRP  RACFNAM RACFLMSG
+         SECSOFT RACFFMID USADATE  UTYPE  SETMADMN UATT    RACFMCNT)
     CVT      = C2D(STORAGE(10,4))               /* Get RACF FMID     */
     CVTRAC   = C2D(STORAGE(D2X(CVT + 992),4))
     RACFFMID = "HRF"STORAGE(D2X(CVTRAC + 616),4)
@@ -136,9 +141,38 @@
        utype = 'Admn:'
     else
        utype = 'User:'
-  *ENDREXX
 
-  IF (&SECSOFT NE RACF)                /* Is the lpar running RACF?  */
+    RACFMCNT = RACFMCNT + 1           /* No. of times menu displayed */
+    user = userid()                     /* Does user have necessary  */
+    x    = outtrap('lu.')               /* access to display profiles*/
+    'LISTUSER 'user                     /* and general resources?    */
+    x    = outtrap('off')
+    uatt = ''
+    lu34 = substr(lu.3,2+11)||substr(lu.4,2+11)
+    if (pos('AUDITOR',lu34) > 0) then do
+       uatt   = uatt'A'
+       access = access'A'
+    end
+    if (pos('OPERATIONS',lu34) > 0) then
+       uatt   = uatt'O'
+    if (pos('ROAUDIT',lu34) > 0) then do
+       uatt   = uatt'R'
+       access = access'A'
+    end
+    if (pos('SPECIAL',lu34) > 0) then do
+       uatt = uatt'S'
+       access = access'A'
+    end
+    if (RACFLMSG = "") & (ACCESS = "") THEN DO
+       RACFLMSG = "Userid ("userid") has limited access",
+                  "to display/view entries, due to it",
+                  "does NOT have the attribute AUDITOR,",
+                  "ROAUDIT or SPECIAL."
+    end
+  *ENDREXX
+  VPUT (RACFMCNT)                     /* No. of times menu displayed */
+
+  IF (&RACFMCNT = 1 & &RACFLMSG NE "")     /* Display long message?  */
      .MSG  = RACF011
 
   IF (&SETGMVS EQ YES)                     /* Add menu options when  */
@@ -270,7 +304,7 @@
 /*--------------------------------------------------------------------*/
 /*                                                                    */
 /*  1) This panel is defined as a primary menu, allowing the          */
-/*     capability to type =1, =2, =n to skip around from one          */
+/*     capability to type in =1, =2, =n to jump around from one       */
 /*     panel to another                                               */
 /*                                                                    */
 /*  2) The )INIT section executes a REXX code to:                     */
@@ -297,7 +331,7 @@
 /*       translated to YES                                            */
 /*                                                                    */
 /*  4) The following are the menu entry standards:                    */
-/*     - Number entries (1-99) are designated for obtaining,          */
+/*     - Numbered entries (1-99) are designated for obtaining,        */
 /*       displaying and changing the RACF database (Userids,          */
 /*       Groups, etc.) and customizing the utility (Settings)         */
 /*     - Alphabetic entries (A-Z) are used to assist in maintaining   */
