@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AS  200616  RACFA    Chg panel name RACFRPTS to RACFDISP          */
 /* @AR  200611  RACFA    Moved database enqueues to top of list       */
 /* @AQ  200611  RACFA    Added ISPSLIB enqueues                       */
 /* @AP  200520  RACFA    If no ALT/LIBDEF dsns, display RACFDB enques */
@@ -32,7 +33,7 @@
 /* @A1  200402  RACFA    Dropped array, save memory                   */
 /* @A0  200401  RACFA    Created REXX                                 */
 /*====================================================================*/
-PANEL01     = "RACFRPTS"   /* Display report with colors   */
+PANEL01     = "RACFDISP"   /* Display report with colors   */ /* @AS */
 PANELM2     = "RACFMSG2"   /* Display RACF command and RC  */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @A2 */
 QNAME       = "SYSDSN"     /* MAJOR resource name for DSNs */

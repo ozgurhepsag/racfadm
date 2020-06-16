@@ -2,7 +2,7 @@
    %  TYPE(TEXT)   INTENS(HIGH) COLOR(WHITE) SKIP(ON)
    +  TYPE(TEXT)   INTENS(LOW)  COLOR(GREEN) SKIP(ON)
    _  TYPE(INPUT)  INTENS(HIGH) COLOR(RED)   CAPS(ON) HILITE(USCORE)
-)BODY WINDOW(61,12)
+)BODY WINDOW(61,13)
 +
 %Cmd=>_ZCMD
 +
@@ -11,6 +11,7 @@
 +   PDS/Seq =_RACFSDSN                                    +
 +   Member  =_RACFSMBR+
 +
++   Save as =_Z+ (T=text, C=CSV)
 +   Replace =_Z+ (Y/N)
 +
 +     ENTER%=+PROCESS                          PF3%=+END
@@ -18,7 +19,7 @@
 )INIT
   &ZCMD    = ' '
   &ZWINTTL = 'RACFADM - Save to DSN'
-  .ZVARS   = '(RACFSREP)'
+  .ZVARS   = '(RACFSFIL RACFSREP)'
   .CURSOR  = RACFSDSN
   .HELP    = #RACMENU
 )PROC
@@ -28,5 +29,6 @@
   ELSE
      VER (&RACFSDSN,NB)
   VER (&RACFSMBR,NAME)
+  VER (&RACFSFIL,NB,LIST,T,C)
   VER (&RACFSREP,NB,LIST,Y,N)
 )END

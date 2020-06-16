@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BM  200616  RACFA    Added primary command 'SAVE' when SEarching  */
+/* @BL  200616  RACFA    Added capability to SAve file as TXT/CSV     */
 /* @BK  200610  RACFA    Added primary command 'SAVE'                 */
 /* @BJ  200506  RACFA    Drop array immediately when done using       */
 /* @BI  200502  RACFA    Re-worked displaying tables, use DO FOREVER  */
@@ -64,7 +66,8 @@ PANEL08     = "RACFCLS8"   /* List classes and profiles    */ /* @AI */
 PANEL13     = "RACFCLSD"   /* Add class                    */ /* @AG */
 PANELM2     = "RACFMSG2"   /* Display RACF command and R   */ /* @AG */
 PANELS1     = "RACFSAVE"   /* Obtain DSName to SAVE        */ /* @BK */
-SKELETON1   = "RACFCLS8"   /* Save tablea to dataset       */ /* @BK */
+SKELETON1   = "RACFCLSD"   /* Save tablea to dataset       */ /* @BM */
+SKELETON2   = "RACFCLS8"   /* Save tableb to dataset       */ /* @BK */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @AZ */
 TABLEA      = 'TA'RANDOM(0,99999)  /* Unique table name A  */ /* @BF */
 TABLEB      = 'TB'RANDOM(0,99999)  /* Unique table name B  */ /* @BG */
@@ -223,7 +226,7 @@ DISPLAY_TABLE_PERMIT:
              rc = get_permits(class,user) /*get permits*/     /* @AO */
         END                                                   /* @AO */
         When (abbrev("SAVE",zcmd,2) = 1) then DO              /* @BK */
-             TMPSKELT = SKELETON1                             /* @BK */
+             TMPSKELT = SKELETON2                             /* @BK */
              call do_SAVE                                     /* @BK */
         END                                                   /* @BK */
         WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN DO              /* @BI */
@@ -495,6 +498,10 @@ DISPLAY_TABLE:
              sortclas = 'A'                                   /* @AW */
              xtdtop   = 1                                     /* @AB */
         END                                                   /* @AB */
+        When (abbrev("SAVE",zcmd,2) = 1) then DO              /* @BM */
+             TMPSKELT = SKELETON1                             /* @BM */
+             call do_SAVE                                     /* @BM */
+        END                                                   /* @BM */
         WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN DO              /* @BI */
              call sortseq 'CLASS'                             /* @AW */
              "TBSORT" TABLEA "FIELDS("sort")"                 /* @BI */
@@ -609,11 +616,13 @@ RETURN                                                        /* @AV */
 DO_SAVE:                                                      /* @BK */
   X = MSG("OFF")                                              /* @BK */
   "ADDPOP COLUMN(40)"                                         /* @BK */
-  "VGET (RACFSDSN RACFSMBR RACFSREP) PROFILE"                 /* @BK */
+  "VGET (RACFSDSN RACFSMBR RACFSFIL RACFSREP) PROFILE"        /* @BL */
   IF (RACFSDSN = "") THEN                                     /* @BK */
      RACFSDSN = USERID()".RACFADM.REPORTS"                    /* @BK */
   IF (RACFSREP = "") THEN                                     /* @BK */
      RACFSREP = "N"                                           /* @BK */
+  IF (RACFSFIL = "") THEN                                     /* @BL */
+     RACFSFIL = "T"                                           /* @BL */
                                                               /* @BK */
   DO FOREVER                                                  /* @BK */
      "DISPLAY PANEL("PANELS1")"                               /* @BK */
@@ -670,7 +679,7 @@ DO_SAVE:                                                      /* @BK */
      LEAVE                                                    /* @BK */
   END                                                         /* @BK */
   "REMPOP"                                                    /* @BK */
-  "VPUT (RACFSDSN RACFSMBR RACFSREP) PROFILE"                 /* @BK */
+  "VPUT (RACFSDSN RACFSMBR RACFSFIL RACFSREP) PROFILE"        /* @BL */
                                                               /* @BK */
 ADDRESS TSO                                                   /* @BK */
   IF (RACFSREP = "Y" & RACFSMBR = "") |,                      /* @BK */

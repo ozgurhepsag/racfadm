@@ -18,7 +18,7 @@
 +Line Commands
 %  S  !Show         +List user/group with permits for this profile
 %  L  !List         +Issue LISTUSER/LISTGRP command
-%  P  !Profile      +List profile using IRRXUTIL (admin RACF API)
+%  P  !Profile      +List user/group profile using IRRXUTIL (admin RACF API)
 %  C  !Change       +Change access list attributes with PERMIT (admin)
 %  A  !Add          +Add access list attributes with PERMIT (admin)
 %  R  !Remove       +Remove access list with PERMIT (admin)

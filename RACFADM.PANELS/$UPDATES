@@ -2,6 +2,23 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  16 June 2020 - V28R6
+     - User (Option 1)
+       -- Allow SAveing when SEarching a userid
+     - Group (Option 2)
+       -- Fix OWNER, was including CREATED date
+     - Dataset (Option 3)
+       -- Fixed SAVEing to dataset, was incorrect table
+     - General Resources (Option 4)
+       -- Fixed titles in panels RACFCLS8/D
+     - User, Group, Dataset and General Resources (Opt 1/2/3/4)
+       -- Enhanced primary command SAVE to allow saving as a
+          Comma Separated Values (CSV) or Text file
+          * Text is the default
+     - Other Items
+       -- Renamed panel RACFRPTS to RACFDISP
+          * Updated member $DIR in panel dataset
+
   15 June 2020 - V28R5
      - Main Menu
        -- Verify user has the necessary security to display profiles

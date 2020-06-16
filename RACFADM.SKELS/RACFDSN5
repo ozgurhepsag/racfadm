@@ -3,8 +3,11 @@
 )CM*------------------------------------------------------------------*
 )CM*  FLG  YYMMDD  USERID   DESCRIPTION
 )CM*  ---  ------  -------  ------------------------------------------
+)CM*  @A2  200616  RACFA    Fixed table name, was TABLEA
+)CM*  @A1  200616  RACFA    Added capability to SAve file as TXT/CSV
 )CM*  @A0  200611  RACFA    Created skeleton
 )CM*------------------------------------------------------------------*
+)SEL &RACFSFIL = T
  &ZDATE -------------( RACFADM - Dataset Profiles )------------ &ZTIME
 )BLANK
 )TB 2 11 65
@@ -18,8 +21,18 @@
  Group/ID Access
  ---------------------------------------------------------------------
 )TB 2 11
-)DOT &TABLEA
+)DOT &TABLEB
 )SETF ID      = &LEFT(&ID,8, )
 )SETF ACC     = &LEFT(&ACC,40, )
 !&ID!&ACC
 )ENDDOT
+)ENDSEL
+)SEL &RACFSFIL = C
+Group/ID,Access
+--------,------
+)DOT &TABLEB
+)SETF ID      = &STRIP(&ID,, )
+)SETF ACC     = &STRIP(&ACC,, )
+&ID,&ACC
+)ENDDOT
+)ENDSEL

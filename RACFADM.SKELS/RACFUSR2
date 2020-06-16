@@ -3,8 +3,10 @@
 )CM*------------------------------------------------------------------*
 )CM*  FLG  YYMMDD  USERID   DESCRIPTION
 )CM*  ---  ------  -------  ------------------------------------------
+)CM*  @A1  200616  RACFA    Added capability to SAve file as TXT/CSV
 )CM*  @A0  200611  RACFA    Created skeleton
 )CM*------------------------------------------------------------------*
+)SEL &RACFSFIL = T
  &ZDATE --------------( RACFADM - User Profiles )-------------- &ZTIME
 )BLANK
 )TB 2 11
@@ -24,3 +26,19 @@
 )SETF TSOUSER = &LEFT(&TSOUSER,3, )
 !&USER!&NAME!&DEFGRP!&DATELGN!&OWNER!&REVOKED!&ATTR2!&TSOUSER
 )ENDDOT
+)ENDSEL
+)SEL &RACFSFIL = C
+Userid,Name,Group,Logon,Owner,Rev,Att,TSO
+------,----,-----,-----,-----,---,---,---
+)DOT &TABLEA
+)SETF USER    = &STRIP(&USER,, )
+)SETF NAME    = &STRIP(&NAME,, )
+)SETF DEFGRP  = &STRIP(&DEFGRP,, )
+)SETF DATELGN = &STRIP(&DATELGN,, )
+)SETF OWNER   = &STRIP(&OWNER,, )
+)SETF REVOKED = &STRIP(&REVOKED,, )
+)SETF ATTR2   = &STRIP(&ATTR2,, )
+)SETF TSOUSER = &STRIP(&TSOUSER,, )
+&USER,&NAME,&DEFGRP,&DATELGN,&OWNER,&REVOKED,&ATTR2,&TSOUSER
+)ENDDOT
+)ENDSEL

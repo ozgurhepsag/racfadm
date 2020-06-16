@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AH  200616  RACFA    Chg panel name RACFRPTS to RACFDISP          */
 /* @AG  200517  RACFA    Standardize environment (ADDRESS ISPEXEC)    */
 /* @AF  200516  RACFA    Fix display error messages                   */
 /* @AE  200506  RACFA    Display headers in a different color         */
@@ -150,7 +151,7 @@
 /*           Z/OS V1R4 ON SINGLE AND SPLIT DATABASES.                */
 /*                                                                   */
 /*********************************************************************/
-PANEL01     = "RACFRPTS"   /* Display report with colors   */ /* @AE */
+PANEL01     = "RACFDISP"   /* Display report with colors   */ /* @AH */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @A4 */
 DDNAME      = 'RACFA'RANDOM(0,999) /* Unique ddname        */ /* @AC */
 parse source . . REXXPGM .                                    /* @AB */

@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AJ  200616  RACFA    Chg panel name RACFRPTS to RACFDISP          */
 /* @AI  200506  LBD      Add ISPF Variable for report                 */
 /* @AH  200506  RACFA    Fix spaces from text between paranthesis (.) */
 /* @AG  200506  LBD      Disp rpt header and bar lines in diff. color */
@@ -22,7 +23,7 @@
 /* @A1  200416  RACFA    Increased size of SYSPRINT                   */
 /* @A0  200416  TRIDJK   Created REXX program                         */
 /*====================================================================*/
-PANEL01     = "RACFRPTS"   /* Display report with colors   */ /* @AG */
+PANEL01     = "RACFDISP"   /* Display report with colors   */ /* @AJ */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn hilite off  */ /* @A5 */
 DDNAME      = "RACFA"RANDOM(0,999) /* Unique ddname        */ /* @A5 */
 parse source . . REXXPGM .         /* Obtain REXX pgm name */ /* @AD */

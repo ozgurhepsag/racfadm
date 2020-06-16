@@ -3,8 +3,10 @@
 )CM*------------------------------------------------------------------*
 )CM*  FLG  YYMMDD  USERID   DESCRIPTION
 )CM*  ---  ------  -------  ------------------------------------------
+)CM*  @A1  200616  RACFA    Added capability to SAve file as TXT/CSV
 )CM*  @A0  200611  RACFA    Created skeleton
 )CM*------------------------------------------------------------------*
+)SEL &RACFSFIL = T
  &ZDATE ------------( RACFADM - General Resources )------------ &ZTIME
 )BLANK
  Class
@@ -14,3 +16,12 @@
 )SETF CLASS   = &LEFT(&CLASS,8, )
 !&CLASS
 )ENDDOT
+)ENDSEL
+)SEL &RACFSFIL = C
+Class
+-----
+)DOT &TABLEA
+)SETF CLASS   = &STRIP(&CLASS,, )
+&CLASS
+)ENDDOT
+)ENDSEL

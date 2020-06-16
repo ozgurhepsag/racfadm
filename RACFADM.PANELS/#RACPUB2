@@ -25,7 +25,6 @@
 @            com.ibm.zos.zsecurity/zsecurity_book.pdf
 +
 +
-+
 + \ \ (press%ENTER+to continue) \ \
 )PROC
   &ZUP     = #RACPUB1

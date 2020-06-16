@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AL  200616  RACFA    Chg panel name RACFRPTS to RACFDISP          */
 /* @AK  200524  TRIDJK   Fixed displaying error message               */
 /* @AJ  200519  TRIDJK   Support ISPLOG SYSOUT datasets - SDSF/(E)JES */
 /* @AI  200511  RACFA    Place most current records at top of file    */
@@ -25,7 +26,7 @@
 /* @A1  200220  RACFA    Added capability to browse/edit/view file    */
 /* @A0  200218  RACFA    Created REXX                                 */
 /*====================================================================*/
-PANEL01     = "RACFRPTS"   /* Display report with colors   */ /* @AG */
+PANEL01     = "RACFDISP"   /* Display report with colors   */ /* @AL */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @A8 */
 parse source . . REXXPGM .         /* Obtain REXX pgm name */ /* @AE */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @AE */

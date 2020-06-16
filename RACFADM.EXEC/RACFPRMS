@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AQ  200616  RACFA    Added capability to SAve file as TXT/CSV     */
 /* @AP  200610  RACFA    Added primary command 'SAVE'                 */
 /* @AO  200608  TRIDJK   Add 'Password minimum change interval'       */
 /* @AN  200502  RACFA    Del line 170, 'call table_create', not used  */
@@ -542,9 +543,11 @@ RETURN                                                        /* @AE */
 DO_SAVE:                                                      /* @AP */
   X = MSG("OFF")                                              /* @AP */
   "ADDPOP COLUMN(40)"                                         /* @AP */
-  "VGET (RACFSDSN RACFSMBR RACFSREP) PROFILE"                 /* @AP */
+  "VGET (RACFSDSN RACFSMBR RACFSFIL RACFSREP) PROFILE"        /* @AQ */
   IF (RACFSDSN = "") THEN                                     /* @AP */
      RACFSDSN = USERID()".RACFADM.REPORTS"                    /* @AP */
+  IF (RACFSFIL = "") THEN                                     /* @AQ */
+     RACFSFIL = "T"                                           /* @AQ */
   IF (RACFSREP = "") THEN                                     /* @AP */
      RACFSREP = "N"                                           /* @AP */
                                                               /* @AP */
@@ -603,7 +606,7 @@ DO_SAVE:                                                      /* @AP */
      LEAVE                                                    /* @AP */
   END                                                         /* @AP */
   "REMPOP"                                                    /* @AP */
-  "VPUT (RACFSDSN RACFSMBR RACFSREP) PROFILE"                 /* @AP */
+  "VPUT (RACFSDSN RACFSMBR RACFSFIL RACFSREP) PROFILE"        /* @AQ */
                                                               /* @AP */
 ADDRESS TSO                                                   /* @AP */
   IF (RACFSREP = "Y" & RACFSMBR = "") |,                      /* @AP */

@@ -5,7 +5,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)   COLOR(GREEN)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration+)\-\
++\-\(%RACFADM - General Resources+)\-\
 %Command ===>_ZCMD                                              +Scroll==>_SAMT+
 %
 +USER:   $USER    +

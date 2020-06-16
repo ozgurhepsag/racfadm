@@ -11,6 +11,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @EL  200616  RACFA    Added capability to SAve file as TXT/CSV     */
 /* @EK  200610  RACFA    Added primary command 'SAVE'                 */
 /* @EJ  200604  RACFA    Fix, prevent from going to top of table      */
 /* @EI  200527  RACFA    Fix, allow typing 'S' on multiple rows       */
@@ -1526,11 +1527,13 @@ RETURN                                                        /* @D4 */
 DO_SAVE:                                                      /* @EK */
   X = MSG("OFF")                                              /* @EK */
   "ADDPOP COLUMN(40)"                                         /* @EK */
-  "VGET (RACFSDSN RACFSMBR RACFSREP) PROFILE"                 /* @EK */
+  "VGET (RACFSDSN RACFSMBR RACFSFIL RACFSREP) PROFILE"        /* @EL */
   IF (RACFSDSN = "") THEN                                     /* @EK */
      RACFSDSN = USERID()".RACFADM.REPORTS"                    /* @EK */
   IF (RACFSREP = "") THEN                                     /* @EK */
      RACFSREP = "N"                                           /* @EK */
+  IF (RACFSFIL = "") THEN                                     /* @EL */
+     RACFSFIL = "T"                                           /* @EL */
                                                               /* @EK */
   DO FOREVER                                                  /* @EK */
      "DISPLAY PANEL("PANELS1")"                               /* @EK */
@@ -1587,7 +1590,7 @@ DO_SAVE:                                                      /* @EK */
      LEAVE                                                    /* @EK */
   END                                                         /* @EK */
   "REMPOP"                                                    /* @EK */
-  "VPUT (RACFSDSN RACFSMBR RACFSREP) PROFILE"                 /* @EK */
+  "VPUT (RACFSDSN RACFSMBR RACFSFIL RACFSREP) PROFILE"        /* @EL */
                                                               /* @EK */
 ADDRESS TSO                                                   /* @EK */
   IF (RACFSREP = "Y" & RACFSMBR = "") |,                      /* @EK */

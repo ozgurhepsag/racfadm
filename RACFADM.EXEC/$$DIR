@@ -5,6 +5,7 @@
   Member      Subject                   Description
  --------  -------------  --------------------------------------------
  $$DIR     Directory      Document members
+ $STUB     Invocation     Can place rexx in site's REXX dataset
  OPERMIT   IBM TSO Cmd    Unix Access Control List, like PERMIT
  ORALTER   IBM TSO Cmd    Unix Security Attribute, like ALTER
  ORLIST    IBM TSO Cmd    Unix Dir/File Security, like RLIST

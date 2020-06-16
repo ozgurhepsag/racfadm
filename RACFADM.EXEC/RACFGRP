@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CS  200616  RACFA    Fix OWNER, was including CREATED date        */
+/* @CR  200616  RACFA    Added capability to SAve file as TXT/CSV     */
 /* @CQ  200610  RACFA    Added primary command 'SAVE'                 */
 /* @CP  200608  RACFA    Fix, F3 (END) out of search panel            */
 /* @CO  200604  RACFA    Fix, prevent from going to top of table      */
@@ -719,7 +721,8 @@ GETD:
   x = OUTTRAP('OFF')
   if (SETMSHOW <> 'NO') then                                  /* @BJ */
      call SHOWCMD                                             /* @AN */
-  parse var details.2 'SUPERIOR GROUP=' supgrp 'OWNER=' owner
+  parse var details.2 'SUPERIOR GROUP=' supgrp,               /* @CS */
+          'OWNER=' owner .                                    /* @CS */
   parse var details.3 'INSTALLATION DATA=' data_1st_line
   data_2nd_line = details.4
   if (subword(data_2nd_line,2,1) = 'MODEL') |,
@@ -1039,11 +1042,13 @@ RETURN                                                        /* @AP */
 DO_SAVE:                                                      /* @CQ */
   X = MSG("OFF")                                              /* @CQ */
   "ADDPOP COLUMN(40)"                                         /* @CQ */
-  "VGET (RACFSDSN RACFSMBR RACFSREP) PROFILE"                 /* @CQ */
+  "VGET (RACFSDSN RACFSMBR RACFSFIL RACFSREP) PROFILE"        /* @CR */
   IF (RACFSDSN = "") THEN                                     /* @CQ */
      RACFSDSN = USERID()".RACFADM.REPORTS"                    /* @CQ */
   IF (RACFSREP = "") THEN                                     /* @CQ */
      RACFSREP = "N"                                           /* @CQ */
+  IF (RACFSFIL = "") THEN                                     /* @CR */
+     RACFSFIL = "T"                                           /* @CR */
                                                               /* @CQ */
   DO FOREVER                                                  /* @CQ */
      "DISPLAY PANEL("PANELS1")"                               /* @CQ */
@@ -1100,7 +1105,7 @@ DO_SAVE:                                                      /* @CQ */
      LEAVE                                                    /* @CQ */
   END                                                         /* @CQ */
   "REMPOP"                                                    /* @CQ */
-  "VPUT (RACFSDSN RACFSMBR RACFSREP) PROFILE"                 /* @CQ */
+  "VPUT (RACFSDSN RACFSMBR RACFSFIL RACFSREP) PROFILE"        /* @CR */
                                                               /* @CQ */
 ADDRESS TSO                                                   /* @CQ */
   IF (RACFSREP = "Y" & RACFSMBR = "") |,                      /* @CQ */
@@ -1110,11 +1115,11 @@ ADDRESS TSO                                                   /* @CQ */
      IF (RACFSMBR = "") THEN                                  /* @CQ */
         "ALLOC  FI(ISPFILE) DA('"RACFSDSN"') NEW",            /* @CQ */
             "REUSE SP(1 1) CYLINDER UNIT(SYSDA)",             /* @CQ */
-            "LRECL(80) RECFM(F B)"                            /* @CQ */
+            "LRECL(132) RECFM(F B)"                           /* @CR */
      ELSE                                                     /* @CQ */
         "ALLOC  FI(ISPFILE) DA('"RACFSDSN"') NEW",            /* @CQ */
             "REUSE SP(1 1) CYLINDER UNIT(SYSDA)",             /* @CQ */
-            "LRECL(80) RECFM(F B)",                           /* @CQ */
+            "LRECL(132) RECFM(F B)",                          /* @CR */
             "DSORG(PO) DSNTYPE(LIBRARY,2)"                    /* @CQ */
   END                                                         /* @CQ */
   ELSE                                                        /* @CQ */

@@ -29,8 +29,9 @@
  #RACHEL2  Tutorial       RACF help commands (2 of 2)
  #RACIBM   Tutorial       RACF IBM option
  #RACLOG   Tutorial       ISPF log file
- #RACMVS   Tutorial       RACF data (Showmvs)
  #RACMENU  Tutorial       Main menu, menu option T
+ #RACMEN1  Tutorial       Menu
+ #RACMVS   Tutorial       RACF data (Showmvs)
  #RACNOT1  Tutorial       Installation notes (1 of 3)
  #RACNOT2  Tutorial       Installation notes (2 of 3)
  #RACNOT3  Tutorial       Installation notes (3 of 3)
@@ -76,6 +77,7 @@
  RACFCLS7  Class          Add access
  RACFCLS8  Class          List classes and profiles
  RACFCMDS  Commands       Execute TSO RACF commands
+ RACFDISP  Display        GrpTree/RACFdb/Enque/Chgs/Issues/ISPLog/Stds
  RACFDSN1  Dataset        Set filter, menu option 3
  RACFDSN2  Dataset        List profiles and types
  RACFDSN3  Dataset        Add profile
@@ -90,7 +92,6 @@
  RACFGRP6  Group          Change connection
  RACFGRP7  Group          Add connection
  RACFGRP8  Group          List groups and descriptions
- RACFRPTS  Reports        GrpTree/RACFdb/Enque/Chgs/Issues/ISPLog/Stds
  RACFMENU  Menu           Main menu
  RACFMSG1  Message        'Confirm Request' (pop-up panel)
  RACFMSG2  Message        'RACF Command = Y', 3 lines (pop-up panel)

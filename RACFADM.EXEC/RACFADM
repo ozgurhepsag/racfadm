@@ -35,6 +35,7 @@ Arg RAOPT                 /* Invoked using $STUB mbr       */ /* @A6 */
 ADDRESS ISPEXEC
   call Setup
   'Select cmd('REXXPGM1')  NewAppl(RADM) PassLib'             /* @A4 */
+
   'Select Panel('PANEL01') NewAppl(RADM) PassLib'             /* @A2 */
   if (RAOPT <> "NA") THEN DO                                  /* @A9 */
      'libdef ispmlib'

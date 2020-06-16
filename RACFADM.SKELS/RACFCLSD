@@ -1,29 +1,26 @@
 )CM*------------------------------------------------------------------*
-)CM*  Purpose:  RACFADM - RACF Parameters - SAve command
+)CM*  Purpose:  RACFADM - General Resources - SAve command
 )CM*------------------------------------------------------------------*
 )CM*  FLG  YYMMDD  USERID   DESCRIPTION
 )CM*  ---  ------  -------  ------------------------------------------
-)CM*  @A1  200616  RACFA    Added capability to SAve file as TXT/CSV
 )CM*  @A0  200611  RACFA    Created skeleton
 )CM*------------------------------------------------------------------*
 )SEL &RACFSFIL = T
- &ZDATE -------------( RACFADM - RACF Parameters )------------- &ZTIME
+ &ZDATE ------------( RACFADM - General Resources )------------ &ZTIME
 )BLANK
- Description                         Value
+ Class
  ---------------------------------------------------------------------
-)TB 2 38
+)TB 2
 )DOT &TABLEA
-)SETF DESC    = &LEFT(&DESC,35, )
-)SETF VALUE   = &LEFT(&VALUE,34, )
-!&DESC!&VALUE
+)SETF CLASS   = &LEFT(&CLASS,8, )
+!&CLASS
 )ENDDOT
 )ENDSEL
 )SEL &RACFSFIL = C
-Description,Value
------------,-----
+Class
+-----
 )DOT &TABLEA
-)SETF DESC    = &STRIP(&DESC,, )
-)SETF VALUE   = &STRIP(&VALUE,, )
-&DESC,&VALUE
+)SETF CLASS   = &STRIP(&CLASS,, )
+&CLASS
 )ENDDOT
 )ENDSEL

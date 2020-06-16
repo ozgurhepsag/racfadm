@@ -13,6 +13,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AQ  200616  RACFA    Chg panel name RACFRPTS to RACFDISP          */
 /* @AP  200611  RACFA    Fix, duplicate entries, was MODE||RESULT     */
 /* @AO  200611  RACFA    Expanded dashes                              */
 /* @AN  200611  RACFA    Added SLIST, display Showmvs Unix info.      */
@@ -41,7 +42,7 @@
 /* @A0  200605  TRIDJK   Created REXX                                 */
 /*====================================================================*/
 PANEL01     = "RACFOMVS"    /* Obtain cmd, path and options*/
-PANEL02     = "RACFRPTS"    /* Display report with colors  */ /* @A3 */
+PANEL02     = "RACFDISP"    /* Display report with colors  */ /* @AQ */
 EDITMACR    = "RACFEMAC"    /* Edit Macro, turn HILITE off */
 UIDGIDLIMIT = 2417483647    /* Limit = 0 - 2,147,483,647   */ /* @A8 */
 parse source . . REXXPGM .         /* Obtain REXX pgm name */
