@@ -2,6 +2,13 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  16 June 2020 - V28R7
+     - Tutorials (Option T)
+       -- Minor update to tutorial menu
+     - Other Items
+       -- Updated RACFSAVE and RACFMENU, standardization
+       -- Updated member $DIR in skeleton dataset
+
   16 June 2020 - V28R6
      - User (Option 1)
        -- Allow SAveing when SEarching a userid
@@ -13,8 +20,7 @@
        -- Fixed titles in panels RACFCLS8/D
      - User, Group, Dataset and General Resources (Opt 1/2/3/4)
        -- Enhanced primary command SAVE to allow saving as a
-          Comma Separated Values (CSV) or Text file
-          * Text is the default
+          Comma Separated Values (CSV) or Text file (default)
      - Other Items
        -- Renamed panel RACFRPTS to RACFDISP
           * Updated member $DIR in panel dataset

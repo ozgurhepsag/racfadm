@@ -1,20 +1,21 @@
 )ATTR DEFAULT(%+_)
-   %  TYPE(TEXT)   INTENS(HIGH) COLOR(WHITE) SKIP(ON)
-   +  TYPE(TEXT)   INTENS(LOW)  COLOR(GREEN) SKIP(ON)
-   _  TYPE(INPUT)  INTENS(HIGH) COLOR(RED)   CAPS(ON) HILITE(USCORE)
-)BODY WINDOW(61,13)
+   %  TYPE(TEXT)    INTENS(HIGH) COLOR(WHITE) SKIP(ON)
+   +  TYPE(TEXT)    INTENS(LOW)  COLOR(GREEN) SKIP(ON)
+   {  TYPE(TEXT)    INTENS(LOW)  COLOR(BLUE)  SKIP(ON)
+   _  TYPE(INPUT)   INTENS(HIGH) COLOR(RED)   CAPS(ON) HILITE(USCORE)
+)BODY WINDOW(57,13)
 +
 %Cmd=>_ZCMD
 +
-+   Insert PDS/member name or sequential file name:
++ Insert PDS/member name or sequential file name:
 +
-+   PDS/Seq =_RACFSDSN                                    +
-+   Member  =_RACFSMBR+
++ PDS/Seq%=_RACFSDSN                                    +
++ Member %=_RACFSMBR+
 +
-+   Save as =_Z+ (T=text, C=CSV)
-+   Replace =_Z+ (Y/N)
++ Save as%=_Z{ (T=text, C=CSV)
++ Replace%=_Z{ (Y/N)
 +
-+     ENTER%=+PROCESS                          PF3%=+END
++        ENTER%=+PROCESS                PF3%=+END
 +
 )INIT
   &ZCMD    = ' '

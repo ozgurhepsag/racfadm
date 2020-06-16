@@ -7,7 +7,7 @@
    {  TYPE(OUTPUT)  PAS(ON)      CAPS(OFF)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V28R6+)\-\
++\-\(%RACFADM - RACF Administration - V28R7+)\-\
 %Option ===>_ZCMD
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -160,7 +160,7 @@
        access = access'A'
     end
     if (pos('SPECIAL',lu34) > 0) then do
-       uatt = uatt'S'
+       uatt   = uatt'S'
        access = access'A'
     end
     if (RACFLMSG = "") & (ACCESS = "") THEN DO

@@ -15,12 +15,8 @@
  RACFGRP5  Group          List userids and access
  RACFGRP8  Group          List groups and descriptions
  RACFPRMS  Parameter      RACF parameters
- RACFUSR2  User           List userids (admin/user)
+ RACFUSR2  User           List userids
  RACFUSR3  User           Show groups and access
 
  Notes:
    - Class is 'General Resources'
-   - (admin) = Administrator
-     -- Line cmds: Show, Srch, List, Prof, Chg, Add, Remove, Reset, etc.
-   - (user)  = General user
-     -- Line cmds: Show, Search, List
