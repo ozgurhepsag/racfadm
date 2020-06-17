@@ -32,6 +32,7 @@
  RACFPRMS  Parameter      Display RACF parameters, menu option 7
  RACFPROF  Profile        Execute line cmd 'P', extract/display profile
  RACFPSWD  Password       Reset userid password (menu opt 5/linecmd PW)
+ RACFRPTS  Reports        ICETOOL/DSMON reports
  RACFSETD  Settings       Set default settings (0) when RACFADM invoked
  RACFSETG  Settings       Customize settings, menu option 0
  RACFUSR   User           Display userid profiles, menu option 1

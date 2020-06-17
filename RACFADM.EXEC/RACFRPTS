@@ -1,0 +1,352 @@
+/*%NOCOMMENT====================* REXX *==============================*/
+/*  PURPOSE:  Create RACF reports using DFSORT ICETOOL from the       */
+/*            dataset created by RACF's IRRDBU00 program              */
+/*--------------------------------------------------------------------*/
+/* FLG  YYMMDD  USERID   DESCRIPTION                                  */
+/* ---  ------  -------  -------------------------------------------- */
+/* @A0  200617  RACFA    Developed REXX                               */
+/*====================================================================*/
+X           = MSG("OFF")
+PANEL01     = "RACFRPTS"   /* Display reports              */
+PANEL99     = "ISPISMLJ"   /* IBM Define JOB card          */
+SKELETON1   = "RACFRPTU"   /* RACF unload pgm (IRRDBU00)   */
+SKELETON2   = "RACFRPTS"   /* RACF reports (ICETOOL/DSMON) */
+EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */
+TABLEA      = "RADM"RANDOM(0,9999)
+DDNAME      = 'RACFA'RANDOM(0,999) /* Unique ddname        */
+RPTSMBR     = "$REPORTS"   /* List of reports              */
+parse source . . REXXPGM .         /* Obtain REXX pgm name */
+REXXPGM     = LEFT(REXXPGM,8)
+
+ADDRESS ISPEXEC
+  "VGET (SETGDISP SETMSHOW SETMTRAC SETDRPTU",
+        "RACFRJCL) PROFILE"
+  If (SETMTRAC <> 'NO') then do
+     Say "*"COPIES("-",70)"*"
+     Say "*"Center("Begin Program = "REXXPGM,70)"*"
+     Say "*"COPIES("-",70)"*"
+     if (SETMTRAC <> 'PROGRAMS') THEN
+        interpret "Trace "SUBSTR(SETMTRAC,1,1)
+  end
+  IF (RACFRJCL = "") THEN
+     RACFRJCL    = "Y"
+
+  ZSCROLLD = "CSR"
+  "VPUT (ZSCROLLD)"
+
+  "QLIBDEF ISPPLIB TYPE(DATASET) ID(DSNAME)"
+  if (RC > 0) then do
+     call racfmsgs ERR19
+     return
+  end
+  DSNRPTS = STRIP(DSNAME,,"'")"("RPTSMBR")"
+
+  CALL CREATE_TABLEA
+
+  IF (RNUM = 0) THEN DO
+     RACFSMSG = "No entries in file"
+     RACFSMSG = "There is are no valid entries in the",
+               "dataset: "DSNRPTS
+     "SETMSG MSG(RACF011)"
+  END
+  ELSE
+     CALL DISP_PANEL
+
+ADDRESS ISPEXEC
+  "TBCLOSE "TABLEA
+
+  IF (SCROLL <> "CSR") THEN DO
+     ZSCROLLD = SCROLL
+     "VPUT (ZSCROLLD)"
+  END
+
+  If (SETMTRAC <> 'NO') then do
+     Say "*"COPIES("-",70)"*"
+     Say "*"Center("End Program = "REXXPGM,70)"*"
+     Say "*"COPIES("-",70)"*"
+  end
+
+EXIT
+/*--------------------------------------------------------------------*/
+/*  Display Panel                                                     */
+/*--------------------------------------------------------------------*/
+DISP_PANEL:
+  opta   = ' '
+  xtdtop = 0
+  rsels  = 0
+  do forever
+     if (rsels < 2) then do
+        "TBTOP " TABLEA
+        'tbskip' tablea 'number('xtdtop')'
+        radmrfnd = 'PASSTHRU'
+        'vput (radmrfnd)'
+        "TBDISPL" TABLEA "PANEL("PANEL01")"
+     end
+     else 'tbdispl' tablea
+     if (rc > 4) then leave
+     xtdtop   = ztdtop
+     rsels    = ztdsels
+     radmrfnd = null
+     'vput (radmrfnd)'
+     PARSE VAR ZCMD ZCMD PARM SEQ
+     IF (SROW <> "") & (SROW <> 0) THEN
+        IF (SROW > 0) THEN DO
+           "TBTOP " TABLEA
+           "TBSKIP" TABLEA "NUMBER("SROW")"
+        END
+     if (zcmd = 'RFIND') then do
+        zcmd = 'FIND'
+        parm = findit
+        'tbtop ' TABLEA
+        'tbskip' TABLEA 'number('last_find')'
+     end
+     SELECT
+        When (abbrev("FIND",zcmd,1) = 1) then
+             call do_finda
+        When (abbrev("JOB",zcmd,1) = 1) then
+             call DEFINE_JOB_CARD
+        WHEN (ABBREV("LOCATE",ZCMD,1) = 1) THEN do
+             if (parm <> '') then do
+                locarg = parm'*'
+                PARSE VAR SORT . "," . "," SEQ
+                IF (SEQ = "D") THEN
+                   CONDLIST = "LE"
+                ELSE
+                   CONDLIST = "GE"
+                parse value sort with scan_field',' .
+                IF (SCAN_FIELD = "DESC") THEN
+                   SCAN_FIELD = "DESCCAPS"
+                interpret scan_field ' = locarg'
+                'tbtop ' tablea
+                "TBSCAN "TABLEA" ARGLIST("scan_field")",
+                        "CONDLIST("CONDLIST")",
+                        "position(scanrow)"
+                xtdtop = scanrow
+             end
+        end
+        WHEN (ABBREV("ONLY",ZCMD,1) = 1) THEN DO
+             find_str = translate(parm)
+             'tbtop ' TABLEA
+             'tbskip' TABLEA
+             do forever
+                str = translate(rec name pgm desc)
+                if (pos(find_str,str) > 0) then nop
+                else 'tbdelete' TABLEA
+                'tbskip' TABLEA
+                if (rc > 0) then do
+                   'tbtop' TABLEA
+                   leave
+                end
+             end
+        END
+        WHEN (ABBREV("RESET",ZCMD,1) = 1) THEN DO
+             if (parm <> '') then
+                rfilter = parm
+             xtdtop   = 1
+             "TBEND" TABLEA
+             call CREATE_TABLEA
+        END
+        WHEN (ABBREV("SORT",ZCMD,1) = 1) THEN DO
+             SELECT
+                when (ABBREV("REC",PARM,1) = 1) then
+                     call sortseq 'REC'
+                when (ABBREV("NAME",PARM,1) = 1) then
+                     call sortseq 'NAME'
+                when (ABBREV("PROGRAM",PARM,1) = 1) then
+                     call sortseq 'PGM'
+                when (ABBREV("DESCRIPTION",PARM,1) = 1) then
+                     call sortseq 'DESC'
+                otherwise NOP
+           END
+           CLRREC   = "GREEN"; CLRNAME = "GREEN"
+           CLRPGM   = "GREEN"; CLRDESC = "GREEN"
+           PARSE VAR SORT LOCARG "," .
+           INTERPRET "CLR"SUBSTR(LOCARG,1,4)" = 'TURQ'"
+           "TBSORT "TABLEA" FIELDS("sort")"
+           "TBTOP  "TABLEA
+        END
+        WHEN ABBREV("UNLOAD",ZCMD,1) = 1 THEN
+             CALL CREATE_JCL
+        otherwise NOP
+     End /* Select */
+     ZCMD = ""; PARM = ""
+     'control display save'
+     Select
+        when (opta = 'S')  then call create_jcl
+        otherwise nop
+     End
+     'control display restore'
+  END  /* Do Forever */
+  "VPUT (SETDRPTU RACFRJCL) PROFILE"
+RETURN
+/*--------------------------------------------------------------------*/
+/*  Create/populate table                                             */
+/*--------------------------------------------------------------------*/
+CREATE_TABLEA:
+ADDRESS ISPEXEC
+  "TBCREATE "TABLEA" NAMES(REC NAME PGM DESC DESCCAPS)",
+                          "NOWRITE REPLACE"
+ADDRESS TSO
+  "ALLOC FI("DDNAME") DA('"DSNRPTS"') SHR REUSE"
+  "EXECIO * DISKR "DDNAME" (STEM REC. FINIS"
+  "FREE FI("DDNAME")"
+
+ADDRESS ISPEXEC
+  DO K = 1 TO REC.0
+     PARSE VAR REC.K REC NAME PGM DESC
+     IF (SUBSTR(REC.K,1,1) = "*") THEN ITERATE
+     REC  = STRIP(REC)
+     NAME = STRIP(NAME)
+     DESC = STRIP(DESC)
+     DESCCAPS = DESC
+     UPPER DESCCAPS
+     "TBADD "TABLEA
+  END
+  DROP REC.
+
+  CLRREC = "TURQ"  ; CLRNAME = "GREEN"
+  CLRPGM = "GREEN" ; CLRDESC = "GREEN"
+  sort   = 'REC,C,A'
+  sortid = 'D'; sortacc = 'A'
+  "TBSORT " TABLEA "FIELDS("sort")"
+RETURN
+/*--------------------------------------------------------------------*/
+/*  Create Batch job                                                  */
+/*--------------------------------------------------------------------*/
+CREATE_JCL:
+ADDRESS ISPEXEC
+  "FTOPEN TEMP"
+  "VGET (ZTEMPF ZLLGJOB1)"
+  IF (ZLLGJOB1 = "") THEN
+     CALL DEFINE_JOB_CARD
+
+  IF (ABBREV("UNLOAD",ZCMD,1) = 1) THEN DO
+     CALL GET_RACF_DSNS
+     "FTINCL "SKELETON1
+  END
+  ELSE
+     "FTINCL "SKELETON2
+  "FTCLOSE"
+
+  IF (RACFRJCL = "Y") THEN
+     "EDIT DATASET('"ztempf"')"
+  ELSE DO
+     ADDRESS TSO "SUBMIT '"ztempf"'"
+     RACFSMSG = "Job Submitted"
+     RACFLMSG = "Batch job was submitted.  Invoke SDSF",
+                "to view output"
+     "SETMSG MSG(RACF011)"
+  END
+RETURN
+/*--------------------------------------------------------------------*/
+/*  RACF primary and backup database names                            */
+/*--------------------------------------------------------------------*/
+GET_RACF_DSNS:
+    cvt      = c2x(storage(10,4))
+    cvtrac$  = d2x((x2d(cvt))+992)
+    cvtrac   = c2x(storage(cvtrac$,4))
+    rcvtsta$ = d2x((x2d(cvtrac))+56)
+    RACFDPRM = strip(storage(rcvtsta$,44))
+    RCVT     = D2X(X2D(CVT) +X2D(3E0))
+    RCVT     = C2X(STORAGE(RCVT,4))
+    DSDT     = D2X(X2D(RCVT) + X2D(E0))
+    DSDT     = C2X(STORAGE(DSDT,4))
+    DSDTBACK = D2X(X2D(DSDT) + X2D(140))
+    BNAME    = D2X(X2D(DSDTBACK) + X2D(21))
+    RACFDBKP = STRIP(STORAGE(BNAME,44))
+    RACFDTMP = RACFDBKP
+    if (RACFDBKP = "") then do
+        RACFDBKP = "N/A"
+        RACFDTMP = RACFDPRM
+    end
+RETURN
+/*--------------------------------------------------------------------*/
+/*  Process primary command FIND for TABLEA                           */
+/*--------------------------------------------------------------------*/
+DO_FINDA:
+  if (parm = null) then do
+     racfsmsg = 'Error'
+     racflmsg = 'Find requires a value to search for.' ,
+                'Try again.'
+     'setmsg msg(RACF011)'
+     return
+  end
+  findit    = translate(parm)
+  last_find = 0
+  wrap      = 0
+  do forever
+     'tbskip' TABLEA
+     if (rc > 0) then do
+        if (wrap = 1) then do
+           racfsmsg = 'Not Found'
+           racflmsg = findit 'not found.'
+           'setmsg msg(RACF011)'
+           return
+        end
+        if (wrap = 0) then wrap = 1
+        'tbtop' TABLEA
+     end
+     else do
+        testit = translate(REC NAME PGM DESC)
+        if (pos(findit,testit) > 0) then do
+           'tbquery' TABLEA 'position(srow)'
+           'tbtop'   TABLEA
+           'tbskip'  TABLEA 'number('srow')'
+           last_find = srow
+           xtdtop    = srow
+           if (wrap = 0) then
+              racfsmsg = 'Found'
+           else
+              racfsmsg = 'Found/Wrapped'
+           racflmsg = findit 'found in row' srow + 0
+           'setmsg msg(RACF011)'
+           return
+        end
+     end
+  end
+RETURN
+/*--------------------------------------------------------------------*/
+/*  Define sort sequence, to allow point-n-shoot sorting (A/D)        */
+/*--------------------------------------------------------------------*/
+SORTSEQ:
+  parse arg sortcol
+  INTERPRET "TMPSEQ = SORT"substr(SORTCOL,1,4)
+  select
+     when (seq <> "") then do
+          if (seq = 'A') then
+             tmpseq = 'D'
+          else
+             tmpseq = 'A'
+          sort = sortcol',C,'seq
+     end
+     when (seq = ""),
+        & (tmpseq = 'A') then do
+           sort   = sortcol',C,D'
+           tmpseq = 'D'
+     end
+     Otherwise do
+        sort   = sortcol',C,A'
+        tmpseq = 'A'
+     end
+  end
+  INTERPRET "SORT"SUBSTR(SORTCOL,1,4)" = TMPSEQ"
+RETURN
+/*--------------------------------------------------------------------*/
+/*  RACFRPTs - Define JOB card                                        */
+/*--------------------------------------------------------------------*/
+DEFINE_JOB_CARD:
+  "ADDPOP"
+  "VGET (ZLLGJOB1)"
+  IF (ZLLGJOB1 = "") THEN DO
+     ZLLGJOB1 = "//job-name JOB (acct),'first-last-name',"
+     ZLLGJOB2 = "//         MSGCLASS=?,CLASS=?,"||,
+                "REGION=0M,NOTIFY=&SYSUID"
+     "VPUT (ZLLGJOB1 ZLLGJOB2)"
+  END
+  DO FOREVER
+     "DISPLAY PANEL("PANEL99")"
+     IF (RC = 8) THEN LEAVE
+  END
+  "REMPOP"
+  "VPUT (ZLLGJOB1 ZLLGJOB2 ZLLGJOB3 ZLLGJOB4)"
+RETURN

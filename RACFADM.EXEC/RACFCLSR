@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMhDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @BA  200617  RACFA    Added comments to right of variables         */
 /* @B9  200616  RACFA    Added capability to SAve file as TXT/CSV     */
 /* @B8  200610  RACFA    Added primary command 'SAVE'                 */
 /* @B7  200506  RACFA    Drop array immediately when done using       */
@@ -417,12 +418,12 @@ DO_SAVE:                                                      /* @B8 */
   X = MSG("OFF")                                              /* @B8 */
   "ADDPOP COLUMN(40)"                                         /* @B8 */
   "VGET (RACFSDSN RACFSMBR RACFSFIL RACFSREP) PROFILE"        /* @B9 */
-  IF (RACFSDSN = "") THEN                                     /* @B8 */
-     RACFSDSN = USERID()".RACFADM.REPORTS"                    /* @B8 */
-  IF (RACFSREP = "") THEN                                     /* @B8 */
-     RACFSREP = "N"                                           /* @B8 */
-  IF (RACFSFIL = "") THEN                                     /* @B9 */
-     RACFSFIL = "T"                                           /* @B9 */
+  IF (RACFSDSN = "") THEN         /* SAve - Dataset Name  */  /* @BA */
+     RACFSDSN = USERID()".RACFADM.REPORTS"                    /* @EK */
+  IF (RACFSFIL = "") THEN         /* SAve - As (TXT/CVS)  */  /* @BA */
+     RACFSFIL = "T"                                           /* @EL */
+  IF (RACFSREP = "") THEN         /* SAve - Replace (Y/N) */  /* @BA */
+     RACFSREP = "N"                                           /* @EK */
                                                               /* @B8 */
   DO FOREVER                                                  /* @B8 */
      "DISPLAY PANEL("PANELS1")"                               /* @B8 */

@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AR  200617  RACFA    Added comments to right of variables         */
 /* @AQ  200616  RACFA    Added capability to SAve file as TXT/CSV     */
 /* @AP  200610  RACFA    Added primary command 'SAVE'                 */
 /* @AO  200608  TRIDJK   Add 'Password minimum change interval'       */
@@ -544,12 +545,12 @@ DO_SAVE:                                                      /* @AP */
   X = MSG("OFF")                                              /* @AP */
   "ADDPOP COLUMN(40)"                                         /* @AP */
   "VGET (RACFSDSN RACFSMBR RACFSFIL RACFSREP) PROFILE"        /* @AQ */
-  IF (RACFSDSN = "") THEN                                     /* @AP */
-     RACFSDSN = USERID()".RACFADM.REPORTS"                    /* @AP */
-  IF (RACFSFIL = "") THEN                                     /* @AQ */
-     RACFSFIL = "T"                                           /* @AQ */
-  IF (RACFSREP = "") THEN                                     /* @AP */
-     RACFSREP = "N"                                           /* @AP */
+  IF (RACFSDSN = "") THEN         /* SAve - Dataset Name  */  /* @AR */
+     RACFSDSN = USERID()".RACFADM.REPORTS"                    /* @EK */
+  IF (RACFSFIL = "") THEN         /* SAve - As (TXT/CVS)  */  /* @AR */
+     RACFSFIL = "T"                                           /* @EL */
+  IF (RACFSREP = "") THEN         /* SAve - Replace (Y/N) */  /* @AR */
+     RACFSREP = "N"                                           /* @EK */
                                                               /* @AP */
   DO FOREVER                                                  /* @AP */
      "DISPLAY PANEL("PANELS1")"                               /* @AP */

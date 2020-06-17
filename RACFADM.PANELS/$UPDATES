@@ -2,6 +2,22 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  17 June 2020 - V28R8
+     - Main Menu
+       -- Added below menu entry
+            R  Reports  ICETOOL/DSMON reports
+     - User (Option 1)
+       -- Fixed line cmds 'A'dd and 'C'hg, was not displaying full name
+     - Tutorials (Option T)
+       -- Added 'Reports'
+     - Other Items
+       -- $DEFSETG
+          * Fixed refreshing several group's entries, prior it
+            only refreshed the first one set
+          * Added variable SETDRPTU, reports IRRDBU00 dataset name
+       -- $DIR
+          * Updated member in panel and REXX datasets
+
   16 June 2020 - V28R7
      - Tutorials (Option T)
        -- Minor update to tutorial menu

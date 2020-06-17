@@ -84,3 +84,8 @@ SETDIBMC =                                  /* IBM RACF Clist dsn    */
 SETDIBMM =                                  /* IBM RACF Message dsn  */
 SETDIBMP =                                  /* IBM RACF Panel dsn    */
 SETDIBMS =                                  /* IBM RACF Skeleton dsn */
+*---------------------------------------------------------------------*
+*  RACFRPTS IRRDBU00 dataset name (no quotes)                         *
+*---------------------------------------------------------------------*
+SETRRPT  = N /* Force refresh of 'Reports' variables (Y=Yes, N=No)   */
+SETDRPTU =                                  /* IRRDBU00 dataset name */

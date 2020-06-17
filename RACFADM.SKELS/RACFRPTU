@@ -1,0 +1,31 @@
+)DEFAULT  )&#!~|@
+)SEL &ZLLGJOB1 ^= &Z
+&ZLLGJOB1
+)SEL &ZLLGJOB2 ^= &Z
+&ZLLGJOB2
+)ENDSEL
+)SEL &ZLLGJOB3 ^= &Z
+&ZLLGJOB3
+)ENDSEL
+)SEL &ZLLGJOB4 ^= &Z
+&ZLLGJOB4
+)ENDSEL
+)ENDSEL
+)SEL &ZLLGJOB1 = &Z
+//jobname  JOB (???),,MSGCLASS=?,CLASS=?,REGION=0M,NOTIFY=&SYSUID
+)ENDSEL
+//*-------------------------------------------------------------------*
+//*  PURPOSE:  UNLOAD RACF DATABASE
+//*-------------------------------------------------------------------*
+//*  NOTES:    1) RACF DATABASES:
+//*                 PRIMARY .. &RACFDPRM
+//*                 BACKUP ... &RACFDBKP
+//*            2) MAY NEED TO CHANGE INDD1 AND OUTDD DATASET NAMES
+//*-------------------------------------------------------------------*
+//IRRDBU00 EXEC PGM=IRRDBU00,PARM=NOLOCKINPUT
+//INDD1    DD  DISP=SHR,DSN=&RACFDTMP
+//OUTDD    DD  DSN=&SETDRPTU,
+//             DISP=(NEW,CATLG,DELETE),
+//             DCB=(LRECL=4096,RECFM=VB,BLKSIZE=81920),
+//             UNIT=SYSDA,SPACE=(CYL,(300,300),RLSE)
+//SYSPRINT DD  SYSOUT=*

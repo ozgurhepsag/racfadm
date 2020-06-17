@@ -1,0 +1,62 @@
+)ATTR DEFAULT(%+_)
+  01  TYPE(OUTPUT)  INTENS(LOW)  SKIP(ON) COLOR(&CLRREC)
+  02  TYPE(OUTPUT)  INTENS(LOW)  SKIP(ON) COLOR(&CLRNAME)
+  03  TYPE(OUTPUT)  INTENS(LOW)  SKIP(ON) COLOR(&CLRPGM)
+  04  TYPE(OUTPUT)  INTENS(LOW)  SKIP(ON) COLOR(&CLRDESC)
+   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON) JUST(LEFT)  HILITE(USCORE)
+   %  TYPE(TEXT)    INTENS(HIGH) SKIP(ON)
+   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
+   {  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(BLUE)
+   ~  TYPE(PS)
+)BODY EXPAND(\\)
++\-\(%RACFADM - RACF Reports+)\-\
+%Command ==>_ZCMD                                                  %Scr =>_Z   +
++
++SELECT: %S+Select
++
++IRRDBU00 Dataset:_SETDRPTU                                + Edit JCL:_Z{ (Y/N)
++
+%S ~Rec   ~Name  ~Program  ~                   Description
+%-------------------------------------------------------------------------------
+)MODEL CLEAR(OPTA)
+_Z+Z    Z      Z        œZ
+)INIT
+  .CURSOR = ZCMD
+  .HELP   = #RACRPTS
+  .ZVARS  = '(ZSCROLLD RACFRJCL OPTA REC NAME PGM DESC)'
+)PROC
+  &SROW = &Z
+  IF (&ZCMD = &Z)
+     IF (&ZTDSELS = 0)
+        &SROW = .CSRROW
+        IF (&SROW ^= 0)
+           &S = S
+
+  &RACFSMSG = &Z
+  &RACFLMSG = &Z
+
+  VER (&SETDRPTU,NB,DSNAME)
+
+  IF (.MSG = &Z)
+     &BADDSN = N
+     *REXX (SETDRPTU BADDSN RACFSMSG RACFLMSG)
+        IF (SYSDSN("'"SETDRPTU"'") <> "OK") THEN DO
+           RACFSMSG = 'DSN does not exist'
+           RACFLMSG = 'The dataset does not reside in the catalog',
+                   'or on a disk pack, please investigate.'
+           BADDSN   = "Y"
+        END
+     *ENDREXX
+
+  IF (&BADDSN = Y)
+     .CURSOR = SETDRPTU
+     .MSG    = RACF011
+
+  IF (.MSG = &Z)
+     VPUT (SETDRPTY) PROFILE
+)PNTS
+  FIELD(ZPS00001) VAR(ZCMD) VAL('SORT REC')
+  FIELD(ZPS00002) VAR(ZCMD) VAL('SORT NAME')
+  FIELD(ZPS00003) VAR(ZCMD) VAL('SORT PROGRAM')
+  FIELD(ZPS00004) VAR(ZCMD) VAL('SORT DESC')
+)END

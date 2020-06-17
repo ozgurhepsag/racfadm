@@ -1,0 +1,27 @@
+)ATTR DEFAULT(%+_)
+   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON) JUST(LEFT) HILITE(USCORE)
+   %  TYPE(TEXT)    INTENS(HIGH) SKIP(ON)
+   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
+   !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
+)BODY EXPAND(\\)
+%Tutorial+\-\(%RACFRPTS - RACF Reports+)\-\%Tutorial
+%Command ===>_ZCMD
++
+%Reports+will create RACF reports via a batch job using:
+!  -+IBM's DFSORT ICETOOL to read in IRRDBU00 unload dataset
+!  -+IBM's Data Security Monitor (DSMON)
++
++Primary Commands
+%  Find text        +Find a text string
+%  Sort column A/D  +Sort column, ascending/descending, cols are point-and-shoot
+%  Locate text      +Locate text in the sorted column
+%  Only text        +Only display rows with text string
+%  Reset text       +Redisplay all rows and sort first column
+%  Unload           +Unload the RACF database using IRRDBU00
+%  Job              +Define JOB card
++
++Line Commands
+%  S  !Select       +Select reports
+)PROC
+  &ZUP     = #RACRPTS
+)END
