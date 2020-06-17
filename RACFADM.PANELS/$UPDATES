@@ -2,6 +2,27 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  17 June 2020 - V29R1
+     - Other Items
+       -- Updated $REPORTS and #RACRPTS in panel dataset
+       -- Added comments and minor updates to REXX program RACFRPTS
+
+  17 June 2020 - V29R0
+     - Main Menu
+       -- Changed 'R, Reports' description to 'RACF reports',
+          was 'ICETOOL/DSMON reports'
+     - Reports (Option R)
+       -- Changed panel title
+
+  17 June 2020 - V28R9
+     - User (Option 1)
+       -- Fixed line cmds 'A'dd and 'C'hg, was not displaying userid
+          names with 'UNKNOWN' correctly
+     - Reports (Option R)
+       * Allowing typing in 'Unload' on the command line and have a
+         dataset that does not exit in 'IRRDBU00 Dataset' field
+       * Fixed saving the IRRDBU00 dataset name to the users profile
+
   17 June 2020 - V28R8
      - Main Menu
        -- Added below menu entry

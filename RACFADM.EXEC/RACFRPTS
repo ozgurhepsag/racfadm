@@ -1,6 +1,12 @@
 /*%NOCOMMENT====================* REXX *==============================*/
-/*  PURPOSE:  Create RACF reports using DFSORT ICETOOL from the       */
-/*            dataset created by RACF's IRRDBU00 program              */
+/*  PURPOSE:  RACFADM - RACF Reports - Menu option R                  */
+/*--------------------------------------------------------------------*/
+/*  NOTES:    1) Will create RACF reports via a batch job using       */
+/*               - IBM's DFSORT ICETOOL using IRRDBU00 unload dataset */
+/*               - IBM's Data Security Monitor (DSMON)                */
+/*            2) Reads in panel dataset member $REPORTS to obtain     */
+/*               list of reports                                      */
+/*            3) Uses IBM's 'Define JOB card' panel (ISPF =0)         */
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
@@ -8,10 +14,9 @@
 /*====================================================================*/
 X           = MSG("OFF")
 PANEL01     = "RACFRPTS"   /* Display reports              */
-PANEL99     = "ISPISMLJ"   /* IBM Define JOB card          */
+PANEL99     = "ISPISMLJ"   /* IBM's define JOB card        */
 SKELETON1   = "RACFRPTU"   /* RACF unload pgm (IRRDBU00)   */
 SKELETON2   = "RACFRPTS"   /* RACF reports (ICETOOL/DSMON) */
-EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */
 TABLEA      = "RADM"RANDOM(0,9999)
 DDNAME      = 'RACFA'RANDOM(0,999) /* Unique ddname        */
 RPTSMBR     = "$REPORTS"   /* List of reports              */

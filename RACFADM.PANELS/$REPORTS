@@ -1,10 +1,11 @@
 *---------------------------------------------------------------------*
-*  Purpose:  RACFRPTS data file
-*  Notes:    1) Reports with a name starting with the characters
-*                 @____ and $____ came from 'SYS1.SAMPLIB(IRRICE)'
-*                 #____ came from IBM download website (RACFICE2)'
-*                 ICE__ came from oocities/Steveneeland/Sort_Reports
-*            2) And the rest came from Nico Rizzuto at www.rizzuto.it
+*                             RACF Reports
+*---------------------------------------------------------------------*
+*  1) Reports with a name starting with the characters
+*       @____ and $____ came from SYS1.SAMPLIB(IRRICE)
+*       #____ came from IBM download website (RACFICE2)
+*       ICE__ came from oocities/Steveneeland/Sort_Reports
+*     And the rest came from Nico Rizzuto at www.rizzuto.it
 *---------------------------------------------------------------------*
 * Rec   Name  Program                   Description
 * ---- ------ -------- ------------------------------------------------

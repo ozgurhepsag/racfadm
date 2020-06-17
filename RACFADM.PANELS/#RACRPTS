@@ -8,7 +8,7 @@
 %Command ===>_ZCMD
 +
 %Reports+will create RACF reports via a batch job using:
-!  -+IBM's DFSORT ICETOOL to read in IRRDBU00 unload dataset
+!  -+IBM's DFSORT ICETOOL using IRRDBU00 unload dataset
 !  -+IBM's Data Security Monitor (DSMON)
 +
 +Primary Commands

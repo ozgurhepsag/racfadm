@@ -7,7 +7,7 @@
    {  TYPE(OUTPUT)  PAS(ON)      CAPS(OFF)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V28R8+)\-\
++\-\(%RACFADM - RACF Administration - V29R1+)\-\
 %Option ===>_ZCMD
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -16,7 +16,7 @@
 %   3 ~Dataset  +Dataset profiles       %H ~Help      +RACF help commands
 %   4 ~General  +General resources      %L ~ISPLog    +ISPF log file
 %   5 ~Password +Password reset         %O ~OMVSCmds  +OMVS RACF commands
-%   6 ~GrpTree  +Group tree report      %R ~Reports   +ICETOOL/DSMON reports
+%   6 ~GrpTree  +Group tree report      %R ~Reports   +RACF reports
 %  ¨z {OPT1DESC ÝOPT1INFO               %S ~Standards +Coding/design
 %  ¨z {OPT2DESC ÝOPT2INFO               %T ~Tutorial  +Help
 %  ¨z {OPT3DESC ÝOPT3INFO               %U ~Updates   +Version/updates

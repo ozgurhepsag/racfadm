@@ -39,7 +39,9 @@ _Z+Z    Z      Z        œZ
 
   IF (.MSG = &Z)
      &BADDSN = N
-     *REXX (SETDRPTU BADDSN RACFSMSG RACFLMSG)
+     *REXX (ZCMD SETDRPTU BADDSN RACFSMSG RACFLMSG)
+        IF (ABBREV("UNLOAD",ZCMD,1) = 1) THEN
+           RETURN
         IF (SYSDSN("'"SETDRPTU"'") <> "OK") THEN DO
            RACFSMSG = 'DSN does not exist'
            RACFLMSG = 'The dataset does not reside in the catalog',
@@ -51,9 +53,6 @@ _Z+Z    Z      Z        œZ
   IF (&BADDSN = Y)
      .CURSOR = SETDRPTU
      .MSG    = RACF011
-
-  IF (.MSG = &Z)
-     VPUT (SETDRPTY) PROFILE
 )PNTS
   FIELD(ZPS00001) VAR(ZCMD) VAL('SORT REC')
   FIELD(ZPS00002) VAR(ZCMD) VAL('SORT NAME')

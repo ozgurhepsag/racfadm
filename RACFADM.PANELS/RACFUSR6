@@ -107,6 +107,8 @@
                     ddatacls dstorcls dmgmtcls
 
        parse var lu.1 'NAME='name
+       if (left(name,7) = 'UNKNOWN') then
+          name = 'UNKNOWN'
        parse var lu.1 'OWNER='bowner .
        do i = 1 to lu.0
           if (substr(lu.i,2,14) = 'DEFAULT-GROUP=') then
