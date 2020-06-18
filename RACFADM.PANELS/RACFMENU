@@ -7,7 +7,7 @@
    {  TYPE(OUTPUT)  PAS(ON)      CAPS(OFF)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V29R4+)\-\
++\-\(%RACFADM - RACF Administration - V29R5+)\-\
 %Option ===>_ZCMD
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -143,11 +143,12 @@
        utype = 'User:'
 
     RACFMCNT = RACFMCNT + 1           /* No. of times menu displayed */
-    user = userid()                     /* Does user have necessary  */
-    x    = outtrap('lu.')               /* access to display profiles*/
+    Access   = ""
+    user     = userid()                 /* Does user have necessary  */
+    x        = outtrap('lu.')           /* access to display profiles*/
     'LISTUSER 'user                     /* and general resources?    */
-    x    = outtrap('off')
-    uatt = ''
+    x        = outtrap('off')
+    uatt     = ''
     lu34 = substr(lu.3,2+11)||substr(lu.4,2+11)
     if (pos('AUDITOR',lu34) > 0) then do
        uatt   = uatt'A'

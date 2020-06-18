@@ -1,25 +1,12 @@
 )CM*------------------------------------------------------------------*
-)CM*  Purpose:  RACFADM - RACF Reports
+)CM*  Purpose:  RACFADM - RACF Reports - All reports
 )CM*------------------------------------------------------------------*
 )CM*  FLG  YYMMDD  USERID   DESCRIPTION
 )CM*  ---  ------  -------  ------------------------------------------
+)CM*  @A2  200618  RACFA    Removed JOB card, moved to seperate member
+)CM*  @A1  200618  RACFA    Fix rpt 200H, chg SCHEDULED to 462, was 471
 )CM*  @A0  200617  RACFA    Created skeleton
 )CM*------------------------------------------------------------------*
-)SEL &ZLLGJOB1 ^= &Z
-&ZLLGJOB1
-)SEL &ZLLGJOB2 ^= &Z
-&ZLLGJOB2
-)ENDSEL
-)SEL &ZLLGJOB3 ^= &Z
-&ZLLGJOB3
-)ENDSEL
-)SEL &ZLLGJOB4 ^= &Z
-&ZLLGJOB4
-)ENDSEL
-)ENDSEL
-)SEL &ZLLGJOB1 = &Z
-//jobname  JOB (???),,MSGCLASS=?,CLASS=?,REGION=0M,NOTIFY=&SYSUID
-)ENDSEL
 )SEL &REC NE 100C AND &REC NE 400A AND &REC NE 400B AND &REC < 900
 //*-------------------------------------------------------------------*
 //*                           RACF Reports

@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A3  200618  RACFA    Chged SYSDA to SYSALLDA                      */
 /* @A2  200605  RACFA    Concatenate panel dsn to TSOHELP             */
 /* @A1  200520  RACFA    Added RACF cmds: OPERMIT, ORALTER and ORLIST */
 /* @A0  200328  RACFA    Modified color/title                         */
@@ -669,7 +670,7 @@ Do_It:
 View_it:
  thdd = 'zt'random(9999)
  Address TSO ,
- 'Alloc f('thdd') new spa(5,5) tr dir(2) unit(sysda)' ,
+ 'Alloc f('thdd') new spa(5,5) tr dir(2) unit(SYSALLDA)' ,    /* @A3 */
        'recfm(f b) lrecl(80) blksize(0)'
 
  'lminit dataid(thd) ddname('thdd')'
@@ -986,10 +987,10 @@ View_it:
  arg dd
  Address TSO
  if pos(left(dd,2),"lc le") > 0 then
- "Alloc f("dd") unit(sysda) spa(5,5) dir(1)",
+ "Alloc f("dd") unit(SYSALLDA) spa(5,5) dir(1)",              /* @A3 */
     "recfm(v b) lrecl(255) blksize(32760)"
  else
- "Alloc f("dd") unit(sysda) spa(5,5) dir(1)",
+ "Alloc f("dd") unit(SYSALLDA) spa(5,5) dir(1)",              /* @A3 */
     "recfm(f b) lrecl(80) blksize(23440)"
  return
 /*

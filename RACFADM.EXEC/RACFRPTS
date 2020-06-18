@@ -10,6 +10,9 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A8  200618  RACFA    Added SKELETON1 for JOB card                 */
+/* @A7  200618  RACFA    Chg SKELETON1/2 to SKELETON2/3               */
+/* @A6  200618  RACFA    Obtain ZLLGJOB3/4 variables                  */
 /* @A5  200618  RACFA    Chg UNIT to be SYSALLDA, was SYSDA           */
 /* @A4  200618  RACFA    Fix chking 1st word in job card no. 1 (Upper)*/
 /* @A3  200618  RACFA    Fix when JOB card is defined, save ZCMD      */
@@ -20,8 +23,9 @@
 X           = MSG("OFF")
 PANEL01     = "RACFRPTS"   /* Display reports              */
 PANEL99     = "RACFRPTJ"   /* Define JOB card/JCL parms    */
-SKELETON1   = "RACFRPTU"   /* RACF unload pgm (IRRDBU00)   */
-SKELETON2   = "RACFRPTS"   /* RACF reports (ICETOOL/DSMON) */
+SKELETON1   = "RACFRPTJ"   /* Job card                     */ /* @A8 */
+SKELETON2   = "RACFRPTU"   /* RACF unload pgm (IRRDBU00)   */ /* @A7 */
+SKELETON3   = "RACFRPTS"   /* RACF reports (ICETOOL/DSMON) */ /* @A7 */
 TABLEA      = "RADM"RANDOM(0,9999)
 DDNAME      = 'RACFA'RANDOM(0,999) /* Unique ddname        */
 RPTSMBR     = "$REPORTS"   /* List of reports              */
@@ -68,11 +72,6 @@ ADDRESS ISPEXEC
 
 ADDRESS ISPEXEC
   "TBCLOSE "TABLEA
-
-  IF (SCROLL <> "CSR") THEN DO
-     ZSCROLLD = SCROLL
-     "VPUT (ZSCROLLD)"
-  END
 
   If (SETMTRAC <> 'NO') then do
      Say "*"COPIES("-",70)"*"
@@ -230,7 +229,7 @@ RETURN
 CREATE_JCL:
 ADDRESS ISPEXEC
   "FTOPEN TEMP"
-  "VGET (ZTEMPF ZLLGJOB1)"
+  "VGET (ZTEMPF ZLLGJOB1 ZLLGJOB2 ZLLGJOB3 ZLLGJOB4)"         /* @A6 */
 
   /*-----------------------------------------------*/         /* @A1 */
   /* If IBM's ISPF JOB card variable is:           */         /* @A1 */
@@ -250,12 +249,13 @@ ADDRESS ISPEXEC
      ZCMD    = TMPZCMD                                        /* @A3 */
   END
 
+  "FTINCL "SKELETON1                                          /* @A8 */
   IF (ABBREV("UNLOAD",ZCMD,1) = 1) THEN DO
      CALL GET_RACF_DSNS
-     "FTINCL "SKELETON1
+     "FTINCL "SKELETON2                                       /* @A7 */
   END
   ELSE
-     "FTINCL "SKELETON2
+     "FTINCL "SKELETON3                                       /* @A7 */
   "FTCLOSE"
 
   IF (RACFRJCL = "Y") THEN
@@ -365,7 +365,6 @@ RETURN
 /*  Define JOB card and JCL parameters                                */
 /*--------------------------------------------------------------------*/
 DEFINE_JOB_CARD:
-  "VGET (ZLLGJOB1)"
   /*-----------------------------------------------*/         /* @A1 */
   /* If IBM's ISPF JOB card variable is:           */         /* @A1 */
   /*   ZLLGJOB1 =                                  */         /* @A1 */

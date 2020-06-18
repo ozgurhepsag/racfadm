@@ -2,6 +2,21 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  18 June 2020 - V29R5
+     - Main Menu
+       -- Fixed displaying message informing user they do not have
+          the correct attributes (SPECIAL, AUDIT or ROAUDIT) to view
+          entries
+     - Reports (Option R)
+       -- Fixed getting ISPF variables ZLLGJOB3/4, added to VGET card
+       -- Fixed report 200H, changed SCHEDULED to 462 columns, was 471,
+          preventing RC=16
+       -- Relocated JOB card into a seperate skeleton member, reduce
+          duplication
+     - Other Items
+       -- Changed all REXX programs to use SYSALLDA when allocating
+          temporary datasets, was SYSDA
+
   18 June 2020 - V29R4
      - Reports (Option R)
        -- Ensure when chking 1st word of job card, it is in UPPER case

@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AS  200618  RACFA    Chged SYSDA to SYSALLDA                      */
 /* @AR  200617  RACFA    Added comments to right of variables         */
 /* @AQ  200616  RACFA    Added capability to SAve file as TXT/CSV     */
 /* @AP  200610  RACFA    Added primary command 'SAVE'                 */
@@ -616,11 +617,11 @@ ADDRESS TSO                                                   /* @AP */
      "DELETE '"RACFSDSN"'"                                    /* @AP */
      IF (RACFSMBR = "") THEN                                  /* @AP */
         "ALLOC  FI(ISPFILE) DA('"RACFSDSN"') NEW",            /* @AP */
-            "REUSE SP(1 1) CYLINDER UNIT(SYSDA)",             /* @AP */
+            "REUSE SP(1 1) CYLINDER UNIT(SYSALLDA)",          /* @AS */
             "LRECL(80) RECFM(F B)"                            /* @AP */
      ELSE                                                     /* @AP */
         "ALLOC  FI(ISPFILE) DA('"RACFSDSN"') NEW",            /* @AP */
-            "REUSE SP(1 1) CYLINDER UNIT(SYSDA)",             /* @AP */
+            "REUSE SP(1 1) CYLINDER UNIT(SYSALLDA)",          /* @AS */
             "LRECL(80) RECFM(F B)",                           /* @AP */
             "DSORG(PO) DSNTYPE(LIBRARY,2)"                    /* @AP */
   END                                                         /* @AP */
