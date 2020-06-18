@@ -23,6 +23,7 @@
 )ENDDOT
 )ENDSEL
 )SEL &RACFSFIL = C
+RACFADM - General Resources
 Profile,Description
 -------,-----------
 )DOT &TABLEA

@@ -28,6 +28,7 @@
 )ENDDOT
 )ENDSEL
 )SEL &RACFSFIL = C
+RACFADM - Dataset Profiles
 Group/ID,Access
 --------,------
 )DOT &TABLEB

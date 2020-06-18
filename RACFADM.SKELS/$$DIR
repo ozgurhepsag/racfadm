@@ -15,8 +15,8 @@
  RACFGRP5  Group          List userids and access
  RACFGRP8  Group          List groups and descriptions
  RACFPRMS  Parameter      RACF parameters
- RACFRPTS  Reports        ICETOOL/DSMON reports
- RACFRPTU  Reports        IRRDBU00 unload utility
+ RACFRPTS  Reports        RACF reports
+ RACFRPTU  Reports        RACF reports, IRRDBU00 unload utility
  RACFUSR2  User           List userids
  RACFUSR3  User           Show groups and access
 

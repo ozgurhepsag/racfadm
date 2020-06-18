@@ -32,7 +32,7 @@
                       5,#RACDSN2  6,#RACCLSR  7,#RACPSWD  8,#RACGTRE
                       9,#RACMVS  10,#RACDB   11,#RACPRMS 12,#RACIBM
                      13,#RACCMDS 14,#RACDSL  15,#RACENQ  16,#RACHEL1
-                     17,#RACLOG  18,#RACOMVS 19,#RACRPTS 20,#RACDSNA
+                     17,#RACLOG  18,#RACOMVS 19,#RACRPT1 20,#RACDSNA
                      21,#RACCLSA 22,#RACPUB1 23,#RACNOT1 24,#RACACKN
                       *,'?')
   &ZUP  = #RACMENU

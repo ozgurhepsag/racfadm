@@ -22,7 +22,7 @@
 _Z+Z    Z      Z        œZ
 )INIT
   .CURSOR = ZCMD
-  .HELP   = #RACRPTS
+  .HELP   = #RACRPT1
   .ZVARS  = '(ZSCROLLD RACFRJCL OPTA REC NAME PGM DESC)'
 )PROC
   &SROW = &Z
@@ -30,7 +30,7 @@ _Z+Z    Z      Z        œZ
      IF (&ZTDSELS = 0)
         &SROW = .CSRROW
         IF (&SROW ^= 0)
-           &S = S
+           &OPTA = S
 
   &RACFSMSG = &Z
   &RACFLMSG = &Z
@@ -40,12 +40,27 @@ _Z+Z    Z      Z        œZ
   IF (.MSG = &Z)
      &BADDSN = N
      *REXX (ZCMD SETDRPTU BADDSN RACFSMSG RACFLMSG)
+        X = MSG("OFF")
         IF (ABBREV("UNLOAD",ZCMD,1) = 1) THEN
            RETURN
-        IF (SYSDSN("'"SETDRPTU"'") <> "OK") THEN DO
+        PARSE VAR SETDRPTU DSN "(" GDGNO ")" .
+        IF (DATATYPE(GDGNO,'N') = 1) THEN DO
+           X = OUTTRAP("LC.")
+           "LISTCAT ENT('"DSN"')"
+           X = OUTTRAP("OFF")
+           IF (LC.0 > (2 - 2 * GDGNO)) THEN DO
+              A   = LC.0 - 1 + 2 * GDGNO
+              DSNDBU = SUBWORD(LC.A,3,1)
+           END
+        END
+        ELSE
+           DSNDBU = SETDRPTU
+        DROP LC.
+
+        IF (SYSDSN("'"DSNDBU"'") <> "OK") THEN DO
            RACFSMSG = 'DSN does not exist'
            RACFLMSG = 'The dataset does not reside in the catalog',
-                   'or on a disk pack, please investigate.'
+                      'or on a disk pack, please investigate.'
            BADDSN   = "Y"
         END
      *ENDREXX
@@ -59,3 +74,15 @@ _Z+Z    Z      Z        œZ
   FIELD(ZPS00003) VAR(ZCMD) VAL('SORT PROGRAM')
   FIELD(ZPS00004) VAR(ZCMD) VAL('SORT DESC')
 )END
+/*--------------------------------------------------------------------*/
+/*                             Comments                               */
+/*--------------------------------------------------------------------*/
+/*                                                                    */
+/*  1) The column headers are point-n-shoot fields to sort the data   */
+/*     in ascending or descending order                               */
+/*                                                                    */
+/*  2) The )PROC section executes REXX code to:                       */
+/*     - Validate validate a sequential and relative GDG dataset      */
+/*       exists, unless the primary command UNLOAD is typed in        */
+/*                                                                    */
+/*--------------------------------------------------------------------*/

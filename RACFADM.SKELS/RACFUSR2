@@ -28,6 +28,7 @@
 )ENDDOT
 )ENDSEL
 )SEL &RACFSFIL = C
+RACFADM - User Profiles
 Userid,Name,Group,Logon,Owner,Rev,Att,TSO
 ------,----,-----,-----,-----,---,---,---
 )DOT &TABLEA

@@ -55,7 +55,8 @@
  #RACPSWD  Tutorial       Password reset
  #RACPUB1  Tutorial       RACF publications and downloads (1 of 2)
  #RACPUB2  Tutorial       RACF eductional websites (2 of 2)
- #RACRPTS  Tutorial       ICETOOL/DSMON reports
+ #RACRPT1  Tutorial       RACF reports (1 of 2)
+ #RACRPT2  Tutorial       RACF reports (2 of 2)
  #RACSET1  Tutorial       Settings - Customize options (1 of 4)
  #RACSET2  Tutorial       Settings - Customize options (2 of 4)
  #RACSET3  Tutorial       Settings - Customize options (3 of 4)
@@ -102,7 +103,8 @@
  RACFPRMS  Parameter      RACF parameters, menu option 6
  RACFPSWD  Password       Reset userid password, opt 5 and line cmd PW
  RACFPSWE  Password       Reset userid password with expire keyword
- RACFRPTS  Reports        ICETOOL/DSMON reports
+ RACFRPTS  Reports        RACF reports, display reports
+ RACFRPTJ  Reports        RACF reports, Job card and JCL parameters
  RACFSAVE  Save Cmd       Save display to dataset (primary command)
  RACFSETG  Settings       Settings, customize options, menu option 0
  RACFSETH  Settings       Define Showmvs dataset to LIBDEF

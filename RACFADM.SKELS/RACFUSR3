@@ -27,6 +27,7 @@
 )ENDDOT
 )ENDSEL
 )SEL &RACFSFIL = C
+RACFADM - User Profiles
 Group,Access
 -----,------
 )DOT &TABLEB

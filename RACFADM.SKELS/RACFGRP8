@@ -24,6 +24,7 @@
 )ENDDOT
 )ENDSEL
 )SEL &RACFSFIL = C
+RACFADM - Group Profiles
 Group,SupGrp,Owner,Description
 -----,------,-----,-----------
 )DOT &TABLEA

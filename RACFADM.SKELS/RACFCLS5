@@ -29,6 +29,7 @@
 )ENDDOT
 )ENDSEL
 )SEL &RACFSFIL = C
+RACFADM - General Resources
 Group/ID,Access
 --------,------
 )DOT &TABLEB

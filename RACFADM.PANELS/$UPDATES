@@ -2,6 +2,27 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  18 June 2020 - V29R2
+     - User, Group, Dataset and General Resources (Opt 1/2/3/4)
+       -- Updated primary command SAve
+          o Added title when saving as a CSV file
+     - Reports (Option R)
+       -- Allow typing in a relative GDG in 'IRRDBU00 Dataset" field
+          o For example: PRD.RACF.IRRDBU00(0) or (-1), etc.
+       -- Updated JCL to include 'UNIT=SYSDA' on all temporary datasets
+          o For sites with no SMS
+       -- The temporary dataset's UNIT and SPACE parameters can
+          be defined/set by using the primary command JOB
+          o And they can be set site wide in panel member $DEFSETG
+       -- Fixed displaying the 'Define JOB card' panel when:
+            ZLLGJOB1 = '//USERID   JOB (ACCOUNT),'NAME'
+       -- Added more information to the tutorial panel
+     - Tutorials (Option T)
+       -- Updated the below help panels
+            #RACCLS5/8
+     - Other Items
+       -- Updated member $DIR in all datasets
+
   17 June 2020 - V29R1
      - Other Items
        -- Updated $REPORTS and #RACRPTS in panel dataset

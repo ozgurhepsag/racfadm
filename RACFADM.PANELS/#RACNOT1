@@ -20,7 +20,7 @@
 +    %$DEFSETG+in the panel dataset.  To override these settings, create a
 +     member called%$DEFSITE+and define/set any of the variables
 !     *+The%$DEFSITE+member is optional, but if it exists, it will be read and
-+       override any settings defined in member%$DEFSETG+
++       override any settings defined in member%$DEFSETG
 !     *+This will prevent from having to update the%$DEFSETG+member every time
 +       a new version of%RACFADM+is installed
 !     *+The user's%Settings+are saved in!ISPF+profile dataset member%RADMPROF

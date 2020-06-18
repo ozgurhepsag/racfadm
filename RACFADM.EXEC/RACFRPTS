@@ -10,11 +10,14 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A3  200618  RACFA    Fix when JOB card is defined, save ZCMD      */
+/* @A2  200618  RACFA    Use $DEFSETG vars for temp dsn unit/space    */
+/* @A1  200618  RACFA    Fixed displaying job card                    */
 /* @A0  200617  RACFA    Developed REXX                               */
 /*====================================================================*/
 X           = MSG("OFF")
 PANEL01     = "RACFRPTS"   /* Display reports              */
-PANEL99     = "ISPISMLJ"   /* IBM's define JOB card        */
+PANEL99     = "RACFRPTJ"   /* Define JOB card/JCL parms    */
 SKELETON1   = "RACFRPTU"   /* RACF unload pgm (IRRDBU00)   */
 SKELETON2   = "RACFRPTS"   /* RACF reports (ICETOOL/DSMON) */
 TABLEA      = "RADM"RANDOM(0,9999)
@@ -25,7 +28,7 @@ REXXPGM     = LEFT(REXXPGM,8)
 
 ADDRESS ISPEXEC
   "VGET (SETGDISP SETMSHOW SETMTRAC SETDRPTU",
-        "RACFRJCL) PROFILE"
+        "SETJRPTU SETJRPTS RACFRJCL) PROFILE"                 /* @A2 */
   If (SETMTRAC <> 'NO') then do
      Say "*"COPIES("-",70)"*"
      Say "*"Center("Begin Program = "REXXPGM,70)"*"
@@ -35,6 +38,10 @@ ADDRESS ISPEXEC
   end
   IF (RACFRJCL = "") THEN
      RACFRJCL    = "Y"
+  IF (SETJRPTU = "") THEN                                     /* @A2 */
+     SETJRPTU = "SYSDA"                                       /* @A2 */
+  IF (SETJRPTS = "") THEN                                     /* @A2 */
+     SETJRPTS = "(CYL,(100,100))"                             /* @A2 */
 
   ZSCROLLD = "CSR"
   "VPUT (ZSCROLLD)"
@@ -222,8 +229,24 @@ CREATE_JCL:
 ADDRESS ISPEXEC
   "FTOPEN TEMP"
   "VGET (ZTEMPF ZLLGJOB1)"
-  IF (ZLLGJOB1 = "") THEN
+
+  /*-----------------------------------------------*/         /* @A1 */
+  /* If IBM's ISPF JOB card variable is:           */         /* @A1 */
+  /*   ZLLGJOB1 =                                  */         /* @A1 */
+  /* or                                            */         /* @A1 */
+  /*   ZLLGJOB1 = //USERID   JOB (ACCOUNT),'NAME'  */         /* @A1 */
+  /* or                                            */         /* @A1 */
+  /*   ZLLGJOB1 = //@??##### JOB (??T),'NAME',etc. */         /* @A1 */
+  /* or                                            */         /* @A1 */
+  /*   ZLLGJOB1 = //JOB-NAME JOB (???),'NAME',etc. */         /* @A1 */
+  /*-----------------------------------------------*/         /* @A1 */
+  PARSE UPPER VAR ZLLGJOB1 W1 .                               /* @A1 */
+  IF (ZLLGJOB1 = "") | (W1 = "//USERID"),                     /* @A1 */
+   | (W1 = "//@??#####") | (W1 = "//JOB-NAME") THEN DO        /* @A1 */
+     TMPZCMD = ZCMD                                           /* @A3 */
      CALL DEFINE_JOB_CARD
+     ZCMD    = TMPZCMD                                        /* @A3 */
+  END
 
   IF (ABBREV("UNLOAD",ZCMD,1) = 1) THEN DO
      CALL GET_RACF_DSNS
@@ -337,21 +360,33 @@ SORTSEQ:
   INTERPRET "SORT"SUBSTR(SORTCOL,1,4)" = TMPSEQ"
 RETURN
 /*--------------------------------------------------------------------*/
-/*  RACFRPTs - Define JOB card                                        */
+/*  Define JOB card and JCL parameters                                */
 /*--------------------------------------------------------------------*/
 DEFINE_JOB_CARD:
-  "ADDPOP"
   "VGET (ZLLGJOB1)"
-  IF (ZLLGJOB1 = "") THEN DO
+  /*-----------------------------------------------*/         /* @A1 */
+  /* If IBM's ISPF JOB card variable is:           */         /* @A1 */
+  /*   ZLLGJOB1 =                                  */         /* @A1 */
+  /* or                                            */         /* @A1 */
+  /*   ZLLGJOB1 = //USERID   JOB (ACCOUNT),'NAME'  */         /* @A1 */
+  /* or                                            */         /* @A1 */
+  /*   ZLLGJOB1 = //@??##### JOB (??T),'NAME',etc. */         /* @A1 */
+  /*-----------------------------------------------*/         /* @A1 */
+  PARSE VAR ZLLGJOB1 W1 .                                     /* @A1 */
+  IF (ZLLGJOB1 = "") | (W1 = "//USERID") then do              /* @A1 */
      ZLLGJOB1 = "//job-name JOB (acct),'first-last-name',"
      ZLLGJOB2 = "//         MSGCLASS=?,CLASS=?,"||,
                 "REGION=0M,NOTIFY=&SYSUID"
      "VPUT (ZLLGJOB1 ZLLGJOB2)"
   END
+  'control display save'                                      /* @A1 */
+  "ADDPOP"
   DO FOREVER
      "DISPLAY PANEL("PANEL99")"
      IF (RC = 8) THEN LEAVE
   END
   "REMPOP"
-  "VPUT (ZLLGJOB1 ZLLGJOB2 ZLLGJOB3 ZLLGJOB4)"
+  'control display restore'                                   /* @A1 */
+  "VPUT (ZLLGJOB1 ZLLGJOB2 ZLLGJOB3 ZLLGJOB4",
+        "SETJRPTU SETJRPTS) PROFILE"                          /* @A2 */
 RETURN
