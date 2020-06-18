@@ -2,6 +2,16 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  18 June 2020 - V29R4
+     - Reports (Option R)
+       -- Ensure when chking 1st word of job card, it is in UPPER case
+       -- Changed default temp dataset's UNIT to SYSALLDA, was SYSDA
+          o Updated both REXX program RACFRPTS and $DEFSETG parm mbr
+
+  18 June 2020 - V29R3
+     - Reports (Option R)
+       -- Updated tutorials
+
   18 June 2020 - V29R2
      - User, Group, Dataset and General Resources (Opt 1/2/3/4)
        -- Updated primary command SAve

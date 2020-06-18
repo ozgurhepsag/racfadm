@@ -10,6 +10,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A5  200618  RACFA    Chg UNIT to be SYSALLDA, was SYSDA           */
+/* @A4  200618  RACFA    Fix chking 1st word in job card no. 1 (Upper)*/
 /* @A3  200618  RACFA    Fix when JOB card is defined, save ZCMD      */
 /* @A2  200618  RACFA    Use $DEFSETG vars for temp dsn unit/space    */
 /* @A1  200618  RACFA    Fixed displaying job card                    */
@@ -39,7 +41,7 @@ ADDRESS ISPEXEC
   IF (RACFRJCL = "") THEN
      RACFRJCL    = "Y"
   IF (SETJRPTU = "") THEN                                     /* @A2 */
-     SETJRPTU = "SYSDA"                                       /* @A2 */
+     SETJRPTU = "SYSALLDA"                                    /* @A5 */
   IF (SETJRPTS = "") THEN                                     /* @A2 */
      SETJRPTS = "(CYL,(100,100))"                             /* @A2 */
 
@@ -372,7 +374,7 @@ DEFINE_JOB_CARD:
   /* or                                            */         /* @A1 */
   /*   ZLLGJOB1 = //@??##### JOB (??T),'NAME',etc. */         /* @A1 */
   /*-----------------------------------------------*/         /* @A1 */
-  PARSE VAR ZLLGJOB1 W1 .                                     /* @A1 */
+  PARSE UPPER VAR ZLLGJOB1 W1 .                               /* @A4 */
   IF (ZLLGJOB1 = "") | (W1 = "//USERID") then do              /* @A1 */
      ZLLGJOB1 = "//job-name JOB (acct),'first-last-name',"
      ZLLGJOB2 = "//         MSGCLASS=?,CLASS=?,"||,

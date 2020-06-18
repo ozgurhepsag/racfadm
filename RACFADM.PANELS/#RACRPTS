@@ -4,29 +4,24 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
    !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
 )BODY EXPAND(\\)
-%Tutorial+\-\(%RACFRPTS - RACF Reports - 2 of 2+)\-\%Tutorial
+%Tutorial+\-\(%RACFRPTS - RACF Reports+)\-\%Tutorial
 %Command ===>_ZCMD
++
+%Reports+will create RACF reports via a batch job using:
+!  -+IBM's DFSORT ICETOOL using IRRDBU00 unload dataset
+!  -+IBM's Data Security Monitor (DSMON)
 +
 +Primary Commands
 %  Find text        +Find a text string
 %  Sort column A/D  +Sort column, ascending/descending, cols are point-and-shoot
 %  Locate text      +Locate text in the sorted column
 %  Only text        +Only display rows with text string
-%  Reset            +Redisplay all rows and sort first column
+%  Reset text       +Redisplay all rows and sort first column
 %  Unload           +Unload the RACF database using IRRDBU00
 %  Job              +Define JOB card
 +
 +Line Commands
 %  S  !Select       +Select reports
-+
-+
-+
-+
-+
-+
-+
-+
-+ \ \ (press%ENTER+to continue) \ \
 )PROC
-  &ZCONT   = #RACRPT1
+  &ZUP     = #RACRPTS
 )END
