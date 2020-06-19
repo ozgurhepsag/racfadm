@@ -17,8 +17,8 @@
 %  Job              +Define JOB card
 +
 +Line Commands
-%  S  !Select       +Select reports
-+
+%  S  !Select       +Select report
+%  R  !Reset        +Unselect report
 +
 +
 +

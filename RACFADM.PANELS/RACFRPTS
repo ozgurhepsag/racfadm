@@ -12,11 +12,11 @@
 +\-\(%RACFADM - RACF Reports+)\-\
 %Command ==>_ZCMD                                                  %Scr =>_Z   +
 +
-+SELECT: %S+Select                                        %F3+- Edit/Submit Job
++SELECT: %S+Select,%R+Reset                               %F3+- Edit/Submit Job
 +
 +IRRDBU00 Dataset:_SETDRPTU                                + Edit JCL:_Z{ (Y/N)
 +
-%S  ~Rec   ~Name  ~Program  ~                   Description
+%S  ~Rec  ~Name   ~Program  ~                   Description
 %-------------------------------------------------------------------------------
 )MODEL CLEAR(OPTA)
 _ZZZ    Z      Z        œZ

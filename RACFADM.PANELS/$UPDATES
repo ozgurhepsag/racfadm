@@ -2,6 +2,15 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  19 June 2020 - V29R8
+     - Reports (Option R)
+       * Added line command 'R' for reset
+       * Fixed editing/submitting a JOB card when executing primary
+         command RESET, to remove all selected reports
+       * Adjusted column header on panel
+       * Standardized reports JCL
+       * Updated tutorial
+
   19 June 2020 - V29R7
      - Reports (Option R)
        -- Place all selected reports into one job, prior would submit
@@ -20,7 +29,7 @@
           * Added CNTL card 'OPTION VLSHRT', preventing IEC218A msg
        -- Changed report $CFQG
           * The SORTOUT DD card will set the SPACE parameter to what
-            what was defined in $DEFSETG or the JOB panel
+            was defined in $DEFSETG or the JOB panel
        -- Fixed displaying error message if $REPORTS member does not
           have any entries/reports to display
      - Other Items
@@ -66,7 +75,7 @@
 
   18 June 2020 - V29R4
      - Reports (Option R)
-       -- Ensure when chking 1st word of job card, it is in UPPER case
+       -- Ensure when checking 1st word of job card, it is in UPPER case
        -- Changed default temp dataset's UNIT to SYSALLDA, was SYSDA
           o Updated both REXX program RACFRPTS and $DEFSETG parm mbr
 

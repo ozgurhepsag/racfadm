@@ -9,6 +9,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AE  200619  RACFA    Added line cmd 'R', remove '*'               */
+/* @AD  200619  RACFA    F3 out, no disp job card, when RESET typed   */
 /* @AC  200619  RACFA    If ALL rpts selected, remove others selected */
 /* @AB  200619  RACFA    Init RNUM with number of rows                */
 /* @AA  200619  LBD      Place all rpts selected into one job         */
@@ -192,11 +194,15 @@ DISP_PANEL:
      ZCMD = ""; PARM = ""
      'control display save'
      Select
-        when (opta = 'S')  then do                            /* @AA */
-          doit = '*'                                          /* @AA */
-          'tbput' tablea                                      /* @AA */
-          selects = 1                                         /* @AA */
-          end                                                 /* @AA */
+        when (opta = 'S') then do                             /* @AA */
+             doit = '*'                                       /* @AA */
+             'tbput' tablea                                   /* @AA */
+             selects = 1                                      /* @AA */
+        end                                                   /* @AA */
+        when (opta = 'R') then do                             /* @AE */
+             doit = ' '                                       /* @AE */
+             'tbput' tablea                                   /* @AE */
+        end                                                   /* @AE */
         otherwise nop
      End
      'control display restore'
@@ -205,7 +211,11 @@ DISP_PANEL:
   /*----------------------------------------------------*/    /* @AA */
   /* If any reports were selected then generate the JCL */    /* @AA */
   /*----------------------------------------------------*/    /* @AA */
-  if (selects = 1) then call create_jcl                       /* @AA */
+  if (selects = 1) then do                                    /* @AC */
+     CALL CHK_ALL                                             /* @AE */
+     IF (SUBMIT = "Y") THEN                                   /* @AE */
+        CALL CREATE_JCL
+  END                                                         /* @AE */
                                                               /* @AA */
   "VPUT (SETDRPTU RACFRJCL) PROFILE"
 RETURN
@@ -213,6 +223,7 @@ RETURN
 /*  Create/populate table                                             */
 /*--------------------------------------------------------------------*/
 CREATE_TABLEA:
+SELECTS = ""                                                  /* @AD */
 ADDRESS ISPEXEC
   "TBCREATE "TABLEA" NAMES(REC DOIT NAME PGM DESC",           /* @AA */
                           "DESCCAPS) NOWRITE REPLACE"         /* @AA */
@@ -339,8 +350,6 @@ ADDRESS ISPEXEC
      ZCMD    = TMPZCMD                                        /* @A3 */
   END
 
-  CALL CHK_ALL                                                /* @AC */
-
   "FTINCL "SKELETON1                                          /* @A8 */
   IF (ABBREV("UNLOAD",ZCMD,1) = 1) THEN DO
      CALL GET_RACF_DSNS
@@ -415,13 +424,15 @@ GET_RACF_DSNS:
     end
 RETURN
 /*--------------------------------------------------------------------*/
-/*  Unselect 'ALL', if other reports selected                     @AC */
+/*  Verify at least one report was selected and unselect 'ALL',  @AC  */
+/*  if other reports were selected, eliminating duplication      @AC  */
 /*--------------------------------------------------------------------*/
 CHK_ALL:                                                      /* @AC */
   "TBSORT "TABLEA" FIELDS(REC,C,A)"                           /* @AC */
   "TBSKIP "TABLEA                                             /* @AC */
   "TBGET  "TABLEA                                             /* @AC */
                                                               /* @AC */
+  SUBMIT = "N"                                                /* @AE */
   IF (REC = "ALL") & (DOIT = "*") THEN DO                     /* @AC */
      DO J = 2 TO RNUM                                         /* @AC */
         "TBSKIP "TABLEA                                       /* @AC */
@@ -431,6 +442,15 @@ CHK_ALL:                                                      /* @AC */
            "TBPUT "TABLEA                                     /* @AC */
         END                                                   /* @AC */
      END                                                      /* @AC */
+     SUBMIT = "Y"                                             /* @AE */
   END                                                         /* @AC */
+  ELSE DO                                                     /* @AE */
+     DO J = 2 TO RNUM                                         /* @AE */
+        "TBSKIP "TABLEA                                       /* @AE */
+        "TBGET  "TABLEA                                       /* @AE */
+        IF (DOIT = "*") THEN                                  /* @AE */
+           SUBMIT = "Y"                                       /* @AE */
+     END                                                      /* @AE */
+  END                                                         /* @AE */
   "TBTOP "TABLEA                                              /* @AC */
 RETURN                                                        /* @AC */
