@@ -11,7 +11,7 @@
 +       changing the RACF database!(Userids, Groups, etc.)+and customizing
 +       the utility!(Settings)+
 !     -+Alphabetic entries!(A-Z)+are used to assist in maintaining or
-+       documenting RACFADM
++       documenting%RACFADM
 +
 %  2)+The menu is defined as a primary menu, allowing the capability to type
 +     in%=1, =2, =n+to jump around from one panel to another

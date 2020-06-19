@@ -1,6 +1,7 @@
 )ATTR DEFAULT(%+_)
    _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON) JUST(LEFT)   HILITE(USCORE)
    !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
+   @  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(RED)
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
 %Tutorial+\-\(%RACFADM - Group Profiles+)\-\%Tutorial
@@ -18,10 +19,10 @@
 +Line Commands
 %  S  !Show         +List user connected to the group
 %  L  !List         +Issue LISTUSER command
-%  P  !Profile      +List user profile using IRRXUTIL (admin RACF API)
-%  C  !Change       +Change group connection (admin)
-%  A  !Add          +Connect user to group (admin)
-%  R  !Remove       +Remove user from group (admin)
+%  P  !Profile      +List user profile using IRRXUTIL@(admin RACF API)
+%  C  !Change       +Change group connection@(admin)
+%  A  !Add          +Connect user to group@(admin)
+%  R  !Remove       +Remove user from group@(admin)
 )PROC
   &ZUP     = #RACGRP5
 )END

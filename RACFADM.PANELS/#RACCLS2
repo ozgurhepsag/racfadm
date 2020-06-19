@@ -1,6 +1,7 @@
 )ATTR DEFAULT(%+_)
    _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON) JUST(LEFT)   HILITE(USCORE)
    !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
+   @  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(RED)
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
 %Tutorial+\-\(%RACFADM - General Resources+)\-\%Tutorial
@@ -18,10 +19,10 @@
 +Line Commands
 %  S  !Show         +List of permits defined for this profile
 %  L  !List         +Issue RLIST command
-%  P  !Profile      +List profile using IRRXUTIL (admin RACF API)
-%  C  !Change       +Change profile attributes (admin)
-%  A  !Add          +Add profile to RACF (admin)
-%  R  !Remove       +Remove profile from RACF (admin)
+%  P  !Profile      +List profile using IRRXUTIL@(admin RACF API)
+%  C  !Change       +Change profile attributes@(admin)
+%  A  !Add          +Add profile to RACF@(admin)
+%  R  !Remove       +Remove profile from RACF@(admin)
 )PROC
   &ZUP     = #RACCLS2
 )END

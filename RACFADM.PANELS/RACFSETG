@@ -121,7 +121,7 @@
 /*         SET .... Settings (option 0)                               */
 /*         # ...... G=General, M=Management, T=Adding TSO Userid,     */
 /*                  P=Program/Panel (Load, REXX or CLIST member),     */
-/*                  D=Dataset and R=Refresh                           */
+/*                  D=Dataset, J=JCL and R=Refresh                    */
 /*          ???? ... Field name, any characters and for Refresh       */
 /*                   variables (4th chr = R) the section name         */
 /*                   (GEN, MGT, TSO, MVS and IBM)                     */

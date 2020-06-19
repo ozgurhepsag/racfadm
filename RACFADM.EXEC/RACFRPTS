@@ -5,11 +5,11 @@
 /*               - IBM's DFSORT ICETOOL using IRRDBU00 unload dataset */
 /*               - IBM's Data Security Monitor (DSMON)                */
 /*            2) Reads in panel dataset member $REPORTS to obtain     */
-/*               list of reports                                      */
-/*            3) Uses IBM's 'Define JOB card' panel (ISPF =0)         */
+/*               and display the list of reports                      */
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A9  200619  RACFA    Relocated obtaining ISPF Job card variables  */
 /* @A8  200618  RACFA    Added SKELETON1 for JOB card                 */
 /* @A7  200618  RACFA    Chg SKELETON1/2 to SKELETON2/3               */
 /* @A6  200618  RACFA    Obtain ZLLGJOB3/4 variables                  */
@@ -34,7 +34,9 @@ REXXPGM     = LEFT(REXXPGM,8)
 
 ADDRESS ISPEXEC
   "VGET (SETGDISP SETMSHOW SETMTRAC SETDRPTU",
-        "SETJRPTU SETJRPTS RACFRJCL) PROFILE"                 /* @A2 */
+        "SETJRPTU SETJRPTS RACFRJCL",                         /* @A2 */
+        "ZLLGJOB1 ZLLGJOB2 ZLLGJOB3 ZLLGJOB4) PROFILE"        /* @A9 */
+
   If (SETMTRAC <> 'NO') then do
      Say "*"COPIES("-",70)"*"
      Say "*"Center("Begin Program = "REXXPGM,70)"*"
@@ -224,73 +226,6 @@ ADDRESS ISPEXEC
   "TBSORT " TABLEA "FIELDS("sort")"
 RETURN
 /*--------------------------------------------------------------------*/
-/*  Create Batch job                                                  */
-/*--------------------------------------------------------------------*/
-CREATE_JCL:
-ADDRESS ISPEXEC
-  "FTOPEN TEMP"
-  "VGET (ZTEMPF ZLLGJOB1 ZLLGJOB2 ZLLGJOB3 ZLLGJOB4)"         /* @A6 */
-
-  /*-----------------------------------------------*/         /* @A1 */
-  /* If IBM's ISPF JOB card variable is:           */         /* @A1 */
-  /*   ZLLGJOB1 =                                  */         /* @A1 */
-  /* or                                            */         /* @A1 */
-  /*   ZLLGJOB1 = //USERID   JOB (ACCOUNT),'NAME'  */         /* @A1 */
-  /* or                                            */         /* @A1 */
-  /*   ZLLGJOB1 = //@??##### JOB (??T),'NAME',etc. */         /* @A1 */
-  /* or                                            */         /* @A1 */
-  /*   ZLLGJOB1 = //JOB-NAME JOB (???),'NAME',etc. */         /* @A1 */
-  /*-----------------------------------------------*/         /* @A1 */
-  PARSE UPPER VAR ZLLGJOB1 W1 .                               /* @A1 */
-  IF (ZLLGJOB1 = "") | (W1 = "//USERID"),                     /* @A1 */
-   | (W1 = "//@??#####") | (W1 = "//JOB-NAME") THEN DO        /* @A1 */
-     TMPZCMD = ZCMD                                           /* @A3 */
-     CALL DEFINE_JOB_CARD
-     ZCMD    = TMPZCMD                                        /* @A3 */
-  END
-
-  "FTINCL "SKELETON1                                          /* @A8 */
-  IF (ABBREV("UNLOAD",ZCMD,1) = 1) THEN DO
-     CALL GET_RACF_DSNS
-     "FTINCL "SKELETON2                                       /* @A7 */
-  END
-  ELSE
-     "FTINCL "SKELETON3                                       /* @A7 */
-  "FTCLOSE"
-
-  IF (RACFRJCL = "Y") THEN
-     "EDIT DATASET('"ztempf"')"
-  ELSE DO
-     ADDRESS TSO "SUBMIT '"ztempf"'"
-     RACFSMSG = "Job Submitted"
-     RACFLMSG = "Batch job was submitted.  Invoke SDSF",
-                "to view output"
-     "SETMSG MSG(RACF011)"
-  END
-RETURN
-/*--------------------------------------------------------------------*/
-/*  RACF primary and backup database names                            */
-/*--------------------------------------------------------------------*/
-GET_RACF_DSNS:
-    cvt      = c2x(storage(10,4))
-    cvtrac$  = d2x((x2d(cvt))+992)
-    cvtrac   = c2x(storage(cvtrac$,4))
-    rcvtsta$ = d2x((x2d(cvtrac))+56)
-    RACFDPRM = strip(storage(rcvtsta$,44))
-    RCVT     = D2X(X2D(CVT) +X2D(3E0))
-    RCVT     = C2X(STORAGE(RCVT,4))
-    DSDT     = D2X(X2D(RCVT) + X2D(E0))
-    DSDT     = C2X(STORAGE(DSDT,4))
-    DSDTBACK = D2X(X2D(DSDT) + X2D(140))
-    BNAME    = D2X(X2D(DSDTBACK) + X2D(21))
-    RACFDBKP = STRIP(STORAGE(BNAME,44))
-    RACFDTMP = RACFDBKP
-    if (RACFDBKP = "") then do
-        RACFDBKP = "N/A"
-        RACFDTMP = RACFDPRM
-    end
-RETURN
-/*--------------------------------------------------------------------*/
 /*  Process primary command FIND for TABLEA                           */
 /*--------------------------------------------------------------------*/
 DO_FINDA:
@@ -362,6 +297,51 @@ SORTSEQ:
   INTERPRET "SORT"SUBSTR(SORTCOL,1,4)" = TMPSEQ"
 RETURN
 /*--------------------------------------------------------------------*/
+/*  Create Batch job                                                  */
+/*--------------------------------------------------------------------*/
+CREATE_JCL:
+ADDRESS ISPEXEC
+  "FTOPEN TEMP"
+  "VGET (ZTEMPF)"                                             /* @A9 */
+
+  /*-----------------------------------------------*/         /* @A1 */
+  /* If IBM's ISPF JOB card variable is:           */         /* @A1 */
+  /*   ZLLGJOB1 =                                  */         /* @A1 */
+  /* or                                            */         /* @A1 */
+  /*   ZLLGJOB1 = //USERID   JOB (ACCOUNT),'NAME'  */         /* @A1 */
+  /* or                                            */         /* @A1 */
+  /*   ZLLGJOB1 = //@??##### JOB (??T),'NAME',etc. */         /* @A1 */
+  /* or                                            */         /* @A1 */
+  /*   ZLLGJOB1 = //JOB-NAME JOB (???),'NAME',etc. */         /* @A1 */
+  /*-----------------------------------------------*/         /* @A1 */
+  PARSE UPPER VAR ZLLGJOB1 W1 .                               /* @A1 */
+  IF (ZLLGJOB1 = "") | (W1 = "//USERID"),                     /* @A1 */
+   | (W1 = "//@??#####") | (W1 = "//JOB-NAME") THEN DO        /* @A1 */
+     TMPZCMD = ZCMD                                           /* @A3 */
+     CALL DEFINE_JOB_CARD
+     ZCMD    = TMPZCMD                                        /* @A3 */
+  END
+
+  "FTINCL "SKELETON1                                          /* @A8 */
+  IF (ABBREV("UNLOAD",ZCMD,1) = 1) THEN DO
+     CALL GET_RACF_DSNS
+     "FTINCL "SKELETON2                                       /* @A7 */
+  END
+  ELSE
+     "FTINCL "SKELETON3                                       /* @A7 */
+  "FTCLOSE"
+
+  IF (RACFRJCL = "Y") THEN
+     "EDIT DATASET('"ztempf"')"
+  ELSE DO
+     ADDRESS TSO "SUBMIT '"ztempf"'"
+     RACFSMSG = "Job Submitted"
+     RACFLMSG = "Batch job was submitted.  Invoke SDSF",
+                "to view output"
+     "SETMSG MSG(RACF011)"
+  END
+RETURN
+/*--------------------------------------------------------------------*/
 /*  Define JOB card and JCL parameters                                */
 /*--------------------------------------------------------------------*/
 DEFINE_JOB_CARD:
@@ -380,6 +360,7 @@ DEFINE_JOB_CARD:
                 "REGION=0M,NOTIFY=&SYSUID"
      "VPUT (ZLLGJOB1 ZLLGJOB2)"
   END
+
   'control display save'                                      /* @A1 */
   "ADDPOP"
   DO FOREVER
@@ -388,6 +369,29 @@ DEFINE_JOB_CARD:
   END
   "REMPOP"
   'control display restore'                                   /* @A1 */
+
   "VPUT (ZLLGJOB1 ZLLGJOB2 ZLLGJOB3 ZLLGJOB4",
         "SETJRPTU SETJRPTS) PROFILE"                          /* @A2 */
+RETURN
+/*--------------------------------------------------------------------*/
+/*  Get RACF primary and backup database names                        */
+/*--------------------------------------------------------------------*/
+GET_RACF_DSNS:
+    cvt      = c2x(storage(10,4))
+    cvtrac$  = d2x((x2d(cvt))+992)
+    cvtrac   = c2x(storage(cvtrac$,4))
+    rcvtsta$ = d2x((x2d(cvtrac))+56)
+    RACFDPRM = strip(storage(rcvtsta$,44))
+    RCVT     = D2X(X2D(CVT) +X2D(3E0))
+    RCVT     = C2X(STORAGE(RCVT,4))
+    DSDT     = D2X(X2D(RCVT) + X2D(E0))
+    DSDT     = C2X(STORAGE(DSDT,4))
+    DSDTBACK = D2X(X2D(DSDT) + X2D(140))
+    BNAME    = D2X(X2D(DSDTBACK) + X2D(21))
+    RACFDBKP = STRIP(STORAGE(BNAME,44))
+    RACFDTMP = RACFDBKP
+    if (RACFDBKP = "") then do
+        RACFDBKP = "N/A"
+        RACFDTMP = RACFDPRM
+    end
 RETURN

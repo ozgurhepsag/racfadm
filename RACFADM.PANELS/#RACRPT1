@@ -9,20 +9,20 @@
 %Command ===>~ZCMD
 +
 %Reports+will create RACF reports via a batch job using:
-!  -+IBM's DFSORT ICETOOL using IRRDBU00 unload dataset
-!  -+IBM's Data Security Monitor (DSMON)
+!  -+IBM's!DFSORT ICETOOL+using!IRRDBU00+unload dataset
+!  -+IBM's Data Security Monitor!(DSMON)
 +
 +Report!Names+starting with the following characters where obtained from:
 %  $+and%@!...+IBM's!SYS1.SAMPLIB(IRRICE)
 %  #!.........^https://www.ibm.com/support/pages/dfsortmvs-downloads
 %  #ICE!......^https//oocities.org/steveneeland/Sort_Reports.html
 +
-+IBM's!Define JOB card+panel will be displayed when:
-!  -+Selecting a report and the variable!ZLLGJOB1+is empty or contains
-+    the default value of!//USERID   JOB (ACCOUNT),'NAME'
-!  -+Typing in%JOB+on the primary command line
++The!Define JOB Card+panel will be displayed when:
+!  -+Selecting a report and the ISPF variable!ZLLGJOB1+is empty or
++    contains the default value of!//USERID   JOB (ACCOUNT),'NAME'
+!  -+Or typing in%JOB+on the primary command line
 +
-+The!IRRDBU00 Dataset+can and the temporary dataset's UNIT/SPACE parameters
++The!IRRDBU00 Dataset+name and the temporary dataset's!UNIT/SPACE+parameters
 +can be defined for all users by updating panel members!$DEFSETG+or!$DEFSITE
 +
 +

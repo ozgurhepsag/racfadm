@@ -2,6 +2,24 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  19 June 2020 - V29R6
+     - Commands (Option C)
+       -- Updated title on panel, standardization
+     - Reports (Option R)
+       -- Updated bullets/highlighting in tutorial panel $RACRPT1
+       -- Deleted dead tutorial member $RACRPTS, no longer used
+       -- Minor cleanup (relocate VGETs/etc.) in REXX program RACFRPTS
+     - Tutorials (Option T)
+       -- Standardized highlighting in option 'Menu'
+       -- Fixed 'RACF Reports' was not allowing one to go to the
+          next tutorial
+       -- Moved 'press ENTER to continue' to bottom of screen in
+          'Publications' slide 2 of 2
+       -- Changed the color of '(admin)' to red in several help panels
+     - Other Items
+       -- Updated documentation in several panels/rexxs, concerning
+          the naming standards of the 'Settings' variables
+
   18 June 2020 - V29R5
      - Main Menu
        -- Fixed displaying message informing user they do not have
@@ -11,7 +29,7 @@
        -- Fixed getting ISPF variables ZLLGJOB3/4, added to VGET card
        -- Fixed report 200H, changed SCHEDULED to 462 columns, was 471,
           preventing RC=16
-       -- Relocated JOB card into a seperate skeleton member, reduce
+       -- Relocated JOB card into a separate skeleton member, reduce
           duplication
      - Other Items
        -- Changed all REXX programs to use SYSALLDA when allocating

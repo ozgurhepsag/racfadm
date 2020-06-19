@@ -12,7 +12,7 @@
 +
 +Primary Commands
 %    SOrt column order +Sort the table using the column name
-+                       order is A or D (default is A)
++                       order is%A+or%D+(default is A)
 +                       Column headers are point and shoot to sort
 +                       1st use sort Ascending, 2nd use sort Descending
 %    Locate cmd next   +Locate the requested command in the table

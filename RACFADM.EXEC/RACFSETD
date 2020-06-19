@@ -24,7 +24,8 @@
 /*                   SET .... Settings (Option 0)                     */
 /*                   # ...... G=General, M=Management, T=Adding TSO   */
 /*                            Userid, P=Program/Panel (Load, REXX or  */
-/*                            CLIST member), D=Dataset and R=Refresh  */
+/*                            CLIST member), D=Dataset, J=JCL and     */
+/*                            R=Refresh                               */
 /*                   ???? ... Field name, any characters and for      */
 /*                            Refresh variables (4th chr = R) the     */
 /*                            variables (4th chr = R) the section     */
