@@ -15,10 +15,15 @@
 //*                 BACKUP ... &RACFDBKP
 //*            2) MAY NEED TO CHANGE INDD1 AND OUTDD DATASET NAMES
 //*-------------------------------------------------------------------*
+//DELETE   EXEC  PGM=IEFBR14
+//UNLOAD   DD  DSN=&SETDRPTU,
+//             DISP=(MOD,DELETE,DELETE),
+//             UNIT=SYSALLDA,SPACE=(TRK,0)
+//*-------------------------------------------------------------------*
 //IRRDBU00 EXEC PGM=IRRDBU00,PARM=NOLOCKINPUT
 //INDD1    DD  DISP=SHR,DSN=&RACFDTMP
 //OUTDD    DD  DSN=&SETDRPTU,
 //             DISP=(NEW,CATLG,DELETE),
 //             DCB=(LRECL=4096,RECFM=VB,BLKSIZE=81920),
-//             UNIT=SYSDA,SPACE=(CYL,(300,300),RLSE)
+//             UNIT=SYSALLDA,SPACE=(CYL,(300,300),RLSE)
 //SYSPRINT DD  SYSOUT=*

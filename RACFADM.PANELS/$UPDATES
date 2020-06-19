@@ -2,6 +2,35 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  19 June 2020 - V29R7
+     - Reports (Option R)
+       -- Place all selected reports into one job, prior would submit
+          multiple jobs
+          * When selecting a report, it will place an asterisk to the
+            right of the selected report
+            o Identifying which report was selected
+          * Pressing F3 (END) will edit/submit the job/JCL
+          * And if 'ALL' and other reports are selected
+            o It will submit all the reports, with no duplicates
+       -- Updated UNLOAD command
+          * Added IEFBR14 step to delete the IRRDBU00 dataset prior to
+            creating, when typing in UNLOAD on the primary command line
+          * Changed UNIT=SYSDA to SYSALLDA when creating IRRDBU00 dsn
+       -- Fixed report 200H
+          * Added CNTL card 'OPTION VLSHRT', preventing IEC218A msg
+       -- Changed report $CFQG
+          * The SORTOUT DD card will set the SPACE parameter to what
+            what was defined in $DEFSETG or the JOB panel
+       -- Fixed displaying error message if $REPORTS member does not
+          have any entries/reports to display
+     - Other Items
+       -- Fixed REXX programs:
+          * RACFADM
+            o Allow LIBDEFing the skeleton dataset with a last level
+              qualifier of 'SKELS', prior would only except 'ISPSLIB'
+          * RACFADM, RACFCMDS and RACFRPTS
+            o Fixed initializing variable NULL in REXX programs
+
   19 June 2020 - V29R6
      - Commands (Option C)
        -- Updated title on panel, standardization

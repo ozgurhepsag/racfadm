@@ -12,18 +12,18 @@
 +\-\(%RACFADM - RACF Reports+)\-\
 %Command ==>_ZCMD                                                  %Scr =>_Z   +
 +
-+SELECT: %S+Select
++SELECT: %S+Select                                        %F3+- Edit/Submit Job
 +
 +IRRDBU00 Dataset:_SETDRPTU                                + Edit JCL:_Z{ (Y/N)
 +
-%S ~Rec   ~Name  ~Program  ~                   Description
+%S  ~Rec   ~Name  ~Program  ~                   Description
 %-------------------------------------------------------------------------------
 )MODEL CLEAR(OPTA)
-_Z+Z    Z      Z        œZ
+_ZZZ    Z      Z        œZ
 )INIT
   .CURSOR = ZCMD
   .HELP   = #RACRPT1
-  .ZVARS  = '(ZSCROLLD RACFRJCL OPTA REC NAME PGM DESC)'
+  .ZVARS  = '(ZSCROLLD RACFRJCL OPTA DOIT REC NAME PGM DESC)'
 )PROC
   &SROW = &Z
   IF (&ZCMD = &Z)

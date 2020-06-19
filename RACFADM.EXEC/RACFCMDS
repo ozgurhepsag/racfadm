@@ -7,6 +7,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A8  200619  RACFA    Initalize the variable NULL                  */
 /* @A7  200519  TRIDJK   Allow logging of RACF commands               */
 /* @A6  200430  RACFA    Added skeleton RACF commands to table        */
 /* @A5  200430  RACFA    Place table name in variable at top of REXX  */
@@ -33,6 +34,7 @@ RACFCMDS.4  = "RL ?        * ALL"                             /* @A6 */
 RACFCMDS.5  = "RL ?        ?        AUTH"                     /* @A6 */
 RACFCMDS.6  = "SEARCH CLASS(?       ) USER(?       )"         /* @A6 */
 RACFCMDS.7  = "SETROPTS LIST"                                 /* @A6 */
+NULL        = ''                                              /* @A8 */
 parse source . . REXXPGM .         /* Obtain REXX pgm name */ /* @A3 */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @A3 */
 

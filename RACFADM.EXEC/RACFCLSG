@@ -97,9 +97,9 @@ EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @BD */
 TABLEA      = 'TA'RANDOM(0,99999)  /* Unique table name A  */ /* @BT */
 TABLEB      = 'TB'RANDOM(0,99999)  /* Unique table name B  */ /* @BU */
 DDNAME      = 'RACFA'RANDOM(0,999) /* Unique ddname        */ /* @BP */
+NULL        = ''                                              /* @BV */
 parse source . . REXXPGM .         /* Obtain REXX pgm name */ /* @BO */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @BO */
-NULL        = ''                                              /* @BV */
 
 ADDRESS ISPEXEC                                               /* @AG */
   Arg Rclass Rfilter Rdisp

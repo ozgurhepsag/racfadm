@@ -16,6 +16,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AC  200619  RACFA    Initialize the variable NULL                 */
+/* @AB  200619  LBD      Fixed datasets w/ last qual. as 'SKEL'       */
 /* @AA  200610  RACFA    Added skeleton dataset                       */
 /* @A9  200520  RACFA    Fixed RFIND, LIBDEF and TBCLOSE using $STUB  */
 /* @A8  200519  TRIDJK   Check user cmd table before site cmd table   */
@@ -30,6 +32,7 @@
 /*====================================================================*/
 PANEL01     = "RACFMENU"  /* RACF Main Menu                */ /* @A2 */
 REXXPGM1    = "RACFSETD"  /* Obtain settings for new user  */ /* @A4 */
+NULL        = ""                                              /* @AC */
 Arg RAOPT                 /* Invoked using $STUB mbr       */ /* @A6 */
 
 ADDRESS ISPEXEC
@@ -64,25 +67,27 @@ SETUP:
   end
   dsname = translate(dsname,' ','.')
   panels = "'"subword(dsname,1,words(dsname)-1)" PANELS'"
+  skels  = "'"subword(dsname,1,words(dsname)-1)" SKELS'"      /* @AB */
   msgs   = "'"subword(dsname,1,words(dsname)-1)" MSGS'"
   plib   = "'"subword(dsname,1,words(dsname)-1)" ISPPLIB'"    /* @A1 */
   slib   = "'"subword(dsname,1,words(dsname)-1)" ISPSLIB'"    /* @AA */
   mlib   = "'"subword(dsname,1,words(dsname)-1)" ISPMLIB'"    /* @A1 */
   panels = translate(panels,'.',' ')
   msgs   = translate(msgs,'.',' ')
+  skels  = translate(skels,'.',' ')                            /*@AB */
   plib   = translate(plib,'.',' ')                            /* @A1 */
   slib   = translate(slib,'.',' ')                            /* @AA */
   mlib   = translate(mlib,'.',' ')                            /* @A1 */
   x = listdsi(plib)                                           /* @A1 */
   if (x = 0) then panels = plib                               /* @A1 */
   x = listdsi(slib)                                           /* @AA */
-  if (x = 0) then skeletons = slib                            /* @AA */
+  if (x = 0) then skels = slib                                /* @AB */
   x = listdsi(mlib)                                           /* @A1 */
   if (x = 0) then msgs = mlib                                 /* @A1 */
   Address TSO 'Altlib Act app(Exec) Dataset('exec')'
   'Libdef ISPMLIB dataset id('msgs') Stack'
   'Libdef ISPPLIB dataset id('panels') Stack'
-  'Libdef ISPSLIB dataset id('skeletons') Stack'              /* @AA */
+  'Libdef ISPSLIB dataset id('skels') Stack'                  /* @AB */
 RETURN
 /*--------------------------------------------------------------------*/
 /*  Define the ISPF Command Table to enable RFIND                @A3  */

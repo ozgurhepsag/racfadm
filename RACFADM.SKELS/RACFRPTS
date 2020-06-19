@@ -3,10 +3,13 @@
 )CM*------------------------------------------------------------------*
 )CM*  FLG  YYMMDD  USERID   DESCRIPTION
 )CM*  ---  ------  -------  ------------------------------------------
+)CM*  @L1  200619  SLBD     Support multiple reports in one job
 )CM*  @A2  200618  RACFA    Removed JOB card, moved to seperate member
 )CM*  @A1  200618  RACFA    Fix rpt 200H, chg SCHEDULED to 462, was 471
 )CM*  @A0  200617  RACFA    Created skeleton
 )CM*------------------------------------------------------------------*
+)DOT &TABLEA
+)SEL &DOIT EQ *
 )SEL &REC NE 100C AND &REC NE 400A AND &REC NE 400B AND &REC < 900
 //*-------------------------------------------------------------------*
 //*                           RACF Reports
@@ -17,7 +20,8 @@
 //* z/OS Security Server RACF Security Administrator's Guide SA23-2289
 //* z/OS Security Server RACF Macros and Interfaces SA23-2288
 //*-------------------------------------------------------------------*
-//ICETOOL EXEC PGM=ICETOOL,REGION=0M,PARM='MSGPRT=ALL'
+)SETF NAME = &LEFT(&NAME,8, )
+//&NAME EXEC PGM=ICETOOL,REGION=0M,PARM='MSGPRT=ALL'
 //DBUDATA  DD  DISP=SHR,DSN=&SETDRPTU
 //SORTWK01 DD  UNIT=&SETJRPTU,SPACE=&SETJRPTS
 //SORTWK02 DD  UNIT=&SETJRPTU,SPACE=&SETJRPTS
@@ -1369,6 +1373,7 @@
   INCLUDE COND=(5,4,CH,EQ,C'0200',AND,
           (462,10,CH,NE,C'          ',OR,
           54,3,CH,EQ,C'YES'))
+  OPTION  VLSHRT
 )ENDSEL
 )SEL &REC = 200I | &REC = ALL
 //I200CNTL DD  *
@@ -1722,7 +1727,7 @@
 //             SPACE=&SETJRPTS
 //SYSOUT   DD  SYSOUT=*
 //SORTOUT  DD  DSN=&&TEMP,DISP=(NEW,DELETE,DELETE),
-//             SPACE=(CYL,(20,5,0)),UNIT=&SETJRPTU
+//             SPACE=&SETJRPTS,UNIT=&SETJRPTU
 //SYSIN    DD  *
   SORT    FIELDS=(10,44,CH,A)
   INCLUDE COND=(5,4,CH,EQ,C'0400',AND,62,4,CH,EQ,C'YES ',AND,
@@ -2136,3 +2141,5 @@
 //SYSIN    DD  *
   FUNCTION USRDSN
 )ENDSEL
+)ENDSEL
+)ENDDOT
