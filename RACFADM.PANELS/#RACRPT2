@@ -14,12 +14,12 @@
 %  Only text        +Only display rows with text string
 %  Reset            +Redisplay all rows and sort first column
 %  Unload           +Unload the RACF database using IRRDBU00
-%  Job              +Define JOB card
+%  Job              +Define JOB card and parameters (UNIT, SPACE, etc.)
+%  SUbmit           +Submit the job
 +
 +Line Commands
 %  S  !Select       +Select report
 %  R  !Reset        +Unselect report
-+
 +
 +
 +

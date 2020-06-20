@@ -2,14 +2,22 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  20 June 2020 - V29R9
+     - Enqueues (Option E)
+       -- Simplified report, reduced lines and paging down/up
+          * Displaying all enqueues on 1 or 2 screens/pages
+     - Reports (Option R)
+       -- Added primary command SUbmit
+       -- Updated tutorial
+
   19 June 2020 - V29R8
      - Reports (Option R)
-       * Added line command 'R' for reset
-       * Fixed editing/submitting a JOB card when executing primary
-         command RESET, to remove all selected reports
-       * Adjusted column header on panel
-       * Standardized reports JCL
-       * Updated tutorial
+       -- Added line command 'R' for reset
+       -- Fixed editing/submitting a JOB card when executing primary
+          command RESET, to remove all selected reports
+       -- Adjusted column header on panel
+       -- Standardized reports JCL
+       -- Updated tutorial
 
   19 June 2020 - V29R7
      - Reports (Option R)
@@ -38,7 +46,7 @@
             o Allow LIBDEFing the skeleton dataset with a last level
               qualifier of 'SKELS', prior would only except 'ISPSLIB'
           * RACFADM, RACFCMDS and RACFRPTS
-            o Fixed initializing variable NULL in REXX programs
+            * Fixed initializing variable NULL in REXX programs
 
   19 June 2020 - V29R6
      - Commands (Option C)
@@ -77,7 +85,7 @@
      - Reports (Option R)
        -- Ensure when checking 1st word of job card, it is in UPPER case
        -- Changed default temp dataset's UNIT to SYSALLDA, was SYSDA
-          o Updated both REXX program RACFRPTS and $DEFSETG parm mbr
+          * Updated both REXX program RACFRPTS and $DEFSETG parm mbr
 
   18 June 2020 - V29R3
      - Reports (Option R)
@@ -86,15 +94,15 @@
   18 June 2020 - V29R2
      - User, Group, Dataset and General Resources (Opt 1/2/3/4)
        -- Updated primary command SAve
-          o Added title when saving as a CSV file
+          * Added title when saving as a CSV file
      - Reports (Option R)
        -- Allow typing in a relative GDG in 'IRRDBU00 Dataset" field
-          o For example: PRD.RACF.IRRDBU00(0) or (-1), etc.
+          * For example: PRD.RACF.IRRDBU00(0) or (-1), etc.
        -- Updated JCL to include 'UNIT=SYSDA' on all temporary datasets
-          o For sites with no SMS
+          * For sites with no SMS
        -- The temporary dataset's UNIT and SPACE parameters can
           be defined/set by using the primary command JOB
-          o And they can be set site wide in panel member $DEFSETG
+          * And they can be set site wide in panel member $DEFSETG
        -- Fixed displaying the 'Define JOB card' panel when:
             ZLLGJOB1 = '//USERID   JOB (ACCOUNT),'NAME'
        -- Added more information to the tutorial panel

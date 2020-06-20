@@ -105,6 +105,10 @@
                zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
           When substr(zdata,i+8,11) = 'og ***     ' then /* ISPLog   */
                zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
+          When substr(zdata,i+8,6) = ' Enqs ' then       /* Enqueues */
+               zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
+          When substr(zdata,i+8,6) = ' ---- ' then       /* Enqueues */
+               zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
           Otherwise do
              if vtype = 'TREE' then
                 zshadow = overlay(colorr,zshadow,i+8,5)

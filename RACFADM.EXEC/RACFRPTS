@@ -9,6 +9,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AF  200620  RACFA    Added primary command SUBMIT                 */
 /* @AE  200619  RACFA    Added line cmd 'R', remove '*'               */
 /* @AD  200619  RACFA    F3 out, no disp job card, when RESET typed   */
 /* @AC  200619  RACFA    If ALL rpts selected, remove others selected */
@@ -187,6 +188,21 @@ DISP_PANEL:
            "TBSORT "TABLEA" FIELDS("sort")"
            "TBTOP  "TABLEA
         END
+        WHEN (ABBREV("SUBMIT",ZCMD,2) = 1) THEN DO            /* @AF */
+             if (selects = 1) then do                         /* @AF */
+                CALL CHK_ALL                                  /* @AF */
+                IF (SUBMIT = "Y") THEN                        /* @AF */
+                   CALL CREATE_JCL                            /* @AF */
+                CALL CLEAR_DOIT                               /* @AF */
+             END                                              /* @AF */
+             else do                                          /* @AF */
+                RACFSMSG = "No reports selected"              /* @AF */
+                RACFLMSG = "Please select at least",          /* @AF */
+                           "one report to edit or",           /* @AF */
+                           "submit."                          /* @AF */
+                "SETMSG MSG(RACF011)"                         /* @AF */
+             end                                              /* @AF */
+        END                                                   /* @AF */
         WHEN ABBREV("UNLOAD",ZCMD,1) = 1 THEN
              CALL CREATE_JCL
         otherwise NOP
@@ -454,3 +470,19 @@ CHK_ALL:                                                      /* @AC */
   END                                                         /* @AE */
   "TBTOP "TABLEA                                              /* @AC */
 RETURN                                                        /* @AC */
+/*--------------------------------------------------------------------*/
+/*  Clear the DOIT field on all reports                          @AF  */
+/*--------------------------------------------------------------------*/
+CLEAR_DOIT:                                                   /* @AF */
+  "TBTOP "TABLEA                                              /* @AF */
+                                                              /* @AF */
+  DO J = 2 TO RNUM                                            /* @AF */
+     "TBSKIP "TABLEA                                          /* @AF */
+     "TBGET  "TABLEA                                          /* @AF */
+     IF (DOIT = "*") THEN DO                                  /* @AF */
+        DOIT = ""                                             /* @AF */
+        "TBPUT "TABLEA                                        /* @AF */
+     END                                                      /* @AF */
+  END                                                         /* @AF */
+  "TBTOP "TABLEA                                              /* @AF */
+RETURN                                                        /* @AF */

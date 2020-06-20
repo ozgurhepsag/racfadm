@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AT  200620  RACFA    Reduced lines displayed, less paging down/up */
 /* @AS  200616  RACFA    Chg panel name RACFRPTS to RACFDISP          */
 /* @AR  200611  RACFA    Moved database enqueues to top of list       */
 /* @AQ  200611  RACFA    Added ISPSLIB enqueues                       */
@@ -38,6 +39,8 @@ PANELM2     = "RACFMSG2"   /* Display RACF command and RC  */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */ /* @A2 */
 QNAME       = "SYSDSN"     /* MAJOR resource name for DSNs */
 DDNAME      = 'RACFA'RANDOM(0,999) /* Unique ddname        */ /* @A9 */
+RECENQ.     = ""                                              /* @AT */
+CNT         = 0            /* Record counter               */ /* @AT */
 parse source . . REXXPGM .         /* Obtain REXX pgm name */ /* @AL */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @AL */
 
@@ -58,7 +61,31 @@ ADDRESS ISPEXEC
   call Get_enqs "ISPPLIB"                                     /* @A7 */
   call Get_enqs "ISPSLIB"                                     /* @AQ */
   call Get_enqs "ISPMLIB"                                     /* @A7 */
-  QUEUE ""
+
+  QUEUE "*"COPIES("-",70)"*"                                  /* @AT */
+  QUEUE "*"Center("RACFADM - Enqueues",70)"*"                 /* @AT */
+  QUEUE "*"COPIES("-",70)"*"                                  /* @AT */
+  QUEUE " "                                                   /* @AT */
+  QUEUE " Enqs   "CENTER("Dataset",44)                        /* @AT */
+  QUEUE " ----   "COPIES("-",44)                              /* @AT */
+  DO J = 1 TO RECENQ.0                                        /* @AT */
+     PARSE VAR RECENQ.J KEY DSN ENQ .                         /* @AT */
+     IF (KEY = "D") THEN                                      /* @AT */
+        QUEUE " "RIGHT(ENQ,4)"   "LEFT(DSN,44)                /* @AT */
+     IF (KEY = "E") THEN DO                                   /* @AT */
+        PARSE VAR RECENQ.J KEY LPAR ENQ USERID NAME           /* @AT */
+        SELECT                                                /* @AT */
+           WHEN (ENQ = "SHARE") THEN ENQ = "SHR"              /* @AT */
+           WHEN (ENQ = "EXCLU") THEN ENQ = "EXC"              /* @AT */
+           OTHEWISE NOP                                       /* @AT */
+        END                                                   /* @AT */
+        QUEUE COPIES(" ",10)LEFT(LPAR,8)" ",                  /* @AT */
+              ENQ"  "LEFT(USERID,8)" ",                       /* @AT */
+              LEFT(NAME,21)                                   /* @AT */
+     END                                                      /* @AT */
+  END                                                         /* @AT */
+  DROP RECENQ.                                                /* @AT */
+  QUEUE                                                       /* @AT */
 
   ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",
               "LRECL(80) BLKSIZE(0) RECFM(F B)",              /* @A5 */
@@ -128,21 +155,14 @@ GET_ENQS:                                                     /* @A7 */
   IF (ROWS = 0) THEN DO                                       /* @A7 */
      IF (QUERYRC <> 8) THEN                                   /* @AE */
         "TBCLOSE "ENQTBL                                      /* @A7 */
-     QUEUE COPIES("-",72)                                     /* @AK */
-     QUEUE '*'CENTER(Rname" - 0 Enqueues",70)'*'              /* @AO */
-     QUEUE COPIES("-",72)                                     /* @AK */
+     CNT = CNT + 1                                            /* @AT */
+     RECENQ.CNT = "D "RNAME" 0"                               /* @AT */
+     RECENQ.0 = CNT                                           /* @AT */
      RETURN                                                   /* @A7 */
   END                                                         /* @A7 */
   ELSE DO                                                     /* @A7 */
-     QUEUE COPIES("-",72)                                     /* @AK */
-     ENQUES = strip(rows,'L',0)                               /* @AK */
-     QUEUE '*'CENTER(Rname" - "ENQUES" Enqueues",70)'*'       /* @AM */
-     QUEUE COPIES("-",72)                                     /* @AK */
-     QUEUE " "
-     QUEUE "         Lpar     Disp    Jobname ",              /* @A7 */
-           Copies(" ",12)"Name"
-     QUEUE "       --------   -----   --------",              /* @A7 */
-           "  "Copies("-",25)
+     CNT         = CNT + 1                                    /* @AT */
+     RECENQ.CNT = "D "RNAME" "strip(rows,'L',0)               /* @AT */
 
      DO J = 1 TO ROWS
         "TBSKIP "ENQTBL
@@ -158,12 +178,13 @@ GET_ENQS:                                                     /* @A7 */
         else
            parse var cmdrec.1 . "NAME="luname "OWNER=" .
         X = OUTTRAP("OFF")
-        QUEUE "       "LEFT(ZENSYST,8)"   "ZENDISP"  ",       /* @A7 */
-              LEFT(ZENJOB,8)"   "Luname
+        CNT = CNT + 1                                         /* @AT */
+        RECENQ.CNT = "E "ZENSYST" "ZENDISP,                   /* @AT */
+                     ZENJOB" "LUNAME                          /* @AT */
      END
   END
+  RECENQ.0 = CNT                                              /* @AT */
   "TBCLOSE "ENQTBL
-  QUEUE " "                                                   /* @A7 */
   DROP CMDREC.                                                /* @A1 */
 RETURN                                                        /* @A7 */
 /*--------------------------------------------------------------------*/
@@ -182,33 +203,33 @@ RETURN                                                        /* @A7 */
 /*--------------------------------------------------------------------*/
 GET_CLIST_DSN:                                                /* @A7 */
 ADDRESS TSO                                                   /* @A7 */
-  X = OUTTRAP("REC.")                                         /* @A7 */
+  X = OUTTRAP("RECALT.")                                      /* @A7 */
   "ALTLIB DISPLAY"                                            /* @A7 */
   X = OUTTRAP("OFF")                                          /* @A7 */
                                                               /* @A7 */
-  IF (SUBSTR(REC.2,1,3) = "IKJ") THEN                         /* @AD */
-     PARSE VAR REC.2 . W1 W2 "DDNAME="DDALTLIB                /* @AD */
+  IF (SUBSTR(RECALT.2,1,3) = "IKJ") THEN                      /* @AD */
+     PARSE VAR RECALT.2 . W1 W2 "DDNAME="DDALTLIB             /* @AD */
   ELSE                                                        /* @AD */
-     PARSE VAR REC.2 W1 W2 "DDNAME="DDALTLIB                  /* @A7 */
-  DROP REC.                                                   /* @A7 */
+     PARSE VAR RECALT.2 W1 W2 "DDNAME="DDALTLIB               /* @A7 */
+  DROP RECALT.                                                /* @A7 */
   RC = 0                                                      /* @AA */
   IF (W1 <> "Application-level") THEN DO                      /* @AC */
      RC = 8                                                   /* @AA */
      return                                                   /* @A7 */
   END                                                         /* @AA */
                                                               /* @A7 */
-  X = OUTTRAP("REC.")                                         /* @A7 */
+  X = OUTTRAP("RECLA.")                                       /* @A7 */
   "LISTA STATUS"                                              /* @A7 */
   X = OUTTRAP("OFF")                                          /* @A7 */
-  do J = 1 TO REC.0                                           /* @A7 */
-     PARSE VAR REC.J W1 .                                     /* @A7 */
+  do J = 1 TO RECLA.0                                         /* @A7 */
+     PARSE VAR RECLA.J W1 .                                   /* @A7 */
      IF (W1 = DDALTLIB) THEN DO                               /* @A7 */
         K = J - 1                                             /* @A7 */
-        DSNAME = REC.K                                        /* @A7 */
+        DSNAME = RECLA.K                                      /* @A7 */
         LEAVE                                                 /* @A7 */
      END                                                      /* @A7 */
   end                                                         /* @A7 */
-  DROP REC. W1 DDALTLIB                                       /* @A7 */
+  DROP RECLA. W1 DDALTLIB                                     /* @A7 */
 ADDRESS ISPEXEC                                               /* @A7 */
 RETURN                                                        /* @A7 */
 /*--------------------------------------------------------------------*/
