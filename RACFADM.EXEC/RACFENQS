@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AU  200621  RACFA    Shifted over report by 2 characters          */
 /* @AT  200620  RACFA    Reduced lines displayed, less paging down/up */
 /* @AS  200616  RACFA    Chg panel name RACFRPTS to RACFDISP          */
 /* @AR  200611  RACFA    Moved database enqueues to top of list       */
@@ -66,12 +67,12 @@ ADDRESS ISPEXEC
   QUEUE "*"Center("RACFADM - Enqueues",70)"*"                 /* @AT */
   QUEUE "*"COPIES("-",70)"*"                                  /* @AT */
   QUEUE " "                                                   /* @AT */
-  QUEUE " Enqs   "CENTER("Dataset",44)                        /* @AT */
-  QUEUE " ----   "COPIES("-",44)                              /* @AT */
+  QUEUE "   Enqs   "CENTER("Dataset",44)                      /* @AU */
+  QUEUE "   ----   "COPIES("-",44)                            /* @AU */
   DO J = 1 TO RECENQ.0                                        /* @AT */
      PARSE VAR RECENQ.J KEY DSN ENQ .                         /* @AT */
      IF (KEY = "D") THEN                                      /* @AT */
-        QUEUE " "RIGHT(ENQ,4)"   "LEFT(DSN,44)                /* @AT */
+        QUEUE "   "RIGHT(ENQ,4)"   "LEFT(DSN,44)              /* @AU */
      IF (KEY = "E") THEN DO                                   /* @AT */
         PARSE VAR RECENQ.J KEY LPAR ENQ USERID NAME           /* @AT */
         SELECT                                                /* @AT */
@@ -79,7 +80,7 @@ ADDRESS ISPEXEC
            WHEN (ENQ = "EXCLU") THEN ENQ = "EXC"              /* @AT */
            OTHEWISE NOP                                       /* @AT */
         END                                                   /* @AT */
-        QUEUE COPIES(" ",10)LEFT(LPAR,8)" ",                  /* @AT */
+        QUEUE COPIES(" ",12)LEFT(LPAR,8)" ",                  /* @AU */
               ENQ"  "LEFT(USERID,8)" ",                       /* @AT */
               LEFT(NAME,21)                                   /* @AT */
      END                                                      /* @AT */

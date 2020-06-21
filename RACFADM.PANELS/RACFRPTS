@@ -6,7 +6,7 @@
    _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON) JUST(LEFT)  HILITE(USCORE)
    %  TYPE(TEXT)    INTENS(HIGH) SKIP(ON)
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
-   {  TYPE(TEXT)    INTENS(LOW)  SKIP(ON)  COLOR(BLUE)
+   {  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(BLUE)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
 +\-\(%RACFADM - RACF Reports+)\-\
@@ -52,11 +52,10 @@ _ZZZ    Z      Z        œZ
               A   = LC.0 - 1 + 2 * GDGNO
               DSNDBU = SUBWORD(LC.A,3,1)
            END
+           DROP LC.
         END
         ELSE
            DSNDBU = SETDRPTU
-        DROP LC.
-
         IF (SYSDSN("'"DSNDBU"'") <> "OK") THEN DO
            RACFSMSG = 'DSN does not exist'
            RACFLMSG = 'The dataset does not reside in the catalog',

@@ -1,0 +1,31 @@
+)ATTR DEFAULT(%+_)
+   _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON) JUST(LEFT) HILITE(USCORE)
+   +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
+   !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
+   %  TYPE(TEXT)    INTENS(HIGH) SKIP(ON)
+)BODY EXPAND(\\)
+%Tutorial+\-\(%RACFADM - RACF Messages+)\-\%Tutorial
+%Command ===>_ZCMD
++
+%Messages+will scan the active or backup!OPERLOG+or!SYSLOG+datasets for
+!ICH408I INSUFFICIENT ACCESS+and!VIOLATIONS+messages in foreground or batch
++
++It uses!SDSF+to obtain the active!OPERLOG+and your userid must be
++authorized to view the!SDSF LOG (OPERLOG and SYSLOG)
++
++The search criteria can be userid, lpar, date, only USS messages and type of
+!ICH408I+message (insufficient access or violations)
++
++A small message in the upper right hand corner of the screen will display
++the total number of!ICH408I+messages found
++
++The!Backup dataset+name can be:
+!  -+An absolute, relative or base GDG
+!    --+When it is a base GDG, it will use the generation with a create date
++       of minus 1, due to the backup was taken after midnight
+!  -+Defined for all users by updating the panel members%$DEFSETG+or%$DEFSITE
++
++A!Job card+must be supplied when executing in batch mode
+)PROC
+  &ZUP     = #RACMSG
+)END

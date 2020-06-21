@@ -1,0 +1,35 @@
+)CM*------------------------------------------------------------------*
+)CM*  PURPOSE:  RACFADM - RACF MESSAGES - BATCH JOB
+)CM*------------------------------------------------------------------*
+)CM*  FLG  YYMMDD  USERID   DESCRIPTION
+)CM*  ---  ------  -------  ------------------------------------------
+)CM*  @A0  200620  RACFA    CREATED SKELETON
+)CM*------------------------------------------------------------------*
+)DEFAULT  )#?!<|>
+//*-------------------------------------------------------------------*
+//*  PURPOSE:  SCAN OPERLOG DATASET FOR ICH408I 'INSUFFICIENT' MSGS
+//*-------------------------------------------------------------------*
+//IKJEFT1B EXEC PGM=IKJEFT1B,REGION=0M,PARM=RACFMSG
+//SYSPROC  DD  DISP=SHR,DSN=#DSNREXX
+)SEL #RACFMLOG EQ B
+//OPERLOG  DD  DISP=SHR,DSN=#DSNBKLOG
+)ENDSEL
+//ERRORS   DD  DISP=(NEW,PASS),DSN=&&ERRORS,
+//             DCB=(RECFM=VB,LRECL=132,BLKSIZE=0),
+//             UNIT=SYSALLDA,SPACE=(CYL,(100,100),RLSE)
+//SYSTSPRT DD  SYSOUT=*
+//SYSTSIN  DD  DUMMY
+//PARMS    DD  *
+  USERID(#RACFMID)
+  LPAR(#RACFMLPR)
+  DATE(#RACFMDAT)
+  TYPE(#RACFMTYP)
+  USSONLY(#RACFMUSS)
+  OPERLOG(#RACFMLOG)
+//*-------------------------------------------------------------------*
+//PRTERRS  EXEC PGM=IDCAMS
+//SYSPRINT DD  SYSOUT=*
+//TMPFILE  DD  DISP=SHR,DSN=&&ERRORS
+//ERRMSGS  DD  SYSOUT=*,DCB=(RECFM=VB,LRECL=132,BLKSIZE=0)
+//SYSIN    DD  *
+  REPRO INFILE(TMPFILE) OUTFILE(ERRMSGS)

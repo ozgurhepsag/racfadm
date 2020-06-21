@@ -26,6 +26,7 @@
  RACFIBM   IBM's RACF     RACF Menu options: System, RRSF, Certificates
  RACFLOG   Documentation  Display changes/issues/isplog, opt C/I/L
  RACFMVS   Showmvs        Execute/display Showmvs RACF data, menu opt 7
+ RACFMSG   Messages       RACF messages, menu option M
  RACFMSGC  Message        Display 'Confirm Request' panel
  RACFMSGS  Message        Display error message
  RACFOMVS  OMVS Commands  Exec RACF OMVS cmds (OPERMIT/ORALTER/ORLIST)

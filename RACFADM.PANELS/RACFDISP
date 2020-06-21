@@ -109,6 +109,10 @@
                zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
           When substr(zdata,i+8,6) = ' ---- ' then       /* Enqueues */
                zshadow = overlay(titlec,zshadow,i+8,zwidth-8)
+          When substr(zdata,i+64,7) = 'ICH408I' then     /* Errors   */
+               call hlite_errs
+          When substr(zdata,i+9,7)  = 'ICH408I' then     /* Errors   */
+               call hlite_errs
           Otherwise do
              if vtype = 'TREE' then
                 zshadow = overlay(colorr,zshadow,i+8,5)
@@ -136,13 +140,25 @@
                            color = colory
                    end /* Select */
                    zshadow = overlay(color,zshadow,i+8+li,1)
-                   if substr(zdata,i+8+li+2) /= '|' then
+                   if substr(zdata,i+8+li+2) /= '|' then   /*GrpTree */
                       zshadow = overlay(colorw,zshadow,i+8+li+2,10)
                 end /* if */
              end /* Do li */
           end /* Otherwise */
        end /* Select */
     end  /* Do i */
+    RETURN
+    HLITE_ERRS:                          /* Highlite ICH408I message */
+      zshadow = overlay(colort,zshadow,i+8,zwidth-8)
+      If (substr(zdata,i+72,5) = 'USER(') then
+         zshadow = overlay(colorr,zshadow,i+77,3)
+      If (substr(zdata,i+17,5) = 'USER(') then
+         zshadow = overlay(colorr,zshadow,i+22,8)
+      If (substr(zdata,i+32,6) = 'GROUP(') then
+         zshadow = overlay(colorr,zshadow,i+38,8)
+      If (substr(zdata,i+48,5) = 'NAME(') then
+         zshadow = overlay(colorr,zshadow,i+53,20)
+    RETURN
   *ENDREXX
 )REINIT
   REFRESH(*)

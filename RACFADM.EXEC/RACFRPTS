@@ -29,7 +29,7 @@
 X           = MSG("OFF")
 PANEL01     = "RACFRPTS"   /* Display reports              */
 PANEL99     = "RACFRPTJ"   /* Define JOB card/JCL parms    */
-SKELETON1   = "RACFRPTJ"   /* Job card                     */ /* @A8 */
+SKELETON1   = "RACFJOB"    /* Job card                     */ /* @A8 */
 SKELETON2   = "RACFRPTU"   /* RACF unload pgm (IRRDBU00)   */ /* @A7 */
 SKELETON3   = "RACFRPTS"   /* RACF reports (ICETOOL/DSMON) */ /* @A7 */
 TABLEA      = "RADM"RANDOM(0,9999)

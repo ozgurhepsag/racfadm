@@ -27,6 +27,7 @@ ADDRESS ISPEXEC
   end
   IF (SETPMVS = "") THEN                                      /* @A2 */
      SETPMVS = "SHOWZOS"                                      /* @A2 */
+
   racflmsg = "Retrieving data - Please be patient"
   "control display lock"
   "display msg(RACF011)"

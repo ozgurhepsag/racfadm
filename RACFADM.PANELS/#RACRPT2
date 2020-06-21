@@ -4,7 +4,7 @@
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
    !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
 )BODY EXPAND(\\)
-%Tutorial+\-\(%RACFRPTS - RACF Reports - 2 of 2+)\-\%Tutorial
+%Tutorial+\-\(%RACFADM - RACF Reports - 2 of 2+)\-\%Tutorial
 %Command ===>_ZCMD
 +
 +Primary Commands

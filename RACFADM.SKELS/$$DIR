@@ -14,8 +14,9 @@
  RACFDSN5  Dataset        Show groups and access
  RACFGRP5  Group          List userids and access
  RACFGRP8  Group          List groups and descriptions
+ RACFJOB   Job card       JOB card
+ RACFMSG   Messages       RACF messages
  RACFPRMS  Parameter      RACF parameters
- RACFRPTJ  Reports        RACF reports, JOB card
  RACFRPTS  Reports        RACF reports, All reports
  RACFRPTU  Reports        RACF reports, IRRDBU00 unload utility
  RACFUSR2  User           List userids

@@ -38,6 +38,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AB  200620  RACFA    Add code to refresh RACFMSGs OPERLOG Bkp dsn */
 /* @AA  200617  RACFA    Add code to refresh RACFRPTs IRRDBU00 dsn    */
 /* @A9  200617  RACFA    Fix refreshing several sections (TSO/MGT/etc)*/
 /* @A8  200528  RACFA    Allow forcing redefining a sections variables*/
@@ -193,48 +194,50 @@ ADDRESS ISPEXEC
      CKCHR1TO4 = SUBSTR(W1,1,4)                               /* @A9 */
      CKCHR4TO7 = SUBSTR(W1,4,4)                               /* @A9 */
      SELECT                                                   /* @A8 */
-        /* Is this a variable used to Refresh?    */          /* @A8 */
-        WHEN (CKCHR1TO4 = "SETR") THEN DO                     /* @A9 */
+        /* Is this a variable used to Refresh?     */         /* @A8 */
+        WHEN (CKCHR1TO4 = "SETR") THEN                        /* @A9 */
              CKRESVAR = W1                                    /* @A9 */
-        END
-        /* Refresh 'General' variables?           */          /* @A8 */
+        /* Refresh 'General' variables?            */         /* @A8 */
         WHEN (CKRESVAR = "SETRGEN"),                          /* @A9 */
            & (SETRGEN = "YES") THEN                           /* @A9 */
              IF (CKCHR1TO4 = "SETG") THEN                     /* @A9 */
                 INTERPRET "'VPUT ("W1") PROFILE'"             /* @A8 */
-        /* Refresh 'Management' variables?        */          /* @A8 */
+        /* Refresh 'Management' variables?         */         /* @A8 */
         WHEN (CKRESVAR = "SETRMGT"),                          /* @A9 */
            & (SETRMGT = "YES") THEN                           /* @A9 */
              IF (CKCHR1TO4 = "SETM") THEN                     /* @A9 */
                 INTERPRET "'VPUT ("W1") PROFILE'"             /* @A8 */
-        /* Refresh 'Adding TSO Userid' variables? */          /* @A8 */
+        /* Refresh 'Adding TSO Userid' variables?  */         /* @A8 */
         WHEN (CKRESVAR = "SETRTSO"),                          /* @A9 */
-           & (SETRTSO = "YES") THEN DO                        /* @A9 */
+           & (SETRTSO = "YES") THEN                           /* @A9 */
              IF (CKCHR1TO4 = "SETT") THEN                     /* @A9 */
                 INTERPRET "'VPUT ("W1") PROFILE'"             /* @A8 */
-        END                                                   /* @A8 */
-        /* Refresh SHOWMVS program and dataset?   */          /* @A8 */
+        /* Refresh SHOWMVS program and dataset?    */         /* @A8 */
         WHEN (CKRESVAR = "SETRTSO"),                          /* @A9 */
            & (SETRMVS = "YES") THEN                           /* @A9 */
              IF (CKCHR4TO7 = "PMVS"),                         /* @A9 */
               | (CKCHR4TO7 = "DMVS") THEN                     /* @A9 */
                 INTERPRET "'VPUT ("W1") PROFILE'"             /* @A8 */
-        /* Refresh IBM RACF panel and datasets?   */          /* @A8 */
+        /* Refresh IBM RACF panel and datasets?    */         /* @A8 */
         WHEN (CKRESVAR = "SETRIBM"),                          /* @A9 */
            & (SETRIBM = "YES") THEN                           /* @A9 */
              IF (CKCHR4TO7 = "PIBM"),                         /* @A9 */
               | (CKCHR4TO7 = "DIBM") THEN                     /* @A9 */
                 INTERPRET "'VPUT ("W1") PROFILE'"             /* @A8 */
-        /* Refresh RACFRPTS IRRDBU00 dataset?     */          /* @AA */
+        /* Refresh RACFRPTS IRRDBU00 dataset?      */         /* @AA */
         WHEN (CKRESVAR = "SETRRPT"),                          /* @AA */
-           & (SETRRPT = "YES") THEN DO                        /* @AA */
+           & (SETRRPT = "YES") THEN                           /* @AA */
              IF (CKCHR4TO7 = "DRPT") THEN                     /* @AA */
                 INTERPRET "'VPUT ("W1") PROFILE'"             /* @AA */
-        END
-        /* Not a new user?                        */          /* @A8 */
+        /* Refresh RACFMSG OPERLOG backip dataset? */         /* @AA */
+        WHEN (CKRESVAR = "SETRMSG"),                          /* @AB */
+           & (SETRMSG = "YES") THEN                           /* @AB */
+             IF (CKCHR4TO7 = "DMSG") THEN                     /* @AB */
+                INTERPRET "'VPUT ("W1") PROFILE'"             /* @AB */
+        /* Not a new user?                         */         /* @A8 */
         WHEN (NEWUSER = 'N') then                             /* @A8 */
              NOP                                              /* @A8 */
-        /* Must be a new user then                */          /* @A8 */
+        /* Must be a new user then                 */         /* @A8 */
         OTHERWISE                                             /* @A8 */
              INTERPRET "'VPUT ("W1") PROFILE'"                /* @A8 */
      END                                                      /* @A8 */

@@ -91,3 +91,8 @@ SETRRPT  = N /* Force refresh of 'Reports' variables (Y=Yes, N=No)   */
 SETDRPTU =                                  /* IRRDBU00 dataset name */
 SETJRPTU = SYSALLDA                         /* Temporary DSN UNIT=   */
 SETJRPTS = (CYL,(100,100))                  /* Temporary DSN SPACE=  */
+*---------------------------------------------------------------------*
+*  RACF Messages Operlog backup dataset (no quotes)                   *
+*---------------------------------------------------------------------*
+SETRMSG  = N /* Force refresh of 'Messages' variables (Y=Yes, N=No)  */
+SETDMSGO =                                  /* Operlog backup dsn    */

@@ -2,6 +2,23 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  21 June 2020 - V30R0
+     - Main Menu
+       -- Added below menu entry
+            M  Messages   RACF Messages
+     - Enqueues (Option E)
+       -- Shifted report over to the right two characters
+     - Reports (Option R)
+       -- Updated tutorials
+     - Tutorials (Option T)
+       -- Added 'RACF messages'
+     - Other Items
+       -- Updated member $DIR in all datasets
+       -- Added variable to initialize the Operlog backup dataset
+          name for new users in $DEFSETG or $DEFSITE
+       -- Renamed skeleton member RACFRPTJ to RACFJOB
+          * Used to insert a job card in all batch jobs
+
   20 June 2020 - V29R9
      - Enqueues (Option E)
        -- Simplified report, reduced lines and paging down/up

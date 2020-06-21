@@ -33,6 +33,7 @@
  #RACMENU  Tutorial       Main menu, menu option T
  #RACMEN1  Tutorial       Menu
  #RACMVS   Tutorial       RACF data (Showmvs)
+ #RACMSG   Tutorial       RACF messages
  #RACNOT1  Tutorial       Installation notes (1 of 3)
  #RACNOT2  Tutorial       Installation notes (2 of 3)
  #RACNOT3  Tutorial       Installation notes (3 of 3)
@@ -96,6 +97,7 @@
  RACFGRP7  Group          Add connection
  RACFGRP8  Group          List groups and descriptions
  RACFMENU  Menu           Main menu
+ RACFMSG   Messages       RACF messages, menu option M
  RACFMSG1  Message        'Confirm Request' (pop-up panel)
  RACFMSG2  Message        'RACF Command = Y', 3 lines (pop-up panel)
  RACFMSG3  Message        'RACF Command = Y', 7 lines (pop-up panel)

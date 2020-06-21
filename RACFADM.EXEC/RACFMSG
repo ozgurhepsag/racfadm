@@ -1,0 +1,469 @@
+/*%NOCOMMENT====================* REXX *==============================*/
+/*  PURPOSE:  RACFADM - RACF Errors - Menu Option E                   */
+/*--------------------------------------------------------------------*/
+/* FLG  YYMMDD  USERID   DESCRIPTION                                  */
+/* ---  ------  -------  -------------------------------------------- */
+/* @A0  200620  RACFA    Created REXX                                 */
+/*====================================================================*/
+TODAY      = DATE("U")
+ENV        = SYSVAR(SYSENV)
+
+ADDRESS ISPEXEC
+  ADDRESS TSO "PROFILE VARSTORAGE(HIGH)"
+  IF (ENV = "FORE") THEN
+     CALL FOREGROUND
+  ELSE
+     CALL BATCH
+EXIT
+/*--------------------------------------------------------------------*/
+/*  Execute in foreground mode                                        */
+/*--------------------------------------------------------------------*/
+FOREGROUND:
+  PANEL01    = "RACFMSG"            /* Pop-up data entry  */
+  PANEL02    = "RACFDISP"           /* ICH408I Color=Turq */
+  SKELETON1  = "RACFJOB"            /* JOB card           */
+  SKELETON2  = "RACFMSG"            /* TSO PARM=RACFERRS  */
+
+  "VGET (SETMTRAC RACFMID  RACFMLPR RACFMTYP",
+        "RACFMUSS RACFMMOD RACFMJCL RACFMLOG SETDMSGO",
+        "ZLLGJOB1 ZLLGJOB2 ZLLGJOB3 ZLLGJOB4) PROFILE"
+  If (SETMTRAC <> 'NO') then do
+     Say "*"COPIES("-",70)"*"
+     Say "*"Center("Begin Program = "REXXPGM,70)"*"
+     Say "*"COPIES("-",70)"*"
+     if (SETMTRAC <> 'PROGRAMS') THEN
+        interpret "Trace "SUBSTR(SETMTRAC,1,1)
+  end
+  IF (RACFMID  = "") THEN RACFMID  = "*"
+  IF (RACFMLPR = "") THEN RACFMLPR = "*"
+  RACFMDAT = DATE("U")
+  IF (RACFMTYP = "") THEN RACFMTYP = "A"
+  IF (RACFMUSS = "") THEN RACFMUSS = "N"
+  IF (RACFMMOD = "") THEN RACFMMOD = "F"
+  IF (RACFMJCL = "") THEN RACFMJCL = "Y"
+  IF (RACFMLOG = "") THEN RACFMLOG = "A"
+
+  /*-----------------------------------------------*/
+  /* If IBM's ISPF JOB card variable is:           */
+  /*   ZLLGJOB1 =                                  */
+  /* or                                            */
+  /*   ZLLGJOB1 = //USERID   JOB (ACCOUNT),'NAME'  */
+  /* or                                            */
+  /*   ZLLGJOB1 = //@??##### JOB (??T),'NAME',etc. */
+  /*-----------------------------------------------*/
+  PARSE UPPER VAR ZLLGJOB1 W1 .
+  IF (ZLLGJOB1 = "") | (W1 = "//USERID") then do
+     ZLLGJOB1 = "//job-name JOB (acct),'first-last-name',"
+     ZLLGJOB2 = "//         MSGCLASS=?,CLASS=?,"||,
+                "REGION=0M,NOTIFY=&SYSUID"
+     "VPUT (ZLLGJOB1 ZLLGJOB2)"
+  END
+
+  CALL GET_CLIST_DSN
+
+  DO FOREVER
+     DSNRPT = USERID()".RACFERRS.RPT"RANDOM()
+     "DISPLAY PANEL("PANEL01")"
+     IF (RC = 8) THEN LEAVE
+     PARSE VAR racfmdat MM "/" DD "/" YY .
+     YYYYMMDD = "20"YY""MM""DD
+     DDD      = DATE("D",YYYYMMDD,"S")
+     JDATE    = YY""DDD
+     IF (RACFMMOD = "F") THEN
+        CALL FOREGROUND_OPERLOG
+     ELSE
+        CALL FOREGROUND_BATCH_JCL
+  END
+  "VPUT (RACFMID  RACFMLPR RACFMTYP",
+        "RACFMUSS RACFMMOD RACFMJCL RACFMLOG SETDMSGO",
+        "ZLLGJOB1 ZLLGJOB2 ZLLGJOB3 ZLLGJOB4) PROFILE"
+
+  If (SETMTRAC <> 'NO') then do
+     Say "*"COPIES("-",70)"*"
+     Say "*"Center("End Program = "REXXPGM,70)"*"
+     Say "*"COPIES("-",70)"*"
+  end
+
+RETURN
+/*--------------------------------------------------------------------*/
+/*  Execute in batch mode                                             */
+/*--------------------------------------------------------------------*/
+BATCH:
+  ADDRESS TSO "EXECIO * DISKR PARMS (STEM PARMS. FINIS"
+  DO J = 1 TO PARMS.0
+     SELECT
+        WHEN (POS("USERID(",PARMS.J)  > 0) THEN
+             PARSE VAR PARMS.J . "USERID("RACFMID")" .
+        WHEN (POS("LPAR(",PARMS.J)    > 0) THEN
+             PARSE VAR PARMS.J . "LPAR("RACFMLPR")" .
+        WHEN (POS("DATE(",PARMS.J)    > 0) THEN
+             PARSE VAR PARMS.J . "DATE("RACFMDAT")" .
+        WHEN (POS("USSONLY(",PARMS.J) > 0) THEN
+             PARSE VAR PARMS.J . "USSONLY("RACFMUSS")" .
+        WHEN (POS("TYPE(",PARMS.J)    > 0) THEN
+             PARSE VAR PARMS.J . "TYPE("RACFMTYP")" .
+        WHEN (POS("OPERLOG(",PARMS.J)    > 0) THEN
+             PARSE VAR PARMS.J . "OPERLOG("RACFMLOG")" .
+        OTHERWISE
+             NOP
+     END /* Select */
+  END J
+  DROP PARMS.
+
+  IF (RACFMID  = "") THEN RACFMID  = "*"
+  IF (RACFMLPR = "") THEN RACFMLPR = "*"
+  IF (RACFMDAT = "") THEN RACFMDAT = DATE("U")
+  IF (RACFMUSS = "") THEN RACFMUSS = "N"
+  IF (RACFMTYP = "") THEN RACFMTYP = "A"
+  IF (RACFMLOG = "") THEN RACFMLOG = "A"
+
+  PARSE VAR racfmdat MM "/" DD "/" YY .
+  YYYYMMDD = "20"YY""MM""DD
+  DDD      = DATE("D",YYYYMMDD,"S")
+  JDATE    = YY""DDD
+  IF (RACFMLOG = "A") THEN
+     CALL OPERLOG_SDSF
+  ELSE
+     CALL OPERLOG_DSN
+
+  SAY "*"COPIES("-",70)"*"
+  SAY "*"CENTER("Total Errors Found: "TOTALERRS,70)"*"
+  SAY "*"COPIES("-",70)"*"
+  SAY "*"CENTER("Parameters: ",
+                "Userid="racfmid",",
+                "Lpar="racfmlpr",",
+                "Date="racfmdat",",
+                "Type="racfmtyp",",
+                "USS="racfmuss",",
+                "MODE="racfmmod,70)"*"
+  SAY "*"COPIES("-",70)"*"
+  ADDRESS TSO "EXECIO * DISKW ERRORS (STEM RECERR. FINIS"
+  EXECIORC = RC
+  DROP RECERR.
+  IF (EXECIORC > 0) THEN DO
+     SAY "ERROR - Missing DD card ERRORS, unable to write",
+         "the ICH408I messages."
+     RETURN
+  END
+RETURN
+/*--------------------------------------------------------------------*/
+/*  Process in forground and create batch JCL (Mode=B)                */
+/*--------------------------------------------------------------------*/
+FOREGROUND_BATCH_JCL:
+ADDRESS ISPEXEC
+  IF (RACFMDAT <> TODAY) THEN DO
+     PARSE VAR SETDMSGO . "(" W1 ")" .
+     IF (W1 = "") THEN DO
+        X = OUTTRAP("LC.")
+        ADDRESS TSO "LISTCAT ENT('"SETDMSGO"')"
+        X = OUTTRAP("OFF")
+        PARSE VAR LC.1 W1 W2 .
+        IF (W1 = "GDG") & (W2 = "BASE") THEN
+           CALL GET_OPERLOG_GOVO
+        ELSE
+           DSNBKLOG = SETDMSGO
+        IF (DSNBKLOG = "") THEN DO
+           RACFSMSG = "Invalid Date"
+           RACFLMSG = "There are no GDG genarations",
+                      "with a date of "RACFMDAT"."
+           "SETMSG MSG(RACF011)"
+           RETURN
+        END
+     END
+     ELSE
+        DSNBKLOG = SETDMSGO
+  END
+  ELSE
+     DSNBKLOG = SETDMSGO
+
+  "FTOPEN TEMP"
+  "VGET (ZTEMPF)"
+  "FTINCL "SKELETON1
+  "FTINCL "SKELETON2
+  "FTCLOSE"
+
+  IF (RACFMJCL = "Y") THEN
+     "EDIT DATASET('"ztempf"')"
+  ELSE DO
+     ADDRESS TSO "SUBMIT '"ztempf"'"
+     RACFSMSG = "Job Submitted"
+     RACFLMSG = "Batch job was submitted.  Invoke SDSF",
+                "to view output"
+     "SETMSG MSG(RACF011)"
+  END
+
+RETURN
+/*--------------------------------------------------------------------*/
+/*  Process the operlog in foreground (Mode=A)                        */
+/*--------------------------------------------------------------------*/
+FOREGROUND_OPERLOG:
+ADDRESS ISPEXEC
+  RECERR.0 = 0
+
+  IF (RACFMLOG = "A") THEN   /* Active OPERLOG? */
+     CALL OPERLOG_SDSF
+  ELSE DO
+     PARSE VAR SETDMSGO . "(" W1 ")" .
+     IF (W1 = "") THEN DO
+        X = OUTTRAP("LC.")
+        ADDRESS TSO "LISTCAT ENT('"SETDMSGO"')"
+        X = OUTTRAP("OFF")
+        PARSE VAR LC.1 W1 W2 .
+        IF (W1 = "GDG") & (W2 = "BASE") THEN
+           CALL GET_OPERLOG_GOVO
+        ELSE
+           DSNBKLOG = SETDMSGO
+        IF (DSNBKLOG = "") THEN DO
+           RACFSMSG = "Invalid Date"
+           RACFLMSG = "There are no GDG genarations",
+                      "with a date of "RACFMDAT"."
+           "SETMSG MSG(RACF011)"
+           RETURN
+        END
+     END
+
+     ADDRESS TSO "ALLOCATE FI(OPERLOG) DSN('"DSNBKLOG"')",
+                 "SHR REUSE BUFNO(30) LRECL(259)"
+     CALL OPERLOG_DSN
+     ADDRESS TSO "FREE FI(OPERLOG)"
+  END
+  IF (RECERR.0 = 0) THEN DO
+     RACFSMSG = "No Security Errors"
+     RACFLMSG = "There are no ICH408I messages",
+                "with the search criteria specified."
+     "SETMSG MSG(RACF011)"
+  END
+  ELSE DO
+     ADDRESS TSO "ALLOCATE FI(RACFERRS)",
+         "NEW REUSE UNIT(VIO)",
+         "LRECL(240) BLKSIZE(0) RECFM(V B)",
+         "CYLINDERS SPACE(10 10)"
+     ADDRESS TSO "EXECIO * DISKW RACFERRS (STEM RECERR. FINIS"
+     DROP RECERR.
+     RACFSMSG = TOTALERRS" Total Errors"
+     RACFLMSG = "There are "TOTALERRS" total RACF",
+               "errors displayed."
+     "SETMSG MSG(RACF011)"
+     "VGET (ZPF10 ZPF11)"
+     SAVEPF10 = ZPF10
+     SAVEPF11 = ZPF11
+     ZPF10    = "LEFT 55"
+     ZPF11    = "RIGHT 55"
+     "VPUT (ZPF10 ZPF11)"
+     "LMINIT DATAID(DATAID) DDNAME(RACFERRS)"
+     "VIEW DATAID("DATAID") PANEL("PANEL02")"
+     ADDRESS TSO "FREE FI(RACFERRS)"
+     ZPF10    = SAVEPF10
+     ZPF11    = SAVEPF11
+     "VPUT (ZPF10 ZPF11)"
+  END
+RETURN
+/*--------------------------------------------------------------------*/
+/*  Scan active operlog for security errors using SDSF (Operlog=A)    */
+/*--------------------------------------------------------------------*/
+OPERLOG_SDSF:
+  ISFLOGSTARTDATE = RACFMDAT
+  ISFLOGSTARTTIME = "00:00"
+  ISFLOGSTOPDATE  = RACFMDAT  /* DATE - MM/DD/YY */
+  ISFLOGSTOPTIME  = "23:59"   /* Time - hh:mm:ss */
+  ISFLINELIM      = 0
+
+  RC = ISFCALLS("ON")
+  IF (RC <> 0) THEN DO
+     IF (ENV = "FORE") THEN DO
+        RACFLMSG = "SDSF is not active on this lpar."
+        "SETMSG MSG(RACF011)"
+     END
+     ELSE
+        SAY "ERROR - SDSF is not active on this lpar."
+     RETURN
+  END
+
+  IF (racfmlpr <> "*") THEN DO
+     ISFSYSID = SUBSTR(LPAR,2)
+     LOGTYPE  = "SYSLOG"
+     ADDRESS SDSF "ISFLOG READ TYPE("LOGTYPE")"
+  END
+  ELSE DO
+     LOGTYPE  = "OPERLOG"
+     ADDRESS SDSF "ISFLOG READ TYPE("LOGTYPE")"
+  END
+  RC=ISFCALLS("OFF")
+
+  K = 0
+  TOTALERRS = 0
+  CALL OPERLOG_PROCESS_RECS
+  RECERR.0 = K
+RETURN
+/*--------------------------------------------------------------------*/
+/*  Scan operlog backup datasets for security errors (Operlog = B)    */
+/*--------------------------------------------------------------------*/
+OPERLOG_DSN:
+  K         = 0
+  READRC    = 0
+  TOTALERRS = 0
+  DO WHILE READRC = 0
+     ADDRESS TSO "EXECIO 300000 DISKR OPERLOG (STEM ISFLINE."
+     READRC = RC
+     CALL OPERLOG_PROCESS_RECS
+  END
+  ADDRESS TSO "EXECIO 0 DISKR OPERLOG (FINIS"
+  RECERR.0 = K
+RETURN
+/*--------------------------------------------------------------------*/
+/*  Process operlog records, find all ICH408I messages                */
+/*--------------------------------------------------------------------*/
+OPERLOG_PROCESS_RECS:
+  DO J = 1 TO ISFLINE.0-1
+     PARSE VAR ISFLINE.J W1 W2 W3 W4 W5 W6 W7 W8 W9 W10
+     IF (W8 = "ICH408I") THEN DO
+        if (jdate = W4) then do
+           IF (RACFMLPR = "*") | (RACFMLPR = W3) THEN DO
+              MSGBEG = J
+              MSGEND = J + 12
+              DO M = MSGBEG TO MSGEND
+                 PARSE VAR ISFLINE.M W1 .
+                 IF (W1 = "E") THEN DO
+                    MSGEND = M
+                    LEAVE
+                 END
+              END M
+              DO M = MSGBEG TO MSGEND
+                 SELECT
+                    WHEN (RACFMTYP = 'V') THEN
+                         FOUND = POS("VIOLATION",ISFLINE.M)
+                    WHEN (RACFMTYP = 'I') THEN
+                         FOUND = POS("INSUFFICIENT",ISFLINE.M)
+                    OTHERWISE DO
+                         FOUNDV = POS("VIOLATION",ISFLINE.M)
+                         FOUNDI = POS("INSUFFICIENT",ISFLINE.M)
+                         IF (FOUNDV = 0) & (FOUNDI = 0) THEN
+                            FOUND = 00
+                         ELSE
+                            FOUND = 99
+                    END
+                 END
+                 IF (FOUND > 0) THEN DO
+                    IF (RACFMID <> "*") THEN DO
+                       DO N = MSGBEG TO MSGEND
+                          FOUND = POS(RACFMID,ISFLINE.N)
+                          IF (FOUND > 0) THEN LEAVE N
+                       END N
+                       IF (FOUND = 0) THEN LEAVE M
+                    END
+                    IF (RACFMUSS = "Y") THEN DO
+                       DO N = MSGBEG TO MSGEND
+                          FOUND = POS("EFFECTIVE",ISFLINE.N)
+                          IF (FOUND > 0) THEN LEAVE N
+                       END N
+                       IF (FOUND = 0) THEN LEAVE M
+                    END
+                    TOTALERRS = TOTALERRS + 1
+                    DO N = MSGBEG TO MSGEND
+                       K = K + 1
+                       RECERR.K = ISFLINE.N
+                    END N
+                 END /* If FOUND */
+              END M
+           END /* If RACFMLPR*/
+        END /* If jdate */
+     END /* If ICH408I */
+  END J
+  DROP ISFLINE.
+RETURN
+/*--------------------------------------------------------------------*/
+/*  Obtain operlog GDG dataset name for the date requested,           */
+/*  when the operlog backup dataset is a GDG base                     */
+/*--------------------------------------------------------------------*/
+GET_OPERLOG_GOVO:
+  DSNBKLOG = ""
+  DSNDATE = ""
+  /*------------------------------------*/
+  /*  Convert Cregorian to Julian date  */
+  /*------------------------------------*/
+  MM   = SUBSTR(RACFMDAT,1,2)
+  DD   = SUBSTR(RACFMDAT,4,2)
+  CC   = SUBSTR(DATE("S"),1,2)
+  YY   = SUBSTR(RACFMDAT,7,2)
+  IF (YY//4=0) & (YY<>0 | CC//4=0) THEN
+     JULTAB=DD'3129313031303131303130'
+  ELSE
+     JULTAB=DD'3128313031303131303130'
+  DAYS=0
+  DO I=1 TO MM
+     MDAYS=SUBSTR(JULTAB,I*2-1,2)
+     DAYS=DAYS+MDAYS
+  END
+  DAYS = DAYS + 1
+  YYYY = SUBSTR(DATE("S"),1,4)
+  IF (YYYY//4 = 0) THEN   /* Leap year? */
+     NOOFDAYS = 366
+  ELSE
+     NOOFDAYS = 365
+  IF (DAYS = NOOFDAY) THEN DO
+     DAYS = "001"
+     YY   = YY + 1
+  END
+  JULIAN=CC||YY'.'RIGHT(DAYS,3,'0')
+
+  X = OUTTRAP("IDCAMS.")
+  ADDRESS TSO "LISTCAT ENT('"SETDMSGO"') ALL"
+  X = OUTTRAP("OFF")
+  K = 0
+  DO J = 1 TO IDCAMS.0
+     PARSE VAR IDCAMS.J W1 W2 W3 .
+     IF (W1 = "NONVSAM") THEN DO
+        L = J + 3
+        PARSE VAR IDCAMS.L AW1 "CREATION--------" AW2
+        IF (AW2 = JULIAN) THEN DO
+           DSNBKLOG = W3
+           DSNDATE = AW2
+           LEAVE
+        END
+     END
+  END
+  DROP IDCAMS.
+RETURN
+/*--------------------------------------------------------------------*/
+/*  Get CLIST dataset name                                            */
+/*--------------------------------------------------------------------*/
+/*  1) The 'ALTLIB DISPLAY' statement, will look for                  */
+/*     'Application-level' in the display in order to obtain          */
+/*     the DDname of the ALTLIBed dataset                             */
+/*       Current search order (by DDNAME) is:                         */
+/*       Application-level CLIST DDNAME=SYS00529                      */
+/*       System-level EXEC       DDNAME=SYSEXEC                       */
+/*       System-level CLIST      DDNAME=SYSPROC                       */
+/*  2) The 'LISTA STATUS' will display all the DDnames and datasets   */
+/*     allocated, allowing the capability to obtain the dataset name  */
+/*     allocated to the 'Application-level CLIST' ddname (SYS#####)   */
+/*--------------------------------------------------------------------*/
+GET_CLIST_DSN:
+  X = OUTTRAP("RECALT.")
+  ADDRESS TSO "ALTLIB DISPLAY"
+  X = OUTTRAP("OFF")
+
+  IF (SUBSTR(RECALT.2,1,3) = "IKJ") THEN
+     PARSE VAR RECALT.2 . W1 W2 "DDNAME="DDALTLIB
+  ELSE
+     PARSE VAR RECALT.2 W1 W2 "DDNAME="DDALTLIB
+  DROP RECALT.
+  RC = 0
+  IF (W1 <> "Application-level") THEN DO
+     RC = 8
+     return
+  END
+
+  X = OUTTRAP("RECLA.")
+  ADDRESS TSO "LISTA STATUS"
+  X = OUTTRAP("OFF")
+  do J = 1 TO RECLA.0
+     PARSE VAR RECLA.J W1 .
+     IF (W1 = DDALTLIB) THEN DO
+        K = J - 1
+        DSNREXX = RECLA.K
+        LEAVE
+     END
+  end
+  DROP RECLA. W1 DDALTLIB
+RETURN

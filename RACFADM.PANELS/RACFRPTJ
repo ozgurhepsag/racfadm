@@ -13,8 +13,8 @@ _ZLLGJOB3
 _ZLLGJOB4
 +
 %Temporary dataset information:
-+UNIT  =_SETJRPTU+
-+SPACE =_SETJRPTS            +
++  UNIT  =_SETJRPTU+
++  SPACE =_SETJRPTS            +
 )INIT
   &ZCMD    = &Z
   &ZWINTTL = 'RACFADM - Define JOB Card'

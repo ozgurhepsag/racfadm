@@ -5,7 +5,7 @@
    ^  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(RED)
    !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
 )BODY EXPAND(\\)
-%Tutorial+\-\(%RACFRPTS - RACF Reports - 1 of 2+)\-\%Tutorial
+%Tutorial+\-\(%RACFADM - RACF Reports - 1 of 2+)\-\%Tutorial
 %Command ===>~ZCMD
 +
 %Reports+will create RACF reports via a batch job using:
@@ -22,9 +22,9 @@
 +    contains the default value of!//USERID   JOB (ACCOUNT),'NAME'
 !  -+Or typing in%JOB+on the primary command line
 +
-+The!IRRDBU00 Dataset+name and the temporary dataset's!UNIT/SPACE+parameters
-+can be defined for all users by updating panel members!$DEFSETG+or!$DEFSITE
-+
++The!IRRDBU00 Dataset+name can be an absolute or relative GDG.  And the
++dataset name and the temporary dataset's!UNIT/SPACE+parameters can be
++defined for all users by updating panel members%$DEFSETG+or%$DEFSITE
 +
 +
 + \ \ (press%ENTER+to continue) \ \
