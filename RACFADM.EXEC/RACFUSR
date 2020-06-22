@@ -11,6 +11,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @EO  200622  TRIDJK   Line cmd A/C, added DATA field               */
 /* @EN  200618  RACFA    Chged SYSDA to SYSALLDA                      */
 /* @EM  200617  RACFA    Added comments to right of variables         */
 /* @EL  200616  RACFA    Added capability to SAve file as TXT/CSV     */
@@ -1350,6 +1351,10 @@ RETURN                                                        /* @BE */
            cmd = cmd||d1 d2 d3||,                             /* @D4 */
            ')'                                                /* @D4 */
   end                                                         /* @D4 */
+  if (idata = '') then                                        /* @EO */
+     nop                                                      /* @EO */
+  else                                                        /* @EO */
+     cmd = cmd||' DATA('''idata''') '                         /* @EO */
   call excmd cmd                                              /* @D4 */
   if (cmd_rc > 0) then do                                     /* @DL */
      call racfmsgs ERR01       /* Add failed */               /* @DL */
@@ -1452,6 +1457,10 @@ RETURN password                                               /* @E1 */
          cmd = cmd||d1 d2 d3||,                               /* @D4 */
          ')'                                                  /* @D4 */
   end                                                         /* @D4 */
+  if idata = '' then                                          /* @DRK*/
+     nop                                                      /* @DRK*/
+  else                                                        /* @DRK*/
+     cmd = cmd||' DATA('''idata''') '                         /* @DRK*/
   call excmd cmd                                              /* @D4 */
   if (cmd_rc > 0) then do                                     /* @DL */
      call racfmsgs ERR07     /* Changed failed */             /* @DL */

@@ -10,19 +10,21 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A2  200622  LBD      Added initial option                         */
 /* @A1  200611  LBD      Added skeleton datasets                      */
 /* @A0  200320  LBD      Created REXX                                 */
 /*====================================================================*/
+arg opt                                                       /* @A2 */
 hlq = 'radmhlq'               /* <=== Change this variable */
 
 Address TSO
-  "Altlib Act App(Exec) Dataset('"hlq".racfadm.exec')"
+  "Altlib Act App(Exec) Dataset('"hlq".exec')"                /* @A2 */
 
 Address ISPExec
-  "Libdef ISPMLIB Dataset ID('"hlq".racfadm.msgs') stack"
-  "Libdef ISPPLIB Dataset ID('"hlq".racfadm.panels') stack"
-  "Libdef ISPSLIB Dataset ID('"hlq".racfadm.skels') stack"    /* @A1 */
-  "Select Cmd(%RacfADM NA) NewAppl(RADM) Passlib"
+  "Libdef ISPMLIB Dataset ID('"hlq".msgs') stack"             /* @A2 */
+  "Libdef ISPPLIB Dataset ID('"hlq".panels') stack"           /* @A2 */
+  "Libdef ISPSLIB Dataset ID('"hlq".skels') stack"            /* @A1 */
+  "Select Cmd(%RacfADM NA" opt ") NewAppl(RADM) Passlib"      /* @A2 */
   "Libdef ISPMLIB"
   "Libdef ISPPLIB"
   "Libdef ISPSLIB"                                            /* @A1 */

@@ -2,6 +2,18 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  22 June 2020 - V30R1
+     - User (Option U)
+       -- Line commands 'A'dd and 'C'hange
+          * Added field 'DATA', for Installation Data
+     - Tutorials (Option T)
+       -- Updated 'Installation Notes'
+     - Other Items
+       -- Allow passing RACFADM a menu option as a parameter
+          * The below example will invoke Messages and when F3 (END)
+            is pressed, will exit RACFADM
+              ==> RACFADM M
+
   21 June 2020 - V30R0
      - Main Menu
        -- Added below menu entry

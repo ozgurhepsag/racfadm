@@ -16,6 +16,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A2  200622  LBD      Support a passed option                      */
 /* @AC  200619  RACFA    Initialize the variable NULL                 */
 /* @AB  200619  LBD      Fixed datasets w/ last qual. as 'SKEL'       */
 /* @AA  200610  RACFA    Added skeleton dataset                       */
@@ -35,11 +36,22 @@ REXXPGM1    = "RACFSETD"  /* Obtain settings for new user  */ /* @A4 */
 NULL        = ""                                              /* @AC */
 Arg RAOPT                 /* Invoked using $STUB mbr       */ /* @A6 */
 
+if pos('NA',RAOPT) > 0 then do                                /* @A2 */
+   rw = wordpos('NA',RAOPT)                                   /* @A2 */
+   radmopt = delword(raopt,rw,1)                              /* @A2 */
+   raopt = 'NA'                                               /* @A2 */
+end                                                           /* @A2 */
+else                                                          /* @A2 */
+   radmopt = raopt                                            /* @A2 */
+
 ADDRESS ISPEXEC
   call Setup
   'Select cmd('REXXPGM1')  NewAppl(RADM) PassLib'             /* @A4 */
 
-  'Select Panel('PANEL01') NewAppl(RADM) PassLib'             /* @A2 */
+  if radmopt /= null then 'control nondispl enter'            /* @A2 */
+
+  'Select Panel('PANEL01') Opt('radmopt')' ,                  /* @A2 */
+         'NewAppl(RADM) PassLib'                              /* @A2 */
   if (RAOPT <> "NA") THEN DO                                  /* @A9 */
      'libdef ispmlib'
      'libdef ispplib'

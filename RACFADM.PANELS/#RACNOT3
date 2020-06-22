@@ -18,8 +18,8 @@
 +      %ORALTER!...+Unix Security Attribute Management, like ALTER
 +      %ORLIST!....+Unix Directory/File Security Information, like RLIST
 +
-+
-+
+!  9)%RACFADM+allows passing a menu option as a parameter, which will invoke
++     the option and when!F3+(END) is pressed, exit out of%RACFADM
 +
 +
 +

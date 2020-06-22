@@ -7,7 +7,7 @@
    {  TYPE(OUTPUT)  PAS(ON)      CAPS(OFF)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V30R0+)\-\
++\-\(%RACFADM - RACF Administration - V30R1+)\-\
 %Option ===>_ZCMD
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -245,6 +245,14 @@
      &OPT4CMD  = &z
      &OPT5CMD  = &z
      &OPT6CMD  = &z
+
+  IF (&RACFMCNT = 1 & &OPT NE &Z)    /* If invoked passing a menu   */
+     &NOMENU = Y                     /* option, invoke the option   */
+  IF (&RACFMCNT = 1 & &OPT = &Z)     /* and F3(END) out of RACFADM  */
+     &NOMENU = N
+  IF (&RACFMCNT > 1  & &NOMENU = Y)
+     &ZCMD = X
+     .RESP = END
 )PROC
   &ZSEL=TRANS(TRUNC(&ZCMD,'.')
       0,'CMD(%RACFSETG)'
@@ -349,5 +357,8 @@
 /*                                                                    */
 /*  6) The menu entries (Settings, User, etc.) are point-n-shoot      */
 /*     fields                                                         */
+/*                                                                    */
+/*  7) Can pass a menu option as a parameter                          */
+/*     - It will select the menu option and exit out of RACFADM       */
 /*                                                                    */
 /*--------------------------------------------------------------------*/
