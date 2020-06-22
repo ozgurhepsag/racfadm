@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A1  200622  TRIDJK   Fix JDATE, IEFSYSID, and ICH408I column      */
 /* @A0  200620  RACFA    Created REXX                                 */
 /*====================================================================*/
 TODAY      = DATE("U")
@@ -68,7 +69,7 @@ FOREGROUND:
      PARSE VAR racfmdat MM "/" DD "/" YY .
      YYYYMMDD = "20"YY""MM""DD
      DDD      = DATE("D",YYYYMMDD,"S")
-     JDATE    = YY""DDD
+     JDATE    = YY""RIGHT(DDD,3,'0')                          /* @A1 */
      IF (RACFMMOD = "F") THEN
         CALL FOREGROUND_OPERLOG
      ELSE
@@ -116,11 +117,10 @@ BATCH:
   IF (RACFMUSS = "") THEN RACFMUSS = "N"
   IF (RACFMTYP = "") THEN RACFMTYP = "A"
   IF (RACFMLOG = "") THEN RACFMLOG = "A"
-
   PARSE VAR racfmdat MM "/" DD "/" YY .
   YYYYMMDD = "20"YY""MM""DD
   DDD      = DATE("D",YYYYMMDD,"S")
-  JDATE    = YY""DDD
+  JDATE    = YY""RIGHT(DDD,3,'0')                             /* @A1 */
   IF (RACFMLOG = "A") THEN
      CALL OPERLOG_SDSF
   ELSE
@@ -280,7 +280,7 @@ OPERLOG_SDSF:
   END
 
   IF (racfmlpr <> "*") THEN DO
-     ISFSYSID = SUBSTR(LPAR,2)
+     ISFSYSID = LPAR       /* SUBSTR(LPAR,2) */               /* @A1 */
      LOGTYPE  = "SYSLOG"
      ADDRESS SDSF "ISFLOG READ TYPE("LOGTYPE")"
   END
@@ -316,7 +316,7 @@ RETURN
 OPERLOG_PROCESS_RECS:
   DO J = 1 TO ISFLINE.0-1
      PARSE VAR ISFLINE.J W1 W2 W3 W4 W5 W6 W7 W8 W9 W10
-     IF (W8 = "ICH408I") THEN DO
+     IF (W7 = "ICH408I") | (W8 = "ICH408I") THEN DO           /* @A1 */
         if (jdate = W4) then do
            IF (RACFMLPR = "*") | (RACFMLPR = W3) THEN DO
               MSGBEG = J

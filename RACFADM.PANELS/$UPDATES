@@ -2,6 +2,13 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  22 June 2020 - V30R2
+     - Messages (Option M)
+       -- Fixed julian date, ensure leading zeros are present (004)
+       -- Fixed searching for ICH408I message, now looking at both
+          word position 7 and 8 in OPERLOG/SYSLOG, prior was just
+          word position 8
+
   22 June 2020 - V30R1
      - User (Option U)
        -- Line commands 'A'dd and 'C'hange

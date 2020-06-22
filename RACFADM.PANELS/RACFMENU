@@ -7,7 +7,7 @@
    {  TYPE(OUTPUT)  PAS(ON)      CAPS(OFF)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V30R1+)\-\
++\-\(%RACFADM - RACF Administration - V30R2+)\-\
 %Option ===>_ZCMD
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -86,12 +86,12 @@
   &UATT     = &Z
   &UTYPE    = 'User'
 
-  VGET (RACFMCNT)                     /* No. of times menu displayed */
-  if (&RACFMCNT = &Z)
-     &RACFMCNT = 0
+  VGET (RACFMENU)                     /* No. of times menu displayed */
+  if (&RACFMENU = &Z)
+     &RACFMENU = 0
 
   *REXX (RACFVER PRMDBASE BKPDBASE ZOSVER RACFGRP  RACFNAM RACFLMSG
-         SECSOFT RACFFMID USADATE  UTYPE  SETMADMN UATT    RACFMCNT)
+         SECSOFT RACFFMID USADATE  UTYPE  SETMADMN UATT    RACFMENU)
     CVT      = C2D(STORAGE(10,4))               /* Get RACF FMID     */
     CVTRAC   = C2D(STORAGE(D2X(CVT + 992),4))
     RACFFMID = "HRF"STORAGE(D2X(CVTRAC + 616),4)
@@ -142,7 +142,7 @@
     else
        utype = 'User:'
 
-    RACFMCNT = RACFMCNT + 1           /* No. of times menu displayed */
+    RACFMENU = RACFMENU + 1           /* No. of times menu displayed */
     Access   = ""
     user     = userid()                 /* Does user have necessary  */
     x        = outtrap('lu.')           /* access to display profiles*/
@@ -171,9 +171,9 @@
                   "ROAUDIT or SPECIAL."
     end
   *ENDREXX
-  VPUT (RACFMCNT)                     /* No. of times menu displayed */
+  VPUT (RACFMENU)                     /* No. of times menu displayed */
 
-  IF (&RACFMCNT = 1 & &RACFLMSG NE "")     /* Display long message?  */
+  IF (&RACFMENU = 1 & &RACFLMSG NE "")     /* Display long message?  */
      .MSG  = RACF011
 
   IF (&SETGMVS EQ YES)                     /* Add menu options when  */
@@ -246,11 +246,11 @@
      &OPT5CMD  = &z
      &OPT6CMD  = &z
 
-  IF (&RACFMCNT = 1 & &OPT NE &Z)    /* If invoked passing a menu   */
+  IF (&RACFMENU = 1 & &OPT NE &Z)    /* If invoked passing a menu   */
      &NOMENU = Y                     /* option, invoke the option   */
-  IF (&RACFMCNT = 1 & &OPT = &Z)     /* and F3(END) out of RACFADM  */
+  IF (&RACFMENU = 1 & &OPT = &Z)     /* and F3(END) out of RACFADM  */
      &NOMENU = N
-  IF (&RACFMCNT > 1  & &NOMENU = Y)
+  IF (&RACFMENU > 1  & &NOMENU = Y)
      &ZCMD = X
      .RESP = END
 )PROC
