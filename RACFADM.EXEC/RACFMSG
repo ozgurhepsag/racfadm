@@ -3,7 +3,10 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
-/* @A1  200622  TRIDJK   Fix JDATE, IEFSYSID, and ICH408I column      */
+/* @A4  200624  RACFA    ICH408I in W7 for SYSLOG and W8 for OPERLOG  */
+/* @A3  200624  RACFA    When batch, fix comments in SYSTSPRT         */
+/* @A2  200624  RACFA    Get site variable to use SYSLOG or OPERLOG   */
+/* @A1  200622  TRIDJK   Fix JDATE                                    */
 /* @A0  200620  RACFA    Created REXX                                 */
 /*====================================================================*/
 TODAY      = DATE("U")
@@ -26,7 +29,8 @@ FOREGROUND:
   SKELETON2  = "RACFMSG"            /* TSO PARM=RACFERRS  */
 
   "VGET (SETMTRAC RACFMID  RACFMLPR RACFMTYP",
-        "RACFMUSS RACFMMOD RACFMJCL RACFMLOG SETDMSGO",
+        "RACFMUSS RACFMMOD RACFMJCL RACFMLOG",                /* @A2 */
+        "SETGSLOG SETDSLOG",                                  /* @A2 */
         "ZLLGJOB1 ZLLGJOB2 ZLLGJOB3 ZLLGJOB4) PROFILE"
   If (SETMTRAC <> 'NO') then do
      Say "*"COPIES("-",70)"*"
@@ -76,7 +80,7 @@ FOREGROUND:
         CALL FOREGROUND_BATCH_JCL
   END
   "VPUT (RACFMID  RACFMLPR RACFMTYP",
-        "RACFMUSS RACFMMOD RACFMJCL RACFMLOG SETDMSGO",
+        "RACFMUSS RACFMMOD RACFMJCL RACFMLOG SETDSLOG",
         "ZLLGJOB1 ZLLGJOB2 ZLLGJOB3 ZLLGJOB4) PROFILE"
 
   If (SETMTRAC <> 'NO') then do
@@ -129,13 +133,11 @@ BATCH:
   SAY "*"COPIES("-",70)"*"
   SAY "*"CENTER("Total Errors Found: "TOTALERRS,70)"*"
   SAY "*"COPIES("-",70)"*"
-  SAY "*"CENTER("Parameters: ",
-                "Userid="racfmid",",
+  SAY "*"CENTER("Userid="racfmid",",                          /* @A3 */
                 "Lpar="racfmlpr",",
                 "Date="racfmdat",",
-                "Type="racfmtyp",",
-                "USS="racfmuss",",
-                "MODE="racfmmod,70)"*"
+                "Type="racfmtyp",",                           /* @A3 */
+                "USS="racfmuss,70)"*"
   SAY "*"COPIES("-",70)"*"
   ADDRESS TSO "EXECIO * DISKW ERRORS (STEM RECERR. FINIS"
   EXECIORC = RC
@@ -152,16 +154,16 @@ RETURN
 FOREGROUND_BATCH_JCL:
 ADDRESS ISPEXEC
   IF (RACFMDAT <> TODAY) THEN DO
-     PARSE VAR SETDMSGO . "(" W1 ")" .
+     PARSE VAR SETDSLOG . "(" W1 ")" .
      IF (W1 = "") THEN DO
         X = OUTTRAP("LC.")
-        ADDRESS TSO "LISTCAT ENT('"SETDMSGO"')"
+        ADDRESS TSO "LISTCAT ENT('"SETDSLOG"')"
         X = OUTTRAP("OFF")
         PARSE VAR LC.1 W1 W2 .
         IF (W1 = "GDG") & (W2 = "BASE") THEN
            CALL GET_OPERLOG_GOVO
         ELSE
-           DSNBKLOG = SETDMSGO
+           DSNBKLOG = SETDSLOG
         IF (DSNBKLOG = "") THEN DO
            RACFSMSG = "Invalid Date"
            RACFLMSG = "There are no GDG genarations",
@@ -171,10 +173,10 @@ ADDRESS ISPEXEC
         END
      END
      ELSE
-        DSNBKLOG = SETDMSGO
+        DSNBKLOG = SETDSLOG
   END
   ELSE
-     DSNBKLOG = SETDMSGO
+     DSNBKLOG = SETDSLOG
 
   "FTOPEN TEMP"
   "VGET (ZTEMPF)"
@@ -203,16 +205,16 @@ ADDRESS ISPEXEC
   IF (RACFMLOG = "A") THEN   /* Active OPERLOG? */
      CALL OPERLOG_SDSF
   ELSE DO
-     PARSE VAR SETDMSGO . "(" W1 ")" .
+     PARSE VAR SETDSLOG . "(" W1 ")" .
      IF (W1 = "") THEN DO
         X = OUTTRAP("LC.")
-        ADDRESS TSO "LISTCAT ENT('"SETDMSGO"')"
+        ADDRESS TSO "LISTCAT ENT('"SETDSLOG"')"
         X = OUTTRAP("OFF")
         PARSE VAR LC.1 W1 W2 .
         IF (W1 = "GDG") & (W2 = "BASE") THEN
            CALL GET_OPERLOG_GOVO
         ELSE
-           DSNBKLOG = SETDMSGO
+           DSNBKLOG = SETDSLOG
         IF (DSNBKLOG = "") THEN DO
            RACFSMSG = "Invalid Date"
            RACFLMSG = "There are no GDG genarations",
@@ -278,16 +280,19 @@ OPERLOG_SDSF:
         SAY "ERROR - SDSF is not active on this lpar."
      RETURN
   END
-
-  IF (racfmlpr <> "*") THEN DO
-     ISFSYSID = LPAR       /* SUBSTR(LPAR,2) */               /* @A1 */
-     LOGTYPE  = "SYSLOG"
-     ADDRESS SDSF "ISFLOG READ TYPE("LOGTYPE")"
-  END
-  ELSE DO
-     LOGTYPE  = "OPERLOG"
-     ADDRESS SDSF "ISFLOG READ TYPE("LOGTYPE")"
-  END
+  KLPAR      = MVSVAR("SYMDEF","SYSKLPAR")                    /* @A2 */
+  SELECT                                                      /* @A2 */
+     WHEN (SETGSLOG = "SYSLOG") THEN DO                       /* @A2 */
+          ISFSYSID = LPAR                                     /* @A2 */
+          ADDRESS SDSF "ISFLOG READ TYPE(SYSLOG)"             /* @A2 */
+     END                                                      /* @A2 */
+     WHEN (KLPAR = "Y") THEN DO                               /* @A2 */
+          ISFSYSID = SUBSTR(LPAR,2) /* Chg IEFSYSID=LPAR? */  /* @A2 */
+          ADDRESS SDSF "ISFLOG READ TYPE(SYSLOG)"             /* @A2 */
+     END                                                      /* @A2 */
+     OTHERWISE                                                /* @A2 */
+          ADDRESS SDSF "ISFLOG READ TYPE(OPERLOG)"            /* @A2 */
+  END                                                         /* @A2 */
   RC=ISFCALLS("OFF")
 
   K = 0
@@ -316,7 +321,7 @@ RETURN
 OPERLOG_PROCESS_RECS:
   DO J = 1 TO ISFLINE.0-1
      PARSE VAR ISFLINE.J W1 W2 W3 W4 W5 W6 W7 W8 W9 W10
-     IF (W7 = "ICH408I") | (W8 = "ICH408I") THEN DO           /* @A1 */
+     IF (W7 = "ICH408I") | (W8 = "ICH408I") THEN DO           /* @A4 */
         if (jdate = W4) then do
            IF (RACFMLPR = "*") | (RACFMLPR = W3) THEN DO
               MSGBEG = J
@@ -407,7 +412,7 @@ GET_OPERLOG_GOVO:
   JULIAN=CC||YY'.'RIGHT(DAYS,3,'0')
 
   X = OUTTRAP("IDCAMS.")
-  ADDRESS TSO "LISTCAT ENT('"SETDMSGO"') ALL"
+  ADDRESS TSO "LISTCAT ENT('"SETDSLOG"') ALL"
   X = OUTTRAP("OFF")
   K = 0
   DO J = 1 TO IDCAMS.0

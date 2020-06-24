@@ -6,6 +6,10 @@
 %Tutorial+\-\(%RACFADM - Settings - 2 of 4+)\-\%Tutorial
 %Command ===>_ZCMD
 %
++General
+!  SDSF log         +Specify the SDSF log to use when scanning for RACF
++                    messages%(O=Operlog is default,%S=Syslog)
++
 +Management
 !  Administrator    +Specify full administrator authority,+providing more line
 +                   +commands: Add, Change, etc.%(Y=Yes, N=No is default)
@@ -18,12 +22,8 @@
 +                     %10 !IBMSys   +RACF system options
 +                     %11 !IBMRRSF  +RACF remote services
 +                     %12 !IBMCert  +RACF certificates
-+                    To specify RACF main menu panel name and datasets to
-+                    ALTLIB/LIBDEF, type in%Yes+in!Panel/DSNs+field,%No+is the
-+                    default
-+
-+
-+
++                    To specify RACF datasets to ALTLIB/LIBDEF, type in%YES+in
++                   !Panel/DSNs+field,%No+is the default
 +
 + \ \ (press%ENTER+to continue) \ \
 )PROC

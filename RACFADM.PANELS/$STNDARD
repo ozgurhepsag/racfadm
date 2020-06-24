@@ -115,7 +115,7 @@
                      D=Dataset, J=JCL and R=Refresh
             ???? ... Field name, any characters and for Refresh
                      variables (4th chr = R) the section name
-                     (GEN, MGT, TSO, MVS and IBM)
+                     (GEN, MGT, TSO, MVS, IBM, RPT and MSG)
        -- The REXX programs and panels will translate the abbreviated
           contents to its full word, in hopes of making it easier to
           understand/maintain the code, for example: Y, will be

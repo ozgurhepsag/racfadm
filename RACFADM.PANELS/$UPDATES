@@ -2,6 +2,29 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  24 June 2020 - V30R4
+     - Settings (Option 0)
+       -- Added field 'SDSF log' to 'General' settings
+          * Allows specifing Operlog or Syslog to scan for messages
+     - Messages (Option M)
+       -- Obtain/use the defined Setting's (opt 0) 'SDSF log'
+       -- When executing in batch, fixed comments in SYSTSPRT
+     - Tutorials (Option T)
+       -- Updated 'Messages'
+     - Other Items
+       -- Panel member $DEFSETG
+          * Includes the general settings 'SDSF log' variable
+          * Renamed/standardized variable names
+              SETRMVS  -> SETRSLOG
+              SETDMSGO -> SETDSLOG
+
+  22 June 2020 - V30R3
+     - Other Items
+       -- Updated $STUB, fixed invoking RACFADM on multiple split
+          screens, was receiving 'TBCLOSE issue for table RACFCMDS'
+       -- Updated comments in several panels, on the standards of
+          site variables
+
   22 June 2020 - V30R2
      - Messages (Option M)
        -- Fixed julian date, ensure leading zeros are present (004)
@@ -431,8 +454,8 @@
           * This will eliminate having to communicate to existing
             users and have them change their Settings (option 0)
             because a module or dataset name changed
-        -- Fixed the 'Default password' variable name in $DEFSETG,
-           it was mis-spelled (SETTPWSD) and needed to be SETTPSWD
+       -- Fixed the 'Default password' variable name in $DEFSETG,
+          it was mis-spelled (SETTPWSD) and needed to be SETTPSWD
 
   27 May 2020 - V25R9
      - Other Items

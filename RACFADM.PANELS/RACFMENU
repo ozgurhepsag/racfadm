@@ -7,7 +7,7 @@
    {  TYPE(OUTPUT)  PAS(ON)      CAPS(OFF)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V30R2+)\-\
++\-\(%RACFADM - RACF Administration - V30R4+)\-\
 %Option ===>_ZCMD
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -38,6 +38,7 @@
   &ZPRIM  = YES              /* Make a primary option menu */
 
   VGET (SETGSTA  SETGSTAP SETGDISP SETGCONF SETGMVS SETGMVSD +
+        SETGSLOG +
         SETMADMN SETMIRRX SETMIBMM SETMIBMD SETMSHOW SETMTRAC) PROFILE
 
   /* General Settings */
@@ -52,6 +53,8 @@
       &SETGMVS = 'YES'       /* Showmvs             = YES  */
   IF (&SETGMVSD NE YES, NO)
       &SETGMVSD = 'NO'       /* Showmvs dataset     = NO   */
+  IF (&SETGSLOG NE OPERLOG, SYSLOG)
+      &SETGSLOG = 'OPERLOG'  /* Messages log     = OPERLOG */
 
   /* Management Settings */
   IF (&SETMADMN NE YES, NO)  /*--- Set default settings ---*/
@@ -70,6 +73,7 @@
       &SETMTRAC = 'NO'       /* REXX trace          = NO   */
 
   VPUT (SETGSTA  SETGSTAP SETGDISP SETGCONF SETGMVS SETGMVSD +
+        SETGSLOG +
         SETMADMN SETMIRRX SETMIBMM SETMIBMD SETMSHOW SETMTRAC) PROFILE
 
   /* Obtain RACF/system info displayed at the bottom of panel */
@@ -337,7 +341,7 @@
 /*                  D=Dataset, J=JCL and R=Refresh                    */
 /*          ???? ... Field name, any characters and for Refresh       */
 /*                   variables (4th chr = R) the section name         */
-/*                   (GEN, MGT, TSO, MVS and IBM)                     */
+/*                   (GEN, MGT, TSO, MVS, IBM, RPT and MSG)           */
 /*     - The REXX programs and panels will translate the abbreviated  */
 /*       contents to its full word, in hopes of making it easier to   */
 /*       understand/maintain the code, for example: Y, will be        */

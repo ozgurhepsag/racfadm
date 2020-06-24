@@ -20,8 +20,8 @@
 +  Edit JCL!....._Z{        (Y=Yes, N=No)
 +
 %File:
-+  Operlog!......_Z{        (A=Active SDSF Operlog, B=Backup DSN)
-+  Backup DSN!..._SETDMSGO                                    +
++  Log!.........._Z{        (A=Active SDSF &SETGSLOG, B=Backup DSN)
++  Backup DSN!..._SETDSLOG                                    +
 +
 %Job card:
 _ZLLGJOB1
@@ -30,6 +30,7 @@ _ZLLGJOB3
 _ZLLGJOB4
 )INIT
   VGET (LPAR) SYMDEF SYMNAMES(SYSNAME)
+  VGET (SETGSLOG)
   .CURSOR  = RACFMID
   .HELP    = #RACMSG
   .ZVARS   = '(RACFMTYP RACFMUSS RACFMMOD RACFMJCL RACFMLOG)'
@@ -61,12 +62,12 @@ _ZLLGJOB4
    &RACFLMSG = &Z
    &DSNBKLOG = &Z
    IF (&RACFMLOG = B)
-      VER (&SETDMSGO,NB,DSNAME)
-   IF (.MSG = &Z & &SETDMSGO NE &Z)
+      VER (&SETDSLOG,NB,DSNAME)
+   IF (.MSG = &Z & &SETDSLOG NE &Z)
       &BADDSN = N
-      *REXX (SETDMSGO DSNBKLOG BADDSN RACFSMSG RACFLMSG)
+      *REXX (SETDSLOG DSNBKLOG BADDSN RACFSMSG RACFLMSG)
          X = MSG("OFF")
-         PARSE VAR SETDMSGO DSN "(" GDGNO ")" .
+         PARSE VAR SETDSLOG DSN "(" GDGNO ")" .
          IF (DATATYPE(GDGNO,'N') = 1) THEN DO
             X = OUTTRAP("LC.")
             "LISTCAT ENT('"DSN"')"
@@ -78,7 +79,7 @@ _ZLLGJOB4
             DROP LC.
          END
          ELSE
-            DSNBKLOG = SETDMSGO
+            DSNBKLOG = SETDSLOG
          IF (SYSDSN("'"DSNBKLOG"'") <> "OK") THEN DO
             RACFSMSG = 'DSN does not exist'
             RACFLMSG = 'The dataset does not reside in the catalog',
@@ -88,7 +89,7 @@ _ZLLGJOB4
       *ENDREXX
 
   IF (&BADDSN = Y)
-     .CURSOR = SETDMSGO
+     .CURSOR = SETDSLOG
      .MSG    = RACF011
 
   IF (&RACFMLOG = B)

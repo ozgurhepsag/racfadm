@@ -38,6 +38,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AC  200624  RACFA    Chg/standardize site variable for SDSF log   */
 /* @AB  200620  RACFA    Add code to refresh RACFMSGs OPERLOG Bkp dsn */
 /* @AA  200617  RACFA    Add code to refresh RACFRPTs IRRDBU00 dsn    */
 /* @A9  200617  RACFA    Fix refreshing several sections (TSO/MGT/etc)*/
@@ -230,9 +231,9 @@ ADDRESS ISPEXEC
              IF (CKCHR4TO7 = "DRPT") THEN                     /* @AA */
                 INTERPRET "'VPUT ("W1") PROFILE'"             /* @AA */
         /* Refresh RACFMSG OPERLOG backip dataset? */         /* @AA */
-        WHEN (CKRESVAR = "SETRMSG"),                          /* @AB */
-           & (SETRMSG = "YES") THEN                           /* @AB */
-             IF (CKCHR4TO7 = "DMSG") THEN                     /* @AB */
+        WHEN (CKRESVAR = "SETRSLOG"),                         /* @AC */
+           & (SETRSLOG = "YES") THEN                          /* @AC */
+             IF (CKCHR4TO8 = "DSLOG") THEN                    /* @AC */
                 INTERPRET "'VPUT ("W1") PROFILE'"             /* @AB */
         /* Not a new user?                         */         /* @A8 */
         WHEN (NEWUSER = 'N') then                             /* @A8 */

@@ -10,6 +10,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A3  200623  LBD      Fix TBCLOSE err, remove NEWAPPL and PASSLIB  */
 /* @A2  200622  LBD      Added initial option                         */
 /* @A1  200611  LBD      Added skeleton datasets                      */
 /* @A0  200320  LBD      Created REXX                                 */
@@ -24,7 +25,7 @@ Address ISPExec
   "Libdef ISPMLIB Dataset ID('"hlq".msgs') stack"             /* @A2 */
   "Libdef ISPPLIB Dataset ID('"hlq".panels') stack"           /* @A2 */
   "Libdef ISPSLIB Dataset ID('"hlq".skels') stack"            /* @A1 */
-  "Select Cmd(%RacfADM NA" opt ") NewAppl(RADM) Passlib"      /* @A2 */
+  "Select Cmd(%RacfADM NA" opt ")"                            /* @A3 */
   "Libdef ISPMLIB"
   "Libdef ISPPLIB"
   "Libdef ISPSLIB"                                            /* @A1 */
