@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CL  200624  RACFA    Allow passing fully qual. dsn with quotes    */
+/* @CK  200624  RACFA    Chg line cmd L, added datasets               */
 /* @CJ  200618  RACFA    Chged SYSDA to SYSALLDA                      */
 /* @CI  200617  RACFA    Added comments to right of variables         */
 /* @CH  200616  RACFA    Added capability to SAve file as TXT/CSV     */
@@ -151,6 +153,14 @@ ADDRESS ISPEXEC                                               /* @AJ */
   chgsmade = 'N'                                              /* @A3 */
 
   "DISPLAY PANEL("PANEL01")"                                  /* @AU */
+  X = MSG("OFF")                                              /* @CL */
+  CHKDSN = SYSDSN(RFILTER)                                    /* @CL */
+  X = MSG("ON")                                               /* @CL */
+  IF (CHKDSN = "OK") THEN DO                                  /* @CL */
+     CALL LIST_FULL_DSN                                       /* @CL */
+     RETURN                                                   /* @CL */
+  END                                                         /* @CL */
+
   Do while (rc = 0)
      call Profl
      "DISPLAY PANEL("PANEL01")"                               /* @AU */
@@ -671,7 +681,7 @@ CREATE_TABLEB:                                                /* @BM */
   data  = ' '
   if (type = 'DISCRETE') then
      type = ' '
-  cmd = "LISTDSD DA('"DATASET"') AUTH"                        /* @AI */
+  cmd = "LISTDSD DA('"DATASET"') AUTH"
   x = OUTTRAP('VAR.')
   address TSO cmd                                             /* @AI */
   cmd_rc = rc                                                 /* @AZ */
@@ -935,7 +945,7 @@ RETURN
 /*  List dataset                                                      */
 /*--------------------------------------------------------------------*/
 LISD:                                                         /* @A1 */
-  CMDPRM  = "ALL"                                             /* @A1 */
+  CMDPRM  = "ALL DSNS"                                        /* @CK */
   CMD     = "LISTDSD DATASET('"DATASET"')" CMDPRM             /* @B2 */
   X = OUTTRAP("CMDREC.")                                      /* @A1 */
   ADDRESS TSO cmd                                             /* @AI */
@@ -1225,3 +1235,19 @@ ADDRESS ISPEXEC                                               /* @CG */
   X = MSG("ON")                                               /* @CG */
                                                               /* @CG */
 RETURN                                                        /* @CG */
+/*--------------------------------------------------------------------*/
+/*  List fully qualified dataset with single quotes              @CL  */
+/*--------------------------------------------------------------------*/
+LIST_FULL_DSN:                                                /* @CL */
+  CMDPRM  = "DSNS GEN"                                        /* @CL */
+  CMD     = "LISTDSD DATASET("RFILTER")" CMDPRM               /* @CL */
+  X = OUTTRAP("CMDREC.")                                      /* @CL */
+  ADDRESS TSO cmd                                             /* @CL */
+  cmd_rc = rc                                                 /* @CL */
+  X = OUTTRAP("OFF")                                          /* @CL */
+  if (SETMSHOW <> 'NO') then                                  /* @CL */
+     call SHOWCMD                                             /* @CL */
+  call display_info                                           /* @CL */
+  if (cmd_rc > 0) then                                        /* @CL */
+     CALL racfmsgs "ERR10" /* Generic failure */              /* @CL */
+RETURN                                                        /* @CL */

@@ -17,8 +17,8 @@
 +
 +
 +
-+Filter examples:!SYS1.**      SYS2.LOAD.*       AA.BB
-+                !EE.CEF.*     GS.ABC*.*         SYS*.**
++Filter examples:!SYS1.**      SYS2.LOAD.*    'SYS1.PARMLIB'
++                !EE.CEF.*     GS.ABC*.*       SYS*.**
 +
 +Wild cards:     !%  {Indicates one character
 !                 *  {Indicates one or more characters

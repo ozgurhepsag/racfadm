@@ -18,8 +18,8 @@
 +
 +
 +
-+Filter examples:!IC*          CA*               ZOS*
-+                !ICN*         YSC*              *
++Filter examples:!IC*          CA*             ZOS*
++                !ICN*         YSC*            *
 +
 +Wild cards:     !%  {Indicates one character
 !                 *  {Indicates one or more characters

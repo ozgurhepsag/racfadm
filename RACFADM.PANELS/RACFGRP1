@@ -17,8 +17,8 @@
 +
 +
 +
-+Filter examples:!CTL*         DTI*              FTP*
-+                !POL*         WIACA*            WIS*
++Filter examples:!CTL*         DTI*            FTP*
++                !POL*         WIACA*          WIS*
 +
 +Wild cards:     !%  {Indicates one character
 !                 *  {Indicates one or more characters

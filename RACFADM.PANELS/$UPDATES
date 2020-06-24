@@ -2,20 +2,30 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  24 June 2020 - V30R5
+     - Dataset (Option D)
+       -- Updated 'RACF Filter'
+          * Allow passing a fully qualified dataset name with single
+            quotes, and execute/display below RACF command:
+              LISTDSD DATASET('dataset_name') DSNS GEN
+       -- Updated line command 'L'ist
+          * Added displaying a list of cataloged datasets affected
+            by a profile change
+
   24 June 2020 - V30R4
      - Settings (Option 0)
        -- Added field 'SDSF log' to 'General' settings
-          * Allows specifing Operlog or Syslog to scan for messages
+          * Allows specifying Operlog or Syslog to scan for messages
      - Messages (Option M)
        -- Obtain/use the defined Setting's (opt 0) 'SDSF log'
        -- When executing in batch, fixed comments in SYSTSPRT
      - Tutorials (Option T)
-       -- Updated 'Messages'
+       -- Updated 'Settings' and 'Messages'
      - Other Items
        -- Panel member $DEFSETG
           * Includes the general settings 'SDSF log' variable
           * Renamed/standardized variable names
-              SETRMVS  -> SETRSLOG
+              SETRMSG  -> SETRSLOG
               SETDMSGO -> SETDSLOG
 
   22 June 2020 - V30R3
@@ -27,7 +37,7 @@
 
   22 June 2020 - V30R2
      - Messages (Option M)
-       -- Fixed julian date, ensure leading zeros are present (004)
+       -- Fixed Julian date, ensure leading zeros are present (004)
        -- Fixed searching for ICH408I message, now looking at both
           word position 7 and 8 in OPERLOG/SYSLOG, prior was just
           word position 8
