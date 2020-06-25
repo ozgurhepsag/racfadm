@@ -2,6 +2,13 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  25 June 2020 - V30R6
+     - Messages (Option M)
+       -- Make Date=today and Log=Active upon invocation
+     - Other Items
+       -- Fixed forcing a refresh on the messages backup log file in
+          panel member $DEFSETD
+
   24 June 2020 - V30R5
      - Dataset (Option D)
        -- Updated 'RACF Filter'

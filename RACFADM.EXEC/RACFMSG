@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A5  200625  RACFA    Make DATE=today and LOG=A as default         */
 /* @A4  200624  RACFA    ICH408I in W7 for SYSLOG and W8 for OPERLOG  */
 /* @A3  200624  RACFA    When batch, fix comments in SYSTSPRT         */
 /* @A2  200624  RACFA    Get site variable to use SYSLOG or OPERLOG   */
@@ -28,7 +29,7 @@ FOREGROUND:
   SKELETON1  = "RACFJOB"            /* JOB card           */
   SKELETON2  = "RACFMSG"            /* TSO PARM=RACFERRS  */
 
-  "VGET (SETMTRAC RACFMID  RACFMLPR RACFMTYP",
+  "VGET (SETMTRAC RACFMID  RACFMLPR RACFMDAT RACFMTYP",
         "RACFMUSS RACFMMOD RACFMJCL RACFMLOG",                /* @A2 */
         "SETGSLOG SETDSLOG",                                  /* @A2 */
         "ZLLGJOB1 ZLLGJOB2 ZLLGJOB3 ZLLGJOB4) PROFILE"
@@ -41,12 +42,12 @@ FOREGROUND:
   end
   IF (RACFMID  = "") THEN RACFMID  = "*"
   IF (RACFMLPR = "") THEN RACFMLPR = "*"
-  RACFMDAT = DATE("U")
+  RACFMDAT = DATE("U")                                        /* @A5 */
   IF (RACFMTYP = "") THEN RACFMTYP = "A"
   IF (RACFMUSS = "") THEN RACFMUSS = "N"
   IF (RACFMMOD = "") THEN RACFMMOD = "F"
   IF (RACFMJCL = "") THEN RACFMJCL = "Y"
-  IF (RACFMLOG = "") THEN RACFMLOG = "A"
+  RACFMLOG = "A"                                              /* @A5 */
 
   /*-----------------------------------------------*/
   /* If IBM's ISPF JOB card variable is:           */

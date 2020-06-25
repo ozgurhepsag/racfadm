@@ -38,6 +38,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AD  200625  RACFA    Fixed refreshing SDSF Log file file          */
 /* @AC  200624  RACFA    Chg/standardize site variable for SDSF log   */
 /* @AB  200620  RACFA    Add code to refresh RACFMSGs OPERLOG Bkp dsn */
 /* @AA  200617  RACFA    Add code to refresh RACFRPTs IRRDBU00 dsn    */
@@ -194,6 +195,7 @@ ADDRESS ISPEXEC
 
      CKCHR1TO4 = SUBSTR(W1,1,4)                               /* @A9 */
      CKCHR4TO7 = SUBSTR(W1,4,4)                               /* @A9 */
+     CKCHR4TO8 = SUBSTR(W1,4,5)                               /* @AD */
      SELECT                                                   /* @A8 */
         /* Is this a variable used to Refresh?     */         /* @A8 */
         WHEN (CKCHR1TO4 = "SETR") THEN                        /* @A9 */
@@ -233,7 +235,7 @@ ADDRESS ISPEXEC
         /* Refresh RACFMSG OPERLOG backip dataset? */         /* @AA */
         WHEN (CKRESVAR = "SETRSLOG"),                         /* @AC */
            & (SETRSLOG = "YES") THEN                          /* @AC */
-             IF (CKCHR4TO8 = "DSLOG") THEN                    /* @AC */
+             IF (CKCHR4TO8 = "DSLOG") THEN                    /* @AD */
                 INTERPRET "'VPUT ("W1") PROFILE'"             /* @AB */
         /* Not a new user?                         */         /* @A8 */
         WHEN (NEWUSER = 'N') then                             /* @A8 */
