@@ -14,7 +14,7 @@
 
  Name:    ORLIST
 
- Author: Bruce Wells - brwells@us.ibm.com
+ Author:  Bruce Wells - brwells@us.ibm.com
 
  Purpose: Display security information for a Unix directory or file
           using a syntax and output format similar to the RACF
@@ -22,13 +22,13 @@
 
  Input:   An absolute path name
 
- NOTE!!! This exec is dependent upon the following "Syntax:" line and
-         the "End-Syntax" line below in order to display the syntax
-         when the exec is invoked without keyword parameters.
+ NOTE!!!  This exec is dependent upon the following "Syntax:" line and
+          the "End-Syntax" line below in order to display the syntax
+          when the exec is invoked without keyword parameters.
 
-         Feel free to add/change examples to show things that are
-         frequently done in your orgnization. But please preserve
-         these surrounding lines.
+          Feel free to add/change examples to show things that are
+          frequently done in your orgnization. But please preserve
+          these surrounding lines.
 
  Beg-Syntax:
  Purpose:  Display security information for a Unix directory or

@@ -3,6 +3,10 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A9  200627  RACFA    Batch, chg parm syntax and upper case        */
+/* @A8  200627  RACFA    Create variables for USERID and LPAR         */
+/* @A7  200627  RACFA    Executing batch, chg display of parameters   */
+/* @A6  200627  RACFA    Added EJES and chged variable names          */
 /* @A5  200625  RACFA    Make DATE=today and LOG=A as default         */
 /* @A4  200624  RACFA    ICH408I in W7 for SYSLOG and W8 for OPERLOG  */
 /* @A3  200624  RACFA    When batch, fix comments in SYSTSPRT         */
@@ -12,6 +16,8 @@
 /*====================================================================*/
 TODAY      = DATE("U")
 ENV        = SYSVAR(SYSENV)
+USERID     = USERID()                                         /* @A8 */
+LPAR       = MVSVAR("SYMDEF","SYSNAME")                       /* @A8 */
 
 ADDRESS ISPEXEC
   ADDRESS TSO "PROFILE VARSTORAGE(HIGH)"
@@ -21,7 +27,7 @@ ADDRESS ISPEXEC
      CALL BATCH
 EXIT
 /*--------------------------------------------------------------------*/
-/*  Execute in foreground mode                                        */
+/*  Execution in foreground mode                                      */
 /*--------------------------------------------------------------------*/
 FOREGROUND:
   PANEL01    = "RACFMSG"            /* Pop-up data entry  */
@@ -30,8 +36,8 @@ FOREGROUND:
   SKELETON2  = "RACFMSG"            /* TSO PARM=RACFERRS  */
 
   "VGET (SETMTRAC RACFMID  RACFMLPR RACFMDAT RACFMTYP",
-        "RACFMUSS RACFMMOD RACFMJCL RACFMLOG",                /* @A2 */
-        "SETGSLOG SETDSLOG",                                  /* @A2 */
+        "RACFMUSS RACFMMOD RACFMJCL RACFMSCN",                /* @A6 */
+        "SETLMSG  SETPMSG  SETDMSG",                          /* @A6 */
         "ZLLGJOB1 ZLLGJOB2 ZLLGJOB3 ZLLGJOB4) PROFILE"
   If (SETMTRAC <> 'NO') then do
      Say "*"COPIES("-",70)"*"
@@ -47,7 +53,9 @@ FOREGROUND:
   IF (RACFMUSS = "") THEN RACFMUSS = "N"
   IF (RACFMMOD = "") THEN RACFMMOD = "F"
   IF (RACFMJCL = "") THEN RACFMJCL = "Y"
-  RACFMLOG = "A"                                              /* @A5 */
+  IF (SETLMSG  = "") THEN SETLMSG  = "O"                      /* @A6 */
+  IF (SETPMSG  = "") THEN SETPMSG  = "SDSF"                   /* @A6 */
+  RACFMSCN = "A"                                              /* @A5 */
 
   /*-----------------------------------------------*/
   /* If IBM's ISPF JOB card variable is:           */
@@ -65,10 +73,10 @@ FOREGROUND:
      "VPUT (ZLLGJOB1 ZLLGJOB2)"
   END
 
-  CALL GET_CLIST_DSN
+  CALL CLIST_DSN                                              /* @A6 */
 
   DO FOREVER
-     DSNRPT = USERID()".RACFERRS.RPT"RANDOM()
+     DSNRPT = USERID".RACFERRS.RPT"RANDOM()
      "DISPLAY PANEL("PANEL01")"
      IF (RC = 8) THEN LEAVE
      PARSE VAR racfmdat MM "/" DD "/" YY .
@@ -76,12 +84,13 @@ FOREGROUND:
      DDD      = DATE("D",YYYYMMDD,"S")
      JDATE    = YY""RIGHT(DDD,3,'0')                          /* @A1 */
      IF (RACFMMOD = "F") THEN
-        CALL FOREGROUND_OPERLOG
+        CALL FOREGROUND_LOG
      ELSE
-        CALL FOREGROUND_BATCH_JCL
+        CALL FOREGROUND_CREATE_JCL
   END
   "VPUT (RACFMID  RACFMLPR RACFMTYP",
-        "RACFMUSS RACFMMOD RACFMJCL RACFMLOG SETDSLOG",
+        "RACFMUSS RACFMMOD RACFMJCL RACFMSCN",                /* @A6 */
+        "SETLMSG  SETPMSG  SETDMSG",                          /* @A6 */
         "ZLLGJOB1 ZLLGJOB2 ZLLGJOB3 ZLLGJOB4) PROFILE"
 
   If (SETMTRAC <> 'NO') then do
@@ -92,24 +101,28 @@ FOREGROUND:
 
 RETURN
 /*--------------------------------------------------------------------*/
-/*  Execute in batch mode                                             */
+/*  Execution in batch mode                                           */
 /*--------------------------------------------------------------------*/
 BATCH:
   ADDRESS TSO "EXECIO * DISKR PARMS (STEM PARMS. FINIS"
   DO J = 1 TO PARMS.0
      SELECT
-        WHEN (POS("USERID(",PARMS.J)  > 0) THEN
-             PARSE VAR PARMS.J . "USERID("RACFMID")" .
-        WHEN (POS("LPAR(",PARMS.J)    > 0) THEN
-             PARSE VAR PARMS.J . "LPAR("RACFMLPR")" .
-        WHEN (POS("DATE(",PARMS.J)    > 0) THEN
-             PARSE VAR PARMS.J . "DATE("RACFMDAT")" .
-        WHEN (POS("USSONLY(",PARMS.J) > 0) THEN
-             PARSE VAR PARMS.J . "USSONLY("RACFMUSS")" .
-        WHEN (POS("TYPE(",PARMS.J)    > 0) THEN
-             PARSE VAR PARMS.J . "TYPE("RACFMTYP")" .
-        WHEN (POS("OPERLOG(",PARMS.J)    > 0) THEN
-             PARSE VAR PARMS.J . "OPERLOG("RACFMLOG")" .
+        WHEN (POS("USERID=",PARMS.J)  > 0) THEN               /* @A9 */
+             PARSE UPPER VAR PARMS.J . "USERID="RACFMID .     /* @A9 */
+        WHEN (POS("LPAR=",PARMS.J)    > 0) THEN               /* @A9 */
+             PARSE UPPER VAR PARMS.J . "LPAR="RACFMLPR .      /* @A9 */
+        WHEN (POS("DATE=",PARMS.J)    > 0) THEN               /* @A9 */
+             PARSE UPPER VAR PARMS.J . "DATE="RACFMDAT .      /* @A9 */
+        WHEN (POS("USSONLY=",PARMS.J) > 0) THEN               /* @A9 */
+             PARSE UPPER VAR PARMS.J . "USSONLY="RACFMUSS .   /* @A9 */
+        WHEN (POS("TYPE=",PARMS.J)    > 0) THEN               /* @A9 */
+             PARSE UPPER VAR PARMS.J . "TYPE="RACFMTYP .      /* @A9 */
+        WHEN (POS("LOG=",PARMS.J)     > 0) THEN               /* @A9 */
+             PARSE UPPER VAR PARMS.J . "LOG="SETLMSG .        /* @A9 */
+        WHEN (POS("SCAN=",PARMS.J)    > 0) THEN               /* @A9 */
+             PARSE UPPER VAR PARMS.J . "SCAN="RACFMSCN .      /* @A9 */
+        WHEN (POS("PROGRAM=",PARMS.J) > 0) THEN               /* @A9 */
+             PARSE UPPER VAR PARMS.J . "PROGRAM="SETPMSG .    /* @A9 */
         OTHERWISE
              NOP
      END /* Select */
@@ -121,28 +134,55 @@ BATCH:
   IF (RACFMDAT = "") THEN RACFMDAT = DATE("U")
   IF (RACFMUSS = "") THEN RACFMUSS = "N"
   IF (RACFMTYP = "") THEN RACFMTYP = "A"
-  IF (RACFMLOG = "") THEN RACFMLOG = "A"
+  IF (RACFMSCN = "") THEN RACFMSCN = "A"                      /* @A6 */
   PARSE VAR racfmdat MM "/" DD "/" YY .
   YYYYMMDD = "20"YY""MM""DD
   DDD      = DATE("D",YYYYMMDD,"S")
   JDATE    = YY""RIGHT(DDD,3,'0')                             /* @A1 */
-  IF (RACFMLOG = "A") THEN
-     CALL OPERLOG_SDSF
+  IF (RACFMSCN = "A") THEN DO                                 /* @A6 */
+     SELECT                                                   /* @A6 */
+        WHEN (SETPMSG = "EJES") THEN DO                       /* @A6 */
+             IF (SETLMSG = "S") THEN
+                EJESLOG = "SYSLOG"
+             ELSE
+                EJESLOG = "OPERLOG"
+             CALL EJES_LOG RACFMDAT EJESLOG RACFMLPR          /* @A6 */
+        END
+        OTHERWISE                                             /* @A6 */
+             CALL SDSF_LOG                                    /* @A6 */
+     END                                                      /* @A6 */
+  END                                                         /* @A6 */
   ELSE
-     CALL OPERLOG_DSN
+     CALL DSN_LOG                                             /* @A6 */
 
-  SAY "*"COPIES("-",70)"*"
-  SAY "*"CENTER("Total Errors Found: "TOTALERRS,70)"*"
-  SAY "*"COPIES("-",70)"*"
-  SAY "*"CENTER("Userid="racfmid",",                          /* @A3 */
-                "Lpar="racfmlpr",",
-                "Date="racfmdat",",
-                "Type="racfmtyp",",                           /* @A3 */
-                "USS="racfmuss,70)"*"
-  SAY "*"COPIES("-",70)"*"
-  ADDRESS TSO "EXECIO * DISKW ERRORS (STEM RECERR. FINIS"
+  SAY "*"COPIES("-",70)"*"                                    /* @A7 */
+  SAY "*"CENTER("RACFADM - Messages",70)"*"                   /* @A7 */
+  SAY "*"COPIES("-",70)"*"                                    /* @A7 */
+  SAY " "                                                     /* @A7 */
+  SAY "   Total:"                                             /* @A7 */
+  SAY "     Messages = "TOTALMSGS                             /* @A7 */
+  SAY " "                                                     /* @A7 */
+  SAY "   Parameters:"                                        /* @A7 */
+  SAY "     Userid   = "LEFT(RACFMID,8),                      /* @A7 */
+      " ("USERID", *)"                                        /* @A8 */
+  SAY "     Lpar     = "LEFT(racfmlpr,8),                     /* @A7 */
+      " ("LPAR", *)"                                          /* @A8 */
+  SAY "     Date     = "LEFT(racfmdat,8),                     /* @A7 */
+      " (mm/dd/yy)"                                           /* @A7 */
+  SAY "     Type     = "LEFT(racfmtyp,8),                     /* @A7 */
+      " (A=All, I=Insufficient, V=Violation)"                 /* @A7 */
+  SAY "     USS      = "LEFT(racfmuss,8),                     /* @A7 */
+      " (Y=Yes, N=No)"                                        /* @A7 */
+  SAY "     Log      = "LEFT(SETLMSG,8),                      /* @A7 */
+      " (O=Operlog, S=Syslog)"                                /* @A7 */
+  SAY "     Scan     = "LEFT(RACFMSCN,8),                     /* @A7 */
+      " (A=Active log, B=Backup log)"                         /* @A7 */
+  SAY "     Program  = "LEFT(SETPMSG,8),                      /* @A7 */
+      " (EJES, SDSF)"                                         /* @A7 */
+  SAY " "                                                     /* @A7 */
+  ADDRESS TSO "EXECIO * DISKW ERRORS (STEM LOGMSG. FINIS"
   EXECIORC = RC
-  DROP RECERR.
+  DROP LOGMSG.
   IF (EXECIORC > 0) THEN DO
      SAY "ERROR - Missing DD card ERRORS, unable to write",
          "the ICH408I messages."
@@ -150,21 +190,20 @@ BATCH:
   END
 RETURN
 /*--------------------------------------------------------------------*/
-/*  Process in forground and create batch JCL (Mode=B)                */
+/*  Foreground, create batch JCL (Mode = B)                           */
 /*--------------------------------------------------------------------*/
-FOREGROUND_BATCH_JCL:
-ADDRESS ISPEXEC
+FOREGROUND_CREATE_JCL:
   IF (RACFMDAT <> TODAY) THEN DO
-     PARSE VAR SETDSLOG . "(" W1 ")" .
+     PARSE VAR SETDMSG . "(" W1 ")" .
      IF (W1 = "") THEN DO
         X = OUTTRAP("LC.")
-        ADDRESS TSO "LISTCAT ENT('"SETDSLOG"')"
+        ADDRESS TSO "LISTCAT ENT('"SETDMSG"')"
         X = OUTTRAP("OFF")
         PARSE VAR LC.1 W1 W2 .
         IF (W1 = "GDG") & (W2 = "BASE") THEN
-           CALL GET_OPERLOG_GOVO
+           CALL GDG_BASE_GET_GOVO                             /* @A6 */
         ELSE
-           DSNBKLOG = SETDSLOG
+           DSNBKLOG = SETDMSG
         IF (DSNBKLOG = "") THEN DO
            RACFSMSG = "Invalid Date"
            RACFLMSG = "There are no GDG genarations",
@@ -174,10 +213,10 @@ ADDRESS ISPEXEC
         END
      END
      ELSE
-        DSNBKLOG = SETDSLOG
+        DSNBKLOG = SETDMSG
   END
   ELSE
-     DSNBKLOG = SETDSLOG
+     DSNBKLOG = SETDMSG
 
   "FTOPEN TEMP"
   "VGET (ZTEMPF)"
@@ -197,25 +236,35 @@ ADDRESS ISPEXEC
 
 RETURN
 /*--------------------------------------------------------------------*/
-/*  Process the operlog in foreground (Mode=A)                        */
+/*  Foreground, process log (Mode = A)                                */
 /*--------------------------------------------------------------------*/
-FOREGROUND_OPERLOG:
-ADDRESS ISPEXEC
-  RECERR.0 = 0
+FOREGROUND_LOG:
+  LOGMSG.0 = 0
 
-  IF (RACFMLOG = "A") THEN   /* Active OPERLOG? */
-     CALL OPERLOG_SDSF
+  IF (RACFMSCN = "A") THEN DO   /* Active OPERLOG? */         /* @A6 */
+     SELECT                                                   /* @A6 */
+        WHEN (SETPMSG = "EJES") THEN DO                       /* @A6 */
+             IF (SETLMSG = "S") THEN                          /* @A6 */
+                EJESLOG = "SYSLOG"                            /* @A6 */
+             ELSE                                             /* @A6 */
+                EJESLOG = "OPERLOG"                           /* @A6 */
+             CALL EJES_LOG RACFMDAT EJESLOG RACFMLPR          /* @A6 */
+        END                                                   /* @A6 */
+        OTHERWISE                                             /* @A6 */
+             CALL SDSF_LOG                                    /* @A6 */
+     END                                                      /* @A6 */
+  END                                                         /* @A6 */
   ELSE DO
-     PARSE VAR SETDSLOG . "(" W1 ")" .
+     PARSE VAR SETDMSG . "(" W1 ")" .
      IF (W1 = "") THEN DO
         X = OUTTRAP("LC.")
-        ADDRESS TSO "LISTCAT ENT('"SETDSLOG"')"
+        ADDRESS TSO "LISTCAT ENT('"SETDMSG"')"
         X = OUTTRAP("OFF")
         PARSE VAR LC.1 W1 W2 .
         IF (W1 = "GDG") & (W2 = "BASE") THEN
-           CALL GET_OPERLOG_GOVO
+           CALL GDG_BASE_GET_GOVO                             /* @A6 */
         ELSE
-           DSNBKLOG = SETDSLOG
+           DSNBKLOG = SETDMSG
         IF (DSNBKLOG = "") THEN DO
            RACFSMSG = "Invalid Date"
            RACFLMSG = "There are no GDG genarations",
@@ -225,12 +274,12 @@ ADDRESS ISPEXEC
         END
      END
 
-     ADDRESS TSO "ALLOCATE FI(OPERLOG) DSN('"DSNBKLOG"')",
+     ADDRESS TSO "ALLOCATE FI(BKPLOG) DSN('"DSNBKLOG"')",
                  "SHR REUSE BUFNO(30) LRECL(259)"
-     CALL OPERLOG_DSN
-     ADDRESS TSO "FREE FI(OPERLOG)"
+     CALL DSN_LOG                                             /* @A6 */
+     ADDRESS TSO "FREE FI(BKPLOG)"
   END
-  IF (RECERR.0 = 0) THEN DO
+  IF (LOGMSG.0 = 0) THEN DO
      RACFSMSG = "No Security Errors"
      RACFLMSG = "There are no ICH408I messages",
                 "with the search criteria specified."
@@ -241,10 +290,10 @@ ADDRESS ISPEXEC
          "NEW REUSE UNIT(VIO)",
          "LRECL(240) BLKSIZE(0) RECFM(V B)",
          "CYLINDERS SPACE(10 10)"
-     ADDRESS TSO "EXECIO * DISKW RACFERRS (STEM RECERR. FINIS"
-     DROP RECERR.
-     RACFSMSG = TOTALERRS" Total Errors"
-     RACFLMSG = "There are "TOTALERRS" total RACF",
+     ADDRESS TSO "EXECIO * DISKW RACFERRS (STEM LOGMSG. FINIS"
+     DROP LOGMSG.
+     RACFSMSG = TOTALMSGS" Total Errors"
+     RACFLMSG = "There are "TOTALMSGS" total RACF",
                "errors displayed."
      "SETMSG MSG(RACF011)"
      "VGET (ZPF10 ZPF11)"
@@ -262,9 +311,9 @@ ADDRESS ISPEXEC
   END
 RETURN
 /*--------------------------------------------------------------------*/
-/*  Scan active operlog for security errors using SDSF (Operlog=A)    */
+/*  SDSF, scan the active log (Scan = A)                              */
 /*--------------------------------------------------------------------*/
-OPERLOG_SDSF:
+SDSF_LOG:                                                     /* @A6 */
   ISFLOGSTARTDATE = RACFMDAT
   ISFLOGSTARTTIME = "00:00"
   ISFLOGSTOPDATE  = RACFMDAT  /* DATE - MM/DD/YY */
@@ -281,15 +330,25 @@ OPERLOG_SDSF:
         SAY "ERROR - SDSF is not active on this lpar."
      RETURN
   END
-  KLPAR      = MVSVAR("SYMDEF","SYSKLPAR")                    /* @A2 */
+  KLPAR = MVSVAR("SYMDEF","SYSKLPAR")     /* GDPS K-Lpar? */  /* @A2 */
   SELECT                                                      /* @A2 */
-     WHEN (SETGSLOG = "SYSLOG") THEN DO                       /* @A2 */
-          ISFSYSID = LPAR                                     /* @A2 */
-          ADDRESS SDSF "ISFLOG READ TYPE(SYSLOG)"             /* @A2 */
-     END                                                      /* @A2 */
      WHEN (KLPAR = "Y") THEN DO                               /* @A2 */
           ISFSYSID = SUBSTR(LPAR,2) /* Chg IEFSYSID=LPAR? */  /* @A2 */
           ADDRESS SDSF "ISFLOG READ TYPE(SYSLOG)"             /* @A2 */
+     END                                                      /* @A2 */
+     WHEN (SETLMSG = "S") THEN DO                             /* @A2 */
+          IF (KLPAR = "") THEN                                /* @A2 */
+             ISFSYSID = RACFMLPR                              /* @A2 */
+          ELSE DO                                             /* @A2 */
+             IF (RACFMLPR = "*") THEN                         /* @A6 */
+                ISFSYSID = RACFMLPR                           /* @A6 */
+             ELSE                                             /* @A6 */
+                ISFSYSID = SUBSTR(RACFMLPR,2)                 /* @A2 */
+          END                                                 /* @A6 */
+          IF (KLPAR = "") | (KLPAR = "Y") THEN                /* @A6 */
+             ADDRESS SDSF "ISFLOG READ TYPE(SYSLOG)"          /* @A2 */
+          ELSE                                                /* @A6 */
+             ADDRESS SDSF "ISFLOG READ TYPE(OPERLOG)"         /* @A6 */
      END                                                      /* @A2 */
      OTHERWISE                                                /* @A2 */
           ADDRESS SDSF "ISFLOG READ TYPE(OPERLOG)"            /* @A2 */
@@ -297,29 +356,29 @@ OPERLOG_SDSF:
   RC=ISFCALLS("OFF")
 
   K = 0
-  TOTALERRS = 0
-  CALL OPERLOG_PROCESS_RECS
-  RECERR.0 = K
+  TOTALMSGS = 0
+  CALL PROCESS_LOG_RECS                                       /* @A6 */
+  LOGMSG.0 = K
 RETURN
 /*--------------------------------------------------------------------*/
-/*  Scan operlog backup datasets for security errors (Operlog = B)    */
+/*  Scan the backup log dataset (Log = B)                             */
 /*--------------------------------------------------------------------*/
-OPERLOG_DSN:
+DSN_LOG:                                                      /* @A6 */
   K         = 0
   READRC    = 0
-  TOTALERRS = 0
+  TOTALMSGS = 0
   DO WHILE READRC = 0
-     ADDRESS TSO "EXECIO 300000 DISKR OPERLOG (STEM ISFLINE."
+     ADDRESS TSO "EXECIO 300000 DISKR BKPLOG (STEM ISFLINE."
      READRC = RC
-     CALL OPERLOG_PROCESS_RECS
+     CALL PROCESS_LOG_RECS                                    /* @A6 */
   END
-  ADDRESS TSO "EXECIO 0 DISKR OPERLOG (FINIS"
-  RECERR.0 = K
+  ADDRESS TSO "EXECIO 0 DISKR BKPLOG (FINIS"
+  LOGMSG.0 = K
 RETURN
 /*--------------------------------------------------------------------*/
-/*  Process operlog records, find all ICH408I messages                */
+/*  Proces log records, find all ICH408I messages                     */
 /*--------------------------------------------------------------------*/
-OPERLOG_PROCESS_RECS:
+PROCESS_LOG_RECS:                                             /* @A6 */
   DO J = 1 TO ISFLINE.0-1
      PARSE VAR ISFLINE.J W1 W2 W3 W4 W5 W6 W7 W8 W9 W10
      IF (W7 = "ICH408I") | (W8 = "ICH408I") THEN DO           /* @A4 */
@@ -364,10 +423,10 @@ OPERLOG_PROCESS_RECS:
                        END N
                        IF (FOUND = 0) THEN LEAVE M
                     END
-                    TOTALERRS = TOTALERRS + 1
+                    TOTALMSGS = TOTALMSGS + 1
                     DO N = MSGBEG TO MSGEND
                        K = K + 1
-                       RECERR.K = ISFLINE.N
+                       LOGMSG.K = ISFLINE.N
                     END N
                  END /* If FOUND */
               END M
@@ -378,10 +437,11 @@ OPERLOG_PROCESS_RECS:
   DROP ISFLINE.
 RETURN
 /*--------------------------------------------------------------------*/
-/*  Obtain operlog GDG dataset name for the date requested,           */
-/*  when the operlog backup dataset is a GDG base                     */
+/*  When the 'Backup log' dataset is a base GDG, obtain the           */
+/*  the generation with a create date of minus 1, due to the          */
+/*  backup was taken after midnight                                   */
 /*--------------------------------------------------------------------*/
-GET_OPERLOG_GOVO:
+GDG_BASE_GET_GOVO:                                            /* @A6 */
   DSNBKLOG = ""
   DSNDATE = ""
   /*------------------------------------*/
@@ -413,7 +473,7 @@ GET_OPERLOG_GOVO:
   JULIAN=CC||YY'.'RIGHT(DAYS,3,'0')
 
   X = OUTTRAP("IDCAMS.")
-  ADDRESS TSO "LISTCAT ENT('"SETDSLOG"') ALL"
+  ADDRESS TSO "LISTCAT ENT('"SETDMSG"') ALL"
   X = OUTTRAP("OFF")
   K = 0
   DO J = 1 TO IDCAMS.0
@@ -431,7 +491,7 @@ GET_OPERLOG_GOVO:
   DROP IDCAMS.
 RETURN
 /*--------------------------------------------------------------------*/
-/*  Get CLIST dataset name                                            */
+/*  Get CLIST/REXX dataset name, used in batch JCL to invoke REXX pgm */
 /*--------------------------------------------------------------------*/
 /*  1) The 'ALTLIB DISPLAY' statement, will look for                  */
 /*     'Application-level' in the display in order to obtain          */
@@ -444,7 +504,7 @@ RETURN
 /*     allocated, allowing the capability to obtain the dataset name  */
 /*     allocated to the 'Application-level CLIST' ddname (SYS#####)   */
 /*--------------------------------------------------------------------*/
-GET_CLIST_DSN:
+CLIST_DSN:                                                    /* @A6 */
   X = OUTTRAP("RECALT.")
   ADDRESS TSO "ALTLIB DISPLAY"
   X = OUTTRAP("OFF")
@@ -472,4 +532,223 @@ GET_CLIST_DSN:
      END
   end
   DROP RECLA. W1 DDALTLIB
+RETURN
+/*--------------------------------------------------------------------*/
+/*  (E)JES - Extracts ICH messages from OPERLOG, SYSLOG or DLOG       */
+/*--------------------------------------------------------------------*/
+/*  1) Input:                                                         */
+/*       There are three positional input parameters:                 */
+/*         logdate = mm/dd/yy                                         */
+/*         logtype = SYSLOG or OPERLOG                                */
+/*         logsys  = system name                                      */
+/*                                                                    */
+/*       OPERLOG and DLOG can display IRR and ICH messages from       */
+/*       all connected systems by specifying an asterisk (*)          */
+/*       for logsys.                                                  */
+/*                                                                    */
+/*       JES2 SYSLOG is not a merged log and will display only        */
+/*       one system at a time.  An asterisk is not valid for          */
+/*       JES2 SYSLOG.                                                 */
+/*                                                                    */
+/*       Sample invocation extracting the IRR and ICH messages        */
+/*       logged to SYSLOG on June 26, 2020 by system MVSA0.           */
+/*          RACFSCAN 06/26/20 SYSLOG MVSA0                            */
+/*                                                                    */
+/*   1) SCAN:                                                         */
+/*       The scan is a trivial operation for (E)JES OPERLOG.          */
+/*       One can simply set date/time boundaries and filter           */
+/*       on system name and messages that start with IRR and          */
+/*       ICH. The OPERLOG browser processes Message Descrip-          */
+/*       tor Blocks (MDBs) and fully understands multi-line           */
+/*       messages, etc. This scan runs at machine speed.              */
+/*                                                                    */
+/*       For SYSLOG and DLOG, the scan task takes longer              */
+/*       because some of the logic is implemented in REXX.            */
+/*       (E)JES could (at machine speed) display messages             */
+/*       that start with IRR and ICH but, because SYSLOG and          */
+/*       DLOG are just simple text files and not a logical            */
+/*       collection of MDBs like OPERLOG, the result would            */
+/*       have been one line per message only. Many IRR and            */
+/*       ICH messages are either multiline messages (MLWTOs)          */
+/*       or single line WTOs continued on a second line when          */
+/*       formatted by MVS. Therefore, this exec implements            */
+/*       logic to examine the lines immediately following             */
+/*       the located IRR or ICH message to see if any of              */
+/*       them should be queued after the message line.                */
+/*                                                                    */
+/*       A single system search through the DLOG can be slow          */
+/*       in a multisystem environment because DLOG is a               */
+/*       JESplex-wide merged log and the exec must filter             */
+/*       out all of the ICH and IRR messages issued by                */
+/*       systems other than the requested one.                        */
+/*                                                                    */
+/*   3) OUTPUT:                                                       */
+/*       The exec creates a stem variable called LOGMSG.              */
+/*       A line of code near the logical end echos this stem          */
+/*       using SAY statements:                                        */
+/*                                                                    */
+/*       do i = 1 to LOGMSG.0;say LOGMSG.i;end                        */
+/*                                                                    */
+/*       This is done for the batch job use case. You can             */
+/*       replace this with any processing desired.                    */
+/*                                                                    */
+/* CHANGE-ACTIVITY =                                                  */
+/*   2020/06/27 = Initial version authored by Ed Jaffe at             */
+/*                Phoenix Software International, Inc.                */
+/*--------------------------------------------------------------------*/
+EJES_LOG:
+  logdate = "09/04/19"  /* mm/dd/yy              */
+  logtype = "SYSLOG"    /* SYSLOG or OPERLOG     */
+  logsys  = "MVSA0"     /* Lpar (Sysname)        */
+
+  parse UPPER arg logdate logtype logsys /* Get Parms */
+
+  rc = EJESREXX("ON")
+  dateparm = LEFT(DATE("Standard",logdate,"Usa"),4) ||,
+             DATE("Days",logdate,"Usa")
+  datepdot = LEFT(DATE("Standard",logdate,"Usa"),4) ||,
+             "." || DATE("Days",logdate,"Usa")
+
+  select;
+    /******************/
+    /*                */
+    /* Handle OPERLOG */
+    /*                */
+    /******************/
+    when logtype = "OPERLOG" then do
+      QUEUE "MASKCHAR * %"
+      QUEUE "DATEFMT YYYYDDD ."
+      QUEUE "LOG" logtype
+      QUEUE "XSELECT"
+      QUEUE ":<"logsys"><><><><><><><><><><>"||,
+             "<><><><><><IRR*><ICH*><><><><><>"||,
+             "<00.00-"datepdot">"||,
+             "<23.59-"datepdot">"
+      QUEUE ""
+      ADDRESS EJES "EXECAPI * (PRE log_ TERM"
+      end /* when */
+
+    /**************************/
+    /*                        */
+    /* Handle SYSLOG and DLOG */
+    /*                        */
+    /**************************/
+    when logtype = "SYSLOG" then do
+
+      msgprfx.1="IRR";msgprfx.2="ICH";msgprfx.0=2
+      IRRline.0 = 0;IRRtime.0 = 0
+      ICHline.0 = 0;ICHtime.0 = 0
+
+      do msgidx = 1 to msgprfx.0
+        DELSTACK
+        QUEUE "MASKCHAR * %"
+        QUEUE "DATEFMT YYYYDDD ."
+        QUEUE "logsys" logsys
+        QUEUE "LOG" logtype
+        QUEUE "LOCATE 00.00-"datepdot
+        QUEUE "FIND P'" || msgprfx.msgidx || "###'"
+        QUEUE ""
+        ADDRESS EJES "EXECAPI 9 (PRE log_"
+        do while rc = 0
+          if RIGHT(log_LogTime.1,7) <> dateparm then leave;
+          column = log_FindPos.1.1
+          /* Filter & Continuation Rules for JES2 SYSLOG */
+          if EJES_EnvJES = 2 then do
+            call EJES_addMSGline 1
+            select
+              when LEFT(LOGMSG.1,1) = "N" then
+                if LEFT(LOGMSG.2,1) = "S" then
+                   call EJES_addMSGline 2
+              when LEFT(LOGMSG.1,1) = "M" then
+                do i = 2 to LOGMSG.0
+                  call EJES_addMSGline i
+                  if LEFT(LOGMSG.i,1) = "E" then leave;
+                end
+              otherwise;
+            end /* select */
+          end
+          /* Filter & Continuation Rules for JES3 DLOG */
+          else do
+            keylen = column - 30
+            key = SUBSTR(LOGMSG.1,30,keylen)
+            if logsys = "*" | WORD(key,1) = logsys then do
+              call EJES_addMSGline 1
+              do i = 2 to LOGMSG.0
+                if key <> SUBSTR(LOGMSG.i,30,keylen) then
+                   leave
+                if SUBSTR(LOGMSG.i,column,1) = "I" | ,
+                   SUBSTR(LOGMSG.i,column,1) = "$" then
+                   leave
+                call EJES_addMSGline i
+                if SUBSTR(LOGMSG.i,column,1) <> " " then
+                   leave
+              end
+            end
+          end
+          DELSTACK
+          QUEUE "UP" LOGMSG.0
+          QUEUE "RFIND"
+          QUEUE ""
+          ADDRESS EJES "EXECAPI 9 (PRE log_"
+        end
+      end /* msgidx = msgprfx.0 */
+
+      /* Merge IRR and ICH Messages */
+      rc = EJESREXX("TERMAPI")
+      IRRnum = 1
+      ICHnum = 1
+      LOGMSG.0 = 0
+      do forever
+        select
+          when IRRnum <= IRRline.0 then do
+            if ICHnum > ICHline.0 then call EJES_logIRRline
+            else do
+              if IRRtime.IRRnum <= ICHtime.ICHnum then
+                 call EJES_logIRRline
+              else call EJES_Logichline
+            end
+            end /* when */
+          when IRRnum > IRRline.0 then do
+            if ICHnum > ICHline.0 then leave;
+            call EJES_Logichline
+            end /* when */
+          otherwise;
+        end
+      end
+
+      end /* when */
+    otherwise do
+      SAY "Invalid logtype"
+      LOGMSG.0 = 0
+      end /* otherwise */
+  end /* select */
+RETURN
+/*--------------------------------------------------------------------*/
+/*  EJES - SYSLOG logic                                               */
+/*--------------------------------------------------------------------*/
+EJES_addMSGline:
+  arg ix
+  interpret "k =" msgprfx.msgidx || "line.0 + 1"
+  interpret msgprfx.msgidx || "line.0 = k"
+  interpret msgprfx.msgidx || "line.k = LOGMSG.ix"
+  interpret msgprfx.msgidx || "time.0 = k"
+  interpret msgprfx.msgidx || "time.k = log_LogTime.ix"
+  return
+/*--------------------------------------------------------------------*/
+/*  EJES - IRR messages                                               */
+/*--------------------------------------------------------------------*/
+EJES_logIRRline:
+/* i = LOGMSG.0 + 1            */
+/*  LOGMSG.0 = i               */
+/*  LOGMSG.i = IRRline.IRRnum  */
+/*  IRRnum = IRRnum + 1        */
+RETURN
+/*--------------------------------------------------------------------*/
+/*  EJES - ICH messages                                               */
+/*--------------------------------------------------------------------*/
+EJES_Logichline:
+  i = LOGMSG.0 + 1
+  LOGMSG.0 = i
+  LOGMSG.i = ICHline.ICHnum
+  ICHnum = ICHnum + 1
 RETURN

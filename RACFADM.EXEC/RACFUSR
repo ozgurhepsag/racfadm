@@ -1457,10 +1457,10 @@ RETURN password                                               /* @E1 */
          cmd = cmd||d1 d2 d3||,                               /* @D4 */
          ')'                                                  /* @D4 */
   end                                                         /* @D4 */
-  if idata = '' then                                          /* @DRK*/
-     nop                                                      /* @DRK*/
-  else                                                        /* @DRK*/
-     cmd = cmd||' DATA('''idata''') '                         /* @DRK*/
+  if idata = '' then                                          /* @EO */
+     nop                                                      /* @EO */
+  else                                                        /* @EO */
+     cmd = cmd||' DATA('''idata''') '                         /* @EO */
   call excmd cmd                                              /* @D4 */
   if (cmd_rc > 0) then do                                     /* @DL */
      call racfmsgs ERR07     /* Changed failed */             /* @DL */

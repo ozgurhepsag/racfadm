@@ -3,16 +3,22 @@
 )CM*------------------------------------------------------------------*
 )CM*  FLG  YYMMDD  USERID   DESCRIPTION
 )CM*  ---  ------  -------  ------------------------------------------
+)CM*  @A2  200627  RACFA    Changed syntax of field names
+)CM*  @A1  200627  RACFA    CHANGED #RACFMLOG TO #RACFMSCN
 )CM*  @A0  200620  RACFA    CREATED SKELETON
 )CM*------------------------------------------------------------------*
-)DEFAULT  )#?!<|>
+)DEFAULT  )#Ý!<|>
 //*-------------------------------------------------------------------*
 //*  PURPOSE:  SCAN OPERLOG DATASET FOR ICH408I 'INSUFFICIENT' MSGS
 //*-------------------------------------------------------------------*
+//*  NOTES:    1) SYNTAX OF PARAMETERS
+//*                 FIELD_NAME=?????
+//*               NO SPACES BETWEEN THE FIELD_NAME AND EQUAL SIGN
+//*-------------------------------------------------------------------*
 //IKJEFT1B EXEC PGM=IKJEFT1B,REGION=0M,PARM=RACFMSG
 //SYSPROC  DD  DISP=SHR,DSN=#DSNREXX
-)SEL #RACFMLOG EQ B
-//OPERLOG  DD  DISP=SHR,DSN=#DSNBKLOG
+)SEL #RACFMSCN EQ B
+//BKPLOG   DD  DISP=SHR,DSN=#DSNBKLOG
 )ENDSEL
 //ERRORS   DD  DISP=(NEW,PASS),DSN=&&ERRORS,
 //             DCB=(RECFM=VB,LRECL=132,BLKSIZE=0),
@@ -20,12 +26,15 @@
 //SYSTSPRT DD  SYSOUT=*
 //SYSTSIN  DD  DUMMY
 //PARMS    DD  *
-  USERID(#RACFMID)
-  LPAR(#RACFMLPR)
-  DATE(#RACFMDAT)
-  TYPE(#RACFMTYP)
-  USSONLY(#RACFMUSS)
-  OPERLOG(#RACFMLOG)
+)TB 3 25
+!USERID=#RACFMID!(#USERID, *)
+!LPAR=#RACFMLPR!(#LPAR, *)
+!DATE=#RACFMDAT!(mm/dd/yy)
+!TYPE=#RACFMTYP!(A=All, I=Insufficient, V=Violation)
+!USSONLY=#RACFMUSS!(Y=Yes, N=No)
+!LOG=#SETLMSG!(O=Operlog, S=Syslog)
+!SCAN=#RACFMSCN!(A=Active log, B=Backup DSN)
+!PROGRAM=#SETPMSG!(EJES, SDSF)
 //*-------------------------------------------------------------------*
 //PRTERRS  EXEC PGM=IDCAMS
 //SYSPRINT DD  SYSOUT=*

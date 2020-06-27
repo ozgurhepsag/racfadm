@@ -2,6 +2,35 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  27 June 2020 - V30R8
+     - Settings (Option 0)
+       -- Deleted below 'General' field, now on "Messages' panel
+            SDSF log ..... O  (O=Operlog, S=Syslog)
+     - Messages (Option M)
+       -- Added/changed 'File' fields
+            Log .......... O         (O=Operlog, S=Syslog)
+            Scan ......... A         (A=Active log, B=Backup DSN)
+       -- Changed batch job's PARM and SYSTSPRT files
+          * Added/changed parms and comments
+       -- Added EJES capability
+          * Defined in panel member $DEFSETG or $DEFSITE
+     - Tutorials (Option T)
+       -- Updated 'Settings', 'Messages' and 'Acknowledgements'
+     - Other Items
+       -- Updated panel member $DEFSETG
+          * Changed/standardized variables
+              SETRSLOG to SETRMSG
+              SETDSLOG to SETLMSG
+          * Added variable
+              SETPMSG .... Define program used to obtain messages
+                           (EJES or SDSF, SDSF is the default)
+
+  26 June 2020 - V30R7
+     - Messages (Option M)
+       -- Display Operlog or Syslog in the Title
+     - Other Items
+       -- Minor updates to REXX programs
+
   25 June 2020 - V30R6
      - Messages (Option M)
        -- Make Date=today and Log=Active upon invocation

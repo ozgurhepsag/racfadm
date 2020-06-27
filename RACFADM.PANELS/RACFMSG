@@ -9,7 +9,7 @@
 %Command ==>_ZCMD
 +
 %Search:
-+  Userid!......._RACFMID { (&ZUSER, *)
++  Userid!......._RACFMID { (&USERID, *)
 +  Lpar!........._RACFMLPR{ (&LPAR, *)
 +  Date!........._RACFMDAT{ (mm/dd/yy)
 +  Type!........._Z{        (A=All, I=Insufficient, V=Violation)
@@ -20,8 +20,9 @@
 +  Edit JCL!....._Z{        (Y=Yes, N=No)
 +
 %File:
-+  Log!.........._Z{        (A=Active SDSF &SETGSLOG, B=Backup DSN)
-+  Backup DSN!..._SETDSLOG                                    +
++  Log!.........._Z{        (O=Operlog, S=Syslog)
++  Scan!........._Z{        (A=Active log, B=Backup DSN)
++  Backup DSN!..._SETDMSG                                     +
 +
 %Job card:
 _ZLLGJOB1
@@ -29,11 +30,10 @@ _ZLLGJOB2
 _ZLLGJOB3
 _ZLLGJOB4
 )INIT
-  VGET (LPAR) SYMDEF SYMNAMES(SYSNAME)
   VGET (SETGSLOG)
   .CURSOR  = RACFMID
   .HELP    = #RACMSG
-  .ZVARS   = '(RACFMTYP RACFMUSS RACFMMOD RACFMJCL RACFMLOG)'
+  .ZVARS   = '(RACFMTYP RACFMUSS RACFMMOD RACFMJCL SETLMSG RACFMSCN)'
 )PROC
    IF (&RACFMID EQ &Z)
       &RACFMID = *
@@ -56,18 +56,19 @@ _ZLLGJOB4
    VER (&RACFMUSS,NB,LIST,Y,N)
    VER (&RACFMMOD,NB,LIST,F,B)
    VER (&RACFMJCL,NB,LIST,Y,N)
-   VER (&RACFMLOG,NB,LIST,A,B)
+   VER (&SETLMSG,NB,LIST,O,S)
+   VER (&RACFMSCN,NB,LIST,A,B)
 
    &RACFSMSG = &Z
    &RACFLMSG = &Z
    &DSNBKLOG = &Z
-   IF (&RACFMLOG = B)
-      VER (&SETDSLOG,NB,DSNAME)
-   IF (.MSG = &Z & &SETDSLOG NE &Z)
+   IF (&RACFMSCN = B)
+      VER (&SETDMSG,NB,DSNAME)
+   IF (.MSG = &Z & &SETDMSG NE &Z)
       &BADDSN = N
-      *REXX (SETDSLOG DSNBKLOG BADDSN RACFSMSG RACFLMSG)
+      *REXX (SETDMSG DSNBKLOG BADDSN RACFSMSG RACFLMSG)
          X = MSG("OFF")
-         PARSE VAR SETDSLOG DSN "(" GDGNO ")" .
+         PARSE VAR SETDMSG DSN "(" GDGNO ")" .
          IF (DATATYPE(GDGNO,'N') = 1) THEN DO
             X = OUTTRAP("LC.")
             "LISTCAT ENT('"DSN"')"
@@ -79,7 +80,7 @@ _ZLLGJOB4
             DROP LC.
          END
          ELSE
-            DSNBKLOG = SETDSLOG
+            DSNBKLOG = SETDMSG
          IF (SYSDSN("'"DSNBKLOG"'") <> "OK") THEN DO
             RACFSMSG = 'DSN does not exist'
             RACFLMSG = 'The dataset does not reside in the catalog',
@@ -89,9 +90,9 @@ _ZLLGJOB4
       *ENDREXX
 
   IF (&BADDSN = Y)
-     .CURSOR = SETDSLOG
+     .CURSOR = SETDMSG
      .MSG    = RACF011
 
-  IF (&RACFMLOG = B)
+  IF (&RACFMSCN = B)
      VER(&ZLLGJOB1,NB)
 )END

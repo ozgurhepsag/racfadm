@@ -14,20 +14,20 @@
 
  Name:    OPERMIT
 
- Author: Bruce Wells - brwells@us.ibm.com
+ Author:  Bruce Wells - brwells@us.ibm.com
 
  Purpose: Provides UNIX access control list (acl) management using
           a syntax consistent with the RACF PERMIT command
 
  Input:   An absolute path name
 
- NOTE!!! This exec is dependent upon the following "Syntax:" line and
-         the "End-Syntax" line below in order to display the syntax
-         when the exec is invoked without keyword parameters.
+ NOTE!!!  This exec is dependent upon the following "Syntax:" line and
+          the "End-Syntax" line below in order to display the syntax
+          when the exec is invoked without keyword parameters.
 
-         Feel free to add/change examples to show things that are
-         frequently done in your orgnization. But please preserve
-         these surrounding lines.
+          Feel free to add/change examples to show things that are
+          frequently done in your orgnization. But please preserve
+          these surrounding lines.
 
  Beg-Syntax:
  Purpose:  Provides UNIX Access Control List (ACL) management using

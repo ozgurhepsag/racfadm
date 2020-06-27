@@ -4,7 +4,16 @@
   |                                                            |
   | Function:  ZIGI Package Installation Script                |
   |                                                            |
-  | Syntax:    ./zginstall.rex                                 |
+  | Syntax:    ./zginstall.rex hlq \ option                    |
+  |                                                            |
+  | Usage:     If hlq is not provided it will be prompted for  |
+  |            and used for the z/OS dataset hlq.              |
+  |                                                            |
+  |            \  - delimeter                                  |
+  |                                                            |
+  |            x - any non-blank will cause zginstall to       |
+  |                use a single cp for each PDS instead of     |
+  |                for each member.                            |
   |                                                            |
   | Installation: This script should be installed in the root  |
   |               OMVS directory for the ZIGI managed Git      |
@@ -59,9 +68,16 @@
   |    <https://www.gnu.org/licenses/>.                        |
   * ---------------------------------------------------------- */
 
+  arg options
+
+  parse value options with ckothlq'/'opt
+
+  ckothlq = strip(ckothlq)
+
   /* ------------------- *
   | Prompt for z/OS HLQ |
   * ------------------- */
+  if ckothlq = '' then do
   say 'Enter the z/OS High Level Qualifier to use:'
   pull ckothlq
   if ckothlq = '' then do
@@ -69,12 +85,17 @@
     exit 8
   end
   ckothlq = translate(ckothlq)
+  end
 
   /* --------------------- *
+  | Set Default Env and   |
   | Get current directory |
   * --------------------- */
+  env.1 = '_BPX_SHAREAS=YES'
+  env.2 = '_BPX_SPAWN_SCRIPT=YES'
+  env.0 = 2
   cmd = 'pwd'
-  x = bpxwunix(cmd,,so.,se.)
+  x = bpxwunix(cmd,,so.,se.,env.)
   ckotdir = strip(so.1)
 
   /* -------------------------------------------------------- *
@@ -82,7 +103,7 @@
   | files in the current directory and sub-directories.      |
   * -------------------------------------------------------- */
   cmd = 'ls -laRk' ckotdir
-  rc = bpxwunix(cmd,,stdout.,stderr.)
+  rc = bpxwunix(cmd,,stdout.,stderr.,env.)
 
   /* ---------------------------------------------- *
   | Display any error messages and if so then exit |
@@ -106,7 +127,7 @@
   | Read in ../.zigi/dsn to get dcb info |
   * ------------------------------------ */
   cmd = 'cd' ckotdir '&& ls -la .zigi'
-  x = bpxwunix(cmd,,co.,ce.)
+  x = bpxwunix(cmd,,co.,ce.,env.)
   if x > 0 then do
     def_recfm = 'FB'
     def_lrecl = 80
@@ -194,7 +215,7 @@
     else type = 'Text'
     say 'Copying' odir 'to' fileg 'as' type
     filec = filec + 1
-    zfile.filec = fileg type
+    zfile.filec = fileg
     x = check_file(fileg)
     if x = 0 then do
       call outtrap 'x.'
@@ -273,7 +294,7 @@
   zgstat_dsn = "'"ckothlq".ZGSTAT.EXEC'"
   cmd = 'cp -v  lrhg.rex "//'zgstat_dsn '"'
   cmd = cmd '&& rm lrhg.rex'
-  x = bpxwunix(cmd,,so.,se.)
+  x = bpxwunix(cmd,,so.,se.,env.)
   do i = 1 to so.0;say so.i;end
   do i = 1 to se.0;say se.i;end
 
@@ -355,7 +376,9 @@ Alloc_Copy_PDS:
   'readdir' rdir 'mems.'
   tcount = mems.0 - 2
 
+  if opt /= null then
   mixed = check_mixed_bintext(sub)
+  else mixed = 1
 
   if mixed = 0 then do
     bin = is_binfile(sub)
@@ -529,7 +552,7 @@ is_binfile: procedure expose binfiles.
 docmd:
   parse arg cmd
   drop so. se.
-  x = bpxwunix(cmd,,so.,se.)
+  x = bpxwunix(cmd,,so.,se.,env.)
   return x
 
 >ZGSTAT     *** Inline ZGSTAT that will be updated and uploaded
@@ -759,7 +782,7 @@ zigistat: Procedure
     if rc > 0 then return x
     drop stats.
     cmd = 'cat' usssafe(filepath)
-    x = bpxwunix(cmd,,stats.,se.)
+    x = bpxwunix(cmd,,stats.,se.,env.)
     do i = 1 to stats.0
       stats.i = translate(stats.i,' ','0D'x)
     end
@@ -918,7 +941,7 @@ Check_Stats_File:
 docmd:
   parse arg cmd
   drop so. se.
-  x = bpxwunix(cmd,,so.,se.)
+  x = bpxwunix(cmd,,so.,se.,env.)
   return x
 
   /* ---------------------------------- *

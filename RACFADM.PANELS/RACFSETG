@@ -15,7 +15,6 @@
 +  Display files{....._Z~ (B=Browse, E=Edit, V=View)   {Display reports/files
 +  Confirm panel{....._Z~ (Y=Yes, N=No)                {Confirm command request
 +  Showmvs data{......_Z~ (Y=Yes, N=No)+Pgm/DSN_Z      {Showmvs RACF data
-+  SDSF log{.........._Z~ (O=Operlog, S=Syslog)        {Log to scan for messages
 +
 ^Management
 +  Administrator{....._Z~ (Y=Yes, N=No)                {Line cmds add/chg/etc.
@@ -31,7 +30,6 @@
 +  User dataset{......_Z                              { Append qualifiers to id
 )INIT
   VGET (SETGFLTR SETGSTA  SETGSTAP SETGDISP  SETGCONF SETGMVS SETGMVSD +
-        SETGSLOG +
         SETMADMN SETMIRRX SETMIBMM SETMIBMD  SETMSHOW SETMTRAC +
         SETTPSWD SETTCTLG SETTPROF SETTUDSN) PROFILE
 
@@ -42,7 +40,6 @@
   &SETGCONF = TRANS (&SETGCONF YES,Y NO,N *,*)
   &SETGMVS  = TRANS (&SETGMVS  YES,Y NO,N *,*)
   &SETGMVSD = TRANS (&SETGMVSD YES,Y NO,N *,*)
-  &SETGSLOG = TRANS (&SETGSLOG O,OPERLOG S,SYSLOG *,*)
 
   /* Management Settings */
   &SETMADMN = TRANS (&SETMADMN YES,Y NO,N *,*)
@@ -53,7 +50,7 @@
   &SETMTRAC = TRANS (&SETMTRAC LABELS,L PROGRAMS,P RESULTS,R NO,N *,*)
 
   .ZVARS = '(SETGFLTR SETGSTA  SETGSTAP SETGDISP SETGCONF +
-             SETGMVS  SETGMVSD SETGSLOG +
+             SETGMVS  SETGMVSD +
              SETMADMN SETMIRRX SETMIBMM SETMIBMD SETMSHOW SETMTRAC +
              SETTPSWD SETTCTLG SETTPROF SETTUDSN)'
 
@@ -65,7 +62,6 @@
   &SETGCONF = TRANS (&SETGCONF Y,YES, N,NO *,*)
   &SETGMVS  = TRANS (&SETGMVS  Y,YES, N,NO *,*)
   &SETGMVSD = TRANS (&SETGMVSD Y,YES, N,NO *,*)
-  &SETGSLOG = TRANS (&SETGSLOG O,OPERLOG, S,SYSLOG *,*)
 
   /* Management Settings */
   &SETMADMN = TRANS (&SETMADMN Y,YES, N,NO *,*)
@@ -88,7 +84,6 @@
   VER (&SETGCONF,NB,LIST,NO,YES)
   VER (&SETGMVS,NB,LIST,NO,YES)
   VER (&SETGMVSD,NB,LIST,NO,YES)
-  VER (&SETGSLOG,NB,LIST,OPERLOG,SYSLOG)
 
   /* Management Settings */
   VER (&SETMADMN,NB,LIST,NO,YES)
@@ -109,7 +104,6 @@
   *ENDREXX
 
   VPUT (SETGFLTR SETGSTA  SETGSTAP SETGDISP  SETGCONF SETGMVS SETGMVSD +
-        SETGSLOG +
         SETMADMN SETMIRRX SETMIBMM SETMIBMD  SETMSHOW SETMTRAC +
         SETTPSWD SETTCTLG SETTPROF SETTUDSN) PROFILE
 )END
