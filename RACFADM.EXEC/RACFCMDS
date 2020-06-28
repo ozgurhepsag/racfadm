@@ -7,6 +7,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A9  200628  RACFA    Added parm GEN to LISTDSD command            */
 /* @A8  200619  RACFA    Initalize the variable NULL                  */
 /* @A7  200519  TRIDJK   Allow logging of RACF commands               */
 /* @A6  200430  RACFA    Added skeleton RACF commands to table        */
@@ -29,7 +30,7 @@ RACFCMDS.1  = "LU ?        CICS CSDATA DCE DFP EIM KERB",     /* @A6 */
               "OPERPARM OVM PROXY TSO WORKATTR"               /* @A6 */
 RACFCMDS.2  = "LG ?        CSDATA DFP OMVS OVM TME"           /* @A6 */
 RACFCMDS.3  = "LISTDSD DATASET('"?"                  ')",     /* @A6 */
-              "ALL"                                           /* @A6 */
+              "ALL GEN"                                       /* @A9 */
 RACFCMDS.4  = "RL ?        * ALL"                             /* @A6 */
 RACFCMDS.5  = "RL ?        ?        AUTH"                     /* @A6 */
 RACFCMDS.6  = "SEARCH CLASS(?       ) USER(?       )"         /* @A6 */

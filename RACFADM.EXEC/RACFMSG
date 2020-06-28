@@ -1,5 +1,5 @@
 /*%NOCOMMENT====================* REXX *==============================*/
-/*  PURPOSE:  RACFADM - RACF Errors - Menu Option E                   */
+/*  PURPOSE:  RACFADM - RACF Messages - Menu Option M                 */
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
@@ -361,7 +361,7 @@ SDSF_LOG:                                                     /* @A6 */
   LOGMSG.0 = K
 RETURN
 /*--------------------------------------------------------------------*/
-/*  Scan the backup log dataset (Log = B)                             */
+/*  Scan the backup log dataset (Scan = B)                            */
 /*--------------------------------------------------------------------*/
 DSN_LOG:                                                      /* @A6 */
   K         = 0
@@ -376,7 +376,7 @@ DSN_LOG:                                                      /* @A6 */
   LOGMSG.0 = K
 RETURN
 /*--------------------------------------------------------------------*/
-/*  Proces log records, find all ICH408I messages                     */
+/*  Proces log records, find ICH408I msgs that meet search criteria   */
 /*--------------------------------------------------------------------*/
 PROCESS_LOG_RECS:                                             /* @A6 */
   DO J = 1 TO ISFLINE.0-1
@@ -534,8 +534,12 @@ CLIST_DSN:                                                    /* @A6 */
   DROP RECLA. W1 DDALTLIB
 RETURN
 /*--------------------------------------------------------------------*/
-/*  (E)JES - Extracts ICH messages from OPERLOG, SYSLOG or DLOG       */
+/*  (E)JES - Scan for IRR and ICH Messages                            */
 /*--------------------------------------------------------------------*/
+/*                                                                    */
+/*  This REXX extracts IRR and ICH messages from OPERLOG, SYSLOG or   */
+/*  DLOG using (E)JES.                                                */
+/*                                                                    */
 /*  1) Input:                                                         */
 /*       There are three positional input parameters:                 */
 /*         logdate = mm/dd/yy                                         */
@@ -609,11 +613,9 @@ EJES_LOG:
   datepdot = LEFT(DATE("Standard",logdate,"Usa"),4) ||,
              "." || DATE("Days",logdate,"Usa")
 
-  select;
+  select
     /******************/
-    /*                */
     /* Handle OPERLOG */
-    /*                */
     /******************/
     when logtype = "OPERLOG" then do
       QUEUE "MASKCHAR * %"
@@ -629,9 +631,7 @@ EJES_LOG:
       end /* when */
 
     /**************************/
-    /*                        */
     /* Handle SYSLOG and DLOG */
-    /*                        */
     /**************************/
     when logtype = "SYSLOG" then do
 
@@ -656,13 +656,13 @@ EJES_LOG:
           if EJES_EnvJES = 2 then do
             call EJES_addMSGline 1
             select
-              when LEFT(LOGMSG.1,1) = "N" then
-                if LEFT(LOGMSG.2,1) = "S" then
+              when LEFT(logmsg.1,1) = "N" then
+                if LEFT(logmsg.2,1) = "S" then
                    call EJES_addMSGline 2
-              when LEFT(LOGMSG.1,1) = "M" then
-                do i = 2 to LOGMSG.0
+              when LEFT(logmsg.1,1) = "M" then
+                do i = 2 to logmsg.0
                   call EJES_addMSGline i
-                  if LEFT(LOGMSG.i,1) = "E" then leave;
+                  if LEFT(logmsg.i,1) = "E" then leave;
                 end
               otherwise;
             end /* select */
@@ -670,23 +670,23 @@ EJES_LOG:
           /* Filter & Continuation Rules for JES3 DLOG */
           else do
             keylen = column - 30
-            key = SUBSTR(LOGMSG.1,30,keylen)
+            key = SUBSTR(logmsg.1,30,keylen)
             if logsys = "*" | WORD(key,1) = logsys then do
               call EJES_addMSGline 1
-              do i = 2 to LOGMSG.0
-                if key <> SUBSTR(LOGMSG.i,30,keylen) then
+              do i = 2 to logmsg.0
+                if key <> SUBSTR(logmsg.i,30,keylen) then
                    leave
-                if SUBSTR(LOGMSG.i,column,1) = "I" | ,
-                   SUBSTR(LOGMSG.i,column,1) = "$" then
+                if SUBSTR(logmsg.i,column,1) = "I" | ,
+                   SUBSTR(logmsg.i,column,1) = "$" then
                    leave
                 call EJES_addMSGline i
-                if SUBSTR(LOGMSG.i,column,1) <> " " then
+                if SUBSTR(logmsg.i,column,1) <> " " then
                    leave
               end
             end
           end
           DELSTACK
-          QUEUE "UP" LOGMSG.0
+          QUEUE "UP" logmsg.0
           QUEUE "RFIND"
           QUEUE ""
           ADDRESS EJES "EXECAPI 9 (PRE log_"
@@ -697,7 +697,7 @@ EJES_LOG:
       rc = EJESREXX("TERMAPI")
       IRRnum = 1
       ICHnum = 1
-      LOGMSG.0 = 0
+      logmsg.0 = 0
       do forever
         select
           when IRRnum <= IRRline.0 then do
@@ -719,36 +719,36 @@ EJES_LOG:
       end /* when */
     otherwise do
       SAY "Invalid logtype"
-      LOGMSG.0 = 0
+      logmsg.0 = 0
       end /* otherwise */
   end /* select */
 RETURN
 /*--------------------------------------------------------------------*/
 /*  EJES - SYSLOG logic                                               */
 /*--------------------------------------------------------------------*/
-EJES_addMSGline:
+EJES_ADDMSGLINE:
   arg ix
   interpret "k =" msgprfx.msgidx || "line.0 + 1"
   interpret msgprfx.msgidx || "line.0 = k"
-  interpret msgprfx.msgidx || "line.k = LOGMSG.ix"
+  interpret msgprfx.msgidx || "line.k = logmsg.ix"
   interpret msgprfx.msgidx || "time.0 = k"
   interpret msgprfx.msgidx || "time.k = log_LogTime.ix"
   return
 /*--------------------------------------------------------------------*/
 /*  EJES - IRR messages                                               */
 /*--------------------------------------------------------------------*/
-EJES_logIRRline:
-/* i = LOGMSG.0 + 1            */
-/*  LOGMSG.0 = i               */
-/*  LOGMSG.i = IRRline.IRRnum  */
+EJES_LOGIRRLINE:
+/* i = logmsg.0 + 1            */
+/*  logmsg.0 = i               */
+/*  logmsg.i = IRRline.IRRnum  */
 /*  IRRnum = IRRnum + 1        */
 RETURN
 /*--------------------------------------------------------------------*/
 /*  EJES - ICH messages                                               */
 /*--------------------------------------------------------------------*/
-EJES_Logichline:
-  i = LOGMSG.0 + 1
-  LOGMSG.0 = i
-  LOGMSG.i = ICHline.ICHnum
+EJES_LOGICHLINE:
+  i = logmsg.0 + 1
+  logmsg.0 = i
+  logmsg.i = ICHline.ICHnum
   ICHnum = ICHnum + 1
 RETURN

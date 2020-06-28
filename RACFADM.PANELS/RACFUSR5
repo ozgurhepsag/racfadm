@@ -124,9 +124,9 @@
       if (nospec  /= '') then call addnos 'NOSPECIAL'
       if (noop    /= '') then call addnos 'NOOPERATIONS'
       if (nogrp   /= '') then call addnos 'NOGRPACC'
-      if (noraud  /= '') then call addnos 'NOAUDITOR'
+      if (noraud  /= '') then call addnos 'NOROAUDIT'
       if (noadsp  /= '') then call addnos 'NOADSP'
-      if (noaud   /= '') then call addnos 'NOROAUDIT'
+      if (noaud   /= '') then call addnos 'NOAUDITOR'
       if (norest  /= '') then call addnos 'NORESTRICTED'
       signal done
     Addnos:

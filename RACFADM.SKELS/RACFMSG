@@ -3,9 +3,10 @@
 )CM*------------------------------------------------------------------*
 )CM*  FLG  YYMMDD  USERID   DESCRIPTION
 )CM*  ---  ------  -------  ------------------------------------------
+)CM*  @A3  200627  RACFA    Updated NOTES
 )CM*  @A2  200627  RACFA    Changed syntax of field names
-)CM*  @A1  200627  RACFA    CHANGED #RACFMLOG TO #RACFMSCN
-)CM*  @A0  200620  RACFA    CREATED SKELETON
+)CM*  @A1  200627  RACFA    Changed #RACFMLOG to #RACFMSCN
+)CM*  @A0  200620  RACFA    Created skeleton
 )CM*------------------------------------------------------------------*
 )DEFAULT  )#Ý!<|>
 //*-------------------------------------------------------------------*
@@ -13,7 +14,8 @@
 //*-------------------------------------------------------------------*
 //*  NOTES:    1) SYNTAX OF PARAMETERS
 //*                 FIELD_NAME=?????
-//*               NO SPACES BETWEEN THE FIELD_NAME AND EQUAL SIGN
+//*               NO SPACES BETWEEN THE FIELD_NAME, EQUAL SIGN AND
+//*               THE DEFINED VALUE
 //*-------------------------------------------------------------------*
 //IKJEFT1B EXEC PGM=IKJEFT1B,REGION=0M,PARM=RACFMSG
 //SYSPROC  DD  DISP=SHR,DSN=#DSNREXX

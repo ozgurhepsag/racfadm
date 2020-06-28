@@ -196,7 +196,6 @@ ADDRESS ISPEXEC
      END
 
      INTERPRET W1" = W3"                                      /* @A7 */
-
      CKCHR1TO4 = SUBSTR(W1,1,4)                               /* @A9 */
      CKCHR5TO7 = SUBSTR(W1,5,3)                               /* @AE */
      SELECT                                                   /* @A8 */

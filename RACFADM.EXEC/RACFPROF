@@ -1,5 +1,5 @@
 /*%NOCOMMENT====================* REXX *==============================*/
-/*  PURPOSE:  RACFADM - User/Group Profiles - (Opt 1/2) line cmd 'P'  */
+/*  PURPOSE:  RACFADM - User/Group Profiles - Line cmd 'P' in opt 1/2 */
 /*--------------------------------------------------------------------*/
 /*  SYNTAX:   CALL RACFPROF 'USER/GROUP' userid/group                 */
 /*--------------------------------------------------------------------*/
