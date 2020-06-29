@@ -7,7 +7,7 @@
    {  TYPE(OUTPUT)  PAS(ON)      CAPS(OFF)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V31R0+)\-\
++\-\(%RACFADM - RACF Administration - V31R1+)\-\
 %Option ===>_ZCMD
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -93,8 +93,7 @@
   *REXX (RACFVER PRMDBASE BKPDBASE ZOSVER RACFGRP  RACFNAM RACFLMSG
          SECSOFT RACFFMID USADATE  UTYPE  SETMADMN UATT    RACFMENU)
     CVT      = C2D(STORAGE(10,4))               /* Get RACF FMID     */
-    CVTRAC   = C2D(STORAGE(D2X(CVT + 992),4))
-    RACFFMID = "HRF"STORAGE(D2X(CVTRAC + 616),4)
+    RACFFMID = "HRF"STORAGE(D2X(CVT - 29),4)
     cvt      = c2x(storage(10,4))               /* Get Sec. Software */
     cvtrac   = C2x(storage((d2x(x2d(cvt)+992)),4))
     ESM      = storage(d2x(x2d(cvtrac)),4)

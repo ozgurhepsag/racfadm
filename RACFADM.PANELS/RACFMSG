@@ -11,7 +11,7 @@
 %Search:
 +  Userid!......._RACFMID { (&USERID, *)
 +  Lpar!........._RACFMLPR{ (&LPAR, *)
-+  Date!........._RACFMDAT{ (mm/dd/yy)
++  Date!........._RACFMDAT{ (mm/dd/yy, *)
 +  Type!........._Z{        (A=All, I=Insufficient, V=Violation)
 +  USS Only!....._Z{        (Y=Yes, N=No)
 +
@@ -43,15 +43,17 @@ _ZLLGJOB4
       VER (&RACFMID,NB,NAME)
    IF (&RACFMLPR NE *)
       VER (&RACFMLPR,NB,NAME)
-   &TMPDATE = &RACFMDAT
-   *REXX(*)
-     RACFMDAT = SUBSTR(RACFMDAT,7,2)"/"||,
-                SUBSTR(RACFMDAT,1,2)"/"||,
-                SUBSTR(RACFMDAT,4,2)
-   *ENDREXX
 
-   VER (&RACFMDAT,NB,IDATE)
-   &RACFMDAT = &TMPDATE
+   IF (&RACFMDAT NE *)
+      &TMPDATE = &RACFMDAT
+      *REXX(*)
+        RACFMDAT = SUBSTR(RACFMDAT,7,2)"/"||,
+                   SUBSTR(RACFMDAT,1,2)"/"||,
+                   SUBSTR(RACFMDAT,4,2)
+      *ENDREXX
+      VER (&RACFMDAT,NB,IDATE)
+      &RACFMDAT = &TMPDATE
+
    VER (&RACFMTYP,NB,LIST,A,V,I)
    VER (&RACFMUSS,NB,LIST,Y,N)
    VER (&RACFMMOD,NB,LIST,F,B)
@@ -66,8 +68,21 @@ _ZLLGJOB4
       VER (&SETDMSG,NB,DSNAME)
    IF (.MSG = &Z & &SETDMSG NE &Z)
       &BADDSN = N
-      *REXX (SETDMSG DSNBKLOG BADDSN RACFSMSG RACFLMSG)
+      *REXX (SETDMSG DSNBKLOG BADDSN RACFSMSG RACFLMSG RACFMDAT)
          X = MSG("OFF")
+         IF (RACFMDAT = "*") THEN DO
+            X = OUTTRAP("LC.")
+            ADDRESS TSO "LISTCAT ENT('"SETDMSG"')"
+            X = OUTTRAP("OFF")
+            PARSE VAR LC.1 W1 W2 .
+            IF (W1 = "GDG") & (W2 = "BASE") THEN DO
+               RACFSMSG = 'Invalid Backup DSN'
+               RACFLMSG = 'Can not use a base GDG when date is',
+                          'an asterick (*).'
+               BADDSN   = "Y"
+               RETURN
+            END
+         END
          PARSE VAR SETDMSG DSN "(" GDGNO ")" .
          IF (DATATYPE(GDGNO,'N') = 1) THEN DO
             X = OUTTRAP("LC.")

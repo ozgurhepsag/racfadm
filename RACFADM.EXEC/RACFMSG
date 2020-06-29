@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AA  200629  RACFA    Allow an asterick as a date                  */
 /* @A9  200627  RACFA    Batch, chg parm syntax and upper case        */
 /* @A8  200627  RACFA    Create variables for USERID and LPAR         */
 /* @A7  200627  RACFA    Executing batch, chg display of parameters   */
@@ -35,9 +36,9 @@ FOREGROUND:
   SKELETON1  = "RACFJOB"            /* JOB card           */
   SKELETON2  = "RACFMSG"            /* TSO PARM=RACFERRS  */
 
-  "VGET (SETMTRAC RACFMID  RACFMLPR RACFMDAT RACFMTYP",
+  "VGET (RACFMID  RACFMLPR RACFMDAT RACFMTYP",
         "RACFMUSS RACFMMOD RACFMJCL RACFMSCN",                /* @A6 */
-        "SETLMSG  SETPMSG  SETDMSG",                          /* @A6 */
+        "SETMTRAC SETLMSG  SETPMSG  SETDMSG",                 /* @A6 */
         "ZLLGJOB1 ZLLGJOB2 ZLLGJOB3 ZLLGJOB4) PROFILE"
   If (SETMTRAC <> 'NO') then do
      Say "*"COPIES("-",70)"*"
@@ -48,10 +49,14 @@ FOREGROUND:
   end
   IF (RACFMID  = "") THEN RACFMID  = "*"
   IF (RACFMLPR = "") THEN RACFMLPR = "*"
-  RACFMDAT = DATE("U")                                        /* @A5 */
+  SELECT                                                      /* @AA */
+     WHEN (RACFMDAT = "")  THEN RACFMDAT = DATE("U")          /* @AA */
+     WHEN (RACFMDAT = "*") THEN NOP                           /* @AA */
+     OTHERWISE RACFMDAT = DATE("U")                           /* @AA */
+  END                                                         /* @AA */
   IF (RACFMTYP = "") THEN RACFMTYP = "A"
   IF (RACFMUSS = "") THEN RACFMUSS = "N"
-  IF (RACFMMOD = "") THEN RACFMMOD = "F"
+  RACFMMOD = "F"                                              /* @AA */
   IF (RACFMJCL = "") THEN RACFMJCL = "Y"
   IF (SETLMSG  = "") THEN SETLMSG  = "O"                      /* @A6 */
   IF (SETPMSG  = "") THEN SETPMSG  = "SDSF"                   /* @A6 */
@@ -79,16 +84,21 @@ FOREGROUND:
      DSNRPT = USERID".RACFERRS.RPT"RANDOM()
      "DISPLAY PANEL("PANEL01")"
      IF (RC = 8) THEN LEAVE
-     PARSE VAR racfmdat MM "/" DD "/" YY .
-     YYYYMMDD = "20"YY""MM""DD
-     DDD      = DATE("D",YYYYMMDD,"S")
-     JDATE    = YY""RIGHT(DDD,3,'0')                          /* @A1 */
+     IF (RACFMDAT = "*") THEN                                 /* @AA */
+        JDATE = "*"
+     ELSE DO                                                  /* @AA */
+        PARSE VAR racfmdat MM "/" DD "/" YY .
+        YYYYMMDD = "20"YY""MM""DD
+        DDD      = DATE("D",YYYYMMDD,"S")
+        JDATE    = YY""RIGHT(DDD,3,'0')                       /* @A1 */
+     END                                                      /* @AA */
+
      IF (RACFMMOD = "F") THEN
         CALL FOREGROUND_LOG
      ELSE
         CALL FOREGROUND_CREATE_JCL
   END
-  "VPUT (RACFMID  RACFMLPR RACFMTYP",
+  "VPUT (RACFMID  RACFMLPR RACFMDAT RACFMTYP",                /* @AA */
         "RACFMUSS RACFMMOD RACFMJCL RACFMSCN",                /* @A6 */
         "SETLMSG  SETPMSG  SETDMSG",                          /* @A6 */
         "ZLLGJOB1 ZLLGJOB2 ZLLGJOB3 ZLLGJOB4) PROFILE"
@@ -135,10 +145,14 @@ BATCH:
   IF (RACFMUSS = "") THEN RACFMUSS = "N"
   IF (RACFMTYP = "") THEN RACFMTYP = "A"
   IF (RACFMSCN = "") THEN RACFMSCN = "A"                      /* @A6 */
-  PARSE VAR racfmdat MM "/" DD "/" YY .
-  YYYYMMDD = "20"YY""MM""DD
-  DDD      = DATE("D",YYYYMMDD,"S")
-  JDATE    = YY""RIGHT(DDD,3,'0')                             /* @A1 */
+  if (RACFMDAT = "*") THEN                                    /* @AA */
+     JDATE = "*"
+  else do                                                     /* @AA */
+     PARSE VAR racfmdat MM "/" DD "/" YY .
+     YYYYMMDD = "20"YY""MM""DD
+     DDD      = DATE("D",YYYYMMDD,"S")
+     JDATE    = YY""RIGHT(DDD,3,'0')                          /* @A1 */
+  END                                                         /* @AA */
   IF (RACFMSCN = "A") THEN DO                                 /* @A6 */
      SELECT                                                   /* @A6 */
         WHEN (SETPMSG = "EJES") THEN DO                       /* @A6 */
@@ -168,7 +182,7 @@ BATCH:
   SAY "     Lpar     = "LEFT(racfmlpr,8),                     /* @A7 */
       " ("LPAR", *)"                                          /* @A8 */
   SAY "     Date     = "LEFT(racfmdat,8),                     /* @A7 */
-      " (mm/dd/yy)"                                           /* @A7 */
+      " (mm/dd/yy, *)"                                        /* @AA */
   SAY "     Type     = "LEFT(racfmtyp,8),                     /* @A7 */
       " (A=All, I=Insufficient, V=Violation)"                 /* @A7 */
   SAY "     USS      = "LEFT(racfmuss,8),                     /* @A7 */
@@ -314,10 +328,12 @@ RETURN
 /*  SDSF, scan the active log (Scan = A)                              */
 /*--------------------------------------------------------------------*/
 SDSF_LOG:                                                     /* @A6 */
-  ISFLOGSTARTDATE = RACFMDAT
-  ISFLOGSTARTTIME = "00:00"
-  ISFLOGSTOPDATE  = RACFMDAT  /* DATE - MM/DD/YY */
-  ISFLOGSTOPTIME  = "23:59"   /* Time - hh:mm:ss */
+  IF (JDATE <> "*") THEN DO                                   /* @AA */
+     ISFLOGSTARTDATE = RACFMDAT
+     ISFLOGSTARTTIME = "00:00"
+     ISFLOGSTOPDATE  = RACFMDAT  /* DATE - MM/DD/YY */
+     ISFLOGSTOPTIME  = "23:59"   /* Time - hh:mm:ss */
+  END                                                         /* @AA */
   ISFLINELIM      = 0
 
   RC = ISFCALLS("ON")
@@ -336,7 +352,7 @@ SDSF_LOG:                                                     /* @A6 */
           ISFSYSID = SUBSTR(LPAR,2) /* Chg IEFSYSID=LPAR? */  /* @A2 */
           ADDRESS SDSF "ISFLOG READ TYPE(SYSLOG)"             /* @A2 */
      END                                                      /* @A2 */
-     WHEN (SETLMSG = "S") THEN DO                             /* @A2 */
+     OTHERWISE DO                                             /* @A2 */
           IF (KLPAR = "") THEN                                /* @A2 */
              ISFSYSID = RACFMLPR                              /* @A2 */
           ELSE DO                                             /* @A2 */
@@ -345,13 +361,15 @@ SDSF_LOG:                                                     /* @A6 */
              ELSE                                             /* @A6 */
                 ISFSYSID = SUBSTR(RACFMLPR,2)                 /* @A2 */
           END                                                 /* @A6 */
-          IF (KLPAR = "") | (KLPAR = "Y") THEN                /* @A6 */
+          IF (KLPAR = "") THEN                                /* @A6 */
              ADDRESS SDSF "ISFLOG READ TYPE(SYSLOG)"          /* @A2 */
-          ELSE                                                /* @A6 */
-             ADDRESS SDSF "ISFLOG READ TYPE(OPERLOG)"         /* @A6 */
+          ELSE DO                                             /* @A6 */
+             IF (RACFMLPR = "*") THEN                         /* @A6 */
+                ADDRESS SDSF "ISFLOG READ TYPE(OPERLOG)"      /* @A6 */
+             ELSE                                             /* @A6 */
+                ADDRESS SDSF "ISFLOG READ TYPE(SYSLOG)"       /* @A6 */
+          END                                                 /* @A6 */
      END                                                      /* @A2 */
-     OTHERWISE                                                /* @A2 */
-          ADDRESS SDSF "ISFLOG READ TYPE(OPERLOG)"            /* @A2 */
   END                                                         /* @A2 */
   RC=ISFCALLS("OFF")
 
@@ -382,7 +400,7 @@ PROCESS_LOG_RECS:                                             /* @A6 */
   DO J = 1 TO ISFLINE.0-1
      PARSE VAR ISFLINE.J W1 W2 W3 W4 W5 W6 W7 W8 W9 W10
      IF (W7 = "ICH408I") | (W8 = "ICH408I") THEN DO           /* @A4 */
-        if (jdate = W4) then do
+        if (jdate = W4) | (jdate = "*") then DO               /* @AA */
            IF (RACFMLPR = "*") | (RACFMLPR = W3) THEN DO
               MSGBEG = J
               MSGEND = J + 12

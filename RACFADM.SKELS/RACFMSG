@@ -3,6 +3,7 @@
 )CM*------------------------------------------------------------------*
 )CM*  FLG  YYMMDD  USERID   DESCRIPTION
 )CM*  ---  ------  -------  ------------------------------------------
+)CM*  @A4  200629  RACFA    Updated PARM date comments
 )CM*  @A3  200627  RACFA    Updated NOTES
 )CM*  @A2  200627  RACFA    Changed syntax of field names
 )CM*  @A1  200627  RACFA    Changed #RACFMLOG to #RACFMSCN
@@ -31,7 +32,7 @@
 )TB 3 25
 !USERID=#RACFMID!(#USERID, *)
 !LPAR=#RACFMLPR!(#LPAR, *)
-!DATE=#RACFMDAT!(mm/dd/yy)
+!DATE=#RACFMDAT!(mm/dd/yy, *)
 !TYPE=#RACFMTYP!(A=All, I=Insufficient, V=Violation)
 !USSONLY=#RACFMUSS!(Y=Yes, N=No)
 !LOG=#SETLMSG!(O=Operlog, S=Syslog)

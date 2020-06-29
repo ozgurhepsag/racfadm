@@ -2,6 +2,15 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  29 June 2020 - V31R1
+     - Main Menu and RACF Databases (RACFDB)
+       -- Corrected how the FMID is displayed, per IBM's macro
+            The RCVTVRMN field contains "7791" starting with
+            z/OS V2R2.  To determine the release level, use
+            fields in the MVS CVT
+     - Messages (Option M)
+       -- Allow typing in an asterick in the 'Date' field
+
   28 June 2020 - V31R0
      - User (Option U)
        -- Fixed line command 'A'lter

@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AI  200629  RACFA    Fixed FMID                                   */
 /* @AH  200616  RACFA    Chg panel name RACFRPTS to RACFDISP          */
 /* @AG  200517  RACFA    Standardize environment (ADDRESS ISPEXEC)    */
 /* @AF  200516  RACFA    Fix display error messages                   */
@@ -478,7 +479,7 @@ SSVRM:
   SMFNAME  = STRIP(SMFNAME,T)                 /* DEL TRAILING BLANKS  */
   ECVT     = C2D(STORAGE(D2X(CVT + 140),4))   /* POINT TO CVTECVT     */
   CVTRAC   = C2D(STORAGE(D2X(CVT + 992),4))   /* POINT TO RACF CVT    */
-  RACFMID  = STORAGE(D2X(CVTRAC + 616),4)     /* RACF FMID            */
+  RACFMID  = "HRF"STORAGE(D2X(CVT - 29),4)    /* RACF FMID        @AI */
   RCVTALIS = STORAGE(D2X(CVTRAC+330),1)       /* GET RCVTALIS BYTE    */
   PRODNAM  = STORAGE(D2X(ECVT+496),16)        /* POINT TO PRODUCT NAME*/
   SSNAME   = STRIP(PRODNAM,T)                 /* DEL TRAILING BLANKS  */
@@ -488,7 +489,7 @@ SSVRM:
   VRM      = VER'.'REL'.'MOD                  /* VRM OF OS            */
   QUEUE "RACF database statistics as of "DATE() TIME()        /* @AD */
   QUEUE "SMF name =",
-        SMFNAME"  "SSNAME VRM"  RACF FMID = HRF"RACFMID
+        SMFNAME"  "SSNAME VRM"  RACF FMID = "RACFMID
   QUEUE "The application identity mapping stage is set at",   /* @AD */
         STRIP(C2D(RCVTALIS))                                  /* @AD */
 RETURN
