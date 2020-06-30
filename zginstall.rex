@@ -1,4 +1,4 @@
-/* REXX */
+/* REXX - must start in column 1 */
   /* --------------------------------------------------------- *
   | Name:      zginstall.rex                                   |
   |                                                            |
@@ -41,6 +41,9 @@
   | Author:    Lionel B. Dyck                                  |
   |                                                            |
   | History:  (most recent on top)                             |
+  |            06/29/20 LBD - Add generic installer prose      |
+  |            06/28/20 LBD - Add text graphics                |
+  |                         - Add prose about INPUT state      |
   |            06/27/20 LBD - Use a single cp if the pds is    |
   |                           not mixed (text & binary)        |
   |            06/26/20 LBD - Fixup zgstat.exec dsname quotes  |
@@ -74,17 +77,57 @@
 
   ckothlq = strip(ckothlq)
 
+  do i = 1 to 20;say ' ';end
+  call zmsg copies('*',76)
+  call zmsg ,
+    "                                            .zZ.     Zz "
+  call zmsg ,
+    "                       ZZZZZZZZ           ZZZZZZZ "
+  call zmsg ,
+    "           ZZZZZZZZZZZZZZZZZZZZZZ   ZZ   ZZZ         zZ "
+  call zmsg ,
+    "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZ            ZZZ    .zZZ   ZZ "
+  call zmsg ,
+    "ZZZZZZZZZZZZZZZZ          ZZZZZZZ   ZZ   ZZZ  ..zZZZ  Zz "
+  call zmsg ,
+    "ZZZZZZZZZZ,             ZZZZZZZZZ   ZZZ  ZzZ      ZZ  ZZ         ZZZZZZZ"
+  call zmsg ,
+    "ZZZZ                   ZZZZZZZZ     ZZZ   ZZZZZZZZZZZ      ZZZZZZZZZZZ "
+  call zmsg ,
+    "                     ZZZZZZZZ       ZZZZ    ZZZZZZ      ZZZZZZZZZg "
+  call zmsg ,
+    "                    ZZZZZZZZ        ZZZ            ZZZZZZZZZ "
+  call zmsg ,
+    "                   ZZZZZZZ              zZZZZZZZZZZZZZZ       Common"
+  call zmsg ,
+ "                 ZZZZZZZ           ZZZZZZZZZZZZZZ               Installation"
+  call zmsg ,
+    "               .ZZZZZZZ      ZZZZZZZZZZZZZZ                       Tool"
+  call zmsg ,
+    "              ZZZZZZZZZZZZZZZZZZZZZZ "
+  call zmsg ,
+    "              ZZZZZZZZZZZZZZZZZ             zOS ISPF Git Interface "
+  call zmsg ,
+    "             ZZZZZZZZZZZZ "
+  call zmsg ,
+    "            ZZZZZZZZZg               The git interface for the rest of us"
+  call zmsg ,
+    "           ZZZZZZig "
+  call zmsg ,
+    "          ZZZZZZi                         Henri Kuiper & Lionel Dyck "
+  call zmsg copies('*',76)
+
   /* ------------------- *
   | Prompt for z/OS HLQ |
   * ------------------- */
   if ckothlq = '' then do
-  say 'Enter the z/OS High Level Qualifier to use:'
-  pull ckothlq
-  if ckothlq = '' then do
-    say 'no qualifier entered - exiting for now.'
-    exit 8
-  end
-  ckothlq = translate(ckothlq)
+    say 'Enter the z/OS High Level Qualifier to use:'
+    pull ckothlq
+    if ckothlq = '' then do
+      say 'no qualifier entered - exiting for now.'
+      exit 8
+    end
+    ckothlq = translate(ckothlq)
   end
 
   /* --------------------- *
@@ -123,13 +166,13 @@
   hit = 0
   filec = 0
 
-/* -------------------------------------------------------------- *
- | Inform the user that if there are directories with a lot of    |
- | members to be copied into a PDS tht the OMVS shell may enter   |
- | an INPUT state and to just press F10 - meanwhile the copy (cp) |
- | is proceeding.                                                 |
- * -------------------------------------------------------------- */
- if opt = null then do
+  /* -------------------------------------------------------------- *
+  | Inform the user that if there are directories with a lot of    |
+  | members to be copied into a PDS tht the OMVS shell may enter   |
+  | an INPUT state and to just press F10 - meanwhile the copy (cp) |
+  | is proceeding.                                                 |
+  * -------------------------------------------------------------- */
+  if opt = null then do
     call zmsg ' '
     call zmsg 'If the repository being installed has partitioned datasets'
     call zmsg 'with a large number of members, the copy operation will take'
@@ -141,7 +184,7 @@
     call zmsg 'and will report out when it completes (but only if the shell'
     call zmsg 'is in a RUNNING state.'
     call zmsg ' '
-    end
+  end
 
   /* ------------------------------------ *
   | Read in ../.zigi/dsn to get dcb info |
@@ -315,7 +358,9 @@
   cmd = 'cp -v  lrhg.rex "//'zgstat_dsn '"'
   cmd = cmd '&& rm lrhg.rex'
   x = bpxwunix(cmd,,so.,se.,env.)
+  if so.0 > 0 then
   do i = 1 to so.0;say so.i;end
+  if se.0 > 0 then
   do i = 1 to se.0;say se.i;end
 
   /* -------------------- *
@@ -344,8 +389,8 @@
 zmsg:
   parse arg message
   if strip(message) = null then
-     message = copies('-',64)
-  say '* 'left(message,64)' *'
+  message = copies('-',76)
+  say '* 'left(message,76)' *'
   return
 
   /* ----------------------------------------------------- */

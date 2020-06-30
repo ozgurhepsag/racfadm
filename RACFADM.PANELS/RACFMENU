@@ -7,7 +7,7 @@
    {  TYPE(OUTPUT)  PAS(ON)      CAPS(OFF)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V31R1+)\-\
++\-\(%RACFADM - RACF Administration - V31R7+)\-\
 %Option ===>_ZCMD
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -94,6 +94,9 @@
          SECSOFT RACFFMID USADATE  UTYPE  SETMADMN UATT    RACFMENU)
     CVT      = C2D(STORAGE(10,4))               /* Get RACF FMID     */
     RACFFMID = "HRF"STORAGE(D2X(CVT - 29),4)
+    CVT      = C2D(STORAGE(10,4))               /* Get RACF Version  */
+    x         = storage(d2x(cvt - 38),5)
+    racfver   = 'V'substr(x,3,1)'R'substr(x,5,1)
     cvt      = c2x(storage(10,4))               /* Get Sec. Software */
     cvtrac   = C2x(storage((d2x(x2d(cvt)+992)),4))
     ESM      = storage(d2x(x2d(cvtrac)),4)
@@ -109,8 +112,6 @@
     cvtrac$   = d2x((x2d(cvt))+992)             /* Get RACF version  */
     cvtrac    = c2x(storage(cvtrac$,4))
     rcvtstat$ = d2x((x2d(cvtrac))+616)
-    x         = storage(rcvtstat$,4)
-    RACFVER   = 'V'substr(x,1,1)'R'substr(x,2,2)'M'substr(x,4,1)
     rcvtsta$  = d2x((x2d(cvtrac))+56)           /* Get Primary Dbase */
     PRMDBASE  = strip(storage(rcvtsta$,44))
     RCVT      = D2X(X2D(CVT) +X2D(3E0))         /* Get Backup  Dbase */
@@ -120,6 +121,8 @@
     DSDTBACK  = D2X(X2D(DSDT) + X2D(140))
     BNAME     = D2X(X2D(DSDTBACK) + X2D(21))
     BKPDBASE  = STRIP(STORAGE(BNAME,44))
+    if pos(left(bkpdbase,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$') = 0
+       then bkpdbase = ''
     if (BKPDBASE = "") THEN
         BKPDBASE = "N/A"
     parse var zosver . "z/OS" ZOSVER .          /* Get z/OS version  */

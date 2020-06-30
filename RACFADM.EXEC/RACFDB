@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AJ  200629  RACFA    If no RACF bkup dsn, then display N/A        */
 /* @AI  200629  RACFA    Fixed FMID                                   */
 /* @AH  200616  RACFA    Chg panel name RACFRPTS to RACFDISP          */
 /* @AG  200517  RACFA    Standardize environment (ADDRESS ISPEXEC)    */
@@ -221,6 +222,10 @@ ADDRESS ISPEXEC                                               /* @AG */
         PSTAT = "INACTIVE"
      BNAME = D2X(X2D(DSDTBACK) + X2D(21))  /* ADDR OF NAME           */
      BNAME = STORAGE(BNAME,44)             /* NAME                   */
+     if pos(left(bname,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$') = 0
+        then bname = ''                                       /* @AJ */
+     if (bname = "") THEN                                     /* @AJ */
+         bname = "N/A"                                        /* @AJ */
      BNUM  = D2X(X2D(DSDTBACK) + X2D(20))  /* ADDR OF BUFFER COUNT   */
      BNUM  = C2D(STORAGE(BNUM,1))          /* BUFFER COUNT           */
      BSTAT = D2X(X2D(DSDTBACK) + X2D(1D))  /* ADDR OF DSDTSTAT       */

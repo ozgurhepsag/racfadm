@@ -2,19 +2,48 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  30 June 2020 - V31R7
+     - RACFPrms
+       -- Added FMID
+
+  29 June 2020 - V31R6
+     - Messages (Option M)
+       -- Made an adjustment to how/when to scan SYSLOG versus OPERLOG
+
+  29 June 2020 - V31R5
+     - Main Menu and RACFPrms
+       - Changed RACF version to V##R##, was V##R##m##
+
+  29 June 2020 - V31R4
+     - Messages (Option M)
+       -- Fixed (I believe) Date=* when using EJES
+
+  29 June 2020 - V31R3
+     - Main Menu, RACFDB and RACFPrms
+       -- Fixed display RACF version
+       -- Fixed displaying 'N/A' when RACF backup database is not
+          defined
+
+  29 June 2020 - V31R2
+     - RACFPrms (Option 8 or 9)
+       -- Only set 'Scroll' amount to CSR, when variable is null
+     - Messages (Option M)
+       -- Was displaying same results when selecting Operlog and
+          Syslog (Log=O or S)
+
   29 June 2020 - V31R1
      - Main Menu and RACF Databases (RACFDB)
-       -- Corrected how the FMID is displayed, per IBM's macro
+       -- Corrected how the FMID is displayed, per IBM's macro:
             The RCVTVRMN field contains "7791" starting with
             z/OS V2R2.  To determine the release level, use
             fields in the MVS CVT
      - Messages (Option M)
-       -- Allow typing in an asterick in the 'Date' field
+       -- Allow typing in an asterisk (*) in the 'Date' field
 
   28 June 2020 - V31R0
-     - User (Option U)
+     - User (Option 1)
        -- Fixed line command 'A'lter
-          * Fields NOROAUDIT and NOAUDITOR where not defined correctly
+          * Fields NORAUDIT and NOAUDITOR where not defined correctly
 
   28 June 2020 - V30R9
      - Other Items

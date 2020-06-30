@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AC  200629  RACFA    Fixed EJES, when date=*                      */
+/* @AB  200629  RACFA    Fix display SYSLOG/OPERLOG, del some code    */
 /* @AA  200629  RACFA    Allow an asterick as a date                  */
 /* @A9  200627  RACFA    Batch, chg parm syntax and upper case        */
 /* @A8  200627  RACFA    Create variables for USERID and LPAR         */
@@ -346,6 +348,7 @@ SDSF_LOG:                                                     /* @A6 */
         SAY "ERROR - SDSF is not active on this lpar."
      RETURN
   END
+
   KLPAR = MVSVAR("SYMDEF","SYSKLPAR")     /* GDPS K-Lpar? */  /* @A2 */
   SELECT                                                      /* @A2 */
      WHEN (KLPAR = "Y") THEN DO                               /* @A2 */
@@ -353,22 +356,12 @@ SDSF_LOG:                                                     /* @A6 */
           ADDRESS SDSF "ISFLOG READ TYPE(SYSLOG)"             /* @A2 */
      END                                                      /* @A2 */
      OTHERWISE DO                                             /* @A2 */
-          IF (KLPAR = "") THEN                                /* @A2 */
-             ISFSYSID = RACFMLPR                              /* @A2 */
-          ELSE DO                                             /* @A2 */
-             IF (RACFMLPR = "*") THEN                         /* @A6 */
-                ISFSYSID = RACFMLPR                           /* @A6 */
-             ELSE                                             /* @A6 */
-                ISFSYSID = SUBSTR(RACFMLPR,2)                 /* @A2 */
-          END                                                 /* @A6 */
-          IF (KLPAR = "") THEN                                /* @A6 */
-             ADDRESS SDSF "ISFLOG READ TYPE(SYSLOG)"          /* @A2 */
+          IF (RACFMLPR = "*") | (KLPAR <> "") THEN            /* @A6 */
+             ADDRESS SDSF "ISFLOG READ TYPE(OPERLOG)"         /* @A6 */
           ELSE DO                                             /* @A6 */
-             IF (RACFMLPR = "*") THEN                         /* @A6 */
-                ADDRESS SDSF "ISFLOG READ TYPE(OPERLOG)"      /* @A6 */
-             ELSE                                             /* @A6 */
-                ADDRESS SDSF "ISFLOG READ TYPE(SYSLOG)"       /* @A6 */
-          END                                                 /* @A6 */
+             ISFSYSID = RACFMLPR                              /* @A2 */
+             ADDRESS SDSF "ISFLOG READ TYPE(SYSLOG)"          /* @A6 */
+          END
      END                                                      /* @A2 */
   END                                                         /* @A2 */
   RC=ISFCALLS("OFF")
@@ -625,6 +618,9 @@ EJES_LOG:
 
   parse UPPER arg logdate logtype logsys /* Get Parms */
 
+  if (logdate = "*") then                                     /* @AC */
+     logdate = "01/01/90"                                     /* @AC */
+
   rc = EJESREXX("ON")
   dateparm = LEFT(DATE("Standard",logdate,"Usa"),4) ||,
              DATE("Days",logdate,"Usa")
@@ -668,7 +664,8 @@ EJES_LOG:
         QUEUE ""
         ADDRESS EJES "EXECAPI 9 (PRE log_"
         do while rc = 0
-          if RIGHT(log_LogTime.1,7) <> dateparm then leave;
+          if (logdate <> "*") then                            /* @AC */
+             if RIGHT(log_LogTime.1,7) <> dateparm then leave;
           column = log_FindPos.1.1
           /* Filter & Continuation Rules for JES2 SYSLOG */
           if EJES_EnvJES = 2 then do
@@ -736,7 +733,6 @@ EJES_LOG:
 
       end /* when */
     otherwise do
-      SAY "Invalid logtype"
       logmsg.0 = 0
       end /* otherwise */
   end /* select */
@@ -756,7 +752,7 @@ EJES_ADDMSGLINE:
 /*  EJES - IRR messages                                               */
 /*--------------------------------------------------------------------*/
 EJES_LOGIRRLINE:
-/* i = logmsg.0 + 1            */
+/*  i = logmsg.0 + 1           */
 /*  logmsg.0 = i               */
 /*  logmsg.i = IRRline.IRRnum  */
 /*  IRRnum = IRRnum + 1        */

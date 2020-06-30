@@ -14,7 +14,8 @@
 desc                               value
 )INIT
   &ZCMD = ' '
-  &SAMT = &ZSCED
+  IF (&SAMT = ' ')
+     &SAMT = &ZSCED
   .HELP = #RACPRMS
 )PROC
 )PNTS
