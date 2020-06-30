@@ -9,6 +9,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AG  200630  RACFA    Allow TSO PREFIX has HLQ in dsname           */
 /* @AF  200620  RACFA    Added primary command SUBMIT                 */
 /* @AE  200619  RACFA    Added line cmd 'R', remove '*'               */
 /* @AD  200619  RACFA    F3 out, no disp job card, when RESET typed   */
@@ -26,7 +27,6 @@
 /* @A1  200618  RACFA    Fixed displaying job card                    */
 /* @A0  200617  RACFA    Developed REXX                               */
 /*====================================================================*/
-X           = MSG("OFF")
 PANEL01     = "RACFRPTS"   /* Display reports              */
 PANEL99     = "RACFRPTJ"   /* Define JOB card/JCL parms    */
 SKELETON1   = "RACFJOB"    /* Job card                     */ /* @A8 */
@@ -41,7 +41,7 @@ NULL        = ""                                              /* @AA */
 SELECTS     = 0                                               /* @AA */
 
 ADDRESS ISPEXEC
-  "VGET (SETGDISP SETMSHOW SETMTRAC SETDRPTU",
+  "VGET (SETGDISP SETGPREF SETMSHOW SETMTRAC SETDRPTU",       /* @AG */
         "SETJRPTU SETJRPTS RACFRJCL",                         /* @A2 */
         "ZLLGJOB1 ZLLGJOB2 ZLLGJOB3 ZLLGJOB4) PROFILE"        /* @A9 */
 
@@ -365,6 +365,19 @@ ADDRESS ISPEXEC
      CALL DEFINE_JOB_CARD
      ZCMD    = TMPZCMD                                        /* @A3 */
   END
+
+  TMPDRPTU = SETDRPTU                                         /* @AG */
+  IF (SETGPREF = "YES") THEN                                  /* @AG */
+     IF (SUBSTR(SETDRPTU,1,1) = "'") THEN                     /* @AG */
+        TMPDRPTU = STRIP(SETDRPTU,,"'")                       /* @AG */
+     ELSE DO                                                  /* @AG */
+        X = OUTTRAP("PROF.")                                  /* @AG */
+        ADDRESS TSO "PROFILE"                                 /* @AG */
+        X = OUTTRAP("OFF")                                    /* @AG */
+        PARSE UPPER VAR PROF.1 . "PREFIX(" PREFIX ")" .       /* @AG */
+        TMPDRPTU = STRIP(PREFIX)"."SETDRPTU                   /* @AG */
+        DROP PROF.                                            /* @AG */
+     END                                                      /* @AG */
 
   "FTINCL "SKELETON1                                          /* @A8 */
   IF (ABBREV("UNLOAD",ZCMD,1) = 1) THEN DO

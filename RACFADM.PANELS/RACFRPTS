@@ -39,14 +39,17 @@ _ZZZ    Z      Z        œZ
 
   IF (.MSG = &Z)
      &BADDSN = N
-     *REXX (ZCMD SETDRPTU BADDSN RACFSMSG RACFLMSG)
+     *REXX (ZCMD SETDRPTU SETGPREF BADDSN RACFSMSG RACFLMSG)
         X = MSG("OFF")
         IF (ABBREV("UNLOAD",ZCMD,1) = 1) THEN
            RETURN
         PARSE VAR SETDRPTU DSN "(" GDGNO ")" .
         IF (DATATYPE(GDGNO,'N') = 1) THEN DO
            X = OUTTRAP("LC.")
-           "LISTCAT ENT('"DSN"')"
+           IF (SETGPREF = "YES") THEN
+              "LISTCAT ENT("DSN")"
+           ELSE
+              "LISTCAT ENT('"DSN"')"
            X = OUTTRAP("OFF")
            IF (LC.0 > (2 - 2 * GDGNO)) THEN DO
               A   = LC.0 - 1 + 2 * GDGNO
@@ -56,7 +59,11 @@ _ZZZ    Z      Z        œZ
         END
         ELSE
            DSNDBU = SETDRPTU
-        IF (SYSDSN("'"DSNDBU"'") <> "OK") THEN DO
+        IF (SETGPREF = "YES") THEN
+           CHKDSN = DSNDBU
+        ELSE
+           CHKDSN = "'"DSNDBU"'"
+        IF (SYSDSN(CHKDSN) <> "OK") THEN DO
            RACFSMSG = 'DSN does not exist'
            RACFLMSG = 'The dataset does not reside in the catalog',
                       'or on a disk pack, please investigate.'

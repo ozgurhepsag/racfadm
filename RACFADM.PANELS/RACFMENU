@@ -7,7 +7,7 @@
    {  TYPE(OUTPUT)  PAS(ON)      CAPS(OFF)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V31R7+)\-\
++\-\(%RACFADM - RACF Administration - V31R8+)\-\
 %Option ===>_ZCMD
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -37,7 +37,7 @@
   .zvars  = '(OPT1 OPT2 OPT3 OPT4 OPT5 OPT6 UTYPE)'
   &ZPRIM  = YES              /* Make a primary option menu */
 
-  VGET (SETGSTA  SETGSTAP SETGDISP SETGCONF SETGMVS SETGMVSD +
+  VGET (SETGSTA  SETGSTAP SETGDISP SETGCONF SETGMVS SETGMVSD SETGPREF +
         SETMADMN SETMIRRX SETMIBMM SETMIBMD SETMSHOW SETMTRAC) PROFILE
 
   /* General Settings */
@@ -52,6 +52,8 @@
       &SETGMVS = 'YES'       /* Showmvs             = YES  */
   IF (&SETGMVSD NE YES, NO)
       &SETGMVSD = 'NO'       /* Showmvs dataset     = NO   */
+  IF (&SETGPREF NE YES, NO)
+      &SETGPREF = 'NO'       /* Prefix Dsname       = NO   */
 
   /* Management Settings */
   IF (&SETMADMN NE YES, NO)  /*--- Set default settings ---*/
@@ -69,7 +71,7 @@
   IF (&SETMTRAC NE LABELS, PROGRAMS, RESULTS, NO)
       &SETMTRAC = 'NO'       /* REXX trace          = NO   */
 
-  VPUT (SETGSTA  SETGSTAP SETGDISP SETGCONF SETGMVS SETGMVSD +
+  VPUT (SETGSTA  SETGSTAP SETGDISP SETGCONF SETGMVS  SETGMVSD SETGPREF +
         SETMADMN SETMIRRX SETMIBMM SETMIBMD SETMSHOW SETMTRAC) PROFILE
 
   /* Obtain RACF/system info displayed at the bottom of panel */

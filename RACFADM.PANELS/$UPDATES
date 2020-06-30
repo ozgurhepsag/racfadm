@@ -2,6 +2,29 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  30 June 2020 - V31R8
+     - Settings (Option 0)
+       -- Added 'Prefix Dsname = Y/N' to 'General' settings
+          * Use TSO prefix as first qualifier of the dataset name
+            if not quoted (Y=Yes, N=No is default)
+     - Messages (Option M)
+       -- Added the capability to type in an equal sign (=) in the
+          date field, to insert today's date
+       -- Updated to accommodate 'Prefix Dsname = Y'
+       -- Only validate 'Backup DSN' if 'Scan = B'
+     - OMVSCmds (Option O)
+       -- Upgraded IBM's OPERMIT, ORALTER and ORLIST
+     - Reports (Option R)
+       -- Updated to accommodate 'Prefix Dsname = Y'
+       -- Added 'Revoked' column to the following reports:
+            200B ... Userids with extraordinary authorities
+            205C ... Userids with extraordinary group authorities
+     - Tutorials (Option T)
+       -- Updated 'Settings' to include information on 'Prefix Dsname'
+     - Other Items
+       -- Added variable SETGPREF to panel member $DEFSETG
+          * Sets site default for 'Prefix Dsname'
+
   30 June 2020 - V31R7
      - RACFPrms
        -- Added FMID

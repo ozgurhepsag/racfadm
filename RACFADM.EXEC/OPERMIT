@@ -7,6 +7,7 @@
 /* @A1  200605  RACFA    Changed 'Syntax...End-Syntax' comments       */
 /* @A0  200605  RACFA    Obtained REXX from IBM                       */
 /*====================================================================*/
+/* rexx */
 /**********************************************************************
  Licensed Materials - Property of IBM
  5650-ZOS
@@ -14,31 +15,33 @@
 
  Name:    OPERMIT
 
- Author:  Bruce Wells - brwells@us.ibm.com
+ Version: 2
+
+ Author: Bruce Wells - brwells@us.ibm.com
 
  Purpose: Provides UNIX access control list (acl) management using
           a syntax consistent with the RACF PERMIT command
 
  Input:   An absolute path name
 
- NOTE!!!  This exec is dependent upon the following "Syntax:" line and
-          the "End-Syntax" line below in order to display the syntax
-          when the exec is invoked without keyword parameters.
+ NOTE!!! This exec is dependent upon the following "Syntax:" line and
+         the "End-Syntax" line below in order to display the syntax
+         when the exec is invoked without keyword parameters.
 
-          Feel free to add/change examples to show things that are
-          frequently done in your orgnization. But please preserve
-          these surrounding lines.
+         Feel free to add/change examples to show things that are
+         frequently done in your orgnization. But please preserve
+         these surrounding lines.
 
  Beg-Syntax:
- Purpose:  Provides UNIX Access Control List (ACL) management using
+ Purpose:  Provides UNIX access control list (acl) management using
            a syntax consistent with the RACF PERMIT command
 
  Syntax:   OPERMIT absolute-path-name operands
 
  Operands: All keywords are optional
-             absolute-path-name   (positional and required)
+             absolute-path-name     (positional)
              ACCess(access-authority) | DELETE
-             ACL FMODEL DMODEL | ALL - type(s) of ACL being modified.
+             ACL FMODEL DMODEL | ALL - type(s) of acl being modified.
              ---
              CLASS(FSSEC)
              DEBUG
@@ -55,8 +58,8 @@
  Examples:
    1) Permit user JOHND to an access ACL
         OPERMIT /u/brwells/myfile CLASS(FSSEC) ID(JOHND) ACCESS(r-x)
-      or
-        OPERMIT /u/brwells/myfile ID(JOHND) ACCESS(r-x)
+        or
+        OPERMIT /u/brwells/myfile              ID(JOHND) ACCESS(r-x)
 
    2) Remove access of group SYSPROGS from an access ACL
         OPERMIT /u/brwells/myfile ID(SYSPROGS) DELETE
@@ -64,6 +67,7 @@
    3) Remove an entire access list
         OPERMIT /u/brwells/myfile RESET
         OPERMIT /u/brwells/myfile RESET FMODEL
+        OPERMIT /u/brwells/myfile RESET DMODEL
 
    4) Merge the access ACL from one path into that of another
         OPERMIT /u/brwells/myfile FROM(/u/brwells/sourceFile)
@@ -1604,6 +1608,15 @@ writeOutputFile:
 /*                                                                   */
 /*********************************************************************/
 fileCreated = 1
+
+/*********************************************************************/
+/* Put "exit 0" at the end of the script to avoid exit status 255    */
+/* when executing the script with OSHELL.                            */
+/*********************************************************************/
+tmp = output.0 + 1
+output.tmp = "exit 0"
+output.0 = tmp
+
 /*********************************************************************/
 /* Write the output stem to the output UNIX file.                    */
 /*********************************************************************/
@@ -1656,6 +1669,7 @@ Else Do
 End
 
 Return fileCreated /* writeOutputFile */
+
 /* ----------------------------------------------------------------- */
 
 /*********************************************************************/

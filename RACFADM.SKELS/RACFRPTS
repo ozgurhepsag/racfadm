@@ -3,7 +3,8 @@
 )CM*------------------------------------------------------------------*
 )CM*  FLG  YYMMDD  USERID   DESCRIPTION
 )CM*  ---  ------  -------  ------------------------------------------
-)CM*  @L1  200619  SLBD     Support multiple reports in one job
+)CM*  @A4  200619  RACFA    Chged var. SETDRPTU to TMPDRPTU
+)CM*  @A3  200619  SLBD     Support multiple reports in one job
 )CM*  @A2  200618  RACFA    Removed JOB card, moved to seperate member
 )CM*  @A1  200618  RACFA    Fix rpt 200H, chg SCHEDULED to 462, was 471
 )CM*  @A0  200617  RACFA    Created skeleton
@@ -22,7 +23,7 @@
 //*-------------------------------------------------------------------*
 )SETF NAME = &LEFT(&NAME,8, )
 //&NAME EXEC PGM=ICETOOL,REGION=0M,PARM='MSGPRT=ALL'
-//DBUDATA  DD  DISP=SHR,DSN=&SETDRPTU
+//DBUDATA  DD  DISP=SHR,DSN=&TMPDRPTU
 //SORTWK01 DD  UNIT=&SETJRPTU,SPACE=&SETJRPTS
 //SORTWK02 DD  UNIT=&SETJRPTU,SPACE=&SETJRPTS
 //SORTWK03 DD  UNIT=&SETJRPTU,SPACE=&SETJRPTS
@@ -185,6 +186,7 @@
           ON(79,20,CH) HEADER('User Name')                    -
           ON(44,4,CH)  HEADER('Special')                      -
           ON(49,4,CH)  HEADER('Operations')                   -
+          ON(54,3,CH)  HEADER('Revoked')                      -
           ON(390,4,CH) HEADER('Auditor')                      -
           ON(638,4,CH) HEADER('Read-only Auditor')
 )ENDSEL
@@ -424,7 +426,8 @@
           ON(19,8,CH)  HEADER('Group Name')                         -
           ON(88,4,CH)  HEADER('Group Special')                      -
           ON(93,4,CH)  HEADER('Group Operations')                   -
-          ON(113,4,CH) HEADER('Group Auditor')
+          ON(113,4,CH) HEADER('Group Auditor')                      -
+          ON(54,3,CH)  HEADER('Revoked')
 )ENDSEL
 )SEL &REC = 206A | &REC = ALL
 *--------------------------------------------------------------------*
@@ -1326,6 +1329,7 @@
   INCLUDE COND=(5,4,CH,EQ,C'0200',AND,
                (44,3,CH,EQ,C'YES',OR,
                 49,3,CH,EQ,C'YES',OR,
+                54,3,CH,EQ,C'YES',OR,
                 390,3,CH,EQ,C'YES',OR,
                 638,3,CH,EQ,C'YES'))
   OPTION  VLSHRT
@@ -1412,7 +1416,8 @@
   INCLUDE COND=(5,4,CH,EQ,C'0205',AND,
                (88,3,CH,EQ,C'YES',OR,
                 93,3,CH,EQ,C'YES',OR,
-                113,3,CH,EQ,C'YES'))
+                113,3,CH,EQ,C'YES',OR,
+                54,3,CH,EQ,C'YES'))
   OPTION  VLSHRT
 )ENDSEL
 )SEL &REC = 206A | &REC = ALL
@@ -1627,7 +1632,7 @@
 //* threshold.
 //*-------------------------------------------------------------------*
 //REC400A1 EXEC PGM=SORT
-//SORTIN   DD  DISP=SHR,DSN=&SETDRPTU
+//SORTIN   DD  DISP=SHR,DSN=&TMPDRPTU
 //SORTWK01 DD  UNIT=&SETJRPTU,SPACE=&SETJRPTS
 //DS$1     DD  DISP=(NEW,PASS),DSN=&&TEMP1,
 //             UNIT=&SETJRPTU,SPACE=&SETJRPTS
@@ -1706,7 +1711,7 @@
 //* threshold.
 //*-------------------------------------------------------------------*
 //REC400B1 EXEC PGM=SORT
-//SORTIN   DD  DISP=SHR,DSN=&SETDRPTU
+//SORTIN   DD  DISP=SHR,DSN=&TMPDRPTU
 //SORTWK01 DD  SPACE=&SETJRPTS,UNIT=&SETJRPTU
 //DS$1     DD  DISP=(NEW,PASS),DSN=&&TEMP1,
 //             UNIT=&SETJRPTU,SPACE=&SETJRPTS
@@ -1796,7 +1801,7 @@
 //*   is at the front of each variable length record.
 //*-------------------------------------------------------------------*
 //REC560 EXEC PGM=ICETOOL,PARM='MSGPRT=ALL'
-//DBUDATA  DD  DISP=SHR,DSN=&SETDRPTU
+//DBUDATA  DD  DISP=SHR,DSN=&TMPDRPTU
 //TEMP0001 DD  UNIT=&SETJRPTU,SPACE=&SETJRPTS
 //TOOLMSG  DD  SYSOUT=*
 //RPT560   DD  SYSOUT=*
@@ -1887,7 +1892,7 @@
 //*    is at the front of each variable length record.
 //*-------------------------------------------------------------------*
 //REC100C EXEC PGM=ICETOOL,PARM='MSGPRT=ALL'
-//DBUDATA  DD  DISP=SHR,DSN=&SETDRPTU
+//DBUDATA  DD  DISP=SHR,DSN=&TMPDRPTU
 //GRPS     DD  DSN=&&GRPS,DISP=(NEW,PASS,DELETE),
 //             UNIT=&SETJRPTU,SPACE=&SETJRPTS
 //UNIVGRPS DD  DSN=&&UNIVGRPS,DISP=(NEW,PASS,DELETE),

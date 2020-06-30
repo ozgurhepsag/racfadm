@@ -11,7 +11,7 @@
 %Search:
 +  Userid!......._RACFMID { (&USERID, *)
 +  Lpar!........._RACFMLPR{ (&LPAR, *)
-+  Date!........._RACFMDAT{ (mm/dd/yy, *)
++  Date!........._RACFMDAT{ (mm/dd/yy, =, *)
 +  Type!........._Z{        (A=All, I=Insufficient, V=Violation)
 +  USS Only!....._Z{        (Y=Yes, N=No)
 +
@@ -31,9 +31,9 @@ _ZLLGJOB3
 _ZLLGJOB4
 )INIT
   VGET (SETGSLOG)
-  .CURSOR  = RACFMID
-  .HELP    = #RACMSG
-  .ZVARS   = '(RACFMTYP RACFMUSS RACFMMOD RACFMJCL SETLMSG RACFMSCN)'
+  .CURSOR = RACFMID
+  .HELP   = #RACMSG
+  .ZVARS  = '(RACFMTYP RACFMUSS RACFMMOD RACFMJCL SETLMSG RACFMSCN)'
 )PROC
    IF (&RACFMID EQ &Z)
       &RACFMID = *
@@ -43,6 +43,11 @@ _ZLLGJOB4
       VER (&RACFMID,NB,NAME)
    IF (&RACFMLPR NE *)
       VER (&RACFMLPR,NB,NAME)
+
+   *REXX(RACFMDAT)
+    if racfmdat = '=' then
+       racfmdat = date('u')
+   *ENDREXX
 
    IF (&RACFMDAT NE *)
       &TMPDATE = &RACFMDAT
@@ -66,43 +71,55 @@ _ZLLGJOB4
    &DSNBKLOG = &Z
    IF (&RACFMSCN = B)
       VER (&SETDMSG,NB,DSNAME)
-   IF (.MSG = &Z & &SETDMSG NE &Z)
-      &BADDSN = N
-      *REXX (SETDMSG DSNBKLOG BADDSN RACFSMSG RACFLMSG RACFMDAT)
-         X = MSG("OFF")
-         IF (RACFMDAT = "*") THEN DO
-            X = OUTTRAP("LC.")
-            ADDRESS TSO "LISTCAT ENT('"SETDMSG"')"
-            X = OUTTRAP("OFF")
-            PARSE VAR LC.1 W1 W2 .
-            IF (W1 = "GDG") & (W2 = "BASE") THEN DO
-               RACFSMSG = 'Invalid Backup DSN'
-               RACFLMSG = 'Can not use a base GDG when date is',
-                          'an asterick (*).'
+      IF (.MSG = &Z & &SETDMSG NE &Z)
+         &BADDSN = N
+         *REXX (SETDMSG DSNBKLOG BADDSN RACFSMSG RACFLMSG RACFMDAT
+                SETGPREF)
+            X = MSG("OFF")
+            IF (RACFMDAT = "*") THEN DO
+               X = OUTTRAP("LC.")
+               IF (SETGPREF = "YES") THEN
+                  ADDRESS TSO "LISTCAT ENT("SETDMSG")"
+               ELSE
+                  ADDRESS TSO "LISTCAT ENT('"SETDMSG"')"
+               X = OUTTRAP("OFF")
+               PARSE VAR LC.1 W1 W2 .
+               IF (W1 = "GDG") & (W2 = "BASE") THEN DO
+                  RACFSMSG = 'Invalid Backup DSN'
+                  RACFLMSG = 'Can not use a base GDG when date is',
+                             'an asterick (*).'
+                  BADDSN   = "Y"
+                  RETURN
+               END
+            END
+            PARSE VAR SETDMSG DSN "(" GDGNO ")" .
+            IF (DATATYPE(GDGNO,'N') = 1) THEN DO
+               X = OUTTRAP("LC.")
+               IF (SETGPREF = "YES") THEN
+                  "LISTCAT ENT("DSN")"
+               ELSE
+                  "LISTCAT ENT('"DSN"')"
+               X = OUTTRAP("OFF")
+               IF (LC.0 > (2 - 2 * GDGNO)) THEN DO
+                  A   = LC.0 - 1 + 2 * GDGNO
+                  DSNBKLOG = SUBWORD(LC.A,3,1)
+               END
+               DROP LC.
+            END
+            ELSE
+               DSNBKLOG = SETDMSG
+            IF (SETGPREF = "YES") THEN
+               CHKDSN = DSNBKLOG
+            ELSE
+               CHKDSN = "'"DSNBKLOG"'"
+            IF (SYSDSN(CHKDSN) <> "OK") THEN DO
+               RACFSMSG = 'DSN does not exist'
+               RACFLMSG = 'The dataset does not reside',
+                          'in the catalog or on a disk',
+                          'pack, please investigate.'
                BADDSN   = "Y"
-               RETURN
             END
-         END
-         PARSE VAR SETDMSG DSN "(" GDGNO ")" .
-         IF (DATATYPE(GDGNO,'N') = 1) THEN DO
-            X = OUTTRAP("LC.")
-            "LISTCAT ENT('"DSN"')"
-            X = OUTTRAP("OFF")
-            IF (LC.0 > (2 - 2 * GDGNO)) THEN DO
-               A   = LC.0 - 1 + 2 * GDGNO
-               DSNBKLOG = SUBWORD(LC.A,3,1)
-            END
-            DROP LC.
-         END
-         ELSE
-            DSNBKLOG = SETDMSG
-         IF (SYSDSN("'"DSNBKLOG"'") <> "OK") THEN DO
-            RACFSMSG = 'DSN does not exist'
-            RACFLMSG = 'The dataset does not reside in the catalog',
-                       'or on a disk pack, please investigate.'
-            BADDSN   = "Y"
-         END
-      *ENDREXX
+         *ENDREXX
 
   IF (&BADDSN = Y)
      .CURSOR = SETDMSG

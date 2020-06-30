@@ -14,7 +14,8 @@
 +  Status interval{..._Z   ~(0-9999){or_Z ~% (0-99)    {Progress message number
 +  Display files{....._Z~ (B=Browse, E=Edit, V=View)   {Display reports/files
 +  Confirm panel{....._Z~ (Y=Yes, N=No)                {Confirm command request
-+  Showmvs data{......_Z~ (Y=Yes, N=No)+Pgm/DSN_Z      {Showmvs RACF data
++  Showmvs data{......_Z~ (Y=Yes, N=No)+Pgm/DSN_Z{      Showmvs RACF data
++  Prefix Dsname{....._Z~ (Y=Yes, N=No)                {Use TSO PREFIX as HLQ
 +
 ^Management
 +  Administrator{....._Z~ (Y=Yes, N=No)                {Line cmds add/chg/etc.
@@ -29,7 +30,8 @@
 +  ISPPROF dataset{..._Z                              { Append qualifiers to id
 +  User dataset{......_Z                              { Append qualifiers to id
 )INIT
-  VGET (SETGFLTR SETGSTA  SETGSTAP SETGDISP  SETGCONF SETGMVS SETGMVSD +
+  VGET (SETGFLTR SETGSTA  SETGSTAP SETGDISP  SETGCONF SETGMVS  +
+        SETGMVSD SETGPREF +
         SETMADMN SETMIRRX SETMIBMM SETMIBMD  SETMSHOW SETMTRAC +
         SETTPSWD SETTCTLG SETTPROF SETTUDSN) PROFILE
 
@@ -40,6 +42,7 @@
   &SETGCONF = TRANS (&SETGCONF YES,Y NO,N *,*)
   &SETGMVS  = TRANS (&SETGMVS  YES,Y NO,N *,*)
   &SETGMVSD = TRANS (&SETGMVSD YES,Y NO,N *,*)
+  &SETGPREF = TRANS (&SETGPREF YES,Y NO,N *,*)
 
   /* Management Settings */
   &SETMADMN = TRANS (&SETMADMN YES,Y NO,N *,*)
@@ -50,7 +53,7 @@
   &SETMTRAC = TRANS (&SETMTRAC LABELS,L PROGRAMS,P RESULTS,R NO,N *,*)
 
   .ZVARS = '(SETGFLTR SETGSTA  SETGSTAP SETGDISP SETGCONF +
-             SETGMVS  SETGMVSD +
+             SETGMVS  SETGMVSD SETGPREF +
              SETMADMN SETMIRRX SETMIBMM SETMIBMD SETMSHOW SETMTRAC +
              SETTPSWD SETTCTLG SETTPROF SETTUDSN)'
 
@@ -62,6 +65,7 @@
   &SETGCONF = TRANS (&SETGCONF Y,YES, N,NO *,*)
   &SETGMVS  = TRANS (&SETGMVS  Y,YES, N,NO *,*)
   &SETGMVSD = TRANS (&SETGMVSD Y,YES, N,NO *,*)
+  &SETGPREF = TRANS (&SETGPREF Y,YES, N,NO *,*)
 
   /* Management Settings */
   &SETMADMN = TRANS (&SETMADMN Y,YES, N,NO *,*)
@@ -84,6 +88,7 @@
   VER (&SETGCONF,NB,LIST,NO,YES)
   VER (&SETGMVS,NB,LIST,NO,YES)
   VER (&SETGMVSD,NB,LIST,NO,YES)
+  VER (&SETGPREF,NB,LIST,NO,YES)
 
   /* Management Settings */
   VER (&SETMADMN,NB,LIST,NO,YES)
@@ -103,7 +108,8 @@
         SETTUDSN = STRIP(SETTUDSN,,"'")
   *ENDREXX
 
-  VPUT (SETGFLTR SETGSTA  SETGSTAP SETGDISP  SETGCONF SETGMVS SETGMVSD +
+  VPUT (SETGFLTR SETGSTA  SETGSTAP SETGDISP  SETGCONF SETGMVS  +
+        SETGMVSD SETGPREF +
         SETMADMN SETMIRRX SETMIBMM SETMIBMD  SETMSHOW SETMTRAC +
         SETTPSWD SETTCTLG SETTPROF SETTUDSN) PROFILE
 )END

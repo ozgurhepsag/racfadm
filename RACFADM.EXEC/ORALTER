@@ -14,30 +14,32 @@
 
  Name:    ORALTER
 
- Author:  Bruce Wells - brwells@us.ibm.com
+ Version: 2
 
- Purpose: Provides UNIX Security Attribute Management using
+ Author: Bruce Wells - brwells@us.ibm.com
+
+ Purpose: Provides UNIX security attribute management using
           a syntax similar to the RACF RALTER command
 
  Input:   An absolute path name
 
- NOTE!!!  This exec is dependent upon the following "Syntax:" line and
-          the "End-Syntax" line below in order to display the syntax
-          when the exec is invoked without keyword parameters.
+ NOTE!!! This exec is dependent upon the following "Syntax:" line and
+         the "End-Syntax" line below in order to display the syntax
+         when the exec is invoked without keyword parameters.
 
-          Feel free to add/change examples to show things that are
-          frequently done in your orgnization. But please preserve
-          these surrounding lines.
+         Feel free to add/change examples to show things that are
+         frequently done in your orgnization. But please preserve
+         these surrounding lines.
 
  Beg-Syntax:
- Purpose:  Provides UNIX Security Attribute Management using
+ Purpose:  Provides UNIX security attribute management using
            a syntax similar to the RACF RALTER command
 
  Syntax:   ORALTER absolute_path_name operands
 
  Operands: All keywords are optional
              FSSEC                (positional)
-             absolute-path-name   (positional and required)
+             absolute-path-name   (positional)
              APF | NOAPF
              AUDIT(access-attempt(audit-access-level))
              DEBUG
@@ -56,31 +58,31 @@
              VERBOSE
 
  Examples:
-   1) Change the owning file and group
+   1) Change the owning file and group:
         ORALTER /u/brwells/myfile OWNER(APPUSR1) GROUP(APPGRP)
 
-   2) Change the permission bits
+   2) Change the permission bits:
         ORALTER /u/brwells/myfile PERMS(rwxr-xr-x)
 
-   3) Change the permission bits as above, in octal notation
+   3) Change the permission bits as above, in octal notation:
         ORALTER /u/brwells/myfile PERMS(755)
 
-   4) Turn on the APF and program control extended attributes
+   4) Turn on the apf and program control extended attributes:
         ORALTER /u/brwells/myprogram APF PROGRAM
 
-   5) Set the owner audit options to log all access
+   5) Set the owner audit options to log all access:
         ORALTER /u/brwells/myfile AUDIT(ALL(rwx))
 
-   6) Set the auditor audit options to log successful access
+   6) Set the auditor audit options to log successful access:
         ORALTER /u/brwells/myfile GLOBALAUDIT(SUCCESS(rwx))
 
-   7) To turn off all 'other' write bits in a directory
+   7) To turn off all 'other' write bits in a directory:
         ORALTER /u/brwells PERMS(o-w) RECURSIVE
 
-   8) To specify a path for the output script
+   8) To specify a path for the output script:
         ORALTER /u/brwells PERMS(o-w) OUTFILE(/u/jdayka/john.sh)
 
-   9) To specify a PDS member for the output script
+   9) To specify a PDS member for the output script:
         ORALTER /u/brwells PERMS(o-w) OUTFILE(//'JDAYKA.UNIX(CMDOUT1)')
 
  End-Syntax
@@ -2101,6 +2103,15 @@ writeOutputFile:
 /*                                                                   */
 /*********************************************************************/
 fileCreated = 1
+
+/*********************************************************************/
+/* Put "exit 0" at the end of the script to avoid exit status 255    */
+/* when executing the script with OSHELL.                            */
+/*********************************************************************/
+tmp = output.0 + 1
+output.tmp = "exit 0"
+output.0 = tmp
+
 /*********************************************************************/
 /* Write the output stem to the output UNIX file.                    */
 /*********************************************************************/
@@ -2153,6 +2164,7 @@ Else Do
 End
 
 Return fileCreated /* writeOutputFile */
+
 /* ----------------------------------------------------------------- */
 
 /*********************************************************************/

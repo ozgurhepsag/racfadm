@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AE  200630  RACFA    Added "=" for today's date                   */
+/* @AD  200630  RACFA    Allow TSO PREFIX has HLQ in dsname           */
 /* @AC  200629  RACFA    Fixed EJES, when date=*                      */
 /* @AB  200629  RACFA    Fix display SYSLOG/OPERLOG, del some code    */
 /* @AA  200629  RACFA    Allow an asterick as a date                  */
@@ -40,7 +42,7 @@ FOREGROUND:
 
   "VGET (RACFMID  RACFMLPR RACFMDAT RACFMTYP",
         "RACFMUSS RACFMMOD RACFMJCL RACFMSCN",                /* @A6 */
-        "SETMTRAC SETLMSG  SETPMSG  SETDMSG",                 /* @A6 */
+        "SETGPREF SETMTRAC SETLMSG  SETPMSG  SETDMSG",        /* @AD */
         "ZLLGJOB1 ZLLGJOB2 ZLLGJOB3 ZLLGJOB4) PROFILE"
   If (SETMTRAC <> 'NO') then do
      Say "*"COPIES("-",70)"*"
@@ -100,9 +102,10 @@ FOREGROUND:
      ELSE
         CALL FOREGROUND_CREATE_JCL
   END
+
   "VPUT (RACFMID  RACFMLPR RACFMDAT RACFMTYP",                /* @AA */
         "RACFMUSS RACFMMOD RACFMJCL RACFMSCN",                /* @A6 */
-        "SETLMSG  SETPMSG  SETDMSG",                          /* @A6 */
+        "SETGPREF SETMTRAC SETLMSG  SETPMSG  SETDMSG",        /* @AD */
         "ZLLGJOB1 ZLLGJOB2 ZLLGJOB3 ZLLGJOB4) PROFILE"
 
   If (SETMTRAC <> 'NO') then do
@@ -141,12 +144,13 @@ BATCH:
   END J
   DROP PARMS.
 
-  IF (RACFMID  = "") THEN RACFMID  = "*"
-  IF (RACFMLPR = "") THEN RACFMLPR = "*"
-  IF (RACFMDAT = "") THEN RACFMDAT = DATE("U")
-  IF (RACFMUSS = "") THEN RACFMUSS = "N"
-  IF (RACFMTYP = "") THEN RACFMTYP = "A"
-  IF (RACFMSCN = "") THEN RACFMSCN = "A"                      /* @A6 */
+  IF (RACFMID  = "")  THEN RACFMID  = "*"
+  IF (RACFMLPR = "")  THEN RACFMLPR = "*"
+  IF (RACFMDAT = "")  THEN RACFMDAT = DATE("U")
+  IF (RACFMDAT = "=") THEN RACFMDAT = DATE("U")               /* @AE */
+  IF (RACFMUSS = "")  THEN RACFMUSS = "N"
+  IF (RACFMTYP = "")  THEN RACFMTYP = "A"
+  IF (RACFMSCN = "")  THEN RACFMSCN = "A"                     /* @A6 */
   if (RACFMDAT = "*") THEN                                    /* @AA */
      JDATE = "*"
   else do                                                     /* @AA */
@@ -184,7 +188,7 @@ BATCH:
   SAY "     Lpar     = "LEFT(racfmlpr,8),                     /* @A7 */
       " ("LPAR", *)"                                          /* @A8 */
   SAY "     Date     = "LEFT(racfmdat,8),                     /* @A7 */
-      " (mm/dd/yy, *)"                                        /* @AA */
+      " (mm/dd/yy, =, *)"                                     /* @AE */
   SAY "     Type     = "LEFT(racfmtyp,8),                     /* @A7 */
       " (A=All, I=Insufficient, V=Violation)"                 /* @A7 */
   SAY "     USS      = "LEFT(racfmuss,8),                     /* @A7 */
@@ -213,7 +217,10 @@ FOREGROUND_CREATE_JCL:
      PARSE VAR SETDMSG . "(" W1 ")" .
      IF (W1 = "") THEN DO
         X = OUTTRAP("LC.")
-        ADDRESS TSO "LISTCAT ENT('"SETDMSG"')"
+        IF (SETGPREF = "YES") THEN                            /* @AD */
+           ADDRESS TSO "LISTCAT ENT("SETDMSG")"               /* @AD */
+        ELSE                                                  /* @AD */
+           ADDRESS TSO "LISTCAT ENT('"SETDMSG"')"
         X = OUTTRAP("OFF")
         PARSE VAR LC.1 W1 W2 .
         IF (W1 = "GDG") & (W2 = "BASE") THEN
@@ -233,6 +240,19 @@ FOREGROUND_CREATE_JCL:
   END
   ELSE
      DSNBKLOG = SETDMSG
+
+  TMPBKLOG = DSNBKLOG                                         /* @AD */
+  IF (SETGPREF = "YES") THEN                                  /* @AD */
+     IF (SUBSTR(DSNBKLOG,1,1) = "'") THEN                     /* @AD */
+        TMPBKLOG = STRIP(DSNBKLOG,,"'")                       /* @AD */
+     ELSE DO                                                  /* @AD */
+        X = OUTTRAP("PROF.")                                  /* @AD */
+        ADDRESS TSO "PROFILE"                                 /* @AD */
+        X = OUTTRAP("OFF")                                    /* @AD */
+        PARSE UPPER VAR PROF.1 . "PREFIX(" PREFIX ")" .       /* @AD */
+        TMPBKLOG = STRIP(PREFIX)"."DSNBKLOG                   /* @AD */
+        DROP PROF.                                            /* @AD */
+     END                                                      /* @AD */
 
   "FTOPEN TEMP"
   "VGET (ZTEMPF)"
@@ -274,7 +294,10 @@ FOREGROUND_LOG:
      PARSE VAR SETDMSG . "(" W1 ")" .
      IF (W1 = "") THEN DO
         X = OUTTRAP("LC.")
-        ADDRESS TSO "LISTCAT ENT('"SETDMSG"')"
+        IF (SETGPREF = "YES") THEN                            /* @AD */
+           ADDRESS TSO "LISTCAT ENT("SETDMSG")"               /* @AD */
+        ELSE                                                  /* @AD */
+           ADDRESS TSO "LISTCAT ENT('"SETDMSG"')"
         X = OUTTRAP("OFF")
         PARSE VAR LC.1 W1 W2 .
         IF (W1 = "GDG") & (W2 = "BASE") THEN
@@ -290,7 +313,11 @@ FOREGROUND_LOG:
         END
      END
 
-     ADDRESS TSO "ALLOCATE FI(BKPLOG) DSN('"DSNBKLOG"')",
+     IF (SETGPREF = "YES") THEN                               /* @AD */
+        TMPDSN = DSNBKLOG                                     /* @AD */
+     ELSE                                                     /* @AD */
+        TMPDSN = "'"DSNBKLOG"'"                               /* @AD */
+     ADDRESS TSO "ALLOCATE FI(BKPLOG) DSN("TMPDSN")",         /* @AD */
                  "SHR REUSE BUFNO(30) LRECL(259)"
      CALL DSN_LOG                                             /* @A6 */
      ADDRESS TSO "FREE FI(BKPLOG)"
@@ -484,7 +511,10 @@ GDG_BASE_GET_GOVO:                                            /* @A6 */
   JULIAN=CC||YY'.'RIGHT(DAYS,3,'0')
 
   X = OUTTRAP("IDCAMS.")
-  ADDRESS TSO "LISTCAT ENT('"SETDMSG"') ALL"
+  IF (SETGPREF = "YES") THEN                                  /* @AD */
+     ADDRESS TSO "LISTCAT ENT("SETDMSG") ALL"                 /* @AD */
+  ELSE                                                        /* @AD */
+     ADDRESS TSO "LISTCAT ENT('"SETDMSG"') ALL"
   X = OUTTRAP("OFF")
   K = 0
   DO J = 1 TO IDCAMS.0

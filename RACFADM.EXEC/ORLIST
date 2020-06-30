@@ -14,21 +14,23 @@
 
  Name:    ORLIST
 
- Author:  Bruce Wells - brwells@us.ibm.com
+ Version: 2
 
- Purpose: Display security information for a Unix directory or file
+ Author: Bruce Wells - brwells@us.ibm.com
+
+ Purpose: Display security information for a Unix file or directory
           using a syntax and output format similar to the RACF
           RLIST command
 
  Input:   An absolute path name
 
- NOTE!!!  This exec is dependent upon the following "Syntax:" line and
-          the "End-Syntax" line below in order to display the syntax
-          when the exec is invoked without keyword parameters.
+ NOTE!!! This exec is dependent upon the following "Syntax:" line and
+         the "End-Syntax" line below in order to display the syntax
+         when the exec is invoked without keyword parameters.
 
-          Feel free to add/change examples to show things that are
-          frequently done in your orgnization. But please preserve
-          these surrounding lines.
+         Feel free to add/change examples to show things that are
+         frequently done in your orgnization. But please preserve
+         these surrounding lines.
 
  Beg-Syntax:
  Purpose:  Display security information for a Unix directory or
@@ -167,7 +169,7 @@ If Length(keywords) = 0 Then Do
      If Word(sourceline(i),1) = "End-Syntax" Then
        Leave
      If Display = "yes" Then
-        say Substr(sourceline(i),1,72)
+       say Substr(sourceline(i),1,72)
     End
   End
   Signal GETOUT
@@ -886,7 +888,6 @@ getacl:
     Call sey "ID          TYPE   ACCESS"
     Call sey "--          ----   ------"
     'aclinit acl'                   /* init variable ACL to hold acl */
-    say 'apath='apath
     'aclget acl (apath)' acltype        /* get the acl               */
     Do i=1 by 1                         /* get each acl entry        */
       'aclgetentry acl acl.' i
@@ -1415,6 +1416,7 @@ Else Do
 End
 
 Return fileCreated /* writeOutputFile */
+
 /* ----------------------------------------------------------------- */
 
 /*********************************************************************/

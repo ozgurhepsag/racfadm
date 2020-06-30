@@ -19,7 +19,7 @@
   120A @GIDS  ICETOOL  USS GIDs used more than once
   200  USBD   ICETOOL  Userids basic data
   200A @NPWI  ICETOOL  Userids with NOINTERVAL specified
-  200B @UGLB  ICETOOL  Userids With extraordinary authorities
+  200B @UGLB  ICETOOL  Userids with extraordinary authorities
   200C @UL90  ICETOOL  Userids defined in the past 90 days
   200D @UVRK  ICETOOL  Userids which are currently revoked
   200E ICE50  ICETOOL  Userids who have a 'PASSDATE=00.000'
