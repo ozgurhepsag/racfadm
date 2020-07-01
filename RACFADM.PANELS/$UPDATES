@@ -2,6 +2,20 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  01 June 2020 - V32R0
+     - Reports (Option R)
+       -- Expanded the 'IRRDBU00' dataset name field to 44 characters
+       -- Initialize command field
+
+  01 June 2020 - V31R9
+     - Settings (Option 0)
+       -- Minor tweak to verbage
+     - Messages (Option M)
+       -- Removed unnecessary VGET in panel, not needed
+     - Tutorials (Option T)
+       -- Fixed issue with 'Messages', no need to VGET variables,
+          preventing error 'Variable 'ZUSER' is reserved by the system'
+
   30 June 2020 - V31R8
      - Settings (Option 0)
        -- Added 'Prefix Dsname = Y/N' to 'General' settings

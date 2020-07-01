@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AF  200701  RACFA    Initialize command field (zcmd)              */
 /* @AE  200630  RACFA    Added "=" for today's date                   */
 /* @AD  200630  RACFA    Allow TSO PREFIX has HLQ in dsname           */
 /* @AC  200629  RACFA    Fixed EJES, when date=*                      */
@@ -86,6 +87,7 @@ FOREGROUND:
 
   DO FOREVER
      DSNRPT = USERID".RACFERRS.RPT"RANDOM()
+     ZCMD = ""                                                /* @AF */
      "DISPLAY PANEL("PANEL01")"
      IF (RC = 8) THEN LEAVE
      IF (RACFMDAT = "*") THEN                                 /* @AA */

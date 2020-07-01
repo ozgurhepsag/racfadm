@@ -24,8 +24,6 @@
 +    of minus 1, due to the backup was taken after midnight
 +
 +A!Job card+must be supplied when executing in batch mode
-)INIT
-  VGET (SETGSLOG ZUSER)
 )PROC
   &ZUP     = #RACMSG
 )END

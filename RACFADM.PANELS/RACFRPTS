@@ -14,7 +14,7 @@
 +
 +SELECT: %S+Select,%R+Reset                               %F3+- Edit/Submit Job
 +
-+IRRDBU00 Dataset:_SETDRPTU                                + Edit JCL:_Z{ (Y/N)
++IRRDBU00 Dsn:_SETDRPTU                                    + Edit JCL:_Z{ (Y/N)
 +
 %S  ~Rec  ~Name   ~Program  ~                   Description
 %-------------------------------------------------------------------------------
