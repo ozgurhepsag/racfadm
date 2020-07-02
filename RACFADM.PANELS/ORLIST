@@ -12,7 +12,7 @@
            AUTH
            DEBUG
            NODISplay
-           OUTFILE(path-name)
+           OUTFILE(path-or-dataset-name)
            RECursive(ALL / CURRENT / FILESYS)
                            -------
 

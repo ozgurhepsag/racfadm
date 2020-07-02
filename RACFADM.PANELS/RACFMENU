@@ -7,7 +7,7 @@
    {  TYPE(OUTPUT)  PAS(ON)      CAPS(OFF)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V32R0+)\-\
++\-\(%RACFADM - RACF Administration - V32R3+)\-\
 %Option ===>_ZCMD
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -40,7 +40,7 @@
   VGET (SETGSTA  SETGSTAP SETGDISP SETGCONF SETGMVS SETGMVSD SETGPREF +
         SETMADMN SETMIRRX SETMIBMM SETMIBMD SETMSHOW SETMTRAC) PROFILE
 
-  /* General Settings */
+  /* Settings - General - Defaults */
   IF (&SETGSTA  = &Z & &SETGSTAP = &Z)
       &SETGSTA  = '100'      /* Status interval (#) = 100  */
       &SETGSTAP = &Z         /* Status interval (%) =      */
@@ -55,8 +55,8 @@
   IF (&SETGPREF NE YES, NO)
       &SETGPREF = 'NO'       /* Prefix Dsname       = NO   */
 
-  /* Management Settings */
-  IF (&SETMADMN NE YES, NO)  /*--- Set default settings ---*/
+  /* Settings - Management - Defaults */
+  IF (&SETMADMN NE YES, NO)
       &SETMADMN = 'NO'       /* Administrator       = NO   */
   IF (&SETMIRRX NE YES, NO)
       &SETMIRRX = 'NO'       /* RACF API (IRRXUTIL) = NO   */
@@ -66,8 +66,6 @@
       &SETMIBMD = 'NO'       /* RACF LIBEDEF/ALTLIB DSNs   */
   IF (&SETMSHOW NE DISPLAY, LOG, BOTH, NO)
       &SETMSHOW = 'NO'       /* RACF commands       = NO   */
-
-  /* Adding TSO Userids Settings */
   IF (&SETMTRAC NE LABELS, PROGRAMS, RESULTS, NO)
       &SETMTRAC = 'NO'       /* REXX trace          = NO   */
 
@@ -96,7 +94,6 @@
          SECSOFT RACFFMID USADATE  UTYPE  SETMADMN UATT    RACFMENU)
     CVT      = C2D(STORAGE(10,4))               /* Get RACF FMID     */
     RACFFMID = "HRF"STORAGE(D2X(CVT - 29),4)
-    CVT      = C2D(STORAGE(10,4))               /* Get RACF Version  */
     x         = storage(d2x(cvt - 38),5)
     racfver   = 'V'substr(x,3,1)'R'substr(x,5,1)
     cvt      = c2x(storage(10,4))               /* Get Sec. Software */
@@ -111,8 +108,6 @@
     IF (SECSOFT <> "RACF") THEN
        RACFLMSG = "RACF is 'NOT' installed on this lpar,",
                   "it is running "SECSOFT
-    cvtrac$   = d2x((x2d(cvt))+992)             /* Get RACF version  */
-    cvtrac    = c2x(storage(cvtrac$,4))
     rcvtstat$ = d2x((x2d(cvtrac))+616)
     rcvtsta$  = d2x((x2d(cvtrac))+56)           /* Get Primary Dbase */
     PRMDBASE  = strip(storage(rcvtsta$,44))

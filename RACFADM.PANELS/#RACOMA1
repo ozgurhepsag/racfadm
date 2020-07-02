@@ -17,7 +17,7 @@
 !          DEBUG
 !          GLOBALaudit(access-attempt(audit-access-level))
 !          GROUP(group-name)
-!          OUTFILE(path-name)
+!          OUTFILE(path-or-dataset-name)
 !          OWNER(user-ID)
 !          PERMS(uuugggooo)
 !          PROGRAM | NOPROGRAM

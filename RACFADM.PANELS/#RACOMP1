@@ -17,9 +17,9 @@
 !          CLASS(FSSEC)
 !          DEBUG
 !          FROM(absolute-path-name)
-!          FTYPE($ACL!| FMODEL | DMODEL )
+!          FTYPE($ACL!| DMODEL | FMODEL )
 !          ID(name ...)
-!          OUTFILE(path-name)
+!          OUTFILE(path-or-dataset-name)
 !          RECursive(ALL |$CURRENT!| FILESYS)
 !          RESET
 !          VERBOSE

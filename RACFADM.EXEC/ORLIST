@@ -2,8 +2,12 @@
 /*     TYPE:  TSO Command                                             */
 /*  PURPOSE:  RACF Unix Security Information for a Dir/File (RLIST)   */
 /*--------------------------------------------------------------------*/
+/*    NOTES:  Obtained utility and documentation from:                */
+/*            ftp://public.dhe.ibm.com/s390/zos/racf/RacfUnixCommands */
+/*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A2  200701  RACFA    Updated doc, added dataset to OUTFILE()      */
 /* @A1  200605  RACFA    Changed 'Syntax...End-Syntax' comments       */
 /* @A0  200605  RACFA    Obtained REXX from IBM                       */
 /*====================================================================*/
@@ -45,7 +49,7 @@
              AUTH
              DEBUG
              NODISplay
-             OUTFILE(path-name)
+             OUTFILE(path-or-dataset-name)
              RECursive(ALL | CURRENT | FILESYS)
                              -------
  Examples:

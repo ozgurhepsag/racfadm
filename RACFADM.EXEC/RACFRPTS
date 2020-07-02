@@ -9,6 +9,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AH  200701  RACFA    Unload - GDG BASE, relative, G#V#, make (+1) */
 /* @AG  200630  RACFA    Allow TSO PREFIX has HLQ in dsname           */
 /* @AF  200620  RACFA    Added primary command SUBMIT                 */
 /* @AE  200619  RACFA    Added line cmd 'R', remove '*'               */
@@ -379,11 +380,38 @@ ADDRESS ISPEXEC
         DROP PROF.                                            /* @AG */
      END                                                      /* @AG */
 
+  GDGDSN = "N"                                                /* @AH */
   "FTINCL "SKELETON1                                          /* @A8 */
-  IF (ABBREV("UNLOAD",ZCMD,1) = 1) THEN DO
+  IF (ABBREV("UNLOAD",ZCMD,1) = 1) THEN DO                    /* @AH */
+     PARSE VAR TMPDRPTU W1 "(" W2 ")" .                       /* @AH */
+     IF (W2 <> "") THEN DO                                    /* @AH */
+        TMPDRPTU = W1"(+1)"                                   /* @AH */
+        GDGDSN = "Y"                                          /* @AH */
+     END                                                      /* @AH */
+     ELSE DO                                                  /* @AH */
+        DSNLEN = LENGTH(TMPDRPTU)                             /* @AH */
+        GOOVOO = SUBSTR(TMPDRPTU,DSNLEN-7)                    /* @AH */
+        GOOVOO = TRANSLATE(GOOVOO,##########,0123456789)      /* @AH */
+        IF (GOOVOO = "G####V##") THEN DO                      /* @AH */
+           GDGDSN = "Y"                                       /* @AH */
+           TMPDRPTU = SUBSTR(TMPDRPTU,1,DSNLEN-9)"(+1)"       /* @AH */
+        END                                                   /* @AH */
+        ELSE DO                                               /* @AH */
+           X = OUTTRAP("LC.")                                 /* @AH */
+           IF (SETGPREF = "YES") THEN                         /* @AH */
+              ADDRESS TSO "LISTCAT ENT("TMPDRPTU")"           /* @AH */
+           ELSE                                               /* @AH */
+              ADDRESS TSO "LISTCAT ENT('"TMPDRPTU"')"         /* @AH */
+           X = OUTTRAP("OFF")                                 /* @AH */
+           PARSE VAR LC.1 W1 W2 .                             /* @AH */
+           IF (W1 = "GDG") & (W2 = "BASE") THEN               /* @AH */
+              TMPDRPTU  = TMPDRPTU"(+1)"                      /* @AH */
+           DROP LC.                                           /* @AH */
+        END /* Else */                                        /* @AH */
+     END /* Else */                                           /* @AH */
      CALL GET_RACF_DSNS
      "FTINCL "SKELETON2                                       /* @A7 */
-  END
+  END /* If UNLOAD */
   ELSE
      "FTINCL "SKELETON3                                       /* @A7 */
   "FTCLOSE"

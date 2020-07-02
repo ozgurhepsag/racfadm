@@ -2,12 +2,41 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
-  01 June 2020 - V32R0
+  02 July 2020 - V32R3
+     - Messages (Option M)
+       -- Validate job card field when 'Mode=B' (Batch), was 'Scan=B',
+          (Backup log)
+
+  01 July 2020 - V32R2
+     - Main Menu
+       -- Cleaned up code in panel
+     - Reports (Option R)
+       -- Verify 'Edit JCL' is Y or N
+          * Missing VER statement
+       -- Updated UNLOAD primary command
+          * If 'IRRDBU00 Dsn' is a GDG BASE, relative or absolute
+            generation, remove the DELETE step and make the unload
+            dataset (+1)
+     - Updates (Option U)
+       -- Fixed recently logged changes to have a date of
+          '01 July 2020', was '01 June 2020'
+
+  01 July 2020 - V32R1
+     - Main Menu
+       -- Removed unnecessary REXX code
+     - OMVSCmds (Option O)
+       -- OPERMIT, ORALTER and ORLIST
+          * Updated tutorials and REXX programs to include a dataset
+            name can be passed in OUTFILE(), prior was only a path name
+          * Also, added comments in REXX programs on where to obtain/
+            download these IBM utilities and documentation
+
+  01 July 2020 - V32R0
      - Reports (Option R)
        -- Expanded the 'IRRDBU00' dataset name field to 44 characters
        -- Initialize command field
 
-  01 June 2020 - V31R9
+  01 July 2020 - V31R9
      - Settings (Option 0)
        -- Minor tweak to verbage
      - Messages (Option M)

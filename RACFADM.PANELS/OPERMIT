@@ -17,7 +17,7 @@
           FTYPE(ACL/FMODEL/DMODEL)
                 ---
           ID(name ...)
-          OUTFILE(path-name)
+          OUTFILE(path-or-dataset-name)
           RECursive(ALL / CURRENT / FILESYS)
                           -------
           RESET
