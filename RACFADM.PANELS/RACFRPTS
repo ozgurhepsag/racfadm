@@ -32,38 +32,43 @@ _ZZZ    Z      Z        œZ
         IF (&SROW ^= 0)
            &OPTA = S
 
-  &RACFSMSG = &Z
-  &RACFLMSG = &Z
-  IF (.MSG = &Z)
-     &BADDSN = N
-     *REXX (ZCMD SETDRPTU SETGPREF BADDSN RACFSMSG RACFLMSG)
+  IF (.MSG = &Z | .RESP NE END)
+     &RACFSMSG = &Z
+     &RACFLMSG = &Z
+     &TMPDRPTU = &Z
+     &BADDSN   = N
+     *REXX (ZCMD SETDRPTU SETGPREF BADDSN RACFSMSG RACFLMSG TMPDRPTU)
         X = MSG("OFF")
+        IF (SETGPREF = "YES") THEN DO
+           IF (SUBSTR(SETDRPTU,1,1) <> "'") THEN
+              TMPDRPTU = SYSVAR('SYSPREF')"."SETDRPTU
+           ELSE
+              TMPDRPTU = STRIP(SETDRPTU,,"'")
+        END
+        ELSE
+           TMPDRPTU = STRIP(SETDRPTU,,"'")
         IF (ABBREV("UNLOAD",ZCMD,1) = 1) THEN
            RETURN
-        PARSE VAR SETDRPTU DSN "(" GDGNO ")" .
+        PARSE VAR TMPDRPTU DSN1 "&" SYMBOL "." DSN2
+        SYMBVAL = MVSVAR("SYMDEF",SYMBOL)
+        TMPDSN  = DSN1""SYMBVAL""DSN2
+        PARSE VAR TMPDSN DSN "(" GDGNO ")" .
         IF (DATATYPE(GDGNO,'N') = 1) THEN DO
            X = OUTTRAP("LC.")
-           IF (SETGPREF = "YES") THEN
-              "LISTCAT ENT("DSN")"
-           ELSE
-              "LISTCAT ENT('"DSN"')"
+           "LISTCAT ENT('"DSN"')"
            X = OUTTRAP("OFF")
            IF (LC.0 > (2 - 2 * GDGNO)) THEN DO
               A   = LC.0 - 1 + 2 * GDGNO
-              DSNDBU = SUBWORD(LC.A,3,1)
+              TMPDSN = SUBWORD(LC.A,3,1)
            END
            DROP LC.
         END
-        ELSE
-           DSNDBU = SETDRPTU
-        IF (SETGPREF = "YES") THEN
-           CHKDSN = DSNDBU
-        ELSE
-           CHKDSN = "'"DSNDBU"'"
-        IF (SYSDSN(CHKDSN) <> "OK") THEN DO
+        TMPDSN = "'"TMPDSN"'"
+        IF (SYSDSN(TMPDSN) <> "OK") THEN DO
            RACFSMSG = 'DSN does not exist'
            RACFLMSG = 'The dataset does not reside in the catalog',
-                      'or on a disk pack, please investigate.'
+                      'or on a disk pack, please investigate.',
+                      'DSN = 'TMPDSN
            BADDSN   = "Y"
         END
      *ENDREXX

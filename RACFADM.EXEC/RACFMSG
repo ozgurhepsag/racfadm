@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AG  200702  RACFA    Allow symbolic in dsname                     */
 /* @AF  200701  RACFA    Initialize command field (zcmd)              */
 /* @AE  200630  RACFA    Added "=" for today's date                   */
 /* @AD  200630  RACFA    Allow TSO PREFIX has HLQ in dsname           */
@@ -215,21 +216,16 @@ RETURN
 /*  Foreground, create batch JCL (Mode = B)                           */
 /*--------------------------------------------------------------------*/
 FOREGROUND_CREATE_JCL:
-  IF (RACFMDAT <> TODAY) THEN DO
-     PARSE VAR SETDMSG . "(" W1 ")" .
-     IF (W1 = "") THEN DO
-        X = OUTTRAP("LC.")
-        IF (SETGPREF = "YES") THEN                            /* @AD */
-           ADDRESS TSO "LISTCAT ENT("SETDMSG")"               /* @AD */
-        ELSE                                                  /* @AD */
-           ADDRESS TSO "LISTCAT ENT('"SETDMSG"')"
-        X = OUTTRAP("OFF")
-        PARSE VAR LC.1 W1 W2 .
-        IF (W1 = "GDG") & (W2 = "BASE") THEN
-           CALL GDG_BASE_GET_GOVO                             /* @A6 */
-        ELSE
-           DSNBKLOG = SETDMSG
-        IF (DSNBKLOG = "") THEN DO
+  PARSE VAR TMPDMSG2 . "(" W1 ")" .                           /* @AG */
+  IF (W1 = "") THEN DO
+     X = OUTTRAP("LC.")
+     ADDRESS TSO "LISTCAT ENT('"TMPDMSG2"')"                  /* @AG */
+     X = OUTTRAP("OFF")
+     PARSE VAR LC.1 W1 W2 .
+     DROP LC.                                                 /* @AG */
+     IF (W1 = "GDG") & (W2 = "BASE") THEN DO
+        CALL GDG_BASE_GET_GOVO                                /* @A6 */
+        IF (TMPDMSG1 = "") THEN DO
            RACFSMSG = "Invalid Date"
            RACFLMSG = "There are no GDG genarations",
                       "with a date of "RACFMDAT"."
@@ -237,24 +233,7 @@ FOREGROUND_CREATE_JCL:
            RETURN
         END
      END
-     ELSE
-        DSNBKLOG = SETDMSG
   END
-  ELSE
-     DSNBKLOG = SETDMSG
-
-  TMPBKLOG = DSNBKLOG                                         /* @AD */
-  IF (SETGPREF = "YES") THEN                                  /* @AD */
-     IF (SUBSTR(DSNBKLOG,1,1) = "'") THEN                     /* @AD */
-        TMPBKLOG = STRIP(DSNBKLOG,,"'")                       /* @AD */
-     ELSE DO                                                  /* @AD */
-        X = OUTTRAP("PROF.")                                  /* @AD */
-        ADDRESS TSO "PROFILE"                                 /* @AD */
-        X = OUTTRAP("OFF")                                    /* @AD */
-        PARSE UPPER VAR PROF.1 . "PREFIX(" PREFIX ")" .       /* @AD */
-        TMPBKLOG = STRIP(PREFIX)"."DSNBKLOG                   /* @AD */
-        DROP PROF.                                            /* @AD */
-     END                                                      /* @AD */
 
   "FTOPEN TEMP"
   "VGET (ZTEMPF)"
@@ -293,32 +272,30 @@ FOREGROUND_LOG:
      END                                                      /* @A6 */
   END                                                         /* @A6 */
   ELSE DO
-     PARSE VAR SETDMSG . "(" W1 ")" .
+     PARSE VAR TMPDMSG2 . "(" W1 ")" .                        /* @AG */
      IF (W1 = "") THEN DO
         X = OUTTRAP("LC.")
-        IF (SETGPREF = "YES") THEN                            /* @AD */
-           ADDRESS TSO "LISTCAT ENT("SETDMSG")"               /* @AD */
-        ELSE                                                  /* @AD */
-           ADDRESS TSO "LISTCAT ENT('"SETDMSG"')"
+        ADDRESS TSO "LISTCAT ENT('"TMPDMSG2"')"               /* @AG */
         X = OUTTRAP("OFF")
         PARSE VAR LC.1 W1 W2 .
-        IF (W1 = "GDG") & (W2 = "BASE") THEN
+        DROP LC.                                              /* @AG */
+        IF (W1 = "GDG") & (W2 = "BASE") THEN DO
            CALL GDG_BASE_GET_GOVO                             /* @A6 */
-        ELSE
-           DSNBKLOG = SETDMSG
-        IF (DSNBKLOG = "") THEN DO
-           RACFSMSG = "Invalid Date"
-           RACFLMSG = "There are no GDG genarations",
-                      "with a date of "RACFMDAT"."
-           "SETMSG MSG(RACF011)"
-           RETURN
+           IF (TMPDMSG1 = "") THEN DO                         /* @AG */
+              RACFSMSG = "Invalid Date"
+              RACFLMSG = "There are no GDG genarations",
+                         "with a date of "RACFMDAT"."
+              "SETMSG MSG(RACF011)"
+              RETURN
+           END
+           TMPDSN = "'"TMPDMSG1"'"                            /* @AG */
         END
+        ELSE
+           TMPDSN = "'"TMPDMSG2"'"                            /* @AG */
      END
+     ELSE
+        TMPDSN = "'"TMPDMSG2"'"                               /* @AG */
 
-     IF (SETGPREF = "YES") THEN                               /* @AD */
-        TMPDSN = DSNBKLOG                                     /* @AD */
-     ELSE                                                     /* @AD */
-        TMPDSN = "'"DSNBKLOG"'"                               /* @AD */
      ADDRESS TSO "ALLOCATE FI(BKPLOG) DSN("TMPDSN")",         /* @AD */
                  "SHR REUSE BUFNO(30) LRECL(259)"
      CALL DSN_LOG                                             /* @A6 */
@@ -482,8 +459,6 @@ RETURN
 /*  backup was taken after midnight                                   */
 /*--------------------------------------------------------------------*/
 GDG_BASE_GET_GOVO:                                            /* @A6 */
-  DSNBKLOG = ""
-  DSNDATE = ""
   /*------------------------------------*/
   /*  Convert Cregorian to Julian date  */
   /*------------------------------------*/
@@ -513,20 +488,17 @@ GDG_BASE_GET_GOVO:                                            /* @A6 */
   JULIAN=CC||YY'.'RIGHT(DAYS,3,'0')
 
   X = OUTTRAP("IDCAMS.")
-  IF (SETGPREF = "YES") THEN                                  /* @AD */
-     ADDRESS TSO "LISTCAT ENT("SETDMSG") ALL"                 /* @AD */
-  ELSE                                                        /* @AD */
-     ADDRESS TSO "LISTCAT ENT('"SETDMSG"') ALL"
-  X = OUTTRAP("OFF")
-  K = 0
+  ADDRESS TSO "LISTCAT ENT('"TMPDMSG2"') ALL"                 /* @AG */
+  X        = OUTTRAP("OFF")
+  K        = 0
+  TMPDMSG1 = ""
   DO J = 1 TO IDCAMS.0
      PARSE VAR IDCAMS.J W1 W2 W3 .
      IF (W1 = "NONVSAM") THEN DO
         L = J + 3
         PARSE VAR IDCAMS.L AW1 "CREATION--------" AW2
         IF (AW2 = JULIAN) THEN DO
-           DSNBKLOG = W3
-           DSNDATE = AW2
+           TMPDMSG1 = W3
            LEAVE
         END
      END

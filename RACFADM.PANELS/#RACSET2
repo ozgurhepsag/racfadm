@@ -7,7 +7,7 @@
 %Command ===>_ZCMD
 %
 +General
-!  Prefix Dsname    +Use TSO prefix as first qualifier of the dataset name
+!  Prefix dataset   +Use TSO prefix as first qualifier of the dataset name
 +                   +if not quoted!(Y=Yes, N=No is default)
 +
 +Management

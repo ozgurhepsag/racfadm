@@ -2,6 +2,26 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  02 July 2020 - V32R5
+     - RACFData (Option 7)
+       -- If Showmvs loadlib is defined in Settings (Option 0) or in
+          panel members $DEFSETG or $DEFSITE, validate the dataset
+          exists prior to LIBDEFing and display message if it does
+          not exist
+     - Other items
+       -- Fixed honoring 'Prefix dataset' in Reports and Messages
+       -- Fixed refreshing Showmvs loadlib dataset for all users when
+          SETRMVS=Y is defined in panel members #DEFSETG or $DEFSITE
+       -- Allow using system symbolics in the dataset names for
+          Showmvs, IBM RACF menu options, report and message datasets
+          when defined in $DEFSETG, $DEFSITE and on the Settings panel
+       -- Reduced code in REXX program RACFSETD, which is used to
+          define default user settings
+
+  02 July 2020 - V32R4
+     - Messages (Option M)
+       -- Allow for system symbolics to be used in the 'Backup DSN'
+
   02 July 2020 - V32R3
      - Messages (Option M)
        -- Validate job card field when 'Mode=B' (Batch), was 'Scan=B',

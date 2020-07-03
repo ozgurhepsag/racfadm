@@ -15,7 +15,7 @@
 +  Display files{....._Z~ (B=Browse, E=Edit, V=View)   {Display reports/files
 +  Confirm panel{....._Z~ (Y=Yes, N=No)                {Confirm command request
 +  Showmvs data{......_Z~ (Y=Yes, N=No)+Pgm/DSN_Z{      Showmvs RACF data
-+  Prefix Dsname{....._Z~ (Y=Yes, N=No)                {Use TSO prefix as HLQ
++  Prefix dataset{...._Z~ (Y=Yes, N=No)                {Use TSO prefix as HLQ
 +
 ^Management
 +  Administrator{....._Z~ (Y=Yes, N=No)                {Line cmds add/chg/etc.

@@ -346,9 +346,6 @@ RETURN
 /*--------------------------------------------------------------------*/
 CREATE_JCL:
 ADDRESS ISPEXEC
-  "FTOPEN TEMP"
-  "VGET (ZTEMPF)"                                             /* @A9 */
-
   /*-----------------------------------------------*/         /* @A1 */
   /* If IBM's ISPF JOB card variable is:           */         /* @A1 */
   /*   ZLLGJOB1 =                                  */         /* @A1 */
@@ -367,19 +364,10 @@ ADDRESS ISPEXEC
      ZCMD    = TMPZCMD                                        /* @A3 */
   END
 
-  TMPDRPTU = SETDRPTU                                         /* @AG */
-  IF (SETGPREF = "YES") THEN                                  /* @AG */
-     IF (SUBSTR(SETDRPTU,1,1) = "'") THEN                     /* @AG */
-        TMPDRPTU = STRIP(SETDRPTU,,"'")                       /* @AG */
-     ELSE DO                                                  /* @AG */
-        X = OUTTRAP("PROF.")                                  /* @AG */
-        ADDRESS TSO "PROFILE"                                 /* @AG */
-        X = OUTTRAP("OFF")                                    /* @AG */
-        PARSE UPPER VAR PROF.1 . "PREFIX(" PREFIX ")" .       /* @AG */
-        TMPDRPTU = STRIP(PREFIX)"."SETDRPTU                   /* @AG */
-        DROP PROF.                                            /* @AG */
-     END                                                      /* @AG */
+  "FTOPEN TEMP"
+  "VGET (ZTEMPF)"                                             /* @A9 */
 
+  TMPDRPTU = STRIP(TMPDRPTU,,"'")
   GDGDSN = "N"                                                /* @AH */
   "FTINCL "SKELETON1                                          /* @A8 */
   IF (ABBREV("UNLOAD",ZCMD,1) = 1) THEN DO                    /* @AH */
@@ -398,10 +386,7 @@ ADDRESS ISPEXEC
         END                                                   /* @AH */
         ELSE DO                                               /* @AH */
            X = OUTTRAP("LC.")                                 /* @AH */
-           IF (SETGPREF = "YES") THEN                         /* @AH */
-              ADDRESS TSO "LISTCAT ENT("TMPDRPTU")"           /* @AH */
-           ELSE                                               /* @AH */
-              ADDRESS TSO "LISTCAT ENT('"TMPDRPTU"')"         /* @AH */
+           ADDRESS TSO "LISTCAT ENT('"TMPDRPTU"')"            /* @AH */
            X = OUTTRAP("OFF")                                 /* @AH */
            PARSE VAR LC.1 W1 W2 .                             /* @AH */
            IF (W1 = "GDG") & (W2 = "BASE") THEN               /* @AH */

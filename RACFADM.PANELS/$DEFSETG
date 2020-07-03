@@ -31,6 +31,7 @@
 *       for example: Y, will be translated to YES                     *
 *     - There must be a space after the variable name, equal sign,    *
 *       and variable definition                                       *
+*     - Dataset names can contain system symbolics                    *
 *     - An asterick (*) in column one will be treated as a comment    *
 *                                                                     *
 *  4) The user's Settings are saved to their ISPF profile dataset in  *
@@ -47,7 +48,7 @@ SETGDISP = V       /* Display files       (B=Browse, E=Edit, V=View) */
 SETGCONF = Y       /* Confirm panel       (Y=Yes, N=No)              */
 SETGMVS  = Y       /* Showmvs RACF data   (Y=Yes, N=No)              */
 SETGMVSD = N       /* Showmvs LIBDEF DSN  (Y=Yes, N=No)              */
-SETGPREF = N       /* Prefix Dsname       (Y=Yes, N=No)              */
+SETGPREF = N       /* Prefix dataset      (Y=Yes, N=No)              */
 *---------------------------------------------------------------------*
 *  Management                                                         *
 *---------------------------------------------------------------------*

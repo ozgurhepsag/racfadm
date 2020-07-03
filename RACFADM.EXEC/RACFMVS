@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A4  200702  RACFA    Allow for symbolic in dsname                 */
 /* @A3  200611  RACFA    Add capability to display USS info   (Opt O) */
 /* @A2  200525  RACFA    Allow defining pgm name in Settings  (Opt 0) */
 /* @A1  200519  RACFA    Obtain DSN from $DEVSETG or Settings (Opt 0) */
@@ -33,7 +34,19 @@ ADDRESS ISPEXEC
   "display msg(RACF011)"
 
   IF (SETDMVSL <> "") THEN DO                                 /* @A1 */
-     SETDMVSL = STRIP(SETDMVSL,,"'")                          /* @A1 */
+     SETDMVSL = STRIP(SETDMVSL,,"'")                          /* @A4 */
+     PARSE VAR SETDMVSL DSN1 "&" SYMBOL "." DSN2              /* @A4 */
+     SYMBVAL  = MVSVAR("SYMDEF",SYMBOL)                       /* @A4 */
+     SETDMVSL = DSN1""SYMBVAL""DSN2                           /* @A4 */
+     IF (SYSDSN("'"SETDMVSL"'") <> "OK") THEN DO              /* @A4 */
+        RACFSMSG = "Invalid - Loadlib DSN"                    /* @A4 */
+        RACFLMSG = "The loadlib dataset does not exist,",     /* @A4 */
+                   "DSN='SETDMVSL'.  Invoke Settings",        /* @A4 */
+                   "(Option 0) and verify the SHOWMVS",       /* @A4 */
+                   "dataset defined is valid."                /* @A4 */
+        "SETMSG MSG(RACF011)"                                 /* @A1 */
+        EXIT                                                  /* @A1 */
+     END                                                      /* @A1 */
      "LIBDEF ISPLLIB DATASET ID('"SETDMVSL"') STACK"          /* @A1 */
   END                                                         /* @A1 */
 

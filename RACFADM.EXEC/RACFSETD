@@ -38,6 +38,9 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AK  200702  RACFA    Reduced lines of code, easier to maintain    */
+/* @AJ  200702  RACFA    Fix refreshing SHOWMVS variables             */
+/* @AI  200702  RACFA    Allow symbolic in dsnames                    */
 /* @AH  200627  RACFA    Validate RACFMSG backup log DSN is valid     */
 /* @AG  200627  RACFA    Upper case record                            */
 /* @AF  200627  RACFA    Chg LOG to MSG                               */
@@ -102,8 +105,8 @@ ADDRESS ISPEXEC
      IF (W3 = "/*") THEN W3 = ""                              /* @AG */
      IF (W3 = "Y")  THEN W3 = "YES"                           /* @AG */
      IF (W3 = "N")  THEN W3 = "NO"                            /* @AG */
-     W3 = STRIP(W3,,"'")                                      /* @AG */
-     W3 = STRIP(W3,,'"')                                      /* @AG */
+     CKCHR4    = SUBSTR(W1,4,1)                               /* @AK */
+     CKCHR4TO7 = SUBSTR(W1,4,4)                               /* @AK */
      SELECT
         WHEN (W1 = "SETGDISP") THEN
            SELECT
@@ -126,72 +129,29 @@ ADDRESS ISPEXEC
               WHEN (W3 = "R")  THEN W3 = "RESULTS"            /* @A7 */
               OTHERWISE NOP
            END
-        WHEN (W1 = "SETDMVSL") & (W3 <> "") THEN              /* @A5 */
-             IF (SYSDSN("'"W3"'") <> "OK") THEN DO            /* @A5 */
-                RACFSMSG = "Invalid RACF Msg DSN"             /* @A5 */
-                RACFLMSG = "The LINKLIB dataset defined",     /* @A5 */
-                           "to variable SETDMVSL does",       /* @A5 */
-                           "not exist, DSN="W3".",            /* @A5 */
-                           "Please update/fix the site",      /* @A5 */
-                           "default settings in panel",       /* @A5 */
-                           "member $DEFSETG or $DEFSITE."     /* @AH */
-                "SETMSG MSG(RACF011)"                         /* @A5 */
-             END                                              /* @A5 */
-        WHEN (W1 = "SETDIBMM") & (W3 <> "") THEN              /* @A4 */
-             IF (SYSDSN("'"W3"'") <> "OK") THEN DO            /* @A4 */
-                RACFSMSG = "Invalid RACF Msg DSN"             /* @A4 */
-                RACFLMSG = "The MESSAGE dataset defined",     /* @A4 */
-                           "to variable SETDIBMM does",       /* @A4 */
-                           "not exist, DSN="W3".",            /* @A4 */
-                           "Please update/fix the site",      /* @A4 */
-                           "default settings in panel",       /* @A4 */
-                           "member $DEFSETG or $DEFSITE."     /* @AH */
-                "SETMSG MSG(RACF011)"                         /* @A4 */
-             END                                              /* @A4 */
-        WHEN (W1 = "SETDIBMP") & (W3 <> "") THEN              /* @A4 */
-             IF (SYSDSN("'"W3"'") <> "OK") THEN DO            /* @A4 */
-                RACFSMSG = "Invalid RACF Panel DSN"           /* @A4 */
-                RACFLMSG = "The PANEL dataset defined",       /* @A4 */
-                           "to variable SETDIBMP does",       /* @A4 */
-                           "not exist, DSN="W3".",            /* @A4 */
-                           "Please update/fix the site",      /* @A4 */
-                           "default settings in panel",       /* @A4 */
-                           "member $DEFSETG or $DEFSITE."     /* @A4 */
-                "SETMSG MSG(RACF011)"                         /* @A4 */
-             END                                              /* @A4 */
-        WHEN (W1 = "SETDIBMS") & (W3 <> "") THEN              /* @A4 */
-             IF (SYSDSN("'"W3"'") <> "OK") THEN DO            /* @A4 */
-                RACFSMSG = "Invalid RACF Skeleton DSN"        /* @A4 */
-                RACFLMSG = "The SKELETON dataset defined",    /* @A4 */
-                           "to variable SETDIBMS does",       /* @A4 */
-                           "not exist, DSN="W3".",            /* @A4 */
-                           "Please update/fix the site",      /* @A4 */
-                           "default settings in panel",       /* @A4 */
-                           "member $DEFSETG or $DEFSITE."     /* @AH */
-                "SETMSG MSG(RACF011)"                         /* @A4 */
-             END                                              /* @A4 */
-        WHEN (W1 = "SETDIBMC") & (W3 <> "") THEN              /* @A4 */
-             IF (SYSDSN("'"W3"'") <> "OK") THEN DO            /* @A4 */
-                RACFSMSG = "Invalid RACF CLIST DSN"           /* @A4 */
-                RACFLMSG = "The CLIST dataset defined",       /* @A4 */
-                           "to variable SETDIBMC does",       /* @A4 */
-                           "not exist, DSN="W3".",            /* @A4 */
-                           "Please update/fix the site",      /* @A4 */
-                           "default settings in panel",       /* @A4 */
-                           "member $DEFSETG or $DEFSITE."     /* @AH */
-                "SETMSG MSG(RACF011)"                         /* @A4 */
-             END                                              /* @A4 */
-        WHEN (W1 = "SETDMSG") & (W3 <> "") THEN               /* @AH */
-             IF (SYSDSN("'"W3"'") <> "OK") THEN DO            /* @AH */
-                RACFSMSG = "Invalid Backup Log DSN"           /* @AH */
-                RACFLMSG = "The backup log dataset defined",  /* @AH */
-                           "to variable SETDMSG does",        /* @AH */
-                           "not exist, DSN="W3".",            /* @AH */
-                           "Please update/fix the site",      /* @AH */
-                           "default settings in panel",       /* @AH */
-                           "member $DEFSETG or $DEFSITE."     /* @AH */
-                "SETMSG MSG(RACF011)"                         /* @AH */
-             END                                              /* @AH */
+        WHEN (CKCHR4 = "D") & (W3 <> "") THEN DO              /* @AK */
+             PARSE VAR W3 DSN1 "&" SYMBOL "." DSN2            /* @AK */
+             SYMBVAL = MVSVAR("SYMDEF",SYMBOL)                /* @AK */
+             TSTW3   = DSN1""SYMBVAL""DSN2                    /* @AK */
+             PARSE VAR TSTW3 TSTW3 "(" .                      /* @AK */
+             TSTW3   = STRIP(TSTW3,,"'")                      /* @AK */
+             TSTW3   = STRIP(TSTW3,,'"')                      /* @AK */
+             IF (SYSDSN("'"TSTW3"'") <> "OK") THEN DO         /* @AK */
+                RACFSMSG = "$DEFSETG - Invalid DSN"           /* @AK */
+                RACFLMSG = "The variable "W1" has a dataset", /* @AK */
+                           "defined to it, that does not",    /* @AK */
+                           "exist, DSN="W3".  Please",        /* @AK */
+                           "update/fix the site default",     /* @AK */
+                           "settings in panel member",        /* @AK */
+                           "$DEFSETG or $DEFSITE."            /* @AK */
+                "SETMSG MSG(RACF011)"                         /* @AK */
+             END                                              /* @AK */
+             IF (CKCHR4TO7 = "DMVS"),                         /* @AK */
+              | (CKCHR4TO7 = "DIBM") THEN DO                  /* @AK */
+                W3 = STRIP(W3,,"'")                           /* @AK */
+                W3 = STRIP(W3,,'"')                           /* @AK */
+             END                                              /* @AK */
+        END                                                   /* @AK */
         OTHERWISE NOP
      END
 
@@ -218,7 +178,7 @@ ADDRESS ISPEXEC
              IF (CKCHR1TO4 = "SETT") THEN                     /* @A9 */
                 INTERPRET "'VPUT ("W1") PROFILE'"             /* @A8 */
         /* Refresh SHOWMVS program and dataset?    */         /* @A8 */
-        WHEN (CKRESVAR = "SETRTSO"),                          /* @A9 */
+        WHEN (CKRESVAR = "SETRMVS"),                          /* @AJ */
            & (SETRMVS = "YES") THEN                           /* @A9 */
              IF (CKCHR5TO7 = "MVS") THEN                      /* @AE */
                 INTERPRET "'VPUT ("W1") PROFILE'"             /* @A8 */
@@ -245,26 +205,5 @@ ADDRESS ISPEXEC
              INTERPRET "'VPUT ("W1") PROFILE'"                /* @A8 */
      END                                                      /* @A8 */
   END
-
-  IF (SETDIBMM = "") & (SETDIBMP = ""),                       /* @A4 */
-   & (SETDIBMS = "") & (SETDIBMC = "") THEN                   /* @A4 */
-     NOP                                                      /* @A4 */
-  ELSE DO                                                     /* @A4 */
-     IF (SETDIBMM <> "") & (SETDIBMP <> ""),                  /* @A4 */
-      & (SETDIBMS <> "") & (SETDIBMC <> "") THEN              /* @A4 */
-         NOP                                                  /* @A4 */
-     ELSE DO                                                  /* @A4 */
-         RACFSMSG = "Invalid - RACF DSNs"                     /* @A4 */
-         RACFLMSG = "When defining IBM RACF datasets in",     /* @A4 */
-                    "the $DEFSETG member, they must contain", /* @A4 */
-                    "dataset names in ALL the variables",     /* @A4 */
-                    "(SETDIBMM/P/S/C) or the variables must", /* @A4 */
-                    "ALL be null/empty.  Please update/fix",  /* @A4 */
-                    "$DEFSETG in the panel dataset, delete",  /* @A4 */
-                    "RADMPROF member in your ISPF profile",   /* @A4 */
-                    "dataset and re-invoke RACFADM."          /* @A4 */
-         "SETMSG MSG(RACF011)"                                /* @A4 */
-     END                                                      /* @A4 */
-  END                                                         /* @A4 */
   DROP REC.                                                   /* @A6 */
 RETURN
