@@ -6,7 +6,7 @@
 %Tutorial+\-\(%RACFADM - RACF Databases+)\-\%Tutorial
 %Command ===>_ZCMD
 %
-+ %RACFdb+displays information on RACF and the databases.
++ %RACFDB+displays information on RACF and the databases.
 +
 +  This utility displays RACF:
 !    Release level and FMID/RMID

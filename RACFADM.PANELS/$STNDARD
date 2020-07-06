@@ -16,7 +16,7 @@
                         will be read and override any settings defined
                         in member $DEFSETG
                       * This will prevent from having to update the
-                        $DEFSETG member everytime a new version of
+                        $DEFSETG member every time a new version of
                         RACFADM is installed
          $??????? ... Data/informational ($CHANGES, $ISSUES, etc.)
          #??????? ... Tutorials

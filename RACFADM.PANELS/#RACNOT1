@@ -12,7 +12,7 @@
 +
 !  2)+When installing a new version of%RACFADM,+the best practice may be
 +    !backing up+the datasets,!deleting+the members, and then!copying+in
-+     the new version, becuase:
++     the new version, because:
 !       -+Members may be renamed or deleted
 !       -+This prevents having dead/unused members
 +

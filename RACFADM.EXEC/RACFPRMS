@@ -516,10 +516,10 @@ CREATE_TABLEA:                                                /* @AE */
   call add_t  'Model users                      'RCVTMUSR     /* @AE */
   call add_t  'Model GDG                        'RCVTMGDG     /* @AE */
   call add_t  'Multi factor authentication      'RCVTMFA      /* @AH */
-  call add_t  'Multi level active               'RCVTSMLA     /* @AJ */
-  call add_t  'Multi level quiet                'RCVTSMLQ     /* @AE */
-  call add_t  'Multi level secure               'RCVTSMLT     /* @AE */
-  call add_t  'Multi level stable               'RCVTSMLS     /* @AE */
+  call add_t  'Multi-level active               'RCVTSMLA     /* @AJ */
+  call add_t  'Multi-level quiet                'RCVTSMLQ     /* @AE */
+  call add_t  'Multi-level secure               'RCVTSMLT     /* @AE */
+  call add_t  'Multi-level stable               'RCVTSMLS     /* @AE */
   call add_t  'Password attempts                'RCVTPRVK     /* @AE */
   call add_t  'Password extended support        'RCVTXPWD     /* @AE */
   call add_t  'Password history                 'RCVTPHIS     /* @AE */

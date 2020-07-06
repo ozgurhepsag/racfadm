@@ -8,7 +8,7 @@
 %
 %GLIST+displays Group Identifiers (GID) and members associated with them
 +
-%Optional:+Can specify a group name or identifer (GID)
+%Optional:+Can specify a group name or identifier (GID)
 +
 %Operands:!GROUP(group-name)
 !          GID(##########)

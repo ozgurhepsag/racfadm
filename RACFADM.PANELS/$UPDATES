@@ -2,6 +2,10 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  06 July 2020 - V32R6
+     - Other Items
+       -- Minor grammar corrections to panels/tutorials
+
   02 July 2020 - V32R5
      - RACFData (Option 7)
        -- If Showmvs loadlib is defined in Settings (Option 0) or in

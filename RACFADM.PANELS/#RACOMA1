@@ -7,7 +7,7 @@
 %Tutorial+\-\(%RACFADM - OMVS ORALTER - 1 of 2+)\-\%Tutorial
 %Command ===>_ZCMD
 %
-%ORALTER+provides UNIX Security Attribute Management using a syntax similiar
+%ORALTER+provides UNIX Security Attribute Management using a syntax similar
 +to the RACF!RALTER+command
 +
 %Required:+Path and Operands

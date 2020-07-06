@@ -1,11 +1,11 @@
 *---------------------------------------------------------------------*
 *                             RACF Reports
 *---------------------------------------------------------------------*
-*  1) Reports with a name starting with the characters
-*       @____ and $____ came from SYS1.SAMPLIB(IRRICE)
-*       #____ came from IBM download website (RACFICE2)
-*       ICE__ came from oocities/Steveneeland/Sort_Reports
-*     And the rest came from Nico Rizzuto at www.rizzuto.it
+*  NOTES:  1) Reports with a name starting with the characters
+*               @____ and $____ came from SYS1.SAMPLIB(IRRICE)
+*               #____ came from IBM download website (RACFICE2)
+*               ICE__ came from oocities/Steveneeland/Sort_Reports
+*             And the rest came from Nico Rizzuto at www.rizzuto.it
 *---------------------------------------------------------------------*
 * Rec   Name  Program                   Description
 * ---- ------ -------- ------------------------------------------------
@@ -76,6 +76,6 @@
   910  SYSLNK DSMON    Link List datasets
   911  SYSAPF DSMON    APF datasets
   912  SYSCAT DSMON    Master and user catalogs
-  913  RACDST DSMON    Primary and backup datbases
+  913  RACDST DSMON    Primary and backup databases
   914  SYSSDS DSMON    System datasets
   915  USRDSN DSMON    User datasets
