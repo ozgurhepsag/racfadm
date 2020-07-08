@@ -11,6 +11,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @EP  200708  TRIDJK   Msg if selection list has no entries ('NONE')*/
 /* @EO  200622  TRIDJK   Line cmd A/C, added DATA field               */
 /* @EN  200618  RACFA    Chged SYSDA to SYSALLDA                      */
 /* @EM  200617  RACFA    Added comments to right of variables         */
@@ -275,9 +276,10 @@ EXIT
 /*--------------------------------------------------------------------*/
 PROFL:
   call CREATE_TABLEA                                          /* @BE */
-  if (USER = 'INVALID') | (USER = 'NO') THEN DO               /* @C5 */
-     "TBEND" TABLEA
+  if (USER = 'INVALID') | (USER = 'NONE') THEN DO             /* @EP */
+     "TBEND" tbla
      call racfmsgs 'ERR16'                                    /* @C5 */
+     rc=8                                                     /* @EP */
      return
   end
   opta   = ' '

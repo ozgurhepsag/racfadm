@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CM  200708  TRIDJK   Msg if selection list has no entries ('NONE')*/
 /* @CL  200624  RACFA    Allow passing fully qual. dsn with quotes    */
 /* @CK  200624  RACFA    Chg line cmd L, added datasets               */
 /* @CJ  200618  RACFA    Chged SYSDA to SYSALLDA                      */
@@ -184,12 +185,10 @@ EXIT
 /*--------------------------------------------------------------------*/
 PROFL:
   call CREATE_TABLEA
-  if (dataset = 'INVALID') | (dataset = 'NO') THEN DO         /* @B5 */
-     "TBEND" TABLEA
-     if (cmd_rc > 0) then DO                                  /* @B5 */
-        call racfmsgs 'ERR16'                                 /* @B5 */
-        RETURN                                                /* @B5 */
-     END                                                      /* @B5 */
+  if (dataset = 'INVALID') | (dataset = 'NONE') THEN DO       /* @CM */
+     "TBEND" tbla
+     call racfmsgs 'ERR16'                                    /* @C5 */
+     rc=8                                                     /* @CM */
      return
   end
   opta   = ' '

@@ -11,7 +11,7 @@
 * ---- ------ -------- ------------------------------------------------
   ALL  ALL    ICETOOL  Generate all reports
   100  GPBD   ICETOOL  Group basic data
-  100A @CPRO  ICETOOL  Number of profiles in the RACF Database
+  100A @CPRO  ICETOOL  Number of profiles in the RACF database
   100B @CUG$  ICETOOL  Universal group count
   100C #LMUG  ICETOOL  List the members of all universal groups
   102  GPMEM  ICETOOL  Group members

@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CV  200708  TRIDJK   Msg if selection list has no entries ('NONE')*/
 /* @CU  200618  RACFA    Chged SYSDA to SYSALLDA                      */
 /* @CT  200617  RACFA    Added comments to right of variables         */
 /* @CS  200616  RACFA    Fix OWNER, was including CREATED date        */
@@ -181,12 +182,10 @@ EXIT
 /*--------------------------------------------------------------------*/
 PROFL:
   call CREATE_TABLEA                                          /* @AP */
-  if (group = 'INVALID') | (group = 'NO') then do             /* @B3 */
-     "TBEND" TABLEA
-     if (cmd_rc > 0) then DO                                  /* @C5 */
-        call racfmsgs 'ERR16'                                 /* @B3 */
-        RETURN                                                /* @C5 */
-     END                                                      /* @C5 */
+  if (group = 'INVALID') | (group = 'NONE') then do           /* @CV */
+     "TBEND" tbla
+     call racfmsgs 'ERR16'                                    /* @C5 */
+     rc=8                                                     /* @CV */
      return
   end
   opta   = ' '                                                /* @CJ */

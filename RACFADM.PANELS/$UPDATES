@@ -2,6 +2,10 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  08 July 2020 - V32R7
+     - User, Group and Dataset (Options 1/2/3)
+       -- Display message if no entries are found
+
   06 July 2020 - V32R6
      - Other Items
        -- Minor grammar corrections to panels/tutorials
