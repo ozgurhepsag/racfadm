@@ -2,6 +2,13 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  20 July 2020 - V32R8
+     - Other Items
+       -- $DEFSETG member
+          * Fixed defining a site wide default password with
+            upper/lower case characters, was not honoring lower
+            case characters
+
   08 July 2020 - V32R7
      - User, Group and Dataset (Options 1/2/3)
        -- Display message if no entries are found

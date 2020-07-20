@@ -38,6 +38,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AL  200720  LBD      Fix to honor lowercase password              */
 /* @AK  200702  RACFA    Reduced lines of code, easier to maintain    */
 /* @AJ  200702  RACFA    Fix refreshing SHOWMVS variables             */
 /* @AI  200702  RACFA    Allow symbolic in dsnames                    */
@@ -109,26 +110,28 @@ ADDRESS ISPEXEC
      CKCHR4TO7 = SUBSTR(W1,4,4)                               /* @AK */
      SELECT
         WHEN (W1 = "SETGDISP") THEN
-           SELECT
-              WHEN (W3 = "B")  THEN W3 = "BROWSE"             /* @A7 */
-              WHEN (W3 = "E")  THEN W3 = "EDIT"               /* @A7 */
-              WHEN (W3 = "V")  THEN W3 = "VIEW"               /* @A7 */
-              OTHERWISE NOP
-           END
+             SELECT
+                WHEN (W3 = "B")  THEN W3 = "BROWSE"           /* @A7 */
+                WHEN (W3 = "E")  THEN W3 = "EDIT"             /* @A7 */
+                WHEN (W3 = "V")  THEN W3 = "VIEW"             /* @A7 */
+                OTHERWISE NOP
+             END
         WHEN (W1 = "SETMSHOW") THEN
-           SELECT
-              WHEN (W3 = "D")  THEN W3 = "DISPLAY"            /* @A7 */
-              WHEN (W3 = "L")  THEN W3 = "LOG"                /* @A7 */
-              WHEN (W3 = "B")  THEN W3 = "BOTH"               /* @A7 */
-              OTHERWISE NOP
-           END
+             SELECT
+                WHEN (W3 = "D")  THEN W3 = "DISPLAY"          /* @A7 */
+                WHEN (W3 = "L")  THEN W3 = "LOG"              /* @A7 */
+                WHEN (W3 = "B")  THEN W3 = "BOTH"             /* @A7 */
+                OTHERWISE NOP
+             END
         WHEN (W1 = "SETMTRAC") THEN
-           SELECT
-              WHEN (W3 = "L")  THEN W3 = "LABELS"             /* @A7 */
-              WHEN (W3 = "P")  THEN W3 = "PROGRAMS"           /* @A7 */
-              WHEN (W3 = "R")  THEN W3 = "RESULTS"            /* @A7 */
-              OTHERWISE NOP
-           END
+             SELECT
+                WHEN (W3 = "L")  THEN W3 = "LABELS"           /* @A7 */
+                WHEN (W3 = "P")  THEN W3 = "PROGRAMS"         /* @A7 */
+                WHEN (W3 = "R")  THEN W3 = "RESULTS"          /* @A7 */
+                OTHERWISE NOP
+             END
+        WHEN (W1 = "SETTPSWD") THEN                           /* @AL */
+             W3 = word(rec.j,3)                               /* @AL */
         WHEN (CKCHR4 = "D") & (W3 <> "") THEN DO              /* @AK */
              PARSE VAR W3 DSN1 "&" SYMBOL "." DSN2            /* @AK */
              SYMBVAL = MVSVAR("SYMDEF",SYMBOL)                /* @AK */
