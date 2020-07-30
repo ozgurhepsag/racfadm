@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AY  200730  TRIDJK   Added Generic prof chk/Generic cmd proc      */
 /* @AX  200629  RACFA    Added FMID                                   */
 /* @AW  200629  RACFA    Chged RACF version to V##R##, was V##R##M##  */
 /* @AU  200629  RACFA    Fixed displaying RACF version                */
@@ -72,6 +73,7 @@ ADDRESS ISPEXEC                                               /* @A4 */
   call Racf_model_options
   call Racf_terminal_options
   call Racf_tape_options
+  call Racf_dataset_class                                     /* @AY */
   call Racf_statistics
   call Get_passphrase                       /* Password phrase   @AF */
 
@@ -416,6 +418,13 @@ RACF_TAPE_OPTIONS:
   rc = Setbool(rcvttdpr,392,'40','NO','YES')   /* tape dsn protection */
 RETURN
 /*--------------------------------------------------------------------*/
+/*  RACF generic profile checking/cmd processing for dataset class    */
+/*--------------------------------------------------------------------*/
+RACF_DATASET_CLASS:                                           /* @AY */
+  rc = Setbool(rcvtdgen,150,'20','NO','YES')   /* generic profile chk */
+  rc = Setbool(rcvtdgcm,150,'10','NO','YES')   /* generic command proc*/
+RETURN
+/*--------------------------------------------------------------------*/
 /*  RACF audit options                                                */
 /*--------------------------------------------------------------------*/
 RACF_AUDIT_OPTIONS:
@@ -504,6 +513,8 @@ CREATE_TABLEA:                                                /* @AE */
   call add_t  'Erase on scratch                 'RCVTSEOS     /* @AE */
   call add_t  'FMID                             'RCVTFMID     /* @AX */
   call add_t  'Generic owner                    'RCVTSGNO     /* @AE */
+  call add_t  'Generic prof chk (DATASET class) 'RCVTDGEN     /* @AY */
+  call add_t  'Generic cmd proc (DATASET class) 'RCVTDGCM     /* @AY */
   call add_t  'Initialize statistics            'RCVTNLS      /* @AH */
   call add_t  'JES batch all                    'RCVTJALL     /* @AE */
 /*call add_t  'JES early verify                 'RCVTJCHK  */ /* @AM */

@@ -2,6 +2,12 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  30 July 2020 - V32R9
+     - RACFPrms
+       -- Added the below entries:
+            Generic cmd proc (DATASET class)
+            Generic prof chk (DATASET class)
+
   20 July 2020 - V32R8
      - Other Items
        -- $DEFSETG member
