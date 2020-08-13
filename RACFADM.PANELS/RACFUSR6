@@ -16,7 +16,7 @@
 ^USRTITL                                           ^
 +
 %Base Segment:
-+ PROFILE%===>_USER    {^USERTXT           ^+ ^PSWDFLD              ^+
++ PROFILE%===>_USER    {^USERTXT           ^+ ^PSWDFLD                    ^+
 + OWNER  %===>_BOWNER  { (Owner of profile)
 + DFLTGRP%===>_DEFGRP  { (Default group)
 + NAME   %===>_NAME                { (Last, first name)
@@ -46,7 +46,7 @@
   IF (&ACTION = '*Add')
      &USRTITL = 'ÝAdd RACF¨USERÝprofile: ¨ADDUSERÝcommand'
      &USERTXT = '~(Enter¨NEW~userid)'
-     &PSWDFLD = 'ÝPASSWORD¨===>!&PSWD   ¨'
+     &PSWDFLD = 'ÝPASSWORD¨===>!&PSWD         ¨'
   IF (&ACTION = '*Change')
      &USRTITL = 'ÝAlt RACF¨USERÝprofile: ¨ALTUSERÝcommand'
      &USERTXT = '~(Enter userid)'

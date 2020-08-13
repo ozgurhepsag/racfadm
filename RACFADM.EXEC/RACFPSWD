@@ -89,7 +89,8 @@ NEWPSWD:
   do n = 1 to length(choices)
      chars.n = substr(choices,n,1)
   end
-  /* Six character password */
+  /* n character password */                                  /* @DRK*/
+  psize = 9                                                   /* @DRK*/
   do forever
      pick = random(1,length(choices))
      /* No repeating characters */
@@ -97,12 +98,12 @@ NEWPSWD:
         nop
      else
         password = password||chars.pick
-     if (length(password) > 5) then
+     if (length(password) > (psize-1)) then                   /* @DRK*/
         leave
   end
   /* Plug in 1 numeric character */
   number   = random(1,9)
-  place    = random(2,6)
+  place    = random(2,psize)                                  /* @DRK*/
   password = overlay(number,password,place,1)
 RETURN password
 /*--------------------------------------------------------------------*/

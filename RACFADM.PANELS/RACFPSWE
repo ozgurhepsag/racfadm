@@ -7,7 +7,7 @@
 %Command ===>_zcmd
 +
 +  Userid  %==>_userid  +
-+  Password%==>~pswd    +
++  Password%==>~pswd          +
 +
 +  EXPIRED %==>_z{    (Y=Yes, N=No)
 +  RESUME  %==>_z{    (Y=Yes, N=No)

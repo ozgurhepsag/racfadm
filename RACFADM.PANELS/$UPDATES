@@ -2,6 +2,10 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  12 Aug 2020 - V33R0
+     - User and Password (Options 1/5)
+       -- Added 'Pass Phrase' support
+
   30 July 2020 - V32R9
      - RACFPrms
        -- Added the below entries:

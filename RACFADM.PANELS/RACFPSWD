@@ -7,7 +7,7 @@
 %Command ===>_zcmd
 +
 +  Userid  %==>_userid  +
-+  Password%==>~pswd    +
++  Password%==>~pswd          +
 +
 +  RESUME  %==>_z{    (Y=Yes, N=No)
 +
