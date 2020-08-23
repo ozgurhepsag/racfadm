@@ -175,6 +175,10 @@
      &RACFSMSG = 'RACF API...'
      &RACFLMSG = 'RACF API IRRXUTIL used to extract data'
   .MSG = RACF011
+
+  IF (&ACTION = '*Add')
+     &USER = &Z
+     &NAME = &Z
 )PROC
   *REXX (PSWDFLD, PSWD)           /* Get password */
      PSWD = SUBSTR(PSWDFLD,16)

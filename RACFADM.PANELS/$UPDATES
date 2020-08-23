@@ -2,6 +2,10 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  23 Aug 2020 - V33R1
+     - User (Option 1)
+       -- When 'A'dding a user, clear the 'Profile' and 'Name' fields
+
   12 Aug 2020 - V33R0
      - User and Password (Options 1/5)
        -- Added 'Pass Phrase' support
