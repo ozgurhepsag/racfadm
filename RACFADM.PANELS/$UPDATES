@@ -2,13 +2,21 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  31 Aug 2020 - V33R2
+     - User and Password (Options 1/5)
+       -- Added 'Passphrase' edits
+     - Other Items
+       -- Added variable SETMPHRA to panel member $DEFSETG
+          * Sets site default for 'Passphrase'
+
   23 Aug 2020 - V33R1
      - User (Option 1)
        -- When 'A'dding a user, clear the 'Profile' and 'Name' fields
 
   12 Aug 2020 - V33R0
      - User and Password (Options 1/5)
-       -- Added 'Pass Phrase' support
+       -- Added 'Passphrase' support
+       -- Changed 'Default password/phrase' length to 14 characters
 
   30 July 2020 - V32R9
      - RACFPrms

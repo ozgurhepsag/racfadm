@@ -59,6 +59,7 @@ SETMIBMM = N       /* IBM RACF menu options 6, 7 and 8 (Y=Yes, N=No) */
 SETMIBMD = N       /* Define IBM RACF ALTLIB/LIBDEF datasets         */
 SETMSHOW = N       /* RACF commands (D=Display, L=Log, B=Both, N=No) */
 SETMTRAC = N       /* REXX trace (L=Labels, P=Pgms, R=Results, N=No) */
+SETMPHRA = N       /* Passphrases (Y=Yes, N=No)                      */
 *---------------------------------------------------------------------*
 *  Adding TSO userids                                                 *
 *---------------------------------------------------------------------*

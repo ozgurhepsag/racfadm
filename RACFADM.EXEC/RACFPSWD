@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AF  200821  TRIDJK   Password phrase support                      */
 /* @AE  200504  JRT      SET vars are stored in PROFILE, line was ASIS*/
 /* @AD  200504  JRT      Use RACFPSWE panel if admin mode set         */
 /* @AC  200429  RACFA    Re-arranged variables (General, Mgmt, TSO)   */
@@ -28,6 +29,7 @@ REXXPGM     = LEFT(REXXPGM,8)                                 /* @A8 */
 parse arg userid
 Address ISPExec
   "VGET (SETMADMN SETMSHOW SETMTRAC SETTPSWD) PROFILE"        /* @AE */
+  "VGET (SETMPHRA) PROFILE"                                   /* @AF */
   If (SETMTRAC <> 'NO') then do                               /* @A4 */
      Say "*"COPIES("-",70)"*"                                 /* @A4 */
      Say "*"Center("Begin Program = "REXXPGM,70)"*"           /* @A4 */
@@ -54,7 +56,10 @@ Address ISPExec
      added = 'RESUME'
   if (expired = 'N') then                                     /* @AD */
      added = added||' NOEXPIRED'                              /* @AD */
-  call EXCMD 'ALTUSER 'userid' PASSWORD('pswd')' added
+  if SETMPHRA = 'YES' then                                    /* @AF */
+    call EXCMD "ALTUSER "userid" PHRASE('"pswd"')" added      /* @AF */
+  else                                                        /* @AF */
+    call EXCMD 'ALTUSER 'userid' PASSWORD('pswd')' added      /* @AF */
   if (cmd_rc > 0) then do
      racfsmsg = 'ALTUSER failed'
      racflmsg = msg.1
@@ -89,8 +94,8 @@ NEWPSWD:
   do n = 1 to length(choices)
      chars.n = substr(choices,n,1)
   end
-  /* n character password */                                  /* @DRK*/
-  psize = 9                                                   /* @DRK*/
+  /* n character password */                                  /* @AF */
+  psize = 6                                                   /* @AF */
   do forever
      pick = random(1,length(choices))
      /* No repeating characters */
@@ -98,12 +103,12 @@ NEWPSWD:
         nop
      else
         password = password||chars.pick
-     if (length(password) > (psize-1)) then                   /* @DRK*/
+     if (length(password) > (psize-1)) then                   /* @AF */
         leave
   end
   /* Plug in 1 numeric character */
   number   = random(1,9)
-  place    = random(2,psize)                                  /* @DRK*/
+  place    = random(2,psize)                                  /* @AF */
   password = overlay(number,password,place,1)
 RETURN password
 /*--------------------------------------------------------------------*/
@@ -136,6 +141,7 @@ SHOWCMD:
   IF (SETMSHOW = "BOTH") | (SETMSHOW = "LOG") THEN DO
      zerrsm = "RACFADM "REXXPGM" RC="WORD(cmd_rc,1)           /* @A6 */
      zerrlm = cmd
+     parse value "" with zerralrm zerrhm zerrtp zerrwn        /* @AF */
      'log msg(isrz003)'
   END
 RETURN

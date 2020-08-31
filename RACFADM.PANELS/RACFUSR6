@@ -16,7 +16,7 @@
 ^USRTITL                                           ^
 +
 %Base Segment:
-+ PROFILE%===>_USER    {^USERTXT           ^+ ^PSWDFLD                    ^+
++ PROFILE%===>_USER    {^USERTXT           ^+ ^PSWDFLD                     ^+
 + OWNER  %===>_BOWNER  { (Owner of profile)
 + DFLTGRP%===>_DEFGRP  { (Default group)
 + NAME   %===>_NAME                { (Last, first name)
@@ -38,7 +38,7 @@
   .ZVARS  = '(SCIND1 SCIND2 COPCLASS COPIDENT COPPRTY CTIMEOUT)'
   .CURSOR = USER
   .HELP   = #RACMENU
-  VGET (SETMIRRX)
+  VGET (SETMIRRX SETMPHRA)
   &OLDUSR = &USER
   &FROM   = &USER
   IF (&USER = NONE)
@@ -46,13 +46,23 @@
   IF (&ACTION = '*Add')
      &USRTITL = 'ÝAdd RACF¨USERÝprofile: ¨ADDUSERÝcommand'
      &USERTXT = '~(Enter¨NEW~userid)'
-     &PSWDFLD = 'ÝPASSWORD¨===>!&PSWD         ¨'
   IF (&ACTION = '*Change')
      &USRTITL = 'ÝAlt RACF¨USERÝprofile: ¨ALTUSERÝcommand'
      &USERTXT = '~(Enter userid)'
      &PSWDFLD = ''
 
-  *Rexx(* SETMIRRX)
+  *Rexx(* SETMIRRX SETMPHRA, PSWDFLD, PSWD ACTION)
+     IF ACTION = '*Add' THEN  DO
+        IF SETMPHRA = 'YES' THEN DO
+          PSWD = LEFT(PSWD,14)
+          PSWDFLD = 'ÝPhrase  ¨===>!'pswd||'¨'
+          END
+        ELSE DO
+          PSWD = LEFT(PSWD,8)
+          PSWDFLD = 'ÝPassword¨===>!'pswd||'¨'
+          END
+        END
+
      if SETMIRRX = 'NO' then do
         call listuser
         return
@@ -116,6 +126,8 @@
           if (substr(lu.i,2,14) = 'DEFAULT-GROUP=') then
              defgrp = substr(lu.i,2+14,8)
           if (substr(lu.i,2,11) = 'ATTRIBUTES=') then do
+             if (pos('PASSPHRASE',lu.i,2+11) > 0) then
+                lu.i = delstr(lu.i,pos('PASSPHRASE',lu.i,2+11),10)
              if (pos('PROTECTED',lu.i,2+11) > 0) then
                 lu.i = delstr(lu.i,pos('PROTECTED',lu.i,2+11),9)
              if (pos('REVOKED',lu.i,2+11) > 0) then
@@ -168,20 +180,49 @@
      return
   *EndRexx
 
-  IF (&SETMIRRX = 'NO')
-     &RACFSMSG = 'LISTUSER...'
-     &RACFLMSG = 'RACF command LISTUSER used to extract data'
-  ELSE
-     &RACFSMSG = 'RACF API...'
-     &RACFLMSG = 'RACF API IRRXUTIL used to extract data'
-  .MSG = RACF011
-
   IF (&ACTION = '*Add')
      &USER = &Z
      &NAME = &Z
 )PROC
-  *REXX (PSWDFLD, PSWD)           /* Get password */
-     PSWD = SUBSTR(PSWDFLD,16)
+  *REXX (PSWDFLD, PSWD, USER, RACFLMSG)      /* Get password */
+     IF SUBSTR(PSWDFLD,2,6) = 'Phrase' THEN DO
+       PSWD = SUBSTR(PSWDFLD,16,14)
+
+       alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+       pswd_upper = translate(pswd)
+       if pos(user,pswd_upper) > 0 then do
+         zrxrc  = 8
+         RACFLMSG = 'Phrase contains Userid'
+         zrxmsg = 'RACF011'
+         end
+       x = 0; y= 0
+       do n = 1 to 14
+         if verify(substr(pswd,n,1),alpha) = 0 then
+           x = x + 1
+         else
+           y = y + 1
+         end
+       if x < 2 then do
+         zrxrc  = 8
+         RACFLMSG = 'Phrase must contain 2 alpha chars'
+         zrxmsg = 'RACF011'
+         end
+       if y < 2 then do
+         zrxrc  = 8
+         RACFLMSG = 'Phrase must contain 2 non-alpha chars'
+         zrxmsg = 'RACF011'
+         end
+       do n = 1 to 12
+         if substr(pswd,n,1) = substr(pswd,n+1,1) then
+           if substr(pswd,n,1) = substr(pswd,n+2,1) then do
+             zrxrc  = 8
+             RACFLMSG = 'Phrase contains repeating characters'
+             zrxmsg = 'RACF011'
+             end
+         end
+       END
+     ELSE
+       PSWD = SUBSTR(PSWDFLD,16,8)
   *ENDREXX
   IF (&ACTION = '*Add')
      IF (&OLDUSR = &USER)

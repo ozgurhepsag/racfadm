@@ -471,7 +471,7 @@ GET_BKP_DATABASE_NAME:                                        /* @A9 */
      rcvtbdsn = "N/A"                                         /* @AT */
 RETURN                                                        /* @A9 */
 /*--------------------------------------------------------------------*/
-/*  Get RACF backup database name                                @AF  */
+/*  Get PASSPHRASE setting                                       @DRK */
 /*--------------------------------------------------------------------*/
 GET_PASSPHRASE:                                               /* @AF */
   cmd    = "PARMLIB LIST(LOGON)"                              /* @AF */

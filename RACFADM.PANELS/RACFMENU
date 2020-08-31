@@ -7,7 +7,7 @@
    {  TYPE(OUTPUT)  PAS(ON)      CAPS(OFF)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V33R1+)\-\
++\-\(%RACFADM - RACF Administration - V33R2+)\-\
 %Option ===>_ZCMD
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -38,7 +38,8 @@
   &ZPRIM  = YES              /* Make a primary option menu */
 
   VGET (SETGSTA  SETGSTAP SETGDISP SETGCONF SETGMVS SETGMVSD SETGPREF +
-        SETMADMN SETMIRRX SETMIBMM SETMIBMD SETMSHOW SETMTRAC) PROFILE
+        SETMADMN SETMIRRX SETMIBMM SETMIBMD SETMSHOW SETMTRAC +
+        SETMPHRA) PROFILE
 
   /* Settings - General - Defaults */
   IF (&SETGSTA  = &Z & &SETGSTAP = &Z)
@@ -68,9 +69,12 @@
       &SETMSHOW = 'NO'       /* RACF commands       = NO   */
   IF (&SETMTRAC NE LABELS, PROGRAMS, RESULTS, NO)
       &SETMTRAC = 'NO'       /* REXX trace          = NO   */
+  IF (&SETMPHRA NE YES, NO)
+      &SETMPHRA = 'NO'       /* Passphrases                */
 
   VPUT (SETGSTA  SETGSTAP SETGDISP SETGCONF SETGMVS  SETGMVSD SETGPREF +
-        SETMADMN SETMIRRX SETMIBMM SETMIBMD SETMSHOW SETMTRAC) PROFILE
+        SETMADMN SETMIRRX SETMIBMM SETMIBMD SETMSHOW SETMTRAC +
+        SETMPHRA) PROFILE
 
   /* Obtain RACF/system info displayed at the bottom of panel */
   &RACFVER  = &Z
@@ -91,7 +95,8 @@
      &RACFMENU = 0
 
   *REXX (RACFVER PRMDBASE BKPDBASE ZOSVER RACFGRP  RACFNAM RACFLMSG
-         SECSOFT RACFFMID USADATE  UTYPE  SETMADMN UATT    RACFMENU)
+         SECSOFT RACFFMID USADATE UTYPE SETMADMN UATT RACFMENU
+         SETMPHRA)
     CVT      = C2D(STORAGE(10,4))               /* Get RACF FMID     */
     RACFFMID = "HRF"STORAGE(D2X(CVT - 29),4)
     x         = storage(d2x(cvt - 38),5)
@@ -168,6 +173,19 @@
                   "to display/view entries, due to it",
                   "does NOT have the attribute AUDITOR,",
                   "ROAUDIT or SPECIAL."
+    end
+
+    if racfmenu = 1 then do
+      x = outtrap('var.')
+      "PARMLIB LIST(LOGON)"
+      x = outtrap('off')
+      Do i = 1 to var.0
+         parse var var.i 'PASSPHRASE(' pphrase ')'
+         if (pphrase = 'ON') | (pphrase = 'OFF') then leave
+      end
+      if (SETMPHRA = "YES") & (pphrase <> "ON") THEN
+        RACFLMSG = "PASSPHRASE(OFF) in PARMLIB member IKJTSOxx",
+                   "conflicts with Passphrase value in Settings"
     end
   *ENDREXX
   VPUT (RACFMENU)                     /* No. of times menu displayed */

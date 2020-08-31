@@ -11,6 +11,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @EQ  200821  TRIDJK   Password phrase support                      */
 /* @EP  200708  TRIDJK   Msg if selection list has no entries ('NONE')*/
 /* @EO  200622  TRIDJK   Line cmd A/C, added DATA field               */
 /* @EN  200618  RACFA    Chged SYSDA to SYSALLDA                      */
@@ -208,7 +209,7 @@ ADDRESS ISPEXEC                                               /* @BC */
   "CONTROL ERRORS RETURN"                                     /* @B1 */
   "VGET (SETGSTA  SETGSTAP SETGDISP SETMADMN",                /* @EA */
         "SETMIRRX SETMSHOW SETMTRAC SETTPSWD",                /* @EA */
-        "SETTPROF SETTUDSN) PROFILE"                          /* @EA */
+        "SETTPROF SETTUDSN SETMPHRA) PROFILE"                 /* @EQ */
 
   If (SETMTRAC <> 'NO') then do                               /* @DK */
      Say "*"COPIES("-",70)"*"                                 /* @DK */
@@ -513,7 +514,14 @@ RESD:
   msg    = 'You are about to resume/reset 'USER NAME
   Sure_? = RACFMSGC(msg)
   if (sure_? = 'YES') then do
-     call EXCMD "ALTUSER "user" RESUME PASSWORD("user")"
+     if (SETTPSWD = "") then                                  /* @EQ */
+        userp = "user.user.user"                              /* @EQ */
+     else                                                     /* @EQ */
+        userp = left(SETTPSWD,14)                             /* @EQ */
+     if SETMPHRA = 'YES' then                                 /* @EQ */
+        call EXCMD "ALTUSER "user" RESUME PHRASE('"userp"')"  /* @EQ */
+     else                                                     /* @EQ */
+        call EXCMD "ALTUSER "user" RESUME PASSWORD("user")"   /* @EQ */
      if (cmd_rc = 0) then do                                  /* @CA */
         revoked ='NO'                                         /* @BP */
         "TBMOD" TABLEA
@@ -1302,8 +1310,13 @@ RETURN                                                        /* @BE */
      return                                                   /* @D4 */
   if (pswd = '') then                                         /* @DE */
      pswd = user                                              /* @DE */
-  cmd = 'ADDUSER 'user' OWNER('bowner') PASSWORD('pswd')'||,  /* @DE */
-        ' DFLTGRP('defgrp') NAME('''name''') ' attr           /* @D4 */
+  if SETMPHRA = 'YES' then                                    /* @EQ */
+     add1 = "ADDUSER "user" OWNER("bowner") PHRASE('"pswd"')" /* @EQ */
+  else                                                        /* @EQ */
+     add1 = "ADDUSER "user" OWNER("bowner") PASSWORD("pswd")" /* @EQ */
+                                                              /* @EQ */
+  add2 = ' DFLTGRP('defgrp') NAME('''name''') ' attr          /* @EQ */
+  cmd = add1 add2                                             /* @EQ */
   if (ohome||oprogram = '') then                              /* @D4 */
      nop                                                      /* @D4 */
   else do                                                     /* @D4 */
@@ -1384,8 +1397,8 @@ NEWPSWD:                                                      /* @E1 */
   do n = 1 to length(choices)                                 /* @E1 */
      chars.n = substr(choices,n,1)                            /* @E1 */
   end                                                         /* @E1 */
-  /* n character password */                                  /* @DRK*/
-  psize = 9                                                   /* @DRK*/
+  /* n character password */                                  /* @EQ */
+  psize = 6                                                   /* @EQ */
   do forever                                                  /* @E1 */
      pick = random(1,length(choices))                         /* @E1 */
      /* No repeating characters */                            /* @E1 */
@@ -1393,12 +1406,12 @@ NEWPSWD:                                                      /* @E1 */
         nop                                                   /* @E1 */
      else                                                     /* @E1 */
         password = password||chars.pick                       /* @E1 */
-     if (length(password) > (psize-1)) then                   /* @DRK*/
+     if (length(password) > (psize-1)) then                   /* @EQ */
         leave                                                 /* @E1 */
   end                                                         /* @E1 */
   /* Plug in 1 numeric character */                           /* @E1 */
   number   = random(1,9)                                      /* @E1 */
-  place    = random(2,psize)                                  /* @DRK*/
+  place    = random(2,psize)                                  /* @EQ */
   password = overlay(number,password,place,1)                 /* @E1 */
 RETURN password                                               /* @E1 */
 /*--------------------------------------------------------------------*/

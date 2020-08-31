@@ -25,7 +25,7 @@
 +  REXX trace{........_Z~ (L=Labels, P=Pgms, R=Results, N=No)  {Trace REXX pgms
 +
 ^Adding TSO userids
-+  Default password{..@Z             ~ (Blank=Random) { New/chg user's password
++  Default password{..@Z             ~ +Passphrase_Z{ { New/chg user's password
 +  User catalog{......_Z                              { z/OS alias catalog
 +  ISPPROF dataset{..._Z                              { Append qualifiers to id
 +  User dataset{......_Z                              { Append qualifiers to id
@@ -33,7 +33,7 @@
   VGET (SETGFLTR SETGSTA  SETGSTAP SETGDISP  SETGCONF SETGMVS  +
         SETGMVSD SETGPREF +
         SETMADMN SETMIRRX SETMIBMM SETMIBMD  SETMSHOW SETMTRAC +
-        SETTPSWD SETTCTLG SETTPROF SETTUDSN) PROFILE
+        SETTPSWD SETMPHRA SETTCTLG SETTPROF SETTUDSN) PROFILE
 
   /* General Settings */
   IF (&SETGSTA NE &Z)
@@ -51,11 +51,12 @@
   &SETMIBMD = TRANS (&SETMIBMD YES,Y NO,N *,*)
   &SETMSHOW = TRANS (&SETMSHOW DISPLAY,D LOG,L BOTH,B NO,N *,*)
   &SETMTRAC = TRANS (&SETMTRAC LABELS,L PROGRAMS,P RESULTS,R NO,N *,*)
+  &SETMPHRA = TRANS (&SETMPHRA YES,Y NO,N *,*)
 
   .ZVARS = '(SETGFLTR SETGSTA  SETGSTAP SETGDISP SETGCONF +
              SETGMVS  SETGMVSD SETGPREF +
              SETMADMN SETMIRRX SETMIBMM SETMIBMD SETMSHOW SETMTRAC +
-             SETTPSWD SETTCTLG SETTPROF SETTUDSN)'
+             SETTPSWD SETMPHRA SETTCTLG SETTPROF SETTUDSN)'
 
   .HELP   = #RACSET1
   .CURSOR = SETGFLTR
@@ -74,6 +75,7 @@
   &SETMIBMD = TRANS (&SETMIBMD Y,YES, N,NO *,*)
   &SETMSHOW = TRANS (&SETMSHOW D,DISPLAY L,LOG B,BOTH N,NO *,*)
   &SETMTRAC = TRANS (&SETMTRAC L,LABELS P,PROGRAMS R,RESULTS, N,NO *,*)
+  &SETMPHRA = TRANS (&SETMPHRA Y,YES, N,NO *,*)
 
   /* General Settings */
   IF (&SETGSTA > 0)
@@ -97,6 +99,7 @@
   VER (&SETMIBMD,NB,LIST,NO,YES)
   VER (&SETMSHOW,NB,LIST,DISPLAY,LOG,BOTH,NO)
   VER (&SETMTRAC,NB,LIST,LABELS,PROGRAMS,RESULTS,NO)
+  VER (&SETMPHRA,NB,LIST,NO,YES)
 
   /* Adding TSO Userid Settings */
   IF (&SETTCTLG NE ' ')
@@ -111,7 +114,7 @@
   VPUT (SETGFLTR SETGSTA  SETGSTAP SETGDISP  SETGCONF SETGMVS  +
         SETGMVSD SETGPREF +
         SETMADMN SETMIRRX SETMIBMM SETMIBMD  SETMSHOW SETMTRAC +
-        SETTPSWD SETTCTLG SETTPROF SETTUDSN) PROFILE
+        SETTPSWD SETMPHRA SETTCTLG SETTPROF SETTUDSN) PROFILE
 )END
 /*--------------------------------------------------------------------*/
 /*                             Comments                               */
