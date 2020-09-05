@@ -2,6 +2,13 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  03 Sept 2020 - V33R3
+     - Messages (Option M)
+       -- When selecting 'A'll, display all ICH408I messages, except
+          'Invalid Password'
+          * Prior it only displayed ICH408I messages with the word
+            'Insufficient' and 'Violation'
+
   31 Aug 2020 - V33R2
      - User and Password (Options 1/5)
        -- Added 'Passphrase' edits

@@ -3,6 +3,8 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AI  200903  RACFA    Added 'OMVS' to USS messages                 */
+/* @AH  200903  RACFA    Display all ICH408I msgs, except pswd invalid*/
 /* @AG  200702  RACFA    Allow symbolic in dsname                     */
 /* @AF  200701  RACFA    Initialize command field (zcmd)              */
 /* @AE  200630  RACFA    Added "=" for today's date                   */
@@ -416,15 +418,14 @@ PROCESS_LOG_RECS:                                             /* @A6 */
                          FOUND = POS("VIOLATION",ISFLINE.M)
                     WHEN (RACFMTYP = 'I') THEN
                          FOUND = POS("INSUFFICIENT",ISFLINE.M)
-                    OTHERWISE DO
-                         FOUNDV = POS("VIOLATION",ISFLINE.M)
-                         FOUNDI = POS("INSUFFICIENT",ISFLINE.M)
-                         IF (FOUNDV = 0) & (FOUNDI = 0) THEN
-                            FOUND = 00
-                         ELSE
-                            FOUND = 99
-                    END
-                 END
+                    OTHERWISE DO                             /* @AH */
+                         FOUND = POS("PASSWORD",ISFLINE.M)    /* @AH */
+                         IF (FOUND > 0) THEN                  /* @AH */
+                            FOUND = 00                        /* @AH */
+                         ELSE                                 /* @AH */
+                            FOUND = 99                        /* @AH */
+                    END                                       /* @AH */
+                 END                                          /* @AH */
                  IF (FOUND > 0) THEN DO
                     IF (RACFMID <> "*") THEN DO
                        DO N = MSGBEG TO MSGEND
@@ -437,6 +438,8 @@ PROCESS_LOG_RECS:                                             /* @A6 */
                        DO N = MSGBEG TO MSGEND
                           FOUND = POS("EFFECTIVE",ISFLINE.N)
                           IF (FOUND > 0) THEN LEAVE N
+                          FOUND = POS("OMVS",ISFLINE.N)       /* @AI */
+                          IF (FOUND > 0) THEN LEAVE N         /* @AI */
                        END N
                        IF (FOUND = 0) THEN LEAVE M
                     END
