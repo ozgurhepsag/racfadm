@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AG  200908  TRIDJK   Minor update/fix to 'Passphrase'             */
 /* @AF  200821  TRIDJK   Password phrase support                      */
 /* @AE  200504  JRT      SET vars are stored in PROFILE, line was ASIS*/
 /* @AD  200504  JRT      Use RACFPSWE panel if admin mode set         */
@@ -66,6 +67,10 @@ Address ISPExec
      "SETMSG MSG(RACF011)"
   end
   else do
+     If (SETMPHRA = 'YES') then                               /* @AG */
+        pwtype = 'Phrase'                                     /* @AG */
+     else                                                     /* @AG */
+        pwtype = 'Password'                                   /* @AG */
      racfsmsg = 'Password reset'
      racflmsg = userid 'password reset to 'pswd
      "SETMSG MSG(RACF011)"
