@@ -2,6 +2,11 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  08 Sept 2020 - V33R5
+     - Settings (Option 0)
+       -- If user has the RACF 'Special' attribute assigned to their
+          userid, automatically make 'Administrator=Y'
+
   08 Sept 2020 - V33R4
      - User and Password (Options 1/5)
        -- Minor update/fix to 'Passphrase'

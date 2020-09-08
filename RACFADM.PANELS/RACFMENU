@@ -7,7 +7,7 @@
    {  TYPE(OUTPUT)  PAS(ON)      CAPS(OFF)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V33R4+)\-\
++\-\(%RACFADM - RACF Administration - V33R5+)\-\
 %Option ===>_ZCMD
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -165,8 +165,10 @@
        access = access'A'
     end
     if (pos('SPECIAL',lu34) > 0) then do
-       uatt   = uatt'S'
-       access = access'A'
+       uatt     = uatt'S'
+       access   = access'A'
+       setmadmn = 'YES'         /* Make Administrator */
+       utype    = 'Admn:'
     end
     if (RACFLMSG = "") & (ACCESS = "") THEN DO
        RACFLMSG = "Userid ("userid") has limited access",
@@ -189,6 +191,7 @@
     end
   *ENDREXX
   VPUT (RACFMENU)                     /* No. of times menu displayed */
+  VPUT (SETMADMN) PROFILE             /* Update SETMADMN in profile  */
 
   IF (&RACFMENU = 1 & &RACFLMSG NE "")     /* Display long message?  */
      .MSG  = RACF011
