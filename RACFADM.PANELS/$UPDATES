@@ -2,6 +2,12 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  11 Sept 2020 - V33R6
+     - User (Option 1)
+       -- Enclose OMVS home/program in quotes
+     - Tutorial (Option T)
+       -- Corrected grammar in acknowledgments
+
   08 Sept 2020 - V33R5
      - Settings (Option 0)
        -- If user has the RACF 'Special' attribute assigned to their

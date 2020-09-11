@@ -11,6 +11,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @ER  200911  LBD      Enclose OMVS home/program in quotes          */
 /* @EQ  200821  TRIDJK   Password phrase support                      */
 /* @EP  200708  TRIDJK   Msg if selection list has no entries ('NONE')*/
 /* @EO  200622  TRIDJK   Line cmd A/C, added DATA field               */
@@ -1323,8 +1324,10 @@ RETURN                                                        /* @BE */
      parse value '' with o1 o2                                /* @D4 */
      cmd = cmd||,                                             /* @D4 */
            ' OMVS('                                           /* @D4 */
-           if ohome    <> '' then o1 = 'HOME('ohome')'        /* @D4 */
-           if oprogram <> '' then o2 = 'PROGRAM('oprogram')'  /* @D4 */
+           if ohome    <> '' then                             /* @ER */
+              o1 = "HOME('"ohome"')"                          /* @ER */
+           if oprogram <> '' then                             /* @ER */
+              o2 = "PROGRAM('"oprogram"')"                    /* @ER */
            cmd = cmd||o1 o2 'AUTOUID'||,                      /* @D4 */
            ')'                                                /* @D4 */
   end                                                         /* @D4 */
