@@ -33,7 +33,7 @@
 /*====================================================================*/
 PANEL01     = "RACFMENU"  /* RACF Main Menu                */ /* @A2 */
 REXXPGM1    = "RACFSETD"  /* Obtain settings for new user  */ /* @A4 */
-NULL        = ""                                              /* @AC */
+null        = ""                                              /* @AC */
 Arg RAOPT                 /* Invoked using $STUB mbr       */ /* @A6 */
 
 if pos('NA',RAOPT) > 0 then do                                /* @A2 */
