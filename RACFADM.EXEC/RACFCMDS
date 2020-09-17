@@ -7,6 +7,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AA  200913  LBD      Display RACF command in flower box at top    */
 /* @A9  200628  RACFA    Added parm GEN to LISTDSD command            */
 /* @A8  200619  RACFA    Initalize the variable NULL                  */
 /* @A7  200519  TRIDJK   Allow logging of RACF commands               */
@@ -167,11 +168,18 @@ EXIT
 /*  Execute the racf command                                          */
 /*--------------------------------------------------------------------*/
 DO_RACFCMD:
+  cmd_rc = 0                                                  /* @AA */
   racfcmde = racfcmd
   'tbadd 'table                                               /* @A5 */
   call outtrap 'so.'
-  Address TSO racfcmde
-  cmd_rc = rc                                                 /* @A7 */
+  do until racfcmd = null                                     /* @AA */
+     parse value racfcmd with racfcmde';'racfcmd              /* @AA */
+     call racfputl '*'copies('-',70)'*'                       /* @AA */
+     call racfputl '* Command:' racfcmde                      /* @AA */
+     call racfputl '*'copies('-',70)'*'                       /* @AA */
+     Address TSO racfcmde                                     /* @AA */
+     if rc > cmd_rc then cmd_rc = rc                          /* @AA */
+     end                                                      /* @AA */
   call outtrap 'off'
   cmd = racfcmde                                              /* @A7 */
   if (SETMSHOW <> 'NO') then                                  /* @A7 */

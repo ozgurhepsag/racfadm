@@ -11,6 +11,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @ES  200913  LBD      Bypass AUTOUID if a UID exists               */
 /* @ER  200911  LBD      Enclose OMVS home/program in quotes          */
 /* @EQ  200821  TRIDJK   Password phrase support                      */
 /* @EP  200708  TRIDJK   Msg if selection list has no entries ('NONE')*/
@@ -280,7 +281,7 @@ PROFL:
   call CREATE_TABLEA                                          /* @BE */
   if (USER = 'INVALID') | (USER = 'NONE') THEN DO             /* @EP */
      "TBEND" tbla
-     call racfmsgs 'ERR16'                                    /* @C5 */
+     call racfmsgs 'ERR16' msg.1                              /* @X1 */
      rc=8                                                     /* @EP */
      return
   end
@@ -425,7 +426,7 @@ PROFL:
              if (revoked <> 'YES') then
                 call RACFCLSS user
              else
-                call racfmsgs 'ERR12' /* user revoked */
+                call racfmsgs 'ERR12' msg.1 /* user revoked */
              action = '*Search'                               /* @BD */
              "TBMOD" TABLEA                                   /* @BD */
         end
@@ -528,7 +529,7 @@ RESD:
         "TBMOD" TABLEA
      end
      else
-        CALL racfmsgs "ERR07" /* Alter failed */
+        CALL racfmsgs "ERR07" msg.1 /* Alter failed */        /* @X1 */
   end
 RETURN
 /*--------------------------------------------------------------------*/
@@ -545,7 +546,7 @@ REVD:
         "TBMOD" TABLEA
      end
      else
-        CALL racfmsgs "ERR07" /* Alter failed */
+        CALL racfmsgs "ERR07" msg.1 /* Alter failed */        /* @X1 */
   end
 RETURN
 /*--------------------------------------------------------------------*/
@@ -602,7 +603,7 @@ LISD:
   if (cmd_rc = 0) then                                        /* @C8 */
      "TBMOD" TABLEA
   else
-     CALL racfmsgs "ERR10" /* Generic failure */
+     CALL racfmsgs "ERR10" msg.1 /* Generic failure */        /* @X1 */
 RETURN
 /*--------------------------------------------------------------------*/
 /*  Display information from line commands 'L' and 'P'           @D2  */
@@ -675,7 +676,7 @@ LISP:
   if (cmd_rc = 0) then                                        /* @C8 */
      "TBMOD" TABLEB                                           /* @AC */
   else                                                        /* @AC */
-     CALL racfmsgs "ERR10" /* Generic failure */              /* @AC */
+     CALL racfmsgs "ERR10" msg.1 /* Generic failure */        /* @X1 */
 RETURN                                                        /* @AC */
 /*--------------------------------------------------------------------*/
 /*  Obtain userid attributes                                     @CI  */
@@ -732,15 +733,15 @@ DELD:
            call EXCMD "DELUSER ("USER")"
            if (cmd_rc = 0) then                               /* @CA */
               "TBDELETE" TABLEA
-           else CALL racfmsgs "ERR02" /* RDELETE failed */
+           else CALL racfmsgs "ERR02" msg.1 /* RDELETE failed */
         end
-        else CALL racfmsgs "ERR02"   /* RDELETE failed */
+        else CALL racfmsgs "ERR02"  msg.1 /* RDELETE failed */
      end
      else do
         call EXCMD "DELUSER ("USER")"
         if (cmd_rc = 0) then                                  /* @CA */
            "TBDELETE" TABLEA
-        else CALL racfmsgs "ERR02"   /* RDELETE failed */
+        else CALL racfmsgs "ERR02" msg.1  /* RDELETE failed */
      end
   end  /* Confirm-delete */
 RETURN
@@ -1075,7 +1076,7 @@ CHGP:
   if (cmd_rc = 0) then                                        /* @CA */
      "TBMOD" TABLEB
   else
-     Call racfmsgs 'ERR03' /* permit failed */
+     Call racfmsgs 'ERR03' msg.1 /* permit failed */          /* @X1 */
 RETURN
 /*--------------------------------------------------------------------*/
 /*  Add permit option                                                 */
@@ -1106,9 +1107,9 @@ ADDP:
   end
   else do
      if (from <> ' ') then
-        call racfmsgs 'ERR04' /* Permit Warning/Failed */
+        call racfmsgs 'ERR04' msg.1 /* Permit Warning/Failed */
      else
-        call racfmsgs 'ERR05' /* Permit Failed */
+        call racfmsgs 'ERR05' msg.1 /* Permit Failed */       /* @X1 */
   end
 RETURN
 /*--------------------------------------------------------------------*/
@@ -1124,7 +1125,7 @@ DELP:
      if (cmd_rc = 0) then                                     /* @CA */
         "TBDELETE" TABLEB
      else
-        call racfmsgs 'ERR06'     /* Permit Failed */
+        call racfmsgs 'ERR06'  msg.1   /* Permit Failed */    /* @X1 */
   end
 RETURN
 /*--------------------------------------------------------------------*/
@@ -1225,34 +1226,34 @@ CREATE_TABLEA:                                                /* @BE */
            end
            when (msgr = 'ICH31009I') then do
                 USER = 'INVALID'     /* Bad filter */
-                call racfmsgs 'ERR08'
+                call racfmsgs 'ERR08' msg.1                   /* @X1 */
            end
            when (msgr = 'ICH31012I') then do
                 USER = 'INVALID'     /* Bad filter */
-                call racfmsgs 'ERR08'
+                call racfmsgs 'ERR08' msg.1                   /* @X1 */
            end
            when (msgr = 'ICH31014I') then do
                 USER = 'INVALID'     /* Bad filter */
-                call racfmsgs 'ERR08'
+                call racfmsgs 'ERR08' msg.1                   /* @X1 */
            end
            when (msgr = 'ICH31016I') then do
                 USER = 'INVALID'     /* Bad filter */
-                call racfmsgs 'ERR08'
+                call racfmsgs 'ERR08' msg.1                   /* @X1 */
            end
            when (msgr = 'ICH31017I') then do
                 USER = 'INVALID'     /* Bad filter */
-                call racfmsgs 'ERR08'
+                call racfmsgs 'ERR08' msg.1                   /* @X1 */
            end
            when (msgr = 'ICH31018I') then do
                 USER = 'INVALID'     /* Bad filter */
-                call racfmsgs 'ERR08'
+                call racfmsgs 'ERR08' msg.1                   /* @X1 */
            end
            when (msgr = 'IKJ56716I') then do
                 USER = 'INVALID'     /* Bad filter */
-                call racfmsgs 'ERR08'
+                call racfmsgs 'ERR08' msg.1                   /* @X1 */
            end
            when (substr(msgr,1,6) = 'ICH310') then do
-                call racfmsgs 'ERR09'
+                call racfmsgs 'ERR09' msg.1                   /* @X1 */
            end
            otherwise nop
         End  /* Select */
@@ -1375,13 +1376,13 @@ RETURN                                                        /* @BE */
      cmd = cmd||' DATA('''idata''') '                         /* @EO */
   call excmd cmd                                              /* @D4 */
   if (cmd_rc > 0) then do                                     /* @DL */
-     call racfmsgs ERR01       /* Add failed */               /* @DL */
+     call racfmsgs ERR01 msg.1 /* Add failed */               /* @X1 */
      return                                                   /* @D6 */
   end                                                         /* @DL */
   cmd_rc = RACFUSRT('ADDD' user tsoproc,                      /* @DL */
            tsoacct defgrp bowner)                             /* @D4 */
   if (cmd_rc > 0) then do                                     /* @DL */
-     call racfmsgs ERR01       /* Add failed */               /* @DL */
+     call racfmsgs ERR01 msg.1   /* Add failed */             /* @X1 */
      return                                                   /* @D6 */
   end                                                         /* @DL */
   call @chkattr                                               /* @D4 */
@@ -1425,6 +1426,13 @@ RETURN password                                               /* @E1 */
   "DISPLAY PANEL("PANEL06")"                                  /* @D4 */
   if (rc = 8) then                                            /* @D4 */
      return                                                   /* @D4 */
+  call outtrap 'x.'                                           /* @X1 */
+  address tso 'lu' user 'omvs'                                /* @X1 */
+  call outtrap 'off'                                          /* @X1 */
+  autouid = 'AUTOUID'                                         /* @X1 */
+  do xi = 1 to x.0                                            /* @X1 */
+     if left(x.xi,4) = 'UID=' then autouid = ''               /* @X1 */
+     end                                                      /* @X1 */
   cmd = 'ALTUSER 'user' OWNER('bowner')'||,                   /* @D4 */
         ' DFLTGRP('defgrp') NAME('''name''') ' attr           /* @D4 */
   if (ohome||oprogram = '') then                              /* @D4 */
@@ -1435,8 +1443,7 @@ RETURN password                                               /* @E1 */
            ' OMVS('                                           /* @D4 */
            if ohome    <> '' then o1 = 'HOME('ohome')'        /* @D4 */
            if oprogram <> '' then o2 = 'PROGRAM('oprogram')'  /* @D4 */
-           cmd = cmd||o1 o2 'AUTOUID'||,                      /* @D4 */
-           ')'                                                /* @D4 */
+           cmd = cmd||o1 o2 autouid')'                        /* @X1 */
   end                                                         /* @D4 */
   if (tsoproc||tsoacct||tsosize||tsounit = '') then           /* @D4 */
      nop                                                      /* @D4 */
@@ -1482,7 +1489,7 @@ RETURN password                                               /* @E1 */
      cmd = cmd||' DATA('''idata''') '                         /* @EO */
   call excmd cmd                                              /* @D4 */
   if (cmd_rc > 0) then do                                     /* @DL */
-     call racfmsgs ERR07     /* Changed failed */             /* @DL */
+     call racfmsgs ERR07 msg.1   /* Changed failed */         /* @X1 */
      return                                                   /* @D6 */
   end                                                         /* @DL */
   call @chkattr                                               /* @D4 */
@@ -1492,12 +1499,12 @@ RETURN password                                               /* @E1 */
            "ID("defgrp")"                                     /* @D4 */
      call excmd cmd                                           /* @D4 */
      if (cmd_rc > 0) then                                     /* @DL */
-        call racfmsgs ERR03   /* Permit failed */             /* @DL */
+        call racfmsgs ERR03  msg.1  /* Permit failed */       /* @X1 */
      cmd = "PE "tsoproc" CLASS(TSOPROC) ACC(READ)",           /* @D4 */
            "ID("defgrp")"                                     /* @D4 */
      call excmd cmd                                           /* @D4 */
      if (cmd_rc > 0) then                                     /* @DL */
-        call racfmsgs ERR03   /* Permit failed */             /* @DL */
+        call racfmsgs ERR03   msg.1 /* Permit failed */       /* @X1 */
   end                                                         /* @D4 */
   "TBMOD" TABLEA                                              /* @D4 */
 RETURN                                                        /* @D4 */
@@ -1528,7 +1535,7 @@ RETURN                                                        /* @D4 */
   if (SETMSHOW <> 'NO') then                                  /* @D5 */
      call SHOWCMD                                             /* @D5 */
   if (WORD(cmd_rc,1) <> 0) then do                            /* @D5 */
-     call racfmsgs ERR20                                      /* @D5 */
+     call racfmsgs ERR20 msg.1                                /* @X1 */
      return                                                   /* @D4 */
   end                                                         /* @D5 */
   tsouser = 'NO'                                              /* @D4 */

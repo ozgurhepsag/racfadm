@@ -2,6 +2,17 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  17 Sept 2020 - V33R8
+     - User (Option 1)
+       * Tweaked panel RACFUSR6, changed words PHRASE and PASSWORD
+         to uppercase
+
+  13 Sept 2020 - V33R7
+     - User (Option 1)
+       -- Bypass AUTOUID, if UID exists
+     - Command (Option C)
+       -- Display RACF command in flower box at top
+
   11 Sept 2020 - V33R6
      - User (Option 1)
        -- Enclose OMVS home/program in quotes

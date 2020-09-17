@@ -55,11 +55,11 @@
      IF ACTION = '*Add' THEN  DO
         IF SETMPHRA = 'YES' THEN DO
           PSWD = LEFT(PSWD,14)
-          PSWDFLD = 'ÝPhrase  ¨===>!'pswd||'¨'
+          PSWDFLD = 'ÝPHRASE  ¨===>!'pswd||'¨'
           END
         ELSE DO
           PSWD = LEFT(PSWD,8)
-          PSWDFLD = 'ÝPassword¨===>!'pswd||'¨'
+          PSWDFLD = 'ÝPASSWORD¨===>!'pswd||'¨'
           END
         END
 
@@ -185,7 +185,7 @@
      &NAME = &Z
 )PROC
   *REXX (PSWDFLD, PSWD, USER, RACFLMSG)      /* Get password */
-     IF SUBSTR(PSWDFLD,2,6) = 'Phrase' THEN DO
+     IF SUBSTR(PSWDFLD,2,6) = 'PHRASE' THEN DO
        PSWD = SUBSTR(PSWDFLD,16,14)
 
        alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'

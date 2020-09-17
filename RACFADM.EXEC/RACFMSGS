@@ -5,6 +5,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AG  200913  LBD      Accept message from command (msg.1)          */
 /* @AF  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @AE  200423  RACFA    Ensure REXX program name is 8 chars long     */
 /* @AD  200413  RACFA    Chg ERR07                                    */
@@ -26,7 +27,7 @@ parse source . . REXXPGM .         /* Obtain REXX pgm name */ /* @AF */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @AF */
 
 ADDRESS ISPEXEC                                               /* @A4 */
-  Arg code
+  parse arg code message                                      /* @AG */
   "VGET (SETMTRAC) PROFILE"                                   /* @A2 */
   If (SETMTRAC <> 'NO') then do                               /* @AA */
      Say "*"COPIES("-",70)"*"                                 /* @AA */
@@ -131,6 +132,10 @@ ADDRESS ISPEXEC                                               /* @A4 */
      end                                                      /* @A9 */
      otherwise nop
   End
+  if message /= '' then                                       /* @AG */
+     if length(racflmsg) > 70                                 /* @AG */
+        then racflmsg = racflmsg message                      /* @AG */
+        else racflmsg = left(racflmsg,70) message             /* @AG */
   "SETMSG MSG(RACF011)"
 
   If (SETMTRAC <> 'NO') then do                               /* @AA */
