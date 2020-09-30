@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AJ  200918  RACFA    Fix 'Type=A', was displaying same msg        */
 /* @AI  200903  RACFA    Added 'OMVS' to USS messages                 */
 /* @AH  200903  RACFA    Display all ICH408I msgs, except pswd invalid*/
 /* @AG  200702  RACFA    Allow symbolic in dsname                     */
@@ -448,6 +449,7 @@ PROCESS_LOG_RECS:                                             /* @A6 */
                        K = K + 1
                        LOGMSG.K = ISFLINE.N
                     END N
+                    LEAVE M                                   /* @AJ */
                  END /* If FOUND */
               END M
            END /* If RACFMLPR*/

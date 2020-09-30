@@ -1,0 +1,35 @@
+)CM*------------------------------------------------------------------*
+)CM*  Purpose:  RACFADM - Digital Certificates - SAve command
+)CM*------------------------------------------------------------------*
+)CM*  FLG  YYMMDD  USERID   DESCRIPTION
+)CM*  ---  ------  -------  ------------------------------------------
+)CM*  @A1  200616  RACFA    Added capability to SAve file as TXT/CSV
+)CM*  @DRK 200929  TRIDJK   Created skeleton
+)CM*------------------------------------------------------------------*
+)SEL &RACFSFIL = T
+ &ZDATE ------------( RACFADM - Digital Certificates )--------- &ZTIME
+)BLANK
+ Label                            StartDate  EndDate    Status
+ ---------------------------------------------------------------------
+)TB 2 35 46 57
+)DOT &TABLEA
+)SETF LABEL   = &STRIP(&LABEL,, )
+)SETF LABEL   = &LEFT(&LABEL,32, )
+)SETF STDATE  = &LEFT(&STDATE,10, )
+)SETF ENDATE  = &LEFT(&ENDATE,10, )
+)SETF STATUS  = &LEFT(&STATUS,7, )
+!&LABEL!&STDATE!&ENDATE!&STATUS
+)ENDDOT
+)ENDSEL
+)SEL &RACFSFIL = C
+RACFADM - Digital Certificates
+Label,StartDate,EndDate,Status
+-----,---------,-------,------
+)DOT &TABLEA
+)SETF LABEL   = &STRIP(&LABEL,, )
+)SETF STDATE  = &STRIP(&STDATE,, )
+)SETF ENDATE  = &STRIP(&ENDATE,, )
+)SETF STATUS  = &STRIP(&STATUS,, )
+&LABEL,&STDATE,&ENDATE,&STATUS
+)ENDDOT
+)ENDSEL

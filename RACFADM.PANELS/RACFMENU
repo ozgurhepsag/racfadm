@@ -7,7 +7,7 @@
    {  TYPE(OUTPUT)  PAS(ON)      CAPS(OFF)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V33R8+)\-\
++\-\(%RACFADM - RACF Administration - V34R0+)\-\
 %Option ===>_ZCMD
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -22,7 +22,7 @@
 %  ¨z {OPT3DESC ÝOPT3INFO               %T ~Tutorial  +Help
 +  ¨z {OPT4DESC ÝOPT4INFO               %U ~Updates   +Version/updates
 +  ¨z {OPT5DESC ÝOPT5INFO               %X ~Exit      +Terminate
-+  ¨z {OPT6DESC ÝOPT6INFO
++  ¨z {OPT6DESC ÝOPT6INFO              %CA ~CertAuth  +Display certificates
 +
 + ---------------------------------------------------------------------------
 +   RACF:!RACFVER        +PrmDB:!PRMDBASE
@@ -291,6 +291,7 @@
      99,'CMD(%RACFCLSA)'        /* Analyze - Verify ACL */  /* Hidden */
       B,'CMD(%BOOKMGR SHELF(''EOYBOOK.ICHZBKC0.BKSHELF''))' /* Hidden */
       C,'CMD(%RACFCMDS)'
+     CA,'CMD(%RACFCERT)'
       D,'CMD(%RACFDSL)'
       E,'CMD(%RACFENQS)'
       H,'CMD(%RACFHELP)'
@@ -331,6 +332,7 @@
   FIELD(OPT5DESC) VAR(ZCMD) VAL('11')
   FIELD(ZPS00019) VAR(ZCMD) VAL('X')
   FIELD(OPT6DESC) VAR(ZCMD) VAL('12')
+  FIELD(ZPS00020) VAR(ZCMD) VAL('CA')
 )END
 /*--------------------------------------------------------------------*/
 /*                             Comments                               */

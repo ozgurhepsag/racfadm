@@ -2,10 +2,19 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  29 Sept 2020 - V34R0
+     - Main Menu
+       -- Added option 'CA  CertAuth  Display certificates'
+
+  18 Sept 2020 - V33R9
+     - Messages (Option M)
+       -- Fixed 'Type=A', was displaying same message multiple times
+          to uppercase
+
   17 Sept 2020 - V33R8
      - User (Option 1)
-       * Tweaked panel RACFUSR6, changed words PHRASE and PASSWORD
-         to uppercase
+       -- Tweaked panel RACFUSR6, changed words PHRASE and PASSWORD
+          to uppercase
 
   13 Sept 2020 - V33R7
      - User (Option 1)

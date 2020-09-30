@@ -14,6 +14,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AZ  200923  TRIDJK   PARSE ARG ...  (lower case for DIGTCERT/RING)*/
 /* @AY  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @AX  200422  RACFA    Fixed IRRXUTIL RC when displaying RACF cmds  */
 /* @AW  200422  RACFA    Ensure the REXX program name is 8 chars      */
@@ -56,7 +57,7 @@ DDNAME      = 'RACFA'RANDOM(0,999) /* Unique ddname        */
 parse source . . REXXPGM .         /* Obtain REXX pgm name */ /* @AY */
 REXXPGM     = LEFT(REXXPGM,8)                                 /* @AY */
 
-arg class profile
+Parse arg class profile                                       /* @AZ */
 Select                                                        /* @AR */
    When (profile = "*") then do                               /* @AF */
       call RACFMSGS ERR17                                     /* @AF */
@@ -234,7 +235,7 @@ DO_VIEW_STEM:
 
 Address TSO
   'alloc f('ddname') unit(vio) new reuse space(1,1) tracks',
-        'lrecl(80) recfm(f b) blksize(0) dsorg(ps)'
+        'lrecl(255) recfm(f b) blksize(0) dsorg(ps)'          /* @AZ */
   'execio * diskw' ddname '(finis stem' stem'.'
 
 Address ISPExec
