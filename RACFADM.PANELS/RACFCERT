@@ -1,4 +1,8 @@
 )ATTR DEFAULT(%+_)
+  01  TYPE(OUTPUT)  INTENS(LOW)  SKIP(ON) COLOR(&CLRLABE)
+  02  TYPE(OUTPUT)  INTENS(LOW)  SKIP(ON) COLOR(&CLRSTDA)
+  03  TYPE(OUTPUT)  INTENS(LOW)  SKIP(ON) COLOR(&CLRENDA)
+  04  TYPE(OUTPUT)  INTENS(LOW)  SKIP(ON) COLOR(&CLRSTAT)
    _  TYPE(INPUT)   INTENS(HIGH) JUST(LEFT) CAPS(ON)     HILITE(USCORE)
    $  TYPE(OUTPUT)  INTENS(LOW)  JUST(LEFT) COLOR(TURQ)
    #  TYPE(OUTPUT)  INTENS(LOW)  JUST(LEFT) COLOR(GREEN)
@@ -13,10 +17,10 @@
 %
 +SELECT: ¬SELCMDS                                                              ¬
 %
-%S  ~Label                           ~StartDate ~EndDate   ~Status
+%S  ~Label                           ~StDate    ~EnDate    ~Status
 %-------------------------------------------------------------------------------
 )MODEL CLEAR(OPTA)
-_Z+ $Z                               #Z         #Z         #Z
+_Z+ Z                               Z         Z         œZ
 )INIT
   .ZVARS   = '(OPTA LABEL STDATE ENDATE STATUS)'
   .HELP    = #RACCERT

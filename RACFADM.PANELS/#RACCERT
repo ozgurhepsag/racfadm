@@ -17,7 +17,6 @@
 +
 +Line Commands
 %  S  !Show         +Issue RACDCERT CERTAUTH LIST LABEL command
-%  L  !List         +Alias for S line command
 )PROC
   &ZUP     = #RACCERT
 )END

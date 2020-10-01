@@ -28,15 +28,15 @@ ADDRESS ISPEXEC
         interpret "Trace "SUBSTR(SETMTRAC,1,1)
   end
 
-  racflmsg = "Loading awesomeness.."                          /* @DRK*/
+  racflmsg = "Loading awesomeness.."
   "control display lock"
   "display msg(RACF011)"
-  Address 'SYSCALL' 'SLEEP (1)'                               /* LBD */
+  Address 'SYSCALL' 'SLEEP (1)'
 
   If (SETMADMN = "YES") then
-      SELCMDS = "ÝS¨Show,ÝL¨List"
+      SELCMDS = "ÝS¨Show"
   else
-      SELCMDS = "ÝS¨Show,ÝL¨List"
+      SELCMDS = "ÝS¨Show"
 
   rlv = SYSVAR('SYSLRACF')
 
@@ -59,7 +59,8 @@ SELECT_LABEL:
                   "NAMES(STDATE ENDATE STATUS) REPLACE NOWRITE"
   call get_cert_labels
   sort     = 'LABEL,C,A'
-  sortclas = 'D'
+  CLRLABE  = "TURQ" ; CLRSTDA = "GREEN"
+  CLRENDA  = "GREEN"; CLRSTAT = "GREEN"
   "TBSORT " TABLEA "FIELDS("sort")"
   "TBTOP  " TABLEA
 RETURN
@@ -68,7 +69,7 @@ RETURN
 /*--------------------------------------------------------------------*/
 GET_CERT_LABELS:
   Scan = 'OFF'
-  cmd = "racdcert certauth list"                              /* @DRK*/
+  cmd = "racdcert certauth list"
   x = OUTTRAP('var.')
   address TSO cmd
   cmd_rc = rc
@@ -82,7 +83,7 @@ GET_CERT_LABELS:
       cnt = cnt + 1
       label  = substr(var.x,10,32)
       y = x + 2
-      status = substr(var.y,11,7)
+      status = substr(var.y,11,9)
       y = y + 1
       stdate = substr(var.y,15,10)
       y = y + 1
@@ -163,7 +164,6 @@ DISPLAY_TABLE:
         WHEN (ABBREV("RESET",ZCMD,1) = 1) THEN DO
              call select_label
              sort     = 'LABEL,C,A'
-             sortclas = 'D'
              xtdtop   = 1
         END
         When (abbrev("SAVE",zcmd,2) = 1) then DO
@@ -185,6 +185,10 @@ DISPLAY_TABLE:
         END
         OTHERWISE NOP
      End /* Select */
+     CLRLABE  = "GREEN"; CLRSTDA = "GREEN"
+     CLRENDA  = "GREEN"; CLRSTAT = "GREEN"
+     PARSE VAR SORT LOCARG "," .
+     INTERPRET "CLR"SUBSTR(LOCARG,1,4)" = 'TURQ'"
      "TBSORT" TABLEA "FIELDS("sort")"
      "TBTOP " TABLEA
      ZCMD = ""; PARM = ""
@@ -272,7 +276,7 @@ RETURN
 /*  List label                                                        */
 /*--------------------------------------------------------------------*/
 LISTL:
-  cmd = "racdcert certauth list(label('"LABEL"'))"            /* @DRK*/
+  cmd = "racdcert certauth list(label('"LABEL"'))"
   X = OUTTRAP("CMDREC.")
   ADDRESS TSO cmd
   cmd_rc = rc
