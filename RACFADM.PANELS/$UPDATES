@@ -2,6 +2,10 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  02 Oct 2020 - V34R2
+     - CertAuth (Option CA)
+       -- Fixed report header when SAving information
+
   01 Oct 2020 - V34R1
      - CertAuth (Option CA)
        -- Removed line command 'L-List', was an alias to 'S-Select',
