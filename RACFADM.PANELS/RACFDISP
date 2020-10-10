@@ -53,6 +53,7 @@
 ZDATA,ZSHADOW/ /                                                              
 / /                                                                           
 )INIT
+  .HELP = #RACMENU
   .ZVARS  = '(ZVMODET ZTITLE ZCL ZCR ZCMD ZSCED)'
   &ZHIDEX = 'Y'
   VGET (ZSCED) PROFILE                /* Fill Scroll Vars if */

@@ -2,6 +2,16 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  09 Oct 2020 - V34R3
+     - Settings (Option 0)
+       -- Removed having to type in an 'ISPPROF dataset' when a 'User
+          catalog' is supplied
+     - User (Option 1)
+       -- Added detailed tutorial when adding/changing a userid
+     - RACFDB, Enqueues, ISPLog, Messages, etc.
+       -- Added help to panel RACFDISP, prior was displaying IBM RACF
+          Help Tutorial
+
   02 Oct 2020 - V34R2
      - CertAuth (Option CA)
        -- Fixed report header when SAving information

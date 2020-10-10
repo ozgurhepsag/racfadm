@@ -102,9 +102,6 @@
   VER (&SETMPHRA,NB,LIST,NO,YES)
 
   /* Adding TSO Userid Settings */
-  IF (&SETTCTLG NE ' ')
-     VER (&SETTPROF,NB)
-
   *REXX (SETTCTLG SETTPROF DSTTUDSN)
         SETTCTLG = STRIP(SETTCTLG,,"'")
         SETTPROF = STRIP(SETTPROF,,"'")
