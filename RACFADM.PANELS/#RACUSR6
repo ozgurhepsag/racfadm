@@ -23,12 +23,10 @@
 !NAME(user-name)+
    Specifies the user name to be associated with the new user ID.
    You can use a maximum of 20 alphanumeric or non-alphanumeric
-   characters. If the name you specify contains any blanks, it
-   must be enclosed in single quotation marks.
+   characters.
 !DATA('installation-defined-data')+
    Specifies up to 255 characters of installation-defined data to
-   be stored in the user's profile and must be enclosed in single
-   quotation marks.
+   be stored in the user's profile.
 
 %TSO Segment:+
 !PROC(logon-procedure-name)+
@@ -111,5 +109,5 @@
    OMVS is entered or when a batch job is started using the
    BPXBATCH program.
 )PROC
-  &ZUP     = #RACUSER
+  &ZUP     = #RACUSR6
 )END
