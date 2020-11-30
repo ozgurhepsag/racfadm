@@ -38,6 +38,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AM  201130  RACFA    Validate GDG base, without recalling gens    */
 /* @AL  200720  LBD      Fix to honor lowercase password              */
 /* @AK  200702  RACFA    Reduced lines of code, easier to maintain    */
 /* @AJ  200702  RACFA    Fix refreshing SHOWMVS variables             */
@@ -139,16 +140,22 @@ ADDRESS ISPEXEC
              PARSE VAR TSTW3 TSTW3 "(" .                      /* @AK */
              TSTW3   = STRIP(TSTW3,,"'")                      /* @AK */
              TSTW3   = STRIP(TSTW3,,'"')                      /* @AK */
-             IF (SYSDSN("'"TSTW3"'") <> "OK") THEN DO         /* @AK */
-                RACFSMSG = "$DEFSETG - Invalid DSN"           /* @AK */
-                RACFLMSG = "The variable "W1" has a dataset", /* @AK */
-                           "defined to it, that does not",    /* @AK */
-                           "exist, DSN="W3".  Please",        /* @AK */
-                           "update/fix the site default",     /* @AK */
-                           "settings in panel member",        /* @AK */
-                           "$DEFSETG or $DEFSITE."            /* @AK */
-                "SETMSG MSG(RACF011)"                         /* @AK */
-             END                                              /* @AK */
+             X = OUTTRAP("LCRPT.",1)                          /* @AM */
+             ADDRESS TSO "LISTCAT ENT('"TSTW3"')"             /* @AM */
+             X = OUTTRAP("OFF")                               /* @AM */
+             PARSE VAR LCRPT.1 W1 W2 W3 W4                    /* @AM */
+             IF (W1 <> "GDG") & (W2 <> "BASE") THEN           /* @AM */
+                IF (SYSDSN("'"TSTW3"'") <> "OK") THEN DO      /* @AM */
+                   RACFSMSG = "$DEFSETG - Invalid DSN"        /* @AM */
+                   RACFLMSG = "The variable "W1" has a",      /* @AM */
+                              "dataset defined to it, that",  /* @AM */
+                              "DOES NOT EXIST, DSN="TSTW3".", /* @AM */
+                              " Please update/fix the site",  /* @AM */
+                              "default settings in the",      /* @AM */
+                              "panel member $DEFSETG or",     /* @AM */
+                              "$DEFSITE."                     /* @AM */
+                   "SETMSG MSG(RACF011)"                      /* @AM */
+                END                                           /* @AM */
              IF (CKCHR4TO7 = "DMVS"),                         /* @AK */
               | (CKCHR4TO7 = "DIBM") THEN DO                  /* @AK */
                 W3 = STRIP(W3,,"'")                           /* @AK */

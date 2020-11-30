@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CY  201130  TRIDJK   Added hidden line command 'X'                */
 /* @CV  200708  TRIDJK   Msg if selection list has no entries ('NONE')*/
 /* @CU  200618  RACFA    Chged SYSDA to SYSALLDA                      */
 /* @CT  200617  RACFA    Added comments to right of variables         */
@@ -290,6 +291,7 @@ PROFL:
         when (opta = 'A') then call Addd
         when (opta = 'C') then call Chgd
         when (opta = 'L') then call Lisd
+        when (opta = 'X') then Call RACFUSRX group JCC        /* @CY */
         when (opta = 'P') then                                /* @BE */
              call RACFPROF 'GROUP' group                      /* @BF */
         when (opta = 'R') then call Deld

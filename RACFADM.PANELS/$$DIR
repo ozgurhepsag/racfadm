@@ -11,6 +11,7 @@
  $STNDARD  Standards      Document coding and design
  $UPDATES  Updates        Document version/updates
  #RACACKN  Tutorial       Acknowledgements
+ #RACCERT  Tutorial       Digital certificates
  #RACCLSA  Tutorial       Add/Change class profile
  #RACCLSR  Tutorial       List classes (show, refresh)
  #RACCLS2  Tutorial       List classes
@@ -66,6 +67,7 @@
  OPERMIT   TSO Help       Unix Access Control List, like PERMIT
  ORALTER   TSO Help       Unix Security Attribute, like ALTER
  ORLIST    TSO Help       Unix Dir/File Security, like RLIST
+ RACFCERT  Certificates   Digital certificates, menu opt CA
  RACFCLSB  Class          List members
  RACFCLSC  Class          Add class
  RACFCLSD  Class          List class profiles
@@ -89,6 +91,7 @@
  RACFDSN5  Dataset        Show groups and access
  RACFDSN6  Dataset        Change access
  RACFDSN7  Dataset        Add access
+ RACFEXP   Certificates   Certificate Export DSN
  RACFGRP1  Group          Set filter, menu option 2
  RACFGRP2  Group          Add group
  RACFGRP4  Group          Alter profile

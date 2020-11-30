@@ -3,11 +3,13 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMhDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @A1  201118  TRIDJK   Add X (CA Export) line command               */
 /* @A0  200929  TRIDJK   Created REXX                                 */
 /*====================================================================*/
 PANEL27     = "RACFCERT"   /* List labels                  */
 PANELM2     = "RACFMSG2"   /* Display RACF command and RC  */
 PANELS1     = "RACFSAVE"   /* Obtain DSName to SAVE        */
+PANELXP     = "RACFEXP"    /* Export DSN prompt            */ /* @A1 */
 SKELETON1   = "RACFCERT"   /* Save tablea to dataset       */
 EDITMACR    = "RACFEMAC"   /* Edit Macro, turn HILITE off  */
 TABLEA      = 'TA'RANDOM(0,99999)  /* Unique table name A  */
@@ -33,11 +35,7 @@ ADDRESS ISPEXEC
   "display msg(RACF011)"
   Address 'SYSCALL' 'SLEEP (1)'
 
-  If (SETMADMN = "YES") then
-      SELCMDS = "›S®Show"
-  else
-      SELCMDS = "›S®Show"
-
+  SELCMDS = "›S®Show›X®Export"                               /* @A1 */
   rlv = SYSVAR('SYSLRACF')
 
   call Select_label
@@ -196,6 +194,7 @@ DISPLAY_TABLE:
      Select
         when (opta = 'L') then call listl
         when (opta = 'S') then call listl
+        when (opta = 'X') then call listl                     /* @XX */
         otherwise nop
      End
      'control display restore'
@@ -283,26 +282,69 @@ LISTL:
   X = OUTTRAP("OFF")
   if (SETMSHOW <> 'NO') then
      call SHOWCMD
-
-  ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",
-              "LRECL(80) BLKSIZE(0) RECFM(F B)",
-              "UNIT(VIO) SPACE(1 5) CYLINDERS"
+  DO J = 1 TO CMDREC.0                                        /* @A1 */
+     CMDREC.J = SUBSTR(CMDREC.J,1,80)                         /* @A1 */
+  END                                                         /* @A1 */
+  IF (OPTA = "X") THEN DO                                     /* @A1 */
+     xdsn = label                                             /* @A1 */
+     call dsn_chars                                           /* @A1 */
+     do x = 1 to length(xdsn)                                 /* @A1 */
+        if x // 9 = 0 then do                                 /* @A1 */
+           if datatype(substr(xdsn,x+1,1),'M') = 1 then       /* @A1 */
+              xdsn = overlay('.',xdsn,x,1)                    /* @A1 */
+           else                                               /* @A1 */
+              xdsn = overlay('.@',xdsn,x,2)                   /* @A1 */
+        end                                                   /* @A1 */
+     end                                                      /* @A1 */
+     xdsn = "'"userid()"."xdsn".XP'"                          /* @A1 */
+     'ADDPOP'                                                 /* @A1 */
+     'DISPLAY PANEL('panelxp')'                               /* @A1 */
+     disprc = RC                                              /* @A1 */
+     'REMPOP'                                                 /* @A1 */
+     if (disprc = 8) then do                                  /* @A1 */
+        cmd_rc = 8                                            /* @A1 */
+        RETURN                                                /* @A1 */
+     end                                                      /* @A1 */
+     ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",               /* @A1 */
+                 "DA("XDSN")"                                 /* @A1 */
+                 "LRECL(132) BLKSIZE(0) RECFM(F B)",          /* @A1 */
+                 "UNIT(SYSALLDA) SPACE(1 5) CYLINDERS"        /* @A1 */
+  END                                                         /* @A1 */
+  ELSE DO                                                     /* @A1 */
+     ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",
+                 "LRECL(80) BLKSIZE(0) RECFM(F B)",
+                 "UNIT(VIO) SPACE(1 5) CYLINDERS"
+  END                                                         /* @A1 */
   ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM CMDREC. FINIS"
   DROP CMDREC.
 
-  "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"
-  SELECT
-     WHEN (SETGDISP = "VIEW") THEN
-          "VIEW DATAID("CMDDATID") MACRO("EDITMACR")"
-     WHEN (SETGDISP = "EDIT") THEN
-          "EDIT DATAID("CMDDATID") MACRO("EDITMACR")"
-     OTHERWISE
-          "BROWSE DATAID("CMDDATID")"
-  END
+  IF (OPTA <> "X") THEN DO                                    /* @A1 */
+     "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"
+     SELECT
+        WHEN (SETGDISP = "VIEW") THEN
+             "VIEW DATAID("CMDDATID") MACRO("EDITMACR")"
+        WHEN (SETGDISP = "EDIT") THEN
+             "EDIT DATAID("CMDDATID") MACRO("EDITMACR")"
+        OTHERWISE
+             "BROWSE DATAID("CMDDATID")"
+     END
+  END                                                         /* @A1 */
   ADDRESS TSO "FREE FI("DDNAME")"
   if (cmd_rc > 0) then
      CALL racfmsgs "ERR10" /* Generic failure */
 RETURN
+/*--------------------------------------------------------------------*/
+/*  Keep only DSN characters                                     @A1  */
+/*--------------------------------------------------------------------*/
+DSN_CHARS:                                                    /* @A1 */
+   if left(xdsn,1) > 'Z' | left(xdsn,1) = '-' then            /* @A1 */
+      xdsn = '@'substr(xdsn,2)                                /* @A1 */
+   dsn='abcdefghijklmnopqrstuvwxyz'||,                        /* @A1 */
+       'ABCDEFGHIJKLMNOPQRSTUVWXYZ'||,                        /* @A1 */
+       '0123456789-@#$'                                       /* @A1 */
+   nondsn = space(translate(xdsn,,dsn),0)                     /* @A1 */
+   xdsn   = space(translate(xdsn,,nondsn),0)                  /* @A1 */
+RETURN                                                        /* @A1 */
 /*--------------------------------------------------------------------*/
 /*  Display RACF command and return code                              */
 /*--------------------------------------------------------------------*/

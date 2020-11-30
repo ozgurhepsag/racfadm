@@ -11,6 +11,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @ET  201130  TRIDJK   Added hidden line commands X and XR          */
 /* @ES  200913  LBD      Bypass AUTOUID if a UID exists               */
 /* @ER  200911  LBD      Enclose OMVS home/program in quotes          */
 /* @EQ  200821  TRIDJK   Password phrase support                      */
@@ -430,7 +431,8 @@ PROFL:
              action = '*Search'                               /* @BD */
              "TBMOD" TABLEA                                   /* @BD */
         end
-        when (opta = 'XR') then call Xrefd                    /* @AL */
+        when (opta = 'XR') then call RACFUSRX user            /* @ET */
+        when (opta = 'X') then call RACFUSRX user JCC         /* @ET */
         when (opta = 'AL') then call Altd                     /* @E6 */
         otherwise nop
      End
@@ -1144,12 +1146,6 @@ EXCMD:
      (subword(msg.1,1,1)= 'ICH10006I') |,
      (subword(msg.1,1,1)= 'ICH06011I') then raclist = 'YES'
 RETURN
-/*--------------------------------------------------------------------*/
-/*  Xref command                                                      */
-/*--------------------------------------------------------------------*/
-XREFD:                                                        /* @AL */
-  Call RACFUSRX user                                          /* @AX */
-RETURN                                                        /* @AL */
 /*--------------------------------------------------------------------*/
 /*  Simulate digital certificate user profiles                        */
 /*--------------------------------------------------------------------*/

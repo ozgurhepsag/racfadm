@@ -14,6 +14,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AB  201130  TRIDJK   Added code to submit batch job               */
 /* @AA  200429  RACFA    Re-arranged variables (General, Mgmt, TSO)   */
 /* @A9  200423  RACFA    Move PARSE REXXPGM name up above IF SETMTRAC */
 /* @A8  200423  RACFA    Ensure REXX program name is 8 chars long     */
@@ -42,8 +43,21 @@ ADDRESS ISPEXEC                                               /* @A2 */
   /*--------------------------------------------*/
   /*  Call IRRUT100 for cross reference report  */
   /*--------------------------------------------*/
-  Parse Arg user
+Parse Arg user parm                                           /* @AB */
 
+if parm = 'JCC' then do                                       /* @AB */
+  Address TSO                                                 /* @AB */
+  "newstack"                                                  /* @AB */
+  queue "//XREF     EXEC  PGM=IRRUT100"                       /* @AB */
+  queue "//SYSUT1   DD  UNIT=SYSALLDA,SPACE=(TRK,(5,1))"      /* @AB */
+  queue "//SYSPRINT DD  SYSOUT=*"                             /* @AB */
+  queue "//SYSIN    DD  *"                                    /* @AB */
+  queue user                                                  /* @AB */
+  queue ""                                                    /* @AB */
+  "submit * jobchar(xr)"                                      /* @AB */
+  "delstack"                                                  /* @AB */
+  call goodbye                                                /* @AB */
+  end                                                         /* @AB */
 Address TSO
   x = outtrap('delete.','*')
   'delete irrut100.'result

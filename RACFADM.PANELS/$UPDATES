@@ -2,6 +2,17 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  30 Nov 2020 - V34R5
+     - User and Group (Options 1/2)
+       -- Added hidden line command X, submits a batch job to execute
+          a Cross Reference Report
+     - CertAuth (Option CA)
+       -- Added line command X to export a certificate to a dataset
+     - Other Items
+       -- Changed REXX program RACFSETD to validate a GDG base
+          dataset name defined in panel members $DEFSETG or $DEFSITE
+          without having to recall all GDG generations
+
   11 Oct 2020 - V34R4
      - User (Option 1)
        -- Minor adjustments to new tutorial panel when adding/changing
