@@ -2,6 +2,12 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  01 Dec 2020 - V34R6
+     - User and Group (Options 1/2)
+       -- Line command X
+          * Unhide command
+          * Obtain job card from ISPF Settings (option 0)
+
   30 Nov 2020 - V34R5
      - User and Group (Options 1/2)
        -- Added hidden line command X, submits a batch job to execute

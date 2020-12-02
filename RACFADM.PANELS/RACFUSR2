@@ -19,7 +19,7 @@
 +\-\(%RACFADM - User Profiles+)\-\
 %Command ===>_ZCMD                                              +Scroll==>_SAMT+
 %
-+FILTER: $RFILTER                                              ¬SELCMD2B       ¬
++FILTER: $RFILTER                                      ¬SELCMD2B               ¬
 +SELECT: ¬SELCMD2A                                                             ¬
 %
 %S         ~Userid  ~Name                ~Group   ~Logon   ~Owner   ~Rev~Att~TSO

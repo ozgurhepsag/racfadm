@@ -11,6 +11,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @EU  201201  RACFA    Unhide line command X for ADMIN users        */
 /* @ET  201130  TRIDJK   Added hidden line commands X and XR          */
 /* @ES  200913  LBD      Bypass AUTOUID if a UID exists               */
 /* @ER  200911  LBD      Enclose OMVS home/program in quotes          */
@@ -232,7 +233,7 @@ ADDRESS ISPEXEC                                               /* @BC */
         SELCMD2A = "›S®Show›SE®Srch›L®List›P®Prof"||,         /* @DI */
                    "›D®Dsn›PW®Pswd›C®Chg›A®Add›R®Rem"||,      /* @DI */
                    "›RS®Res"                                  /* @DI */
-        SELCMD2B = " ›RV®Rev›AL®Alt"                          /* @E6 */
+        SELCMD2B = " ›RV®Rev›AL®Alt›X®Xref"                   /* @EU */
         SELCMDS3 = "›S®Show,›L®List,›P®Profile,"||,           /* @CO */
                    "›C®Change,›A®Add,›R®Remove"               /* @CO */
      end                                                      /* @D7 */
@@ -240,7 +241,7 @@ ADDRESS ISPEXEC                                               /* @BC */
         SELCMD2A = "›S®Show›SE®Srch›L®List"||,                /* @DI */
                    "›D®Dsn›PW®Pswd›C®Chg›A®Add›R®Rem"||,      /* @DI */
                    "›RS®Res›RV®Rev"                           /* @DJ */
-        SELCMD2B = "       ›AL®Alt"                           /* @E6 */
+        SELCMD2B = "        ›AL®Alt›X®Xref"                   /* @EU */
         SELCMDS3 = "›S®Show,›L®List,"||,                      /* @D7 */
                    "›C®Change,›A®Add,›R®Remove"               /* @D7 */
      end                                                      /* @D7 */

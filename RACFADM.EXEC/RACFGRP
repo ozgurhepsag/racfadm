@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @CZ  201201  RACFA    Unhide line command 'X' for ADMIN users      */
 /* @CY  201130  TRIDJK   Added hidden line command 'X'                */
 /* @CV  200708  TRIDJK   Msg if selection list has no entries ('NONE')*/
 /* @CU  200618  RACFA    Chged SYSDA to SYSALLDA                      */
@@ -149,11 +150,11 @@ ADDRESS ISPEXEC                                               /* @AO */
      If (SETMIRRX = "YES") then                               /* @BS */
         SELCMDS = "ÝS¨Show,ÝL¨List,ÝP¨Profile,"||,            /* @BH */
                   "ÝC¨Change,ÝA¨Add,"||,                      /* @BH */
-                  "ÝR¨Remove"                                 /* @BH */
+                  "ÝR¨Remove,ÝX¨Xref"                         /* @CZ */
      Else                                                     /* @BS */
         SELCMDS = "ÝS¨Show,ÝL¨List,"||,                       /* @BS */
                   "ÝC¨Change,ÝA¨Add,"||,                      /* @BS */
-                  "ÝR¨Remove"                                 /* @BS */
+                  "ÝR¨Remove,ÝX¨Xref"                         /* @CZ */
   else do                                                     /* @CM */
      If (SETMIRRX = "YES") then                               /* @CM */
         SELCMDS = "ÝS¨Show,ÝL¨list,ÝP¨Profile"                /* @CM */
