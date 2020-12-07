@@ -43,9 +43,9 @@ _Z+ Z         Z
 
   IF (&SETMADMN = YES)
      IF (&SETMIRRX = YES)
-        VER (&OPTB,LIST,S,L,P,C,A,R)
+        VER (&OPTB,LIST,S,L,P,C,A,R,X)
      ELSE
-        VER (&OPTB,LIST,S,L,C,A,R)
+        VER (&OPTB,LIST,S,L,C,A,R,X)
   ELSE
      IF (&SETMIRRX = YES)
         VER (&OPTB,LIST,S,L,P)

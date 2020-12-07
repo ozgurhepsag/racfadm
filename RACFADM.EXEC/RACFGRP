@@ -562,6 +562,7 @@ DISD:
               when (optb = 'R')  then call Delp
               when (optb = 'S')  then call RACFUSR id
               when (optb = 'SE') then call RACFCLSS id
+              when (optb = 'X') then Call RACFUSRX id JCC     /* @CY */
               otherwise nop
            End
         end

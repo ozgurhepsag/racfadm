@@ -2,6 +2,16 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  04 Dec 2020 - V34R7
+     - Group (Option 2)
+       -- Line command 'X', Cross Reference Report
+          * Fixed issue with RACFCERT due to duplicate dataset
+            already exists
+          * If user does not have authorization to execute
+            RACFCERT, display error message
+     - Tutorial (Option T)
+       -- Added 'Digital Certificates'
+
   01 Dec 2020 - V34R6
      - User and Group (Options 1/2)
        -- Line command X

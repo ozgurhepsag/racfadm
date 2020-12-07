@@ -30,13 +30,27 @@ ADDRESS ISPEXEC
         interpret "Trace "SUBSTR(SETMTRAC,1,1)
   end
 
+  cmd = "racdcert certauth list(label('DUMMY')"
+  x    = outtrap('var.')
+  Address TSO cmd
+  cmd_rc = rc
+  x    = outtrap('off')
+  if (SETMSHOW <> 'NO') then
+     call SHOWCMD
+  if cmd_rc = 8 then do
+    RACFSMSG = "Not authorized"                               /* @A1 */
+    RACFLMSG = "You are not authorized to issue",             /* @A1 */
+               "the RACDCERT command."                        /* @A1 */
+    "SETMSG MSG(RACF011)"                                     /* @A1 */
+    EXIT
+    end
+
   racflmsg = "Loading awesomeness.."
   "control display lock"
   "display msg(RACF011)"
   Address 'SYSCALL' 'SLEEP (1)'
 
-  SELCMDS = "ÝS¨ShowÝX¨Export"                               /* @A1 */
-  rlv = SYSVAR('SYSLRACF')
+  SELCMDS = "ÝS¨ShowÝX¨Export"                                /* @A1 */
 
   call Select_label
   rc = display_table()
@@ -80,12 +94,12 @@ GET_CERT_LABELS:
     if pos('Label:',var.x) > 0 then do
       cnt = cnt + 1
       label  = substr(var.x,10,32)
-      y = x + 2
-      status = substr(var.y,11,9)
-      y = y + 1
-      stdate = substr(var.y,15,10)
-      y = y + 1
-      endate = substr(var.y,15,10)
+      i = x + 2
+      status = substr(var.i,11,9)
+      i = i + 1
+      stdate = substr(var.i,15,10)
+      i = i + 1
+      endate = substr(var.i,15,10)
       "TBMOD" TABLEA
       end
     end
@@ -194,7 +208,7 @@ DISPLAY_TABLE:
      Select
         when (opta = 'L') then call listl
         when (opta = 'S') then call listl
-        when (opta = 'X') then call listl                     /* @XX */
+        when (opta = 'X') then call listl                     /* @A1 */
         otherwise nop
      End
      'control display restore'
@@ -272,19 +286,9 @@ SORTSEQ:
   INTERPRET "SORT"SUBSTR(SORTCOL,1,4)" = TMPSEQ"
 RETURN
 /*--------------------------------------------------------------------*/
-/*  List label                                                        */
+/*  List/Export label                                                 */
 /*--------------------------------------------------------------------*/
 LISTL:
-  cmd = "racdcert certauth list(label('"LABEL"'))"
-  X = OUTTRAP("CMDREC.")
-  ADDRESS TSO cmd
-  cmd_rc = rc
-  X = OUTTRAP("OFF")
-  if (SETMSHOW <> 'NO') then
-     call SHOWCMD
-  DO J = 1 TO CMDREC.0                                        /* @A1 */
-     CMDREC.J = SUBSTR(CMDREC.J,1,80)                         /* @A1 */
-  END                                                         /* @A1 */
   IF (OPTA = "X") THEN DO                                     /* @A1 */
      xdsn = label                                             /* @A1 */
      call dsn_chars                                           /* @A1 */
@@ -305,20 +309,38 @@ LISTL:
         cmd_rc = 8                                            /* @A1 */
         RETURN                                                /* @A1 */
      end                                                      /* @A1 */
-     ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",               /* @A1 */
-                 "DA("XDSN")"                                 /* @A1 */
-                 "LRECL(132) BLKSIZE(0) RECFM(F B)",          /* @A1 */
-                 "UNIT(SYSALLDA) SPACE(1 5) CYLINDERS"        /* @A1 */
+     cmd = "racdcert certauth export(label('"LABEL"')) dsn("xdsn")"
+     X = OUTTRAP("CMDREC.")                                   /* @A1 */
+     ADDRESS TSO cmd                                          /* @A1 */
+     cmd_rc = rc                                              /* @A1 */
+     X = OUTTRAP("OFF")                                       /* @A1 */
+     if (SETMSHOW <> 'NO') then                               /* @A1 */
+        call SHOWCMD                                          /* @A1 */
+     DROP CMDREC.                                             /* @A1 */
+     if (cmd_rc = 0) then do                                  /* @A1 */
+       RACFSMSG = "Certificate exported"                      /* @A1 */
+       RACFLMSG = "Label '"strip(label)"' was exported to",   /* @A1 */
+                  "dataset "xdsn                              /* @A1 */
+       "SETMSG MSG(RACF011)"                                  /* @A1 */
+       end                                                    /* @A1 */
   END                                                         /* @A1 */
   ELSE DO                                                     /* @A1 */
+     cmd = "racdcert certauth list(label('"LABEL"'))"
+     X = OUTTRAP("CMDREC.")
+     ADDRESS TSO cmd
+     cmd_rc = rc
+     X = OUTTRAP("OFF")
+     if (SETMSHOW <> 'NO') then
+        call SHOWCMD
+     DO J = 1 TO CMDREC.0
+        CMDREC.J = SUBSTR(CMDREC.J,1,80)
+     END
      ADDRESS TSO "ALLOC F("DDNAME") NEW REUSE",
                  "LRECL(80) BLKSIZE(0) RECFM(F B)",
                  "UNIT(VIO) SPACE(1 5) CYLINDERS"
-  END                                                         /* @A1 */
-  ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM CMDREC. FINIS"
-  DROP CMDREC.
+     ADDRESS TSO "EXECIO * DISKW "DDNAME" (STEM CMDREC. FINIS"
+     DROP CMDREC.
 
-  IF (OPTA <> "X") THEN DO                                    /* @A1 */
      "LMINIT DATAID(CMDDATID) DDNAME("DDNAME")"
      SELECT
         WHEN (SETGDISP = "VIEW") THEN
@@ -328,10 +350,10 @@ LISTL:
         OTHERWISE
              "BROWSE DATAID("CMDDATID")"
      END
-  END                                                         /* @A1 */
-  ADDRESS TSO "FREE FI("DDNAME")"
-  if (cmd_rc > 0) then
-     CALL racfmsgs "ERR10" /* Generic failure */
+     ADDRESS TSO "FREE FI("DDNAME")"
+     if (cmd_rc > 0) then
+        CALL racfmsgs "ERR10" /* Generic failure */
+  END
 RETURN
 /*--------------------------------------------------------------------*/
 /*  Keep only DSN characters                                     @A1  */

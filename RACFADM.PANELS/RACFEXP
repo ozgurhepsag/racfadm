@@ -17,4 +17,5 @@
   &ZWINTTL = 'RACFADM - Certificate Export DSN'
 )Proc
   ver (&xdsn,nb,dsname)
+  &ZWINTTL = ''
 )End

@@ -1,6 +1,7 @@
 )ATTR DEFAULT(%+_)
    _  TYPE(INPUT)   INTENS(HIGH) CAPS(ON) JUST(LEFT)   HILITE(USCORE)
    !  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(TURQ)
+   @  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(RED)
    +  TYPE(TEXT)    INTENS(LOW)  SKIP(ON) COLOR(GREEN)
 )BODY EXPAND(\\)
 %Tutorial+\-\(%RACFADM - Digital Certificates+)\-\%Tutorial
@@ -16,8 +17,8 @@
 %  SAve             +Save display to a dataset
 +
 +Line Commands
-%  S  !Show         +Issue RACDCERT CERTAUTH LIST LABEL command
-%  X  !Export       +Issue RACDCERT CERTAUTH EXPORT LABEL command
+%  S  !Show         +Issue RACDCERT CERTAUTH LIST LABEL command@(SPECIAL)
+%  X  !Export       +Issue RACDCERT CERTAUTH EXPORT LABEL command@(SPECIAL)
 )PROC
   &ZUP     = #RACCERT
 )END
