@@ -7,7 +7,7 @@
    {  TYPE(OUTPUT)  PAS(ON)      CAPS(OFF)
    ~  TYPE(PS)
 )BODY EXPAND(\\)
-+\-\(%RACFADM - RACF Administration - V34R7+)\-\
++\-\(%RACFADM - RACF Administration - V35R0+)\-\
 %Option ===>_ZCMD
 %
 %   0 ~Settings +Customize options      %C ~Command   +Execute RACF commands
@@ -22,7 +22,7 @@
 %  ¨z {OPT3DESC ÝOPT3INFO               %T ~Tutorial  +Help
 +  ¨z {OPT4DESC ÝOPT4INFO               %U ~Updates   +Version/updates
 +  ¨z {OPT5DESC ÝOPT5INFO               %X ~Exit      +Terminate
-+  ¨z {OPT6DESC ÝOPT6INFO              %CA ~CertAuth  +Display certificates
++  ¨z {OPT6DESC ÝOPT6INFO              %CA ~CertAuth  +Digital certificates
 +
 + ---------------------------------------------------------------------------
 +   RACF:!RACFVER        +PrmDB:!PRMDBASE

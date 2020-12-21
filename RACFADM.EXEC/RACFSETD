@@ -38,6 +38,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @AN  201220  RACFA    Fix/deleted code for SETTPSWD                */
 /* @AM  201130  RACFA    Validate GDG base, without recalling gens    */
 /* @AL  200720  LBD      Fix to honor lowercase password              */
 /* @AK  200702  RACFA    Reduced lines of code, easier to maintain    */
@@ -131,8 +132,6 @@ ADDRESS ISPEXEC
                 WHEN (W3 = "R")  THEN W3 = "RESULTS"          /* @A7 */
                 OTHERWISE NOP
              END
-        WHEN (W1 = "SETTPSWD") THEN                           /* @AL */
-             W3 = word(rec.j,3)                               /* @AL */
         WHEN (CKCHR4 = "D") & (W3 <> "") THEN DO              /* @AK */
              PARSE VAR W3 DSN1 "&" SYMBOL "." DSN2            /* @AK */
              SYMBVAL = MVSVAR("SYMDEF",SYMBOL)                /* @AK */

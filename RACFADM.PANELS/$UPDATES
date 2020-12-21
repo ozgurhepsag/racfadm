@@ -2,6 +2,23 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  20 Dec 2020 - V35R0
+     - User (Option 1)
+       * After typing in the line command 'X' next to userid,
+         display '*Xref' in the action column
+
+  20 Dec 2020 - V34R9
+     - Settings (Option 0)
+       -- Fixed 'Default Password', when variable SETTPSWD was null in
+          the $DEFSETG panel mbr, would initialize/display '/*'
+          * May need to set variable SETRTSO=Y in $DEFSETG or $DEFSITE
+            to force refresh, in order for this fix to take affect
+
+  08 Dec 2020 - V34R8
+     - Main Menu
+       -- Changed description of menu option 'CA' to
+          'Digital Certificates', was 'Display Certificates'
+
   04 Dec 2020 - V34R7
      - Group (Option 2)
        -- Line command 'X', Cross Reference Report

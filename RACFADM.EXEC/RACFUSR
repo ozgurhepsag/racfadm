@@ -11,6 +11,7 @@
 /*--------------------------------------------------------------------*/
 /* FLG  YYMMDD  USERID   DESCRIPTION                                  */
 /* ---  ------  -------  -------------------------------------------- */
+/* @EV  201220  RACFA    Display action for Xref line command         */
 /* @EU  201201  RACFA    Unhide line command X for ADMIN users        */
 /* @ET  201130  TRIDJK   Added hidden line commands X and XR          */
 /* @ES  200913  LBD      Bypass AUTOUID if a UID exists               */
@@ -433,7 +434,11 @@ PROFL:
              "TBMOD" TABLEA                                   /* @BD */
         end
         when (opta = 'XR') then call RACFUSRX user            /* @ET */
-        when (opta = 'X') then call RACFUSRX user JCC         /* @ET */
+        when (opta = 'X') then do                             /* @EV */
+             call RACFUSRX user JCC                           /* @EV */
+             action = '*Xref'                                 /* @EV */
+             'TBMOD 'tablea                                   /* @EV */
+        end                                                   /* @EV */
         when (opta = 'AL') then call Altd                     /* @E6 */
         otherwise nop
      End
