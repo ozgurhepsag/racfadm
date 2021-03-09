@@ -17,12 +17,12 @@
 %
 +SELECT: ¬SELCMDS                                                              ¬
 %
-%S  ~Label                           ~StDate    ~EnDate    ~Status
+%S  ~Label                           ~StDate    ~EnDate    ~Status   State
 %-------------------------------------------------------------------------------
 )MODEL CLEAR(OPTA)
-_Z+ Z                               Z         Z         œZ
+_Z+ Z                               Z         Z         œZ       œZ
 )INIT
-  .ZVARS   = '(OPTA LABEL STDATE ENDATE STATUS)'
+  .ZVARS   = '(OPTA LABEL STDATE ENDATE STATUS State)'
   .HELP    = #RACCERT
   &ZCMD    = ' '
   IF (&SAMT = ' ')
