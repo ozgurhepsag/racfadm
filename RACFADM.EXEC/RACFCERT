@@ -69,8 +69,8 @@ EXIT
 SELECT_LABEL:
   seconds = time('S')
   "TBCREATE" TABLEA "KEYS(LABEL)",
-                  "NAMES(STDATE ENDATE STATUS STATE)" ,         /*@A2*/
-                  "REPLACE NOWRITE"                             /*@A2*/
+                  "NAMES(STDATE ENDATE STATUS STATE)" ,       /* @A2 */
+                  "REPLACE NOWRITE"                           /* @A2 */
   call get_cert_labels
   sort     = 'LABEL,C,A'
   CLRLABE  = "TURQ" ; CLRSTDA = "GREEN"
@@ -102,11 +102,11 @@ GET_CERT_LABELS:
       stdate = substr(var.i,15,10)
       i = i + 1
       endate = substr(var.i,15,10)
-      parse value endate with ey'/'em'/'ed                      /*@A2*/
-      tendate = ey''em''ed                                      /*@A2*/
-      if tendate < date('s')                                    /*@A2*/
-         then state = '*Expired*'                               /*@A2*/
-         else state = null                                      /*@A2*/
+      parse value endate with ey'/'em'/'ed                    /* @A2 */
+      tendate = ey''em''ed                                    /* @A2 */
+      if tendate < date('s')                                  /* @A2 */
+         then state = '*Expired*'                             /* @A2 */
+         else state = null                                    /* @A2 */
       "TBMOD" TABLEA
       end
     end
@@ -165,12 +165,12 @@ DISPLAY_TABLE:
                 xtdtop = scanrow
              end
         end
-        WHEN (ABBREV("ONLY",ZCMD,1) = 1) THEN DO
+        WHEN (ABBREV("ONLY",ZCMD,1) = 1) THEN DO              /* @A2 */
              find_str = translate(parm)
              'tbtop ' TABLEA
              'tbskip' TABLEA
              do forever
-                str = translate(label stdate endate status)
+                str = translate(label stdate endate status state)
                 if (pos(find_str,str) > 0) then nop
                 else 'tbdelete' TABLEA
                 'tbskip' TABLEA
@@ -199,6 +199,8 @@ DISPLAY_TABLE:
                      call sortseq 'ENDATE'
                 when (ABBREV("STATUS",PARM,1) = 1) then
                      call sortseq 'STATUS'
+                when (ABBREV("STATE",PARM,1) = 1) then        /* @A2 */
+                     call sortseq 'STATE'
                 otherwise NOP
            END
         END

@@ -2,6 +2,11 @@
 *                          RACFADM - Updates                           *
 *----------------------------------------------------------------------*
 
+  10 Mar 2021 - V35R1
+     - CA (Certificates)
+       * Added State field to show when a certificate has expired.
+       * Added State to Only and Sort options
+
   20 Dec 2020 - V35R0
      - User (Option 1)
        * After typing in the line command 'X' next to userid,
